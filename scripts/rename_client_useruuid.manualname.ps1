@@ -53,6 +53,8 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
+Set-StrictMode -Version Latest
+
 # ============================== SETTINGS =====================================
 $SUPEROPS_API_KEY        = "$YourApiKeyHere"
 $CUSTOM_CLIENT_SEG_INPUT = "$YourCustomClientHere"

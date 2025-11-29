@@ -35,6 +35,8 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
+Set-StrictMode -Version Latest
+
 # --- Script Variables ---
 # NOTE: This is the URL placeholder that will be replaced.
 $MsiScriptUrl = "$MSIURL"

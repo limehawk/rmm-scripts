@@ -48,6 +48,8 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
+Set-StrictMode -Version Latest
+
 # ============================== SETTINGS =====================================
 $SUPEROPS_API_KEY        = "$YourApiKeyHere"
 $SUPEROPS_SUBDOMAIN      = "limehawk"

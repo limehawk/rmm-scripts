@@ -103,6 +103,8 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 ================================================================================
 #>
 
+Set-StrictMode -Version Latest
+
 # ==== HELPER FUNCTIONS (Output Compliance) ====
 function Write-Section {
     param([string]$title)

@@ -22,6 +22,9 @@
 ================================================================================
 #>
 
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+
 # Define variables
 $folderPath = "$runtime_folderPath"  # The path to the folder you want to clean up
 $days = $runtime_days                # The number of days old a file must be to be deleted
