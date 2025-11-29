@@ -54,7 +54,8 @@ After StrictMode: State variables, hardcoded inputs, validation, then main code
 
 **README/CHANGELOG Block:**
 * Top ruler: exactly 80 `=` characters
-* Section dividers: exactly 62 `-` characters
+* Section dividers: exactly 80 `-` characters (matches ruler width)
+* Console output dividers: exactly 62 `-` characters (see Console Output section)
 * Required sections (in order):
   - SCRIPT + VERSION (in top ruler area)
   - FILE (suggested snake_case filename with .ps1 extension)
@@ -250,7 +251,7 @@ Keep explanations concise. The script should be self-documenting through its REA
 
 QUALITY CHECKLIST (verify before delivering)
 
-- [ ] README has all required sections with correct rulers (80 `=`, 62 `-`)
+- [ ] README has all required sections with correct rulers (80 `=`, 80 `-`)
 - [ ] FILE line shows proper snake_case filename with .ps1 extension
 - [ ] All inputs are hardcoded (no param, no $args, no $env: for config)
 - [ ] Input validation checks INPUT VALUES only, not operational preconditions
