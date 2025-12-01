@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Stop'
 
 ================================================================================
 SCRIPT        : OneStart Complete Removal
-VERSION       : 1.0.0
+VERSION       : 1.1.0
 FILE          : onestart_complete_removal.ps1
 --------------------------------------------------------------------------------
 README
@@ -43,8 +43,9 @@ BEHAVIOR
 3. Terminates any running OneStart/DBar processes
 4. Removes scheduled tasks matching OneStart patterns
 5. Removes leftover files and folders from AppData, ProgramData, Program Files
-6. Cleans up registry keys in HKCU and HKLM
-7. Reports final cleanup status
+6. Backs up registry keys to C:\limehawk\registry_backups before removal
+7. Cleans up registry keys in HKCU and HKLM
+8. Reports final cleanup status
 
 --------------------------------------------------------------
 PREREQUISITES
@@ -56,6 +57,7 @@ PREREQUISITES
 SECURITY NOTES
 - No secrets in logs
 - Only removes OneStart-related items using known paths/patterns
+- Registry keys are backed up before removal for recovery if needed
 
 --------------------------------------------------------------
 ENDPOINTS
@@ -111,11 +113,18 @@ Removed : C:\Users\User\AppData\Local\OneStart.ai
 Removed : C:\Users\User\AppData\Roaming\OneStart
 File cleanup complete
 
+[ REGISTRY BACKUP ]
+--------------------------------------------------------------
+Creating registry backups before removal...
+Backed up : HKCU:\Software\OneStart.ai
+Backup location : C:\limehawk\registry_backups\onestart_20251201_120000
+Registry backup complete
+
 [ REGISTRY CLEANUP ]
 --------------------------------------------------------------
-Cleaning HKCU registry keys...
+Cleaning registry keys...
 Removed : HKCU:\Software\OneStart.ai
-Cleaning HKLM registry keys...
+Checking startup entries...
 Registry cleanup complete
 
 [ FINAL STATUS ]
@@ -125,6 +134,7 @@ Uninstall Attempted : Yes
 Processes Terminated : 1
 Tasks Removed : 1
 Folders Removed : 2
+Registry Keys Backed Up : 1
 Registry Keys Removed : 1
 
 [ SCRIPT COMPLETED ]
@@ -132,6 +142,7 @@ Registry Keys Removed : 1
 ================================================================================
 CHANGELOG
 --------------------------------------------------------------
+2025-12-01 v1.1.0 Add registry backup before removal to C:\limehawk\registry_backups
 2025-12-01 v1.0.0 Initial release - combines NirSoft uninstall with manual cleanup
 ================================================================================
 #>
@@ -149,6 +160,7 @@ $appName = 'OneStart'
 # ==============================================================================
 
 $destinationFolder = "$env:SystemDrive\limehawk\nirsoft"
+$registryBackupFolder = "$env:SystemDrive\limehawk\registry_backups"
 
 $processPatterns = @(
     'OneStart'
@@ -202,11 +214,12 @@ $runKeyPaths = @(
 # STATE TRACKING
 # ==============================================================================
 
-$uninstallAttempted  = $false
-$processesTerminated = 0
-$tasksRemoved        = 0
-$foldersRemoved      = 0
-$registryKeysRemoved = 0
+$uninstallAttempted   = $false
+$processesTerminated  = 0
+$tasksRemoved         = 0
+$foldersRemoved       = 0
+$registryKeysBackedUp = 0
+$registryKeysRemoved  = 0
 
 # ==============================================================================
 # INPUT VALIDATION
@@ -487,6 +500,88 @@ if ($foldersRemoved -eq 0) {
 Write-Host "File cleanup complete"
 
 # ==============================================================================
+# REGISTRY BACKUP
+# ==============================================================================
+
+Write-Host ""
+Write-Host "[ REGISTRY BACKUP ]"
+Write-Host "--------------------------------------------------------------"
+
+Write-Host "Creating registry backups before removal..."
+
+try {
+    if (-not (Test-Path $registryBackupFolder)) {
+        New-Item -ItemType Directory -Path $registryBackupFolder -Force | Out-Null
+        Write-Host "Created backup folder : $registryBackupFolder"
+    }
+
+    $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $backupSubFolder = Join-Path $registryBackupFolder "onestart_$timestamp"
+    New-Item -ItemType Directory -Path $backupSubFolder -Force | Out-Null
+
+    foreach ($regPath in $registryPaths) {
+        if (Test-Path $regPath) {
+            try {
+                # Convert PowerShell path to reg.exe format
+                $regExePath = $regPath -replace '^HKCU:', 'HKEY_CURRENT_USER' -replace '^HKLM:', 'HKEY_LOCAL_MACHINE'
+                $safeName = ($regPath -replace ':', '' -replace '\\', '_' -replace '\{', '' -replace '\}', '')
+                $backupFile = Join-Path $backupSubFolder "$safeName.reg"
+
+                $regExport = Start-Process -FilePath "reg.exe" -ArgumentList "export `"$regExePath`" `"$backupFile`" /y" -Wait -PassThru -WindowStyle Hidden
+                if ($regExport.ExitCode -eq 0) {
+                    Write-Host "Backed up : $regPath"
+                    $registryKeysBackedUp++
+                } else {
+                    Write-Host "Failed to backup : $regPath"
+                }
+            }
+            catch {
+                Write-Host "Failed to backup : $regPath - $($_.Exception.Message)"
+            }
+        }
+    }
+
+    # Backup Run key entries
+    foreach ($runKey in $runKeyPaths) {
+        if (Test-Path $runKey) {
+            try {
+                $props = Get-ItemProperty -Path $runKey -ErrorAction SilentlyContinue
+                if ($props) {
+                    $matchingProps = $props.PSObject.Properties | Where-Object { $_.Name -like "*OneStart*" -or $_.Name -like "*DBar*" }
+                    if ($matchingProps) {
+                        $regExePath = $runKey -replace '^HKCU:', 'HKEY_CURRENT_USER' -replace '^HKLM:', 'HKEY_LOCAL_MACHINE'
+                        $safeName = ($runKey -replace ':', '' -replace '\\', '_') + "_Run"
+                        $backupFile = Join-Path $backupSubFolder "$safeName.reg"
+
+                        $regExport = Start-Process -FilePath "reg.exe" -ArgumentList "export `"$regExePath`" `"$backupFile`" /y" -Wait -PassThru -WindowStyle Hidden
+                        if ($regExport.ExitCode -eq 0) {
+                            Write-Host "Backed up Run key : $runKey"
+                            $registryKeysBackedUp++
+                        }
+                    }
+                }
+            }
+            catch {
+                # Could not access run key
+            }
+        }
+    }
+
+    if ($registryKeysBackedUp -gt 0) {
+        Write-Host "Backup location : $backupSubFolder"
+    }
+}
+catch {
+    Write-Host "Warning: Could not create backup folder - $($_.Exception.Message)"
+}
+
+if ($registryKeysBackedUp -eq 0) {
+    Write-Host "No registry keys found to backup"
+}
+
+Write-Host "Registry backup complete"
+
+# ==============================================================================
 # REGISTRY CLEANUP
 # ==============================================================================
 
@@ -553,6 +648,7 @@ Write-Host "Uninstall Attempted : $(if ($uninstallAttempted) { 'Yes' } else { 'N
 Write-Host "Processes Terminated : $processesTerminated"
 Write-Host "Tasks Removed : $tasksRemoved"
 Write-Host "Folders Removed : $foldersRemoved"
+Write-Host "Registry Keys Backed Up : $registryKeysBackedUp"
 Write-Host "Registry Keys Removed : $registryKeysRemoved"
 
 Write-Host ""
