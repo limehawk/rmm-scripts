@@ -117,7 +117,7 @@ File cleanup complete
 --------------------------------------------------------------
 Creating registry backups before removal...
 Backed up : HKCU:\Software\OneStart.ai
-Backup location : C:\limehawk\registry_backup\onestart_20251201_120000
+Backup location : <SystemDrive>\limehawk\registry_backup\onestart_20251201_120000
 Registry backup complete
 
 [ REGISTRY CLEANUP ]
