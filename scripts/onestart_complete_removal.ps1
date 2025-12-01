@@ -43,7 +43,7 @@ BEHAVIOR
 3. Terminates any running OneStart/DBar processes
 4. Removes scheduled tasks matching OneStart patterns
 5. Removes leftover files and folders from AppData, ProgramData, Program Files
-6. Backs up registry keys to C:\limehawk\registry_backups before removal
+6. Backs up registry keys to $env:SystemDrive\limehawk\registry_backup before removal
 7. Cleans up registry keys in HKCU and HKLM
 8. Reports final cleanup status
 
@@ -117,7 +117,7 @@ File cleanup complete
 --------------------------------------------------------------
 Creating registry backups before removal...
 Backed up : HKCU:\Software\OneStart.ai
-Backup location : C:\limehawk\registry_backups\onestart_20251201_120000
+Backup location : C:\limehawk\registry_backup\onestart_20251201_120000
 Registry backup complete
 
 [ REGISTRY CLEANUP ]
@@ -142,7 +142,7 @@ Registry Keys Removed : 1
 ================================================================================
 CHANGELOG
 --------------------------------------------------------------
-2025-12-01 v1.1.0 Add registry backup before removal to C:\limehawk\registry_backups
+2025-12-01 v1.1.0 Add registry backup before removal to $env:SystemDrive\limehawk\registry_backup
 2025-12-01 v1.0.0 Initial release - combines NirSoft uninstall with manual cleanup
 ================================================================================
 #>
@@ -160,7 +160,7 @@ $appName = 'OneStart'
 # ==============================================================================
 
 $destinationFolder = "$env:SystemDrive\limehawk\nirsoft"
-$registryBackupFolder = "$env:SystemDrive\limehawk\registry_backups"
+$registryBackupFolder = "$env:SystemDrive\limehawk\registry_backup"
 
 $processPatterns = @(
     'OneStart'
