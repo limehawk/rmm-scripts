@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
  SCRIPT    : rename_workstation_auto.ps1
- VERSION   : v8.2.0
+ VERSION   : v8.2.1
 ================================================================================
  README
 --------------------------------------------------------------------------------
@@ -32,6 +32,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ v8.2.1  (2024-12-01)  Fixed StrictMode error checking GraphQL response for errors.
  v8.2.0  (2025-08-20)  Clarified README: auto script enforces 3-char client code.
  v8.1.0  (2025-08-19)  Pattern CLIENT-USERUUID, min UUID=3, maximize USER, exact 15.
  v8.0.x  (2025-08-19)  No separators prototype, experimental.
