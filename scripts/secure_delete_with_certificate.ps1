@@ -139,7 +139,7 @@ EXAMPLE RUN (DRY RUN MODE):
     --------------------------------------------------------------
     *** DRY RUN MODE - SKIPPING ACTUAL DELETION ***
 
-    Would execute: sdelete -p 3 -nobanner <file>
+    Would execute: sdelete -accepteula -p 3 -nobanner <file>
     Files that would be deleted: 3
 
       [WOULD DELETE] document1.pdf
@@ -460,7 +460,7 @@ function Invoke-SecureDeletion {
     $results = @{
         StartTime = Get-FormattedTimestamp
         FilesAttempted = $FilePaths.Count
-        Command = "sdelete -p $overwritePasses -nobanner"
+        Command = "sdelete -accepteula -p $overwritePasses -nobanner"
         Output = ''
         ExitCode = $null
         EndTime = $null
@@ -486,7 +486,7 @@ function Invoke-SecureDeletion {
             }
 
             # Execute SDelete
-            $output = & sdelete -p $overwritePasses -nobanner "$filePath" 2>&1
+            $output = & sdelete -accepteula -p $overwritePasses -nobanner "$filePath" 2>&1
             $fileResult['ExitCode'] = $LASTEXITCODE
             $fileResult['Output'] = $output -join "`n"
             $fileResult['Success'] = ($LASTEXITCODE -eq 0)
@@ -679,7 +679,7 @@ function New-Certificate {
     [void]$cert.AppendLine("")
     [void]$cert.AppendLine("Deletion Method   : Microsoft SDelete")
     [void]$cert.AppendLine("Overwrite Passes  : $overwritePasses")
-    [void]$cert.AppendLine("Command Template  : sdelete -p $overwritePasses -nobanner <filepath>")
+    [void]$cert.AppendLine("Command Template  : sdelete -accepteula -p $overwritePasses -nobanner <filepath>")
     [void]$cert.AppendLine("")
 
     foreach ($entry in $DeletionLog) {
@@ -1312,7 +1312,7 @@ Write-Section "SECURE DELETION"
 if ($dryRun) {
     Write-Host "*** DRY RUN MODE - SKIPPING ACTUAL DELETION ***"
     Write-Host ""
-    Write-Host "Would execute: sdelete -p $overwritePasses -nobanner <file>"
+    Write-Host "Would execute: sdelete -accepteula -p $overwritePasses -nobanner <file>"
     Write-Host "Files that would be deleted: $($filesToProcess.Count)"
     Write-Host ""
     foreach ($filePath in $filesToProcess) {
@@ -1329,10 +1329,10 @@ if ($dryRun) {
             Success = $true
         }
     }
-    $script:sdeleteOutput = "*** DRY RUN MODE ***`n`nNo files were actually deleted.`nSDelete was not executed.`n`nCommand that would have been used:`nsdelete -p $overwritePasses -nobanner <filepath>"
+    $script:sdeleteOutput = "*** DRY RUN MODE ***`n`nNo files were actually deleted.`nSDelete was not executed.`n`nCommand that would have been used:`nsdelete -accepteula -p $overwritePasses -nobanner <filepath>"
 } else {
     Write-Host "Executing SDelete with $overwritePasses passes..."
-    Write-Host "Command : sdelete -p $overwritePasses -nobanner <file>"
+    Write-Host "Command : sdelete -accepteula -p $overwritePasses -nobanner <file>"
     Write-Host ""
 
     $deletionResults = Invoke-SecureDeletion -FilePaths $filesToProcess
