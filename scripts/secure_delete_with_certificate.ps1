@@ -1055,6 +1055,30 @@ if (-not (Test-Path -LiteralPath $targetPath)) {
 
 # Check if SDelete is available
 $sdeleteAvailable = $null -ne (Get-Command sdelete -ErrorAction SilentlyContinue)
+
+# If not in PATH, search common installation locations
+if (-not $sdeleteAvailable) {
+    $searchPaths = @(
+        "$env:LOCALAPPDATA\Microsoft\WinGet\Links"
+        "$env:LOCALAPPDATA\Microsoft\WinGet\Packages"
+        "$env:ProgramFiles\SysinternalsSuite"
+        "${env:ProgramFiles(x86)}\SysinternalsSuite"
+    )
+
+    foreach ($searchPath in $searchPaths) {
+        if (Test-Path $searchPath) {
+            $found = Get-ChildItem -Path $searchPath -Filter 'sdelete.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($found) {
+                $sdeleteDir = $found.DirectoryName
+                $env:Path = "$sdeleteDir;$env:Path"
+                Write-Host "Found SDelete at: $sdeleteDir"
+                $sdeleteAvailable = $true
+                break
+            }
+        }
+    }
+}
+
 if (-not $sdeleteAvailable) {
     if ($autoInstallSDelete) {
         Write-Host "SDelete not found. Installing via winget..."
@@ -1079,12 +1103,35 @@ if (-not $sdeleteAvailable) {
             $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path', 'User')
             $sdeleteAvailable = $null -ne (Get-Command sdelete -ErrorAction SilentlyContinue)
 
+            # If not in PATH, search common winget installation locations
+            if (-not $sdeleteAvailable) {
+                $searchPaths = @(
+                    "$env:LOCALAPPDATA\Microsoft\WinGet\Links"
+                    "$env:LOCALAPPDATA\Microsoft\WinGet\Packages"
+                    "$env:ProgramFiles\SysinternalsSuite"
+                    "${env:ProgramFiles(x86)}\SysinternalsSuite"
+                )
+
+                foreach ($searchPath in $searchPaths) {
+                    if (Test-Path $searchPath) {
+                        $found = Get-ChildItem -Path $searchPath -Filter 'sdelete.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                        if ($found) {
+                            $sdeleteDir = $found.DirectoryName
+                            $env:Path = "$sdeleteDir;$env:Path"
+                            Write-Host "Found SDelete at: $sdeleteDir"
+                            $sdeleteAvailable = $true
+                            break
+                        }
+                    }
+                }
+            }
+
             if (-not $sdeleteAvailable) {
                 Write-Host ""
                 Write-Host "[ ERROR OCCURRED ]"
                 Write-Host "--------------------------------------------------------------"
-                Write-Host "SDelete installation completed but command not found in PATH."
-                Write-Host "You may need to restart the terminal or run this script again."
+                Write-Host "SDelete installation completed but sdelete.exe not found."
+                Write-Host "Please install manually or add SDelete location to PATH."
                 exit 1
             }
 
