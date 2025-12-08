@@ -41,6 +41,7 @@ SETTINGS:
     $dryRun           - Test mode: performs all steps except actual deletion ($true/$false)
     $recursive        - Process subfolders if target is directory ($true/$false)
     $generateHtml     - Generate HTML certificate in addition to text ($true/$false)
+    $autoInstallSDelete - Auto-install SDelete via winget if not found ($true/$false)
 
 BEHAVIOR:
     1. Validates target path exists and SDelete is available
@@ -55,7 +56,7 @@ BEHAVIOR:
     10. Outputs certificate to specified directory with timestamp
 
 PREREQUISITES:
-    - Microsoft SDelete (install: winget install Microsoft.Sysinternals.SDelete)
+    - Microsoft SDelete (auto-installed via winget if $autoInstallSDelete = $true)
     - PowerShell 5.1 or later
     - Administrator rights recommended for complete metadata access
 
@@ -224,6 +225,9 @@ $recursive = $true
 
 # Generate HTML certificate in addition to plain text
 $generateHtml = $true
+
+# Auto-install SDelete via winget if not found
+$autoInstallSDelete = $true
 
 # ==============================================================================
 # STATE VARIABLES
@@ -1052,16 +1056,58 @@ if (-not (Test-Path -LiteralPath $targetPath)) {
 # Check if SDelete is available
 $sdeleteAvailable = $null -ne (Get-Command sdelete -ErrorAction SilentlyContinue)
 if (-not $sdeleteAvailable) {
-    Write-Host ""
-    Write-Host "[ ERROR OCCURRED ]"
-    Write-Host "--------------------------------------------------------------"
-    Write-Host "Microsoft SDelete is not installed or not in PATH."
-    Write-Host ""
-    Write-Host "Install with: winget install Microsoft.Sysinternals.SDelete"
-    Write-Host ""
-    Write-Host "Or download from:"
-    Write-Host "https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete"
-    exit 1
+    if ($autoInstallSDelete) {
+        Write-Host "SDelete not found. Installing via winget..."
+
+        # Check if winget is available
+        $wingetAvailable = $null -ne (Get-Command winget -ErrorAction SilentlyContinue)
+        if (-not $wingetAvailable) {
+            Write-Host ""
+            Write-Host "[ ERROR OCCURRED ]"
+            Write-Host "--------------------------------------------------------------"
+            Write-Host "Winget is not available on this system."
+            Write-Host "Please install SDelete manually from:"
+            Write-Host "https://learn.microsoft.com/en-us/sysinternals/downloads/sdelete"
+            exit 1
+        }
+
+        try {
+            $installResult = winget install Microsoft.Sysinternals.SDelete --accept-source-agreements --accept-package-agreements 2>&1
+            Write-Host $installResult
+
+            # Refresh PATH and verify installation
+            $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path', 'User')
+            $sdeleteAvailable = $null -ne (Get-Command sdelete -ErrorAction SilentlyContinue)
+
+            if (-not $sdeleteAvailable) {
+                Write-Host ""
+                Write-Host "[ ERROR OCCURRED ]"
+                Write-Host "--------------------------------------------------------------"
+                Write-Host "SDelete installation completed but command not found in PATH."
+                Write-Host "You may need to restart the terminal or run this script again."
+                exit 1
+            }
+
+            Write-Host "SDelete installed successfully"
+            Write-Host ""
+        } catch {
+            Write-Host ""
+            Write-Host "[ ERROR OCCURRED ]"
+            Write-Host "--------------------------------------------------------------"
+            Write-Host "Failed to install SDelete: $_"
+            exit 1
+        }
+    } else {
+        Write-Host ""
+        Write-Host "[ ERROR OCCURRED ]"
+        Write-Host "--------------------------------------------------------------"
+        Write-Host "Microsoft SDelete is not installed or not in PATH."
+        Write-Host ""
+        Write-Host "Install with: winget install Microsoft.Sysinternals.SDelete"
+        Write-Host ""
+        Write-Host "Or set `$autoInstallSDelete = `$true to install automatically."
+        exit 1
+    }
 }
 
 # Set default output directory
