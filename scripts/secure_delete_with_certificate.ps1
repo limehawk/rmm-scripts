@@ -590,8 +590,8 @@ function New-Certificate {
     [void]$cert.AppendLine("")
 
     # Summary
-    $successCount = ($VerificationResults | Where-Object { $_.Verified -eq $true }).Count
-    $failCount = ($VerificationResults | Where-Object { $_.Verified -ne $true }).Count
+    $successCount = @($VerificationResults | Where-Object { $_.Verified -eq $true }).Count
+    $failCount = @($VerificationResults | Where-Object { $_.Verified -ne $true }).Count
 
     [void]$cert.AppendLine("--------------------------------------------------------------------------------")
     if ($dryRun) {
@@ -772,8 +772,8 @@ function New-HtmlCertificate {
         [string]$SDeleteOutput
     )
 
-    $successCount = ($VerificationResults | Where-Object { $_.Verified -eq $true }).Count
-    $failCount = ($VerificationResults | Where-Object { $_.Verified -ne $true }).Count
+    $successCount = @($VerificationResults | Where-Object { $_.Verified -eq $true }).Count
+    $failCount = @($VerificationResults | Where-Object { $_.Verified -ne $true }).Count
     $overallStatus = if ($failCount -eq 0 -and $successCount -gt 0) { 'SUCCESSFUL' } else { 'INCOMPLETE - REVIEW REQUIRED' }
     $statusClass = if ($failCount -eq 0 -and $successCount -gt 0) { 'success' } else { 'warning' }
 
@@ -1393,8 +1393,8 @@ if ($dryRun) {
 
     Write-Host ""
 
-    $successCount = ($script:verificationResults | Where-Object { $_.Verified -eq $true }).Count
-    $failCount = ($script:verificationResults | Where-Object { $_.Verified -ne $true }).Count
+    $successCount = @($script:verificationResults | Where-Object { $_.Verified -eq $true }).Count
+    $failCount = @($script:verificationResults | Where-Object { $_.Verified -ne $true }).Count
 
     Write-Host "Verification complete"
     Write-Host "Successfully deleted : $successCount"
