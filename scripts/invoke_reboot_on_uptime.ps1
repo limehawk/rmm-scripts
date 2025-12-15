@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
  SCRIPT    : invoke_reboot_on_uptime.ps1
- VERSION   : v7.0.0
+ VERSION   : v7.1.0
 ================================================================================
  README
 --------------------------------------------------------------------------------
@@ -98,6 +98,8 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2025-12-15  v7.1.0  Moved configuration to dedicated section at top of script
+                     for easier access.
  2025-12-15  v7.0.0  Added reboot flag detection - script now reboots if uptime
                      threshold exceeded OR if Windows reboot-pending flags are
                      detected (CBS, Windows Update, PendingFileRenameOperations).
@@ -121,6 +123,21 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 
 Set-StrictMode -Version Latest
 
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                              CONFIGURATION                                 ║
+# ╠════════════════════════════════════════════════════════════════════════════╣
+# ║  Edit these values to customize script behavior.                           ║
+# ║  RMM variables will override these defaults if provided.                   ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+# Maximum uptime in days before forcing a reboot (default: 7)
+$DefaultMaxUptimeDays = 7
+
+# RMM literal text replacement placeholder (SuperOps replaces this at runtime)
+$RMMValue = "`$maxuptimedays"
+
+# ════════════════════════════════════════════════════════════════════════════════
+
 # ==== HELPER FUNCTIONS (Output Compliance) ====
 function Write-Section {
     param([string]$title)
@@ -135,15 +152,11 @@ function PrintKV([string]$label, [string]$value) {
 }
 
 # ==== INPUT RESOLUTION (RMM -> ENV -> Default) ====
-# Assumes RMM performs LITERAL TEXT REPLACEMENT.
+# Priority: RMM variable > Environment variable > Default from CONFIGURATION section
 
 $ResolvedInput = $null
 
-# 1. Capture and prepare RMM literal text replacement placeholder.
-# Using double quotes to capture potentially empty replacement strings.
-$RMMValue = "`$maxuptimedays" 
-
-# Check if the RMM value is usable (not null, not empty, and not the literal text placeholder itself)
+# Check if the RMM value is usable (not null, not empty, and not the literal placeholder itself)
 $isRMMValueUsable = -not [string]::IsNullOrWhiteSpace($RMMValue) -and ($RMMValue -notmatch '^\$\w+$')
 
 if ($isRMMValueUsable) {
@@ -155,8 +168,8 @@ elseif (-not [string]::IsNullOrWhiteSpace($env:MAXUPTIMEDAYS)) {
     $ResolvedInput = $env:MAXUPTIMEDAYS
 }
 else {
-    # 3. Default Fallback
-    $ResolvedInput = 7
+    # 3. Default from CONFIGURATION section
+    $ResolvedInput = $DefaultMaxUptimeDays
 }
 
 # ==== VALIDATE AND CAST ====
