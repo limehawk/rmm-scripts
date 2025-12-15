@@ -4,20 +4,21 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 <#
 ██╗     ██╗███╗   ███╗███████╗██╗  ██╗ █████╗ ██╗    ██╗██╗  ██╗
 ██║     ██║████╗ ████║██╔════╝██║  ██║██╔══██╗██║    ██║██║ ██╔╝
-██║     ██║██╔████╔██║█████╗  ███████║███████║██║ █╗ ██║█████╔╝ 
-██║     ██║██║╚██╔╝██║██╔══╝  ██╔══██║██╔══██║██║███╗██║██╔═██╗ 
+██║     ██║██╔████╔██║█████╗  ███████║███████║██║ █╗ ██║█████╔╝
+██║     ██║██║╚██╔╝██║██╔══╝  ██╔══██║██╔══██║██║███╗██║██╔═██╗
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
  SCRIPT    : invoke_reboot_on_uptime.ps1
- VERSION   : v6.0.0
+ VERSION   : v7.0.0
 ================================================================================
  README
 --------------------------------------------------------------------------------
  PURPOSE
  This script forces a system reboot if the current uptime exceeds a specified
- threshold in days. It is designed as an routine maintenance task to ensure
- system stability and that pending updates are applied.
+ threshold in days OR if Windows reboot-pending flags are detected. It is
+ designed as a routine maintenance task to ensure system stability and that
+ pending updates are applied.
 
  DATA SOURCES & PRIORITY
  1) RMM literal text replacement ($maxuptimedays)
@@ -38,9 +39,14 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 
  BEHAVIOR
  - Retrieves the system's last boot time to calculate current uptime in days.
+ - Checks Windows registry for reboot-pending flags:
+   - Component Based Servicing (CBS) RebootPending
+   - Windows Update RebootRequired
+   - Pending File Rename Operations (Session Manager)
  - Compares the current uptime against the resolved $MaxUptimeDays threshold.
- - If uptime exceeds the threshold, a forceful reboot is initiated.
- - If not, a successful, non-action taken status is logged.
+ - If uptime exceeds the threshold OR reboot flags are detected, a forceful
+   reboot is initiated.
+ - If neither condition is met, a successful, non-action taken status is logged.
 
  PREREQUISITES
  - PowerShell 5.1+
@@ -59,32 +65,42 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
  - 0 success (reboot not required or reboot initiated).
  - 1 failure (input validation failed or a command failed to execute).
 
- EXAMPLE RUN (Style A)
+ EXAMPLE RUN (Style A) - Reboot triggered by pending flags
  [ INPUT VALIDATION ]
  --------------------------------------------------------------
- Max Uptime Days          : 7
+ Max Uptime Days          : 14
+
+ [ REBOOT FLAG CHECK ]
+ --------------------------------------------------------------
+ CBS RebootPending        : No
+ WU RebootRequired        : Yes
+ PendingFileRename        : No
+ Reboot Flags Detected    : Yes
 
  [ UPTIME CHECK ]
  --------------------------------------------------------------
- Last Boot Time           : 2025-09-18T05:00:00
- Current Uptime (Days)    : 8
- Threshold (Days)         : 7
- Reboot Required          : Yes
+ Last Boot Time           : 2025-12-10T08:00:00
+ Current Uptime (Days)    : 5
+ Threshold (Days)         : 14
+ Uptime Exceeded          : No
 
  [ REBOOT ACTION ]
  --------------------------------------------------------------
- Status                   : Uptime exceeds threshold
+ Trigger                  : Reboot flags detected
  Result                   : INITIATING REBOOT
 
  [ FINAL STATUS ]
  --------------------------------------------------------------
- OPERATION COMPLETED SUCCESSFULLY
+ OPERATION COMPLETED SUCCESSFULLY (REBOOT INITIATED)
 
  [ SCRIPT COMPLETED ]
  --------------------------------------------------------------
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2025-12-15  v7.0.0  Added reboot flag detection - script now reboots if uptime
+                     threshold exceeded OR if Windows reboot-pending flags are
+                     detected (CBS, Windows Update, PendingFileRenameOperations).
  2025-09-25  v6.0.0  FINAL FIX: Reverted conditional logic to robust IF/ELSEIF/ELSE structure
                      to ensure compatibility with PowerShell 5.1 and earlier, fixing the '?' operator error.
  2025-09-25  v5.0.1  Revised input resolution to assume RMM performs LITERAL TEXT REPLACEMENT,
@@ -167,6 +183,34 @@ PrintKV "Max Uptime Days" $MaxUptimeDays
 
 # ==== MAIN OPERATION ====
 try {
+    # --- Reboot Flag Detection ---
+    Write-Section "REBOOT FLAG CHECK"
+
+    # Check Component Based Servicing (CBS) RebootPending
+    $cbsRebootPending = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
+
+    # Check Windows Update RebootRequired
+    $wuRebootRequired = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+
+    # Check Pending File Rename Operations (non-empty value indicates pending reboot)
+    $pendingFileRename = $false
+    $sessionManagerPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager'
+    if (Test-Path $sessionManagerPath) {
+        $pendingOps = Get-ItemProperty -Path $sessionManagerPath -Name 'PendingFileRenameOperations' -ErrorAction SilentlyContinue
+        if ($pendingOps -and $pendingOps.PendingFileRenameOperations) {
+            $pendingFileRename = $true
+        }
+    }
+
+    # Determine if any reboot flags are set
+    $rebootFlagsDetected = $cbsRebootPending -or $wuRebootRequired -or $pendingFileRename
+
+    PrintKV "CBS RebootPending"      $(if ($cbsRebootPending) { "Yes" } else { "No" })
+    PrintKV "WU RebootRequired"      $(if ($wuRebootRequired) { "Yes" } else { "No" })
+    PrintKV "PendingFileRename"      $(if ($pendingFileRename) { "Yes" } else { "No" })
+    PrintKV "Reboot Flags Detected"  $(if ($rebootFlagsDetected) { "Yes" } else { "No" })
+
+    # --- Uptime Check ---
     Write-Section "UPTIME CHECK"
 
     # Uptime Check: Using [WMI] type accelerator and direct property access.
@@ -179,10 +223,24 @@ try {
     PrintKV "Current Uptime (Days)"  $uptimeDays
     PrintKV "Threshold (Days)"       $MaxUptimeDays
 
-    if ($uptimeDays -gt $MaxUptimeDays) {
-        PrintKV "Reboot Required" "Yes"
+    $uptimeExceeded = $uptimeDays -gt $MaxUptimeDays
+    PrintKV "Uptime Exceeded"        $(if ($uptimeExceeded) { "Yes" } else { "No" })
+
+    # --- Reboot Decision ---
+    if ($rebootFlagsDetected -or $uptimeExceeded) {
         Write-Section "REBOOT ACTION"
-        PrintKV "Status" "Uptime exceeds threshold"
+
+        # Determine trigger reason for logging
+        if ($rebootFlagsDetected -and $uptimeExceeded) {
+            PrintKV "Trigger" "Both: Reboot flags AND uptime exceeded"
+        }
+        elseif ($rebootFlagsDetected) {
+            PrintKV "Trigger" "Reboot flags detected"
+        }
+        else {
+            PrintKV "Trigger" "Uptime exceeds threshold"
+        }
+
         PrintKV "Result" "INITIATING REBOOT"
 
         # Execute forceful reboot
@@ -192,9 +250,8 @@ try {
         Write-Host " OPERATION COMPLETED SUCCESSFULLY (REBOOT INITIATED)"
     }
     else {
-        PrintKV "Reboot Required" "No"
         Write-Section "FINAL STATUS"
-        Write-Host " UPTIME IS WITHIN THRESHOLD. NO ACTION TAKEN."
+        Write-Host " NO REBOOT REQUIRED. Uptime within threshold and no pending flags."
     }
 
     Write-Section "SCRIPT COMPLETED"
