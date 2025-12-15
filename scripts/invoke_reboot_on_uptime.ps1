@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
  SCRIPT    : invoke_reboot_on_uptime.ps1
- VERSION   : v7.1.0
+ VERSION   : v7.2.0
 ================================================================================
  README
 --------------------------------------------------------------------------------
@@ -31,11 +31,12 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
    - Env Name: 'MAXUPTIMEDAYS'
    - Constraints: Integer (1 or greater)
    - Default: 7
-   - NOTE: This script is optimized for RMM environments using literal text replacement.
 
- SETTINGS
- - The default maximum uptime is 7 days, overrideable via RMM variable or
-   environment variable.
+ SETTINGS (hardcoded in script)
+ - $DefaultMaxUptimeDays : Default uptime threshold if RMM/env not set (7)
+ - $CheckCBSRebootPending : Check Component Based Servicing flag ($true)
+ - $CheckWURebootRequired : Check Windows Update flag ($true)
+ - $CheckPendingFileRename : Check Pending File Rename Operations ($true)
 
  BEHAVIOR
  - Retrieves the system's last boot time to calculate current uptime in days.
@@ -69,6 +70,9 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
  [ INPUT VALIDATION ]
  --------------------------------------------------------------
  Max Uptime Days          : 14
+ Check CBS Pending        : Yes
+ Check WU Required        : Yes
+ Check File Rename        : Yes
 
  [ REBOOT FLAG CHECK ]
  --------------------------------------------------------------
@@ -98,8 +102,8 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
- 2025-12-15  v7.1.0  Moved configuration to dedicated section at top of script
-                     for easier access.
+ 2025-12-15  v7.2.0  Simplified configuration section to follow style guidelines.
+                     Added toggle settings for each reboot flag check.
  2025-12-15  v7.0.0  Added reboot flag detection - script now reboots if uptime
                      threshold exceeded OR if Windows reboot-pending flags are
                      detected (CBS, Windows Update, PendingFileRenameOperations).
@@ -123,20 +127,12 @@ $ErrorActionPreference = 'Stop' # Rule 1: Enable early error mode (fail on any n
 
 Set-StrictMode -Version Latest
 
-# ╔════════════════════════════════════════════════════════════════════════════╗
-# ║                              CONFIGURATION                                 ║
-# ╠════════════════════════════════════════════════════════════════════════════╣
-# ║  Edit these values to customize script behavior.                           ║
-# ║  RMM variables will override these defaults if provided.                   ║
-# ╚════════════════════════════════════════════════════════════════════════════╝
-
-# Maximum uptime in days before forcing a reboot (default: 7)
-$DefaultMaxUptimeDays = 7
-
-# RMM literal text replacement placeholder (SuperOps replaces this at runtime)
-$RMMValue = "`$maxuptimedays"
-
-# ════════════════════════════════════════════════════════════════════════════════
+# ==== HARDCODED INPUTS ====
+$DefaultMaxUptimeDays   = 7
+$CheckCBSRebootPending  = $true
+$CheckWURebootRequired  = $true
+$CheckPendingFileRename = $true
+$RMMValue               = "`$maxuptimedays"
 
 # ==== HELPER FUNCTIONS (Output Compliance) ====
 function Write-Section {
@@ -193,6 +189,9 @@ if ($errors.Count -gt 0) {
 # --- Validation Success Output ---
 Write-Section "INPUT VALIDATION"
 PrintKV "Max Uptime Days" $MaxUptimeDays
+PrintKV "Check CBS Pending"      $(if ($CheckCBSRebootPending) { "Yes" } else { "No" })
+PrintKV "Check WU Required"      $(if ($CheckWURebootRequired) { "Yes" } else { "No" })
+PrintKV "Check File Rename"      $(if ($CheckPendingFileRename) { "Yes" } else { "No" })
 
 # ==== MAIN OPERATION ====
 try {
@@ -200,27 +199,35 @@ try {
     Write-Section "REBOOT FLAG CHECK"
 
     # Check Component Based Servicing (CBS) RebootPending
-    $cbsRebootPending = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
+    $cbsRebootPending = $false
+    if ($CheckCBSRebootPending) {
+        $cbsRebootPending = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
+    }
 
     # Check Windows Update RebootRequired
-    $wuRebootRequired = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+    $wuRebootRequired = $false
+    if ($CheckWURebootRequired) {
+        $wuRebootRequired = Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+    }
 
     # Check Pending File Rename Operations (non-empty value indicates pending reboot)
     $pendingFileRename = $false
-    $sessionManagerPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager'
-    if (Test-Path $sessionManagerPath) {
-        $pendingOps = Get-ItemProperty -Path $sessionManagerPath -Name 'PendingFileRenameOperations' -ErrorAction SilentlyContinue
-        if ($pendingOps -and $pendingOps.PendingFileRenameOperations) {
-            $pendingFileRename = $true
+    if ($CheckPendingFileRename) {
+        $sessionManagerPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager'
+        if (Test-Path $sessionManagerPath) {
+            $pendingOps = Get-ItemProperty -Path $sessionManagerPath -Name 'PendingFileRenameOperations' -ErrorAction SilentlyContinue
+            if ($pendingOps -and $pendingOps.PendingFileRenameOperations) {
+                $pendingFileRename = $true
+            }
         }
     }
 
     # Determine if any reboot flags are set
     $rebootFlagsDetected = $cbsRebootPending -or $wuRebootRequired -or $pendingFileRename
 
-    PrintKV "CBS RebootPending"      $(if ($cbsRebootPending) { "Yes" } else { "No" })
-    PrintKV "WU RebootRequired"      $(if ($wuRebootRequired) { "Yes" } else { "No" })
-    PrintKV "PendingFileRename"      $(if ($pendingFileRename) { "Yes" } else { "No" })
+    PrintKV "CBS RebootPending"      $(if (-not $CheckCBSRebootPending) { "Skipped" } elseif ($cbsRebootPending) { "Yes" } else { "No" })
+    PrintKV "WU RebootRequired"      $(if (-not $CheckWURebootRequired) { "Skipped" } elseif ($wuRebootRequired) { "Yes" } else { "No" })
+    PrintKV "PendingFileRename"      $(if (-not $CheckPendingFileRename) { "Skipped" } elseif ($pendingFileRename) { "Yes" } else { "No" })
     PrintKV "Reboot Flags Detected"  $(if ($rebootFlagsDetected) { "Yes" } else { "No" })
 
     # --- Uptime Check ---
