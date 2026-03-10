@@ -5,8 +5,8 @@ language: PowerShell
 runAs: SYSTEM_USER
 timeout: 5
 tags:
-  - Windows
   - Remote Access
+  - Windows
 shared: false
 favourite: false
 readme: >
@@ -14,8 +14,8 @@ readme: >
 
   Installs the OpenSSH Server Windows capability, configures the sshd service
   for automatic startup with delayed start, enables public key authentication,
-  restricts access to Administrators, and opens the Windows Firewall for SSH
-  on port 22.
+  restricts access to Administrators, and opens the Windows Firewall for SSH on
+  port 22.
 
 
   ## Usage Notes
@@ -39,3 +39,6 @@ readme: >
   - Internet access if OpenSSH capability not already present
 runtimeVariables: []
 placeholderVariables: []
+scriptId: "8340552888703545344"
+lastPushedChecksum: sha256:c182f7aae76eb7a9
+lastPushedMetaChecksum: sha256:133fb13aeeb5c7ad

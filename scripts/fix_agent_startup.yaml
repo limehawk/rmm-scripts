@@ -5,17 +5,17 @@ language: PowerShell
 runAs: SYSTEM_USER
 timeout: 5
 tags:
-  - Windows
   - Maintenance
   - RMM
+  - Windows
 shared: false
 favourite: false
 readme: >
   ## Purpose
 
   Configures the RMM agent service with proper recovery options (restart on
-  failure) and delayed automatic start to prevent startup failures on slow
-  or overloaded machines where services timeout during boot.
+  failure) and delayed automatic start to prevent startup failures on slow or
+  overloaded machines where services timeout during boot.
 
 
   ## Usage Notes
@@ -38,3 +38,6 @@ readme: >
   - RMM agent installed
 runtimeVariables: []
 placeholderVariables: []
+scriptId: "5530366567637630976"
+lastPushedChecksum: sha256:84431f39b66433a8
+lastPushedMetaChecksum: sha256:c82c9c62ea5f0c9a
