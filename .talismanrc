@@ -5,4 +5,10 @@ fileignoreconfig:
   checksum: 020320572fd96bcfb0a31b70ec6a2e577babd5e8c3e3b6470cf803533492ac25
 - filename: scripts/restic_backup_b2_install.yaml
   checksum: 2ebbfd81dd6d0e03dae3f9d8e1526cfd36637d75746b62c6e16553f27e694c18
+- filename: scripts/openssh_server_remove.yaml
+  checksum: d7bca1ae9ebd3cb60bf1ce07892f9b2aee597bcd9acfaecbd4080bf22f25cbfb
+- filename: scripts/openssh_server_remove.ps1
+  checksum: ef694bb570164fdbc6216fa88fa1da184b5ec122db69871a27849230c2336ca9
+- filename: scripts/openssh_server_setup.ps1
+  checksum: 717389b606d77b5fe1068026613598a2035ebc0b4ca1e0eb2eb09b43ed407689
 version: "1.0"
