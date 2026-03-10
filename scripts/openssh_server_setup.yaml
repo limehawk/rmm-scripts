@@ -1,0 +1,41 @@
+name: openssh_server_setup.ps1
+description: Installs and configures OpenSSH Server on Windows for remote SSH
+  access, restricted to Administrators
+language: PowerShell
+runAs: SYSTEM_USER
+timeout: 5
+tags:
+  - Windows
+  - Remote Access
+shared: false
+favourite: false
+readme: >
+  ## Purpose
+
+  Installs the OpenSSH Server Windows capability, configures the sshd service
+  for automatic startup with delayed start, enables public key authentication,
+  restricts access to Administrators, and opens the Windows Firewall for SSH
+  on port 22.
+
+
+  ## Usage Notes
+
+  - Default shell set to PowerShell for SSH sessions
+
+  - Access restricted to Administrators group via AllowGroups in sshd_config
+
+  - Comments out the default Match Group administrators block that breaks
+    per-user authorized_keys
+
+  - Uses registry key for delayed start (compatible with Server 2019)
+
+
+  ## Requirements
+
+  - Windows Server 2019+ or Windows 10 1809+
+
+  - Administrator privileges
+
+  - Internet access if OpenSSH capability not already present
+runtimeVariables: []
+placeholderVariables: []
