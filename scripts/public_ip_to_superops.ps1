@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Public IP to SuperOps                                         v1.0.0
+ SCRIPT   : Public IP to SuperOps                                         v1.0.1
  AUTHOR   : Limehawk.io
  DATE     : March 2026
  USAGE    : .\public_ip_to_superops.ps1
@@ -112,6 +112,7 @@ EXAMPLE RUN
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-03-13 v1.0.1 Fix multiline value format for Send-CustomField API
  2026-03-13 v1.0.0 Initial release
 ================================================================================
 #>
@@ -222,14 +223,7 @@ Write-Host "Country  : $country ($countryCode)"
 Write-Host "Tor Exit : $torExit"
 
 # Format multiline text for custom field
-$fieldValue = @"
-IP: $ipAddress
-Location: $location
-Hostname: $hostname
-ISP: $isp
-Country: $country ($countryCode)
-Tor Exit: $torExit
-"@
+$fieldValue = "IP: $ipAddress`nLocation: $location`nHostname: $hostname`nISP: $isp`nCountry: $country ($countryCode)`nTor Exit: $torExit"
 
 # ============================================================================
 # SUPEROPS SYNC
