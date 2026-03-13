@@ -4,9 +4,9 @@ language: Bash
 runAs: ROOT
 timeout: 15
 tags:
+  - Linux
   - Network
   - macOS
-  - Linux
 shared: true
 favourite: false
 readme: >
@@ -42,3 +42,6 @@ readme: >
   - Internet connectivity to reach wtfismyip.com
 runtimeVariables: []
 placeholderVariables: []
+scriptId: "8476301307730685952"
+lastPushedChecksum: sha256:94948ee4aa84ac43
+lastPushedMetaChecksum: sha256:de6531d3cb14181c
