@@ -44,3 +44,6 @@ readme: >
   - SuperOps custom field must exist: Public IP (Multiline Text)
 runtimeVariables: []
 placeholderVariables: []
+scriptId: "582443736728412160"
+lastPushedChecksum: sha256:9d4ea1ab2703e73e
+lastPushedMetaChecksum: sha256:61bfe99929ca3aee
