@@ -1,0 +1,33 @@
+name: Test Sync Probe
+description: Validates the superops-script-sync pipeline between GitHub and SuperOps
+language: PowerShell
+runAs: SYSTEM_USER
+timeout: 10
+tags:
+  - Testing
+  - Sync
+  - Validation
+favourite: false
+shared: false
+readme: |
+  ## Description
+  A lightweight test script used to validate that the sync pipeline is working
+  correctly. Outputs basic system info and exits.
+
+  ## When to Use
+  - After initial setup of superops-script-sync
+  - After updating sync credentials
+  - When troubleshooting sync issues
+
+  ## Expected Output
+  ```
+  Sync test probe - 2026-03-14 10:30:00
+  Hostname: WORKSTATION-01
+  OS: Microsoft Windows NT 10.0.22631.0
+  Test complete.
+  ```
+
+  ## Notes
+  Safe to run on any Windows endpoint. No system changes are made.
+runtimeVariables: []
+placeholderVariables: []
