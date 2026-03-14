@@ -1,14 +1,12 @@
 name: Test Sync Probe
 description: Validates the superops-script-sync pipeline between GitHub and SuperOps
 language: PowerShell
+tags:
+- Testing
+- Sync
+- Validation
 runAs: SYSTEM_USER
 timeout: 10
-tags:
-  - Testing
-  - Sync
-  - Validation
-favourite: false
-shared: false
 readme: |
   ## Description
   A lightweight test script used to validate that the sync pipeline is working
@@ -29,5 +27,8 @@ readme: |
 
   ## Notes
   Safe to run on any Windows endpoint. No system changes are made.
-runtimeVariables: []
-placeholderVariables: []
+favourite: false
+shared: false
+scriptId: '582647814599286784'
+lastPushedChecksum: sha256:1a98881fce736ee9
+lastPushedMetaChecksum: sha256:98cadb45284aad38

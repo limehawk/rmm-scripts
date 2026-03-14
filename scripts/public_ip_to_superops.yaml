@@ -1,49 +1,31 @@
 name: public_ip_to_superops.ps1
 description: Fetches public IP info from wtfismyip.com and syncs to SuperOps custom field
 language: PowerShell
+tags:
+- Network
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Queries wtfismyip.com/json to retrieve public IP address, ISP, geolocation,
-  and hostname information. Formats the results into a readable multiline string
-  and sends it to a SuperOps custom field for network visibility and auditing.
-
+  Queries wtfismyip.com/json to retrieve public IP address, ISP, geolocation, and hostname information. Formats the results into a readable multiline string and sends it to a SuperOps custom field for network visibility and auditing.
 
   Usage Notes
-
   -----------
-
   - Queries wtfismyip.com/json for public IP details
-
   - Formats IP, Location, Hostname, ISP, Country, and Tor Exit status
-
   - Sends formatted multiline text to SuperOps "Public IP" custom field
-
   - No external binaries required (uses Invoke-RestMethod)
 
-
   Requirements
-
   ------------
-
   - SuperOps PowerShell module must be available and authenticated
-
   - Internet connectivity to reach wtfismyip.com
-
   - Windows with PowerShell 5.1+ or PowerShell 7+
-
   - SuperOps custom field must exist: Public IP (Multiline Text)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "582443736728412160"
-lastPushedChecksum: sha256:9d4ea1ab2703e73e
+favourite: false
+shared: true
+scriptId: '582443736728412160'
+lastPushedChecksum: sha256:e0c1fbe387585960
 lastPushedMetaChecksum: sha256:61bfe99929ca3aee
