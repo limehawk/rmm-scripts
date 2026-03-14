@@ -1,42 +1,27 @@
 name: printers_nuke_all.bat
-description: Removes all printers, ports, and unused drivers from Windows
-  (legacy batch script)
+description: Removes all printers, ports, and unused drivers from Windows (legacy batch script)
 language: Bat
+tags:
+- Cleanup
+- Services
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Services
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Removes ALL installed printers, their associated TCP/IP ports, and unused
-  printer drivers from Windows. This is a destructive operation that cannot be
-  undone.
-
+  Removes ALL installed printers, their associated TCP/IP ports, and unused printer drivers from Windows. This is a destructive operation that cannot be undone.
 
   Usage Notes:
-
   - Supports both Windows XP and Windows 7+ systems
-
-  - Uses VBScript-based printer management tools (prnmngr.vbs, prnport.vbs,
-  prndrvr.vbs)
-
+  - Uses VBScript-based printer management tools (prnmngr.vbs, prnport.vbs, prndrvr.vbs)
   - Creates temporary files in C:\ during port enumeration (auto-cleaned)
 
-
   Requirements:
-
   - Windows operating system
-
   - Administrator privileges
-
   - Print Spooler service running
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "3659744570500739072"
+favourite: false
+shared: true
+scriptId: '3659744570500739072'
 lastPushedChecksum: sha256:9d01900d10e6bf2a
-lastPushedMetaChecksum: sha256:c93db6557aca22ec
+lastPushedMetaChecksum: sha256:4f4d864d8637d5c4

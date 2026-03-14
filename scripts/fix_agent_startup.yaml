@@ -1,25 +1,17 @@
 name: fix_agent_startup.ps1
-description: Fixes RMM agent service startup with recovery options and delayed
-  start to prevent boot failures
+description: Fixes RMM agent service startup with recovery options and delayed start to prevent boot failures
 language: PowerShell
+tags:
+- Maintenance
+- RMM
+- Windows
 runAs: SYSTEM_USER
 timeout: 5
-tags:
-  - Maintenance
-  - RMM
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Configures the RMM agent service with proper recovery options (restart on
-  failure) and delayed automatic start to prevent startup failures on slow or
-  overloaded machines where services timeout during boot.
-
+  Configures the RMM agent service with proper recovery options (restart on failure) and delayed automatic start to prevent startup failures on slow or overloaded machines where services timeout during boot.
 
   ## Usage Notes
-
   - Default service name is "limehawk" — change $ServiceName variable for
     other RMM agents
 
@@ -28,16 +20,12 @@ readme: >
 
   - Reports recent crash events from Event Viewer for diagnosis
 
-
   ## Requirements
-
   - Windows OS
-
   - Administrator privileges
-
   - RMM agent installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "5530366567637630976"
+favourite: false
+shared: false
+scriptId: '5530366567637630976'
 lastPushedChecksum: sha256:84431f39b66433a8
-lastPushedMetaChecksum: sha256:c82c9c62ea5f0c9a
+lastPushedMetaChecksum: sha256:3c34580e8e0553a3

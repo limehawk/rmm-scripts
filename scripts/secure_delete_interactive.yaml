@@ -1,93 +1,58 @@
 name: secure_delete_interactive.ps1
-description: Interactive wizard for secure file deletion with DoD-compliant
-  overwriting and certificate generation
+description: Interactive wizard for secure file deletion with DoD-compliant overwriting and certificate generation
 language: PowerShell
+tags:
+- Cleanup
+- Interactive
+- Security
+- Windows
 runAs: LOGGED_IN_USER
 timeout: 30
-tags:
-  - Cleanup
-  - Interactive
-  - Security
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   # Secure Delete Interactive
 
-
-  Interactive wizard for securely deleting files using Microsoft SDelete with
-  DoD 5220.22-M compliant overwriting.
-
+  Interactive wizard for securely deleting files using Microsoft SDelete with DoD 5220.22-M compliant overwriting.
 
   ## Features
 
-
   - Step-by-step guided wizard
-
   - Dry run mode (default) to preview before deleting
-
   - SHA-256, SHA-1, and MD5 hashing of files before deletion
-
   - Comprehensive certificate of destruction (text and HTML)
-
   - System information capture for audit trail
-
   - Auto-installs SDelete via winget if not present
-
 
   ## Usage
 
-
   Run the script interactively - it will prompt for:
 
-
   1. **Target path** - File or folder to delete
-
   2. **Operator name** - For legal documentation
-
   3. **Case reference** - Optional legal case number
-
   4. **Witness name** - Optional witness
-
   5. **Notes** - Optional additional notes
-
   6. **Overwrite passes** - Number of passes (default: 3)
-
   7. **Recursive** - Process subfolders (default: yes)
-
   8. **HTML certificate** - Generate HTML version (default: yes)
-
   9. **Output directory** - Where to save certificates
-
   10. **Dry run** - Preview mode (default: yes)
-
 
   ## Requirements
 
-
   - Must run as logged-in user (interactive prompts)
-
   - Microsoft SDelete (auto-installed if missing)
-
   - PowerShell 5.1+
-
 
   ## Certificate Output
 
-
   Generates comprehensive documentation including:
-
   - File inventory with hashes
-
   - System information
-
   - Deletion execution log
-
   - Post-deletion verification
-
   - Signature blocks for legal attestation
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "3784411666984587264"
+favourite: false
+shared: false
+scriptId: '3784411666984587264'
 lastPushedChecksum: sha256:e03230c4004980d7
-lastPushedMetaChecksum: sha256:1992075c8ef201a1
+lastPushedMetaChecksum: sha256:59fab500ad163f73

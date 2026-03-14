@@ -1,46 +1,30 @@
 name: nircmd_screenshot.ps1
 description: Captures screenshot of current display using NirSoft NirCmd utility
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Captures a screenshot of the current display using NirSoft's NirCmd utility.
-  Downloads NirCmd if not already present, then saves a timestamped screenshot.
-
+  Captures a screenshot of the current display using NirSoft's NirCmd utility. Downloads NirCmd if not already present, then saves a timestamped screenshot.
 
   Usage Notes
-
   -----------
-
   - Screenshots saved to C:\limehawk\nirsoft\screenshots by default
-
   - Filename format: screenshot_YYYYMMDD-HHmmss.png
-
   - Automatically downloads correct NirCmd version (x64 or x86)
-
   - NirCmd is downloaded from official NirSoft website
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server
-
   - Internet access for NirCmd download
-
   - Write permissions to destination folder
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059111493754880"
+favourite: false
+shared: false
+scriptId: '259059111493754880'
 lastPushedChecksum: sha256:1796923bd56b59bc
-lastPushedMetaChecksum: sha256:6afd90c0b43bd856
+lastPushedMetaChecksum: sha256:c3659ede79a1c633

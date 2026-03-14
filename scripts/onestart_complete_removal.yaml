@@ -1,55 +1,33 @@
 name: onestart_complete_removal.ps1
-description: Completely removes OneStart.ai PUP from Windows using NirSoft
-  UninstallView and manual cleanup
+description: Completely removes OneStart.ai PUP from Windows using NirSoft UninstallView and manual cleanup
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Completely removes OneStart.ai browser/PUP from Windows systems. First
-  attempts a clean uninstall via NirSoft UninstallView, then performs manual
-  cleanup of any remaining processes, files, registry keys, and scheduled tasks.
-
+  Completely removes OneStart.ai browser/PUP from Windows systems. First attempts a clean uninstall via NirSoft UninstallView, then performs manual cleanup of any remaining processes, files, registry keys, and scheduled tasks.
 
   Usage Notes
-
   -----------
-
   - Downloads NirSoft UninstallView (architecture-appropriate)
-
   - Attempts silent uninstall of OneStart via UninstallView
-
   - Terminates any running OneStart/DBar processes
-
   - Removes scheduled tasks matching OneStart patterns
-
   - Removes leftover files and folders from AppData, ProgramData, Program Files
-
-  - Backs up registry keys to SystemDrive\limehawk\registry_backup before
-  removal
-
+  - Backs up registry keys to SystemDrive\limehawk\registry_backup before removal
   - Cleans up registry keys in HKCU and HKLM
 
-
   Requirements
-
   ------------
-
   - Windows with PowerShell 5.1 or later
-
   - Administrator privileges
-
   - Internet access for UninstallView download
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6295817723329372160"
+favourite: false
+shared: false
+scriptId: '6295817723329372160'
 lastPushedChecksum: sha256:d64a71d8b91adcc8
-lastPushedMetaChecksum: sha256:750b916eb257bfb5
+lastPushedMetaChecksum: sha256:2ae83ddcd7cf23f1

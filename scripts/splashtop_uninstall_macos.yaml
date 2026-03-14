@@ -1,42 +1,28 @@
 name: splashtop_uninstall_macos.sh
 description: Completely removes Splashtop Streamer and all components from macOS
 language: Bash
+tags:
+- Cleanup
+- Mac
+- Software
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Mac
-  - Software
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Completely removes Splashtop Streamer from macOS including all related files,
-  launch daemons, kernel extensions, and preferences. Performs a thorough
-  cleanup of all Splashtop components.
-
+  Completely removes Splashtop Streamer from macOS including all related files, launch daemons, kernel extensions, and preferences. Performs a thorough cleanup of all Splashtop components.
 
   Usage Notes:
-
   - Run with sudo privileges
-
   - Kills all running Splashtop processes
-
   - Removes applications, daemons, kernel extensions, audio plugins
-
   - Clears preferences, caches, and package receipts
-
   - Data removal is permanent
 
-
   Requirements:
-
   - macOS
-
   - Root/sudo privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059192137637888"
+favourite: false
+shared: false
+scriptId: '259059192137637888'
 lastPushedChecksum: sha256:b9213924115309e4
-lastPushedMetaChecksum: sha256:faa0898e4ae6dcd3
+lastPushedMetaChecksum: sha256:4d212bcdbc60e02a

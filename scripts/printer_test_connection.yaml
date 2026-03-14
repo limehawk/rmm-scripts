@@ -1,41 +1,27 @@
 name: printer_test_connection.sh
 description: Tests network printer connectivity via ping and reports pass/fail status
 language: Bash
+tags:
+- Services
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Services
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Tests network connectivity to configured printers by pinging their
-  hostnames/IPs. Reports success/failure for each printer and optionally sends
-  an email alert if any tests fail.
-
+  Tests network connectivity to configured printers by pinging their hostnames/IPs. Reports success/failure for each printer and optionally sends an email alert if any tests fail.
 
   Usage Notes:
-
   - Configure PRINTERS array with printer hostnames or IP addresses
-
   - Performs DNS lookup for failed connections as diagnostics
-
   - Optional email alerts via sendmail when failures occur
-
   - Default: 2 ping packets with 5 second timeout
 
-
   Requirements:
-
   - macOS or Linux
-
   - Network access to printer hosts
-
   - (Optional) sendmail for email alerts
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059148156166144"
+favourite: false
+shared: false
+scriptId: '259059148156166144'
 lastPushedChecksum: sha256:8c85fe824e4c808c
-lastPushedMetaChecksum: sha256:7fcb876e1fd175a7
+lastPushedMetaChecksum: sha256:ae9868822391c9a2

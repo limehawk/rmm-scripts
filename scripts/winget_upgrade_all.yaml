@@ -1,48 +1,31 @@
 name: winget_upgrade_all.ps1
 description: Upgrades all winget-managed packages to latest versions with logging
 language: PowerShell
+tags:
+- Patch
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Patch
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Upgrades all winget-managed packages to their latest versions. Includes
-  logging and automatic cleanup of old log files.
-
+  Upgrades all winget-managed packages to their latest versions. Includes logging and automatic cleanup of old log files.
 
   Usage Notes
-
   -----------
-
   - Runs winget upgrade --all with silent options
-
   - Accepts all package agreements automatically
-
   - Logs output to Windows temp directory
-
   - Cleans up logs older than 14 days
-
   - Locates winget executable in WindowsApps
 
-
   Requirements
-
   ------------
-
   - Windows 10 1809+ or Windows 11 or Server 2022
-
   - Administrator privileges
-
   - Winget (App Installer) installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059247913492480"
+favourite: false
+shared: false
+scriptId: '259059247913492480'
 lastPushedChecksum: sha256:a012ab90c5f2a0d1
-lastPushedMetaChecksum: sha256:eceee64fd7dc9662
+lastPushedMetaChecksum: sha256:d987c3a03c98431d

@@ -1,14 +1,11 @@
 name: wol_status_check.ps1
-description: Checks Wake-on-LAN status at BIOS and OS levels for Dell, HP, and
-  Lenovo systems
+description: Checks Wake-on-LAN status at BIOS and OS levels for Dell, HP, and Lenovo systems
 language: PowerShell
+tags:
+- Network
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Windows
-shared: false
-favourite: false
 readme: |
   Purpose
   -------
@@ -30,8 +27,8 @@ readme: |
   - Administrator privileges
   - Internet access for module installation
   - Supported manufacturer: Dell, HP, or Lenovo
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059262794883072"
+favourite: false
+shared: false
+scriptId: '259059262794883072'
 lastPushedChecksum: sha256:0a04b378725e2ef0
-lastPushedMetaChecksum: sha256:54dc9ca4e5cb1e49
+lastPushedMetaChecksum: sha256:d242dff52d189bc9

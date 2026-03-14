@@ -1,57 +1,35 @@
 name: power_profile_always_on.ps1
-description: Creates custom always-on power plan for workstations that should
-  never sleep on AC power
+description: Creates custom always-on power plan for workstations that should never sleep on AC power
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Creates a custom "Always On - Limehawk" power plan optimized for workstations
-  that should never sleep while on AC power. If the plan already exists, it will
-  be reused and reconfigured. The plan is based on High Performance settings.
-
+  Creates a custom "Always On - Limehawk" power plan optimized for workstations that should never sleep while on AC power. If the plan already exists, it will be reused and reconfigured. The plan is based on High Performance settings.
 
   Usage Notes
-
   -----------
-
   - Creates or reuses custom power plan based on High Performance
-
   - Sets display, disk, standby, and hibernate timeouts
-
   - Disables hibernation on desktops (no battery)
-
   - Default settings: Display 30min, Disk 60min, Sleep never (AC)
-
   - Windows 11: Custom plans work but are hidden in Settings app
-
   - To verify: Run control powercfg.cpl or powercfg /getactivescheme
 
-
   Configurable options (hardcoded in script):
-
   - Display/disk/standby/hibernate timeouts for AC and DC power
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server 2016+
-
   - Administrator privileges
-
   - High Performance power plan must exist
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059132276531200"
+favourite: false
+shared: false
+scriptId: '259059132276531200'
 lastPushedChecksum: sha256:e1a77ca471b39412
-lastPushedMetaChecksum: sha256:f075cce3d6aaf355
+lastPushedMetaChecksum: sha256:4f4b348fc701606f

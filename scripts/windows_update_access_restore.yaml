@@ -1,45 +1,30 @@
 name: windows_update_access_restore.ps1
 description: Removes SetDisableUXWUAccess registry key to restore Windows Update access
 language: PowerShell
+tags:
+- Patch
+- Recovery
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Patch
-  - Recovery
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Removes the SetDisableUXWUAccess registry key to restore user access to
-  Windows Update settings in the Settings app.
-
+  Removes the SetDisableUXWUAccess registry key to restore user access to Windows Update settings in the Settings app.
 
   Usage Notes
-
   -----------
-
   - Checks for SetDisableUXWUAccess registry key
-
   - Removes it if present
-
   - Reports result (key removed or did not exist)
-
   - Counterpart to windows_update_access_toggle script
 
-
   Requirements
-
   ------------
-
   - Windows 10/11
-
   - Administrator privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059243740160000"
+favourite: false
+shared: false
+scriptId: '259059243740160000'
 lastPushedChecksum: sha256:b8d790b668a1b512
-lastPushedMetaChecksum: sha256:4e16bba528724737
+lastPushedMetaChecksum: sha256:0854ce2c9a34d499

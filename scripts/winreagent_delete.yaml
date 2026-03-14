@@ -1,15 +1,12 @@
 name: winreagent_delete.bat
-description: Deletes the C:\$WinREAgent folder used during Windows Recovery
-  Environment updates
+description: Deletes the C:\$WinREAgent folder used during Windows Recovery Environment updates
 language: Bat
+tags:
+- Cleanup
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Disk
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -27,8 +24,8 @@ readme: |
   ------------
   - Windows 10/11
   - Administrator privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6174064285322764288"
+favourite: false
+shared: true
+scriptId: '6174064285322764288'
 lastPushedChecksum: sha256:c8ec796736564a31
-lastPushedMetaChecksum: sha256:4a919b72a0cacfda
+lastPushedMetaChecksum: sha256:1c55482deb84e7a2

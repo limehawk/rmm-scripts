@@ -1,43 +1,28 @@
 name: superops_agent_install.ps1
 description: Downloads and installs SuperOps RMM agent on Windows via MSI installer
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Downloads and installs the SuperOps RMM agent on Windows using the MSI
-  installer. Designed for automated deployment where the agent download URL is
-  provided as an environment variable.
-
+  Downloads and installs the SuperOps RMM agent on Windows using the MSI installer. Designed for automated deployment where the agent download URL is provided as an environment variable.
 
   Usage Notes:
-
   - AGENT_URL environment variable must be set by RMM platform
-
   - Uses silent installation mode (/qn) for unattended deployment
-
   - Automatically accepts license agreement
-
   - Cleans up installer file after successful installation
 
-
   Requirements:
-
   - PowerShell 5.1 or later
-
   - Administrator privileges
-
   - Internet access
-
   - AGENT_URL environment variable set by RMM platform
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059194989764608"
+favourite: false
+shared: false
+scriptId: '259059194989764608'
 lastPushedChecksum: sha256:52ab8410999a4df7
-lastPushedMetaChecksum: sha256:ed5375dc726ed1b8
+lastPushedMetaChecksum: sha256:74dc830f2c92d67a

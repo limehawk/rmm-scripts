@@ -1,54 +1,33 @@
 name: speedtest_to_superops.ps1
 description: Runs Ookla Speedtest and syncs results to SuperOps custom fields
 language: PowerShell
+tags:
+- Network
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Software
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Downloads and runs Ookla Speedtest CLI, captures network performance metrics,
-  and synchronizes the results to SuperOps custom fields for monitoring and
-  reporting. Designed for RMM automation to track internet connectivity quality.
-
+  Downloads and runs Ookla Speedtest CLI, captures network performance metrics, and synchronizes the results to SuperOps custom fields for monitoring and reporting. Designed for RMM automation to track internet connectivity quality.
 
   Usage Notes
-
   -----------
-
   - Automatically downloads Speedtest CLI if not present
-
-  - Sends four custom fields to SuperOps: Download Speed, Upload Speed, ISP,
-  Speedtest URL
-
+  - Sends four custom fields to SuperOps: Download Speed, Upload Speed, ISP, Speedtest URL
   - Reports detailed metrics to console (ping, jitter, packet loss, server info)
-
   - Speed values are in Mbps with full decimal precision
 
-
   Requirements
-
   ------------
-
   - SuperOps PowerShell module must be available and authenticated
-
   - Internet connectivity for downloading CLI and running speedtest
-
   - Write permissions to TEMP directory
-
   - Windows with PowerShell 5.1+ or PowerShell 7+
-
-  - SuperOps custom fields must exist: Download Speed, Upload Speed, ISP,
-  Speedtest URL
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6533495977667035136"
+  - SuperOps custom fields must exist: Download Speed, Upload Speed, ISP, Speedtest URL
+favourite: false
+shared: true
+scriptId: '6533495977667035136'
 lastPushedChecksum: sha256:cceb9f23f3209983
-lastPushedMetaChecksum: sha256:7e9adbd35bc322bc
+lastPushedMetaChecksum: sha256:17ca6bab63300a45

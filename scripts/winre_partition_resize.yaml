@@ -1,14 +1,11 @@
 name: winre_partition_resize.ps1
-description: Extends WinRE partition by 250MB to resolve Windows update issues
-  like KB5034441
+description: Extends WinRE partition by 250MB to resolve Windows update issues like KB5034441
 language: PowerShell
+tags:
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Disk
-  - Windows
-shared: false
-favourite: false
 readme: |
   Purpose
   -------
@@ -31,8 +28,8 @@ readme: |
   - Administrator privileges
   - Sufficient free space on OS partition
   - WinRE must be enabled before running
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059249217921024"
+favourite: false
+shared: false
+scriptId: '259059249217921024'
 lastPushedChecksum: sha256:193e2e8a68f2a4ce
-lastPushedMetaChecksum: sha256:ebf501235090adf2
+lastPushedMetaChecksum: sha256:d876f261a3b9a744

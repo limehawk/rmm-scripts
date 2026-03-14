@@ -1,41 +1,26 @@
 name: edge_suppress_policies_system.ps1
 description: Applies machine-wide policies to suppress Edge nagging behaviors
 language: PowerShell
+tags:
+- Applications
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Applies machine-wide policies to suppress Microsoft Edge nagging behaviors.
-  Stops Edge from prompting to become default, auto-importing from other
-  browsers, running in background, and showing promotional UI elements. Run as
-  SYSTEM via RMM - this is the machine policy script.
-
+  Applies machine-wide policies to suppress Microsoft Edge nagging behaviors. Stops Edge from prompting to become default, auto-importing from other browsers, running in background, and showing promotional UI elements. Run as SYSTEM via RMM - this is the machine policy script.
 
   ## Usage
-
   - All options default to `$true` (suppress everything)
-
   - Set individual options to `$false` to keep specific Edge behaviors
-
-  - Disables UI prompts, features (Collections, Shopping, Copilot), background
-  behavior, and scheduled tasks
-
+  - Disables UI prompts, features (Collections, Shopping, Copilot), background behavior, and scheduled tasks
 
   ## Requirements
-
   - PowerShell 5.1 or later
-
   - Administrator privileges required (runs as SYSTEM via RMM)
-
   - Windows 10/11 with Microsoft Edge installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "7562203720498790400"
+favourite: false
+shared: false
+scriptId: '7562203720498790400'
 lastPushedChecksum: sha256:1151af7b4680d90b
-lastPushedMetaChecksum: sha256:5bd3e5bb7f4b7f68
+lastPushedMetaChecksum: sha256:e51b23cd805f171a

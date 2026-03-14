@@ -1,60 +1,37 @@
 name: power_profile_macos.sh
 description: Configures always-on power settings for macOS laptops and desktops
 language: Bash
+tags:
+- Mac
+- Maintenance
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Maintenance
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Configures an "always-on" power profile for macOS laptops and desktops. Sets
-  display sleep, disk sleep, system sleep, and hibernation settings based on
-  whether the device has a battery (laptop vs desktop).
-
+  Configures an "always-on" power profile for macOS laptops and desktops. Sets display sleep, disk sleep, system sleep, and hibernation settings based on whether the device has a battery (laptop vs desktop).
 
   Usage Notes
-
   -----------
-
   Desktop (no battery):
-
   - Display Sleep (AC): 30 minutes
-
   - Disk Sleep (AC): 60 minutes
-
   - System Sleep (AC): Never
-
   - Hibernation: Disabled
 
-
   Laptop (with battery):
-
   - Display Sleep (AC): 30 minutes, (DC): 10 minutes
-
   - Disk Sleep (AC): 60 minutes, (DC): 30 minutes
-
   - System Sleep (DC): 20 minutes
-
   - Hibernation: Enabled (default)
 
-
   Requirements
-
   ------------
-
   - macOS 10.12 or later
-
   - Root/sudo privileges
-
   - pmset utility (standard macOS component)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059133677428736"
+favourite: false
+shared: false
+scriptId: '259059133677428736'
 lastPushedChecksum: sha256:9072c99f1f6610aa
-lastPushedMetaChecksum: sha256:ae318b1c25fcc142
+lastPushedMetaChecksum: sha256:24fc151fabf7b143

@@ -1,52 +1,31 @@
 name: windows11_compatibility_checker.ps1
-description: Comprehensive Windows 11 compatibility checker with TPM,
-  SecureBoot, RAM, CPU validation
+description: Comprehensive Windows 11 compatibility checker with TPM, SecureBoot, RAM, CPU validation
 language: PowerShell
+tags:
+- Monitoring
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Monitoring
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Evaluates system compatibility for Windows 11 upgrade by checking hardware
-  requirements including TPM 2.0, Secure Boot, CPU compatibility, RAM, storage,
-  and UEFI firmware. Identifies blockers preventing upgrade and provides
-  recommended actions. Designed for RMM deployment to assess upgrade readiness
-  across fleet of devices.
-
+  Evaluates system compatibility for Windows 11 upgrade by checking hardware requirements including TPM 2.0, Secure Boot, CPU compatibility, RAM, storage, and UEFI firmware. Identifies blockers preventing upgrade and provides recommended actions. Designed for RMM deployment to assess upgrade readiness across fleet of devices.
 
   Usage Notes
-
   -----------
-
   - Configurable minimum requirements (default: 4GB RAM, 64GB storage)
-
   - Optional auto-fix capability for TPM and Secure Boot (disabled by default)
-
   - Check-only mode available for read-only assessment
-
   - Reports all blockers with specific remediation steps
-
   - Exit codes indicate compatibility status
 
-
   Requirements
-
   ------------
-
   - PowerShell 5.1 or later
-
   - Administrator privileges required
-
   - Windows 10 or Windows 11 operating system
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059237931048960"
+favourite: false
+shared: false
+scriptId: '259059237931048960'
 lastPushedChecksum: sha256:0ed5896400e0cfd8
-lastPushedMetaChecksum: sha256:587c2a3a59d3a866
+lastPushedMetaChecksum: sha256:0f2ec8d338c3e31c

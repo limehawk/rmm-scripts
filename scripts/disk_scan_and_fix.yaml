@@ -1,41 +1,27 @@
 name: disk_scan_and_fix.sh
 description: Comprehensive disk and volume health check for macOS using diskutil
 language: Bash
+tags:
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Disk
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Performs a comprehensive health check on all mounted disks and volumes on
-  macOS. Verifies partition maps, file systems, and SMART status where
-  supported.
-
+  Performs a comprehensive health check on all mounted disks and volumes on macOS. Verifies partition maps, file systems, and SMART status where supported.
 
   ## Usage Notes
-
   - Auto-detects all mounted disks
-
   - Checks partition map health
-
   - Verifies HFS and APFS volumes
-
   - Reports SMART status when available
-
   - Read-only operations (verification only)
 
-
   ## Requirements
-
   - macOS operating system
-
   - Root/sudo privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "5830142789672906752"
+favourite: false
+shared: true
+scriptId: '5830142789672906752'
 lastPushedChecksum: sha256:1391750fc9b31938
-lastPushedMetaChecksum: sha256:9a4c036fbd871f40
+lastPushedMetaChecksum: sha256:53586cd89f03cc12

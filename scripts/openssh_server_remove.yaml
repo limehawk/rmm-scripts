@@ -1,39 +1,26 @@
 name: openssh_server_remove.ps1
 description: Removes OpenSSH Server, firewall rule, and cleans up config and host keys
 language: PowerShell
+tags:
+- Remote Access
+- Windows
 runAs: SYSTEM_USER
 timeout: 5
-tags:
-  - Remote Access
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Stops and removes the OpenSSH Server from Windows. Removes the firewall rule,
-  uninstalls the Windows capability, and cleans up the sshd config directory
-  including host keys.
-
+  Stops and removes the OpenSSH Server from Windows. Removes the firewall rule, uninstalls the Windows capability, and cleans up the sshd config directory including host keys.
 
   ## Usage Notes
-
   - Removes firewall rule OpenSSH-Server-In-TCP
-
   - Deletes C:\ProgramData\ssh (config, host keys, authorized_keys)
-
   - Removes default shell registry key
-
   - Safe to run if OpenSSH is already uninstalled (exits 0)
 
-
   ## Requirements
-
   - Windows Server 2019+ or Windows 10 1809+
-
   - Administrator privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6700531945296977920"
+favourite: false
+shared: false
+scriptId: '6700531945296977920'
 lastPushedChecksum: sha256:71f9a649c4db3f9b
-lastPushedMetaChecksum: sha256:4973d89bd99bc59e
+lastPushedMetaChecksum: sha256:a21d23e59f9d37eb

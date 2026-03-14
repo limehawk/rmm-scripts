@@ -1,3 +1,7 @@
-scriptId: "1356766166757322752"
+name: reboot_force_now
+language: PowerShell
+runAs: SYSTEM_USER
+timeout: 15
+scriptId: '1356766166757322752'
 lastPushedChecksum: sha256:eba09f277fefc277
-lastPushedMetaChecksum: sha256:d21e4a6a52735f5b
+lastPushedMetaChecksum: sha256:17e7bce57ba5c99a

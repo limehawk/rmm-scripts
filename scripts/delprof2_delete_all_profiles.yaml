@@ -1,42 +1,28 @@
 name: delprof2_delete_all_profiles.ps1
-description: Deletes ALL Windows user profiles except protected ones (gaia,
-  administrator) using DelProf2
+description: Deletes ALL Windows user profiles except protected ones (gaia, administrator) using DelProf2
 language: PowerShell
+tags:
+- Administration
+- Cleanup
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Cleanup
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Deletes ALL Windows user profiles except protected ones (gaia, administrator).
-  Uses DelProf2 utility downloaded directly from helgeklein.com.
-
+  Deletes ALL Windows user profiles except protected ones (gaia, administrator). Uses DelProf2 utility downloaded directly from helgeklein.com.
 
   ## Usage Notes
-
   - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
-
   - Always protects: gaia and administrator profiles
-
   - Downloads DelProf2 directly (no Chocolatey required)
-
   - Automatically cleans up cached files after execution
 
-
   ## Requirements
-
   - Windows 10/11
-
   - Administrator privileges
-
   - Internet access for DelProf2 download from helgeklein.com
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "7029137174820597760"
+favourite: false
+shared: true
+scriptId: '7029137174820597760'
 lastPushedChecksum: sha256:04d9f20eba05065d
-lastPushedMetaChecksum: sha256:02e85d2f37615be1
+lastPushedMetaChecksum: sha256:3b5a1282efd0311c

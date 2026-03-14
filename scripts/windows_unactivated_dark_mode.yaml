@@ -1,49 +1,31 @@
 name: windows_unactivated_dark_mode.ps1
 description: Sets wallpaper and dark mode on non-activated Windows 11 via registry
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Bypasses the locked personalization settings on non-activated Windows 11 by
-  applying wallpaper and dark mode settings directly via registry. Also
-  optionally configures UTC hardware clock for dual-boot Linux compatibility.
-
+  Bypasses the locked personalization settings on non-activated Windows 11 by applying wallpaper and dark mode settings directly via registry. Also optionally configures UTC hardware clock for dual-boot Linux compatibility.
 
   Usage Notes
-
   -----------
-
   - Downloads wallpaper from configured URL to Public Pictures
-
   - Sets dark mode for both Apps and System themes
-
   - Restarts Explorer to apply theme changes immediately
-
   - Optional UTC clock fix for dual-boot systems
-
   - Configure inputs: wallpaperUrl, wallpaperPath, enableDarkMode, fixUtcClock
 
-
   Requirements
-
   ------------
-
   - PowerShell 5.1 or later
-
   - Administrator privileges
-
   - Internet access for wallpaper download
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059241932414976"
+favourite: false
+shared: false
+scriptId: '259059241932414976'
 lastPushedChecksum: sha256:f2143762b2c36743
-lastPushedMetaChecksum: sha256:8180fc72ca2c5d8b
+lastPushedMetaChecksum: sha256:e94a7e18b7b54f4e

@@ -1,41 +1,27 @@
 name: screenshot_macos.sh
 description: Captures screenshot of all displays on macOS with timestamped filename
 language: Bash
+tags:
+- Mac
+- Maintenance
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Maintenance
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Captures a screenshot on macOS and saves it with a timestamped filename. Uses
-  the native screencapture utility for silent capture. Designed for RMM
-  deployment to capture system state for troubleshooting.
-
+  Captures a screenshot on macOS and saves it with a timestamped filename. Uses the native screencapture utility for silent capture. Designed for RMM deployment to capture system state for troubleshooting.
 
   Usage Notes:
-
   - Screenshots saved to /tmp/screenshots/ (auto-cleaned on reboot)
-
   - Filename format: screenshot_YYYYMMDD_HHMMSS.png
-
   - Silent capture enabled (-x flag, no shutter sound)
-
   - May capture sensitive on-screen content
 
-
   Requirements:
-
   - macOS 10.12 or later
-
   - screencapture utility (standard macOS component)
-
   - Screen Recording permission may be required (System Preferences > Security)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059167751954432"
+favourite: false
+shared: false
+scriptId: '259059167751954432'
 lastPushedChecksum: sha256:280df0bae5ceebc6
-lastPushedMetaChecksum: sha256:335e8f336158f79f
+lastPushedMetaChecksum: sha256:a2c2a4915ba9b624

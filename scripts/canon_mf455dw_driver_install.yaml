@@ -1,45 +1,27 @@
 name: canon_mf455dw_driver_install.ps1
-description: Downloads and installs Canon imageCLASS MF455dw printer drivers
-  with optional queue creation
+description: Downloads and installs Canon imageCLASS MF455dw printer drivers with optional queue creation
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Downloads the Canon imageCLASS MF455dw MF Driver package from Canon's CDN,
-  extracts it, and installs the UFR II LT printer driver to the Windows driver
-  store using pnputil. Optionally creates a TCP/IP printer queue if an IP
-  address is specified.
-
+  Downloads the Canon imageCLASS MF455dw MF Driver package from Canon's CDN, extracts it, and installs the UFR II LT printer driver to the Windows driver store using pnputil. Optionally creates a TCP/IP printer queue if an IP address is specified.
 
   ## Usage Notes
-
-  - Configure via hardcoded variables: `$driverUrl`, `$printerIp`,
-  `$printerName`, `$installScanner`
-
+  - Configure via hardcoded variables: `$driverUrl`, `$printerIp`, `$printerName`, `$installScanner`
   - Driver extracts to C:\Temp\CanonMF455dw and is cleaned up after installation
-
-  - Leave `$printerIp` empty to install driver only without creating a printer
-  queue
-
+  - Leave `$printerIp` empty to install driver only without creating a printer queue
 
   ## Requirements
-
   - Windows 10/11 or Windows Server 2016+
-
   - Administrator privileges
-
   - Network connectivity to Canon CDN (gdlp01.c-wss.com)
-
   - curl.exe (included in Windows 10 1803+)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059056091193344"
+favourite: false
+shared: false
+scriptId: '259059056091193344'
 lastPushedChecksum: sha256:9422dc3b1c79a3bf
-lastPushedMetaChecksum: sha256:e97b1fd81e787a72
+lastPushedMetaChecksum: sha256:90d05960c09228d9

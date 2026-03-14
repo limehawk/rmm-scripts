@@ -1,43 +1,28 @@
 name: emsisoft_install_via_url.ps1
 description: Downloads and installs Emsisoft Anti-Malware from a specified URL
 language: PowerShell
+tags:
+- Antivirus
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Antivirus
-  - Software
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Downloads and installs Emsisoft Anti-Malware from a specified URL. Designed
-  for deployments where the Emsisoft installer is hosted on a web server or
-  cloud storage and needs to be deployed to endpoints via RMM.
-
+  Downloads and installs Emsisoft Anti-Malware from a specified URL. Designed for deployments where the Emsisoft installer is hosted on a web server or cloud storage and needs to be deployed to endpoints via RMM.
 
   ## Usage
-
   - Set `$installerUrl` to the full URL of the Emsisoft installer executable
-
-  - Set `$downloadPath` to the local directory for download (default:
-  `$env:TEMP`)
-
+  - Set `$downloadPath` to the local directory for download (default: `$env:TEMP`)
   - Installer is executed immediately after download (interactive install)
 
-
   ## Requirements
-
   - Windows PowerShell 5.1 or PowerShell 7+
-
   - Internet connectivity to download URL
-
   - Administrator privileges recommended (for installation)
-
   - Sufficient disk space for installer download
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "8388334911230820352"
+favourite: false
+shared: true
+scriptId: '8388334911230820352'
 lastPushedChecksum: sha256:12e113f3902d9e2c
-lastPushedMetaChecksum: sha256:0ad0c93613367afb
+lastPushedMetaChecksum: sha256:4f6afb2a778e79cf

@@ -1,48 +1,30 @@
 name: windows_product_key_to_superops.ps1
 description: Retrieves Windows product key from registry and syncs to SuperOps custom field
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Retrieves the Windows product key from the local machine's registry by
-  decoding the DigitalProductId value and sends it to a SuperOps custom field
-  for asset management and license tracking.
-
+  Retrieves the Windows product key from the local machine's registry by decoding the DigitalProductId value and sends it to a SuperOps custom field for asset management and license tracking.
 
   Usage Notes
-
   -----------
-
-  - Decodes DigitalProductId from HKLM:\SOFTWARE\Microsoft\Windows
-  NT\CurrentVersion
-
+  - Decodes DigitalProductId from HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion
   - Sends product key to SuperOps custom field named "Windows Product Key"
-
   - Product key format: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
-
   - Designed for unattended RMM execution
 
-
   Requirements
-
   ------------
-
   - PowerShell 5.1 or later
-
   - SuperOps RMM agent installed with module available
-
   - Registry access to read Windows product information
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "214958378614583296"
+favourite: false
+shared: true
+scriptId: '214958378614583296'
 lastPushedChecksum: sha256:813ee0777103c978
-lastPushedMetaChecksum: sha256:39fc8f4b6ad3515b
+lastPushedMetaChecksum: sha256:f7f078d2c4bb92d2

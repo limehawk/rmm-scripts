@@ -1,39 +1,26 @@
 name: cups_toggle_macos.sh
 description: Toggles the CUPS web interface on/off for printer administration on macOS/Linux
 language: Bash
+tags:
+- Mac
+- Services
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Services
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Toggles the CUPS (Common Unix Printing System) web interface on or off. If
-  currently enabled, disables it. If disabled, enables it. Useful for managing
-  printer administration access on macOS and Linux systems.
-
+  Toggles the CUPS (Common Unix Printing System) web interface on or off. If currently enabled, disables it. If disabled, enables it. Useful for managing printer administration access on macOS and Linux systems.
 
   ## Usage Notes
-
   - Auto-detects current state and toggles to opposite
-
   - Web interface URL when enabled: http://localhost:631
-
   - Enabling exposes printer admin interface on localhost:631
 
-
   ## Requirements
-
   - macOS or Linux with CUPS installed
-
   - cupsctl command available
-
   - Root/sudo privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059066321100800"
+favourite: false
+shared: false
+scriptId: '259059066321100800'
 lastPushedChecksum: sha256:798218624bddb90d
-lastPushedMetaChecksum: sha256:82b5f93972d87f1f
+lastPushedMetaChecksum: sha256:e338d7b2c6c2bc5e

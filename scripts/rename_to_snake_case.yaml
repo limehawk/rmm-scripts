@@ -1,13 +1,11 @@
 name: rename_to_snake_case.ps1
 description: Renames files in a directory to snake_case format
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -28,9 +26,10 @@ readme: |
   - Windows 10/11
   - Write permissions to target directory
   - PowerShell 5.1+
+favourite: false
+shared: true
 runtimeVariables:
-  - name: YourTargetPathHere
-placeholderVariables: []
-scriptId: "1154509803255455744"
+- name: YourTargetPathHere
+scriptId: '1154509803255455744'
 lastPushedChecksum: sha256:80c611c6757117e5
-lastPushedMetaChecksum: sha256:f2cd28f06c09f306
+lastPushedMetaChecksum: sha256:315062ec49d1b2d5

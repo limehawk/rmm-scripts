@@ -1,40 +1,27 @@
 name: foxit_pdf_editor_plus_install.ps1
 description: Installs Foxit PDF Editor from Microsoft Store via winget
 language: PowerShell
+tags:
+- Applications
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Installs Foxit PDF Editor from Microsoft Store source via winget. The MS Store
-  version validates licenses server-side, supporting all Foxit subscription
-  types including PDF Editor+, Suite Pro Teams, and other subscription SKUs.
-
+  Installs Foxit PDF Editor from Microsoft Store source via winget. The MS Store version validates licenses server-side, supporting all Foxit subscription types including PDF Editor+, Suite Pro Teams, and other subscription SKUs.
 
   ## Usage
-
   - No inputs required - package ID is hardcoded
-
   - Silent install with automatic agreement acceptance
-
   - User must sign into Foxit account post-install to activate license
 
-
   ## Requirements
-
   - Windows 10/11 with winget installed
-
   - Administrator/SYSTEM privileges
-
   - Internet connectivity to Microsoft Store
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "8969905695147712512"
+favourite: false
+shared: false
+scriptId: '8969905695147712512'
 lastPushedChecksum: sha256:46dc5587c5f2c2bf
-lastPushedMetaChecksum: sha256:05a701017c5fb58d
+lastPushedMetaChecksum: sha256:47ecd6c2623e3467

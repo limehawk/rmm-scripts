@@ -1,46 +1,30 @@
 name: winreagent_cleanup.ps1
 description: Deletes C:\$WinREAgent folder to free disk space after WinRE updates
 language: PowerShell
+tags:
+- Cleanup
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Disk
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Deletes the C:\$WinREAgent folder which contains temporary Windows Recovery
-  Environment update files. This folder can consume significant disk space and
-  is safe to delete after WinRE updates are complete.
-
+  Deletes the C:\$WinREAgent folder which contains temporary Windows Recovery Environment update files. This folder can consume significant disk space and is safe to delete after WinRE updates are complete.
 
   Usage Notes
-
   -----------
-
   - Checks if C:\$WinREAgent folder exists
-
   - If exists, deletes folder and all contents recursively
-
   - Handles hidden/system folder deletion
-
   - Safe to run - exits successfully if folder does not exist
 
-
   Requirements
-
   ------------
-
   - Windows 10/11
-
   - Administrator privileges recommended
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059257623306240"
+favourite: false
+shared: false
+scriptId: '259059257623306240'
 lastPushedChecksum: sha256:142834ca4118604e
-lastPushedMetaChecksum: sha256:ae7d8098daa6097d
+lastPushedMetaChecksum: sha256:99449c63e77d1ec4

@@ -1,13 +1,11 @@
 name: local_user_create.ps1
 description: Creates a new local user account with specified username and password
 language: PowerShell
+tags:
+- Administration
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -27,10 +25,11 @@ readme: |
   - Windows 10/11
   - Administrator privileges
   - PowerShell 5.1+
+favourite: false
+shared: true
 runtimeVariables:
-  - name: NewUsername
-  - name: NewPassword
-placeholderVariables: []
-scriptId: "1015906830558752768"
+- name: NewUsername
+- name: NewPassword
+scriptId: '1015906830558752768'
 lastPushedChecksum: sha256:11eced3f499bf362
-lastPushedMetaChecksum: sha256:f94899a2529f8503
+lastPushedMetaChecksum: sha256:1c177b6600968756

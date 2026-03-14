@@ -1,34 +1,24 @@
 name: flush_dns.sh
 description: Flushes DNS cache on macOS across all supported versions
 language: Bash
+tags:
+- Network
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Flushes the DNS cache on macOS to resolve DNS-related connectivity issues.
-  Automatically detects macOS version and uses the appropriate flush method.
-
+  Flushes the DNS cache on macOS to resolve DNS-related connectivity issues. Automatically detects macOS version and uses the appropriate flush method.
 
   ## Usage
-
   - Run with sudo: `sudo ./flush_dns.sh`
-
   - Script auto-detects macOS version and selects appropriate flush command
 
-
   ## Requirements
-
   - macOS 10.6 or later
-
   - Root/sudo privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "934483777516347392"
+favourite: false
+shared: true
+scriptId: '934483777516347392'
 lastPushedChecksum: sha256:fd8698fac2a9f51f
-lastPushedMetaChecksum: sha256:7bfb66c0257c0336
+lastPushedMetaChecksum: sha256:fe3b5f5ec3b82e2a

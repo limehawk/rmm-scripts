@@ -1,14 +1,11 @@
 name: workstation_info.vbs
-description: Displays system info popup message box for Windows user
-  self-service via RMM tray
+description: Displays system info popup message box for Windows user self-service via RMM tray
 language: VBScript
+tags:
+- Monitoring
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Monitoring
-  - Windows
-shared: false
-favourite: false
 readme: |
   Purpose
   -------
@@ -29,8 +26,8 @@ readme: |
   ------------
   - Windows 10/11
   - No special privileges required
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059265290493952"
+favourite: false
+shared: false
+scriptId: '259059265290493952'
 lastPushedChecksum: sha256:3897e294e0f6e0a1
-lastPushedMetaChecksum: sha256:28741e94b073d133
+lastPushedMetaChecksum: sha256:ae505c0f45a5cff0

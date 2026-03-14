@@ -1,42 +1,30 @@
 name: directory_cleanup.ps1
 description: Deletes files and directories older than specified days with logging
 language: PowerShell
+tags:
+- Cleanup
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Disk
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Cleans up files and directories older than a specified number of days. Logs
-  deleted items to a file in the target folder.
-
+  Cleans up files and directories older than a specified number of days. Logs deleted items to a file in the target folder.
 
   ## Usage Notes
-
   - Recursively scans subdirectories
-
   - Removes empty directories after file cleanup
-
   - Creates deleted_files.log in the target folder
 
-
   ## Requirements
-
   - Windows OS
-
   - Runtime variable: `runtime_folderPath` (path to the folder to clean up)
-
-  - Runtime variable: `runtime_days` (number of days old a file must be to be
-  deleted)
+  - Runtime variable: `runtime_days` (number of days old a file must be to be deleted)
+favourite: false
+shared: false
 runtimeVariables:
-  - name: runtime_folderPath
-  - name: runtime_days
-placeholderVariables: []
-scriptId: "259059077524086784"
+- name: runtime_folderPath
+- name: runtime_days
+scriptId: '259059077524086784'
 lastPushedChecksum: sha256:f3556ed6849d69df
-lastPushedMetaChecksum: sha256:ce996a9b2b3cd40e
+lastPushedMetaChecksum: sha256:9bef830c083da691

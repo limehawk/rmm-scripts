@@ -1,13 +1,11 @@
 name: rename_workstation_auto.ps1
 description: Rename a Windows device and sync the same name to SuperOps
 language: PowerShell
+tags:
+- Administration
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -36,18 +34,20 @@ readme: |
   - Administrator privileges
   - SuperOps agent installed
   - Internet access for SuperOps API
+favourite: false
+shared: true
 runtimeVariables:
-  - name: YourApiKeyHere
+- name: YourApiKeyHere
 placeholderVariables:
-  - name: YourAssetIdHere
-    label: Asset ID
-    column: assetId
-  - name: YourAssetNameHere
-    label: Asset name
-    column: name
-  - name: YourClientNameHere
-    label: Client name
-    column: client.name
-scriptId: "8083616885623574528"
+- name: YourAssetIdHere
+  label: Asset ID
+  column: assetId
+- name: YourAssetNameHere
+  label: Asset name
+  column: name
+- name: YourClientNameHere
+  label: Client name
+  column: client.name
+scriptId: '8083616885623574528'
 lastPushedChecksum: sha256:66097951d0d86e7e
-lastPushedMetaChecksum: sha256:c8a39bf8c5e0d921
+lastPushedMetaChecksum: sha256:ae29120e40382490

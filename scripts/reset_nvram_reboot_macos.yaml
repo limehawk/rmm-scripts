@@ -1,45 +1,29 @@
 name: reset_nvram_reboot_macos.sh
 description: Resets NVRAM settings and schedules immediate macOS reboot
 language: Bash
+tags:
+- Antivirus
+- Mac
+- Services
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Antivirus
-  - Mac
-  - Services
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Schedules an NVRAM reset on the next reboot and immediately reboots the Mac.
-  NVRAM stores system settings including startup disk, display resolution,
-  speaker volume, and time zone. Useful for troubleshooting boot issues, display
-  problems, audio issues, and startup disk errors.
-
+  Schedules an NVRAM reset on the next reboot and immediately reboots the Mac. NVRAM stores system settings including startup disk, display resolution, speaker volume, and time zone. Useful for troubleshooting boot issues, display problems, audio issues, and startup disk errors.
 
   Usage Notes:
-
   - Detects Mac architecture (Intel vs Apple Silicon)
-
   - Displays current NVRAM values before reset
-
   - Sets NVRAM variable to trigger reset on next boot
-
   - WILL IMMEDIATELY REBOOT THE SYSTEM
-
   - User data is not affected (only system settings reset)
 
-
   Requirements:
-
   - Root/sudo access required
-
   - macOS 10.14 or later
-
   - Intel-based Mac (Apple Silicon uses different reset method)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059166317502464"
+favourite: false
+shared: false
+scriptId: '259059166317502464'
 lastPushedChecksum: sha256:86cce573a4c2c35d
-lastPushedMetaChecksum: sha256:70d54f663d5bf0c9
+lastPushedMetaChecksum: sha256:a132e26ad19b3132

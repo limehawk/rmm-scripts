@@ -1,41 +1,27 @@
 name: eset_cleanup.ps1
 description: Completely removes ESET antivirus remnants from Windows systems
 language: PowerShell
+tags:
+- Antivirus
+- Cleanup
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Antivirus
-  - Cleanup
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Performs a complete cleanup of ESET antivirus software from Windows systems.
-  Removes services, processes, files, registry entries, and scheduled tasks left
-  behind after ESET uninstallation. Useful when standard uninstall fails or
-  leaves remnants that interfere with new AV deployment.
-
+  Performs a complete cleanup of ESET antivirus software from Windows systems. Removes services, processes, files, registry entries, and scheduled tasks left behind after ESET uninstallation. Useful when standard uninstall fails or leaves remnants that interfere with new AV deployment.
 
   ## Usage
-
   - Run as Administrator or via RMM as SYSTEM
-
   - No inputs required - all cleanup targets are predefined
-
   - A system reboot is recommended after cleanup
 
-
   ## Requirements
-
   - Windows PowerShell 5.1 or PowerShell 7+
-
   - Administrator privileges (required)
-
   - No modules required
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "317078575525470208"
+favourite: false
+shared: false
+scriptId: '317078575525470208'
 lastPushedChecksum: sha256:be3fe66de9f75c4b
-lastPushedMetaChecksum: sha256:d6e52e35832cce80
+lastPushedMetaChecksum: sha256:627fb6c15c5cae62

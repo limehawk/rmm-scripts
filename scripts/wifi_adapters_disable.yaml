@@ -1,49 +1,31 @@
 name: wifi_adapters_disable.ps1
 description: Disables all physical and virtual Wi-Fi network adapters for wired-only policy
 language: PowerShell
+tags:
+- Network
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Identifies and disables all physical and virtual Wi-Fi network adapters on a
-  Windows system. Enforces a wired-only network policy by ensuring that wireless
-  connectivity is turned off while leaving Ethernet adapters enabled.
-
+  Identifies and disables all physical and virtual Wi-Fi network adapters on a Windows system. Enforces a wired-only network policy by ensuring that wireless connectivity is turned off while leaving Ethernet adapters enabled.
 
   Usage Notes
-
   -----------
-
   - No inputs required
-
   - Automatically categorizes adapters as Wi-Fi, Wired, or Other
-
   - Only disables adapters categorized as Wi-Fi
-
   - Ethernet/wired adapters are not affected
-
   - Displays detailed list of all adapters before processing
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server
-
   - Administrator privileges required
-
   - Get-NetAdapter cmdlet available
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059226895835136"
+favourite: false
+shared: false
+scriptId: '259059226895835136'
 lastPushedChecksum: sha256:16dd67e48b67ceaf
-lastPushedMetaChecksum: sha256:3eefac16f3df89c2
+lastPushedMetaChecksum: sha256:48a2d1c3274ec6a2

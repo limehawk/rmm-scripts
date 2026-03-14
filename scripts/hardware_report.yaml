@@ -1,46 +1,29 @@
 name: hardware_report.ps1
 description: Generates comprehensive hardware inventory report via CIM/WMI queries
 language: PowerShell
+tags:
+- Monitoring
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Monitoring
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Generates a comprehensive hardware inventory report for the local machine.
-  Collects system information, CPU, memory, storage, GPU, network adapters, and
-  BIOS details. Designed for unattended execution in RMM environments to gather
-  standardized hardware data for asset management.
-
+  Generates a comprehensive hardware inventory report for the local machine. Collects system information, CPU, memory, storage, GPU, network adapters, and BIOS details. Designed for unattended execution in RMM environments to gather standardized hardware data for asset management.
 
   ## Usage
-
   Configure via hardcoded settings in the script:
-
   - `IncludeStorage` - Include storage device information
-
   - `IncludeGpu` - Include GPU information
-
   - `IncludeNetwork` - Include network adapter information
-
   - `IncludeBios` - Include BIOS information
-
   - `IncludeMemoryModules` - Include individual RAM module details
 
-
   ## Requirements
-
   - PowerShell 5.1 or later
-
   - Windows operating system with CIM/WMI support
-
   - No special permissions required (runs in user context)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "2059287687210598400"
+favourite: false
+shared: true
+scriptId: '2059287687210598400'
 lastPushedChecksum: sha256:de8ba9756cb4a9ce
-lastPushedMetaChecksum: sha256:57ac5e11726931e9
+lastPushedMetaChecksum: sha256:4df955a78af0495e

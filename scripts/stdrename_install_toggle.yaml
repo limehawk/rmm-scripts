@@ -1,39 +1,26 @@
 name: stdrename_install_toggle.ps1
 description: Toggles installation of stdrename file renaming utility on Windows
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Toggles installation of stdrename - a command-line file/folder renaming
-  utility. If installed, uninstalls it. If not installed, downloads and installs
-  it. Installs to System32 for system-wide availability.
-
+  Toggles installation of stdrename - a command-line file/folder renaming utility. If installed, uninstalls it. If not installed, downloads and installs it. Installs to System32 for system-wide availability.
 
   Usage Notes:
-
   - Toggle behavior: if installed it uninstalls, if not installed it installs
-
   - Downloads from GitHub releases (latest version)
-
   - Installs to C:\Windows\System32 for PATH accessibility
 
-
   Requirements:
-
   - Windows 10/11
-
   - Admin privileges (writing to System32)
-
   - Internet connectivity for download
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "2703029945385623552"
+favourite: false
+shared: true
+scriptId: '2703029945385623552'
 lastPushedChecksum: sha256:6fb3442faa559a1f
-lastPushedMetaChecksum: sha256:56f86ee4d7b4ab95
+lastPushedMetaChecksum: sha256:5d1369ef1197518d

@@ -1,41 +1,29 @@
 name: local_user_admin_create.ps1
 description: Creates local administrator account with secure random password
 language: PowerShell
+tags:
+- Administration
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Creates or updates a local administrator account with a cryptographically
-  secure random password. If the account exists, resets the password. If not,
-  creates the account and adds it to the Administrators group.
-
+  Creates or updates a local administrator account with a cryptographically secure random password. If the account exists, resets the password. If not, creates the account and adds it to the Administrators group.
 
   ## Usage
-
   Provide the following SuperOps runtime variable:
-
   - `NewAdminUsername` - Username for the local admin account
-
 
   Password is output to console for RMM custom field capture.
 
-
   ## Requirements
-
   - Windows 10/11
-
   - Admin privileges required
-
   - PowerShell 5.1+
+favourite: false
+shared: true
 runtimeVariables:
-  - name: NewAdminUsername
-placeholderVariables: []
-scriptId: "1015907075732598784"
+- name: NewAdminUsername
+scriptId: '1015907075732598784'
 lastPushedChecksum: sha256:6b773927949ad9ce
-lastPushedMetaChecksum: sha256:5d35b97629470a5c
+lastPushedMetaChecksum: sha256:7693cd1adf6dd187

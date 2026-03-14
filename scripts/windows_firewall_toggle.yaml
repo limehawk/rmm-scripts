@@ -1,46 +1,30 @@
 name: windows_firewall_toggle.ps1
 description: Toggles Windows Firewall state for all profiles (Domain, Private, Public)
 language: PowerShell
+tags:
+- Firewall
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Firewall
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Toggles Windows Firewall state for all profiles (Domain, Private, Public). If
-  firewall is ON, turns it OFF. If firewall is OFF, turns it ON.
-
+  Toggles Windows Firewall state for all profiles (Domain, Private, Public). If firewall is ON, turns it OFF. If firewall is OFF, turns it ON.
 
   Usage Notes
-
   -----------
-
   - No inputs required - automatically detects current state
-
   - Affects all firewall profiles simultaneously
-
   - Verifies new state after toggle
-
   - WARNING: Disabling firewall reduces system security
-
   - Use with caution in production environments
 
-
   Requirements
-
   ------------
-
   - Windows 10/11
-
   - Administrator privileges required
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6103852407269097472"
+favourite: false
+shared: true
+scriptId: '6103852407269097472'
 lastPushedChecksum: sha256:3ababf5f681c4117
-lastPushedMetaChecksum: sha256:c3aa7f2c07a60529
+lastPushedMetaChecksum: sha256:47e9bb5b07558e77

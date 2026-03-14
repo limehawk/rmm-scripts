@@ -1,39 +1,26 @@
 name: reboot_on_uptime_macos.sh
 description: Reboots macOS/Linux when uptime exceeds configured threshold (default 14 days)
 language: Bash
+tags:
+- Mac
+- Services
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Services
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Automatically reboots a macOS or Linux system if the uptime exceeds a
-  specified threshold (default: 14 days). Useful for ensuring systems are
-  restarted periodically to apply updates and clear memory.
-
+  Automatically reboots a macOS or Linux system if the uptime exceeds a specified threshold (default: 14 days). Useful for ensuring systems are restarted periodically to apply updates and clear memory.
 
   Usage Notes:
-
   - Set max_uptime_days to configure threshold (default: 14)
-
   - Linux: Reads uptime from /proc/uptime
-
   - macOS: Uses sysctl kern.boottime
-
   - Exits cleanly if threshold not exceeded
 
-
   Requirements:
-
   - macOS or Linux with /proc/uptime (Linux) or sysctl (macOS)
-
   - Root/sudo privileges for reboot
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059156825792512"
+favourite: false
+shared: false
+scriptId: '259059156825792512'
 lastPushedChecksum: sha256:90407ef54e6ade53
-lastPushedMetaChecksum: sha256:906ef85186d36752
+lastPushedMetaChecksum: sha256:3cdbf5057f1ce1d6

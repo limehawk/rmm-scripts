@@ -1,49 +1,31 @@
 name: network_service_refresh_macos.sh
 description: Refreshes all macOS network services by toggling them off and on
 language: Bash
+tags:
+- Mac
+- Network
+- Services
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Network
-  - Services
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Refreshes all network services on macOS by toggling them off and on. Preserves
-  the original enabled/disabled state of each service. Useful for resolving DHCP
-  lease issues, DNS problems, or general network connectivity problems without
-  requiring a full system restart.
-
+  Refreshes all network services on macOS by toggling them off and on. Preserves the original enabled/disabled state of each service. Useful for resolving DHCP lease issues, DNS problems, or general network connectivity problems without requiring a full system restart.
 
   Usage Notes
-
   -----------
-
   - Processes all network services automatically
-
   - Preserves original enabled/disabled state of each service
-
   - TOGGLE_DELAY controls wait time between off/on (default: 2 seconds)
-
   - Temporarily disrupts network connectivity during refresh
 
-
   Requirements
-
   ------------
-
   - Root/sudo access required
-
   - macOS 10.14 or later
-
   - networksetup command available
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059108515799040"
+favourite: false
+shared: false
+scriptId: '259059108515799040'
 lastPushedChecksum: sha256:5c518394b55357ae
-lastPushedMetaChecksum: sha256:d1373fcff8ff14e5
+lastPushedMetaChecksum: sha256:63b5c5f68603a306

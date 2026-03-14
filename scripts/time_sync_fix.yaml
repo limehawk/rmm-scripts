@@ -1,46 +1,29 @@
 name: time_sync_fix.ps1
-description: Fixes Windows time synchronization by resetting NTP configuration
-  and forcing sync
+description: Fixes Windows time synchronization by resetting NTP configuration and forcing sync
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Fixes Windows time synchronization by setting the timezone, resetting the
-  Windows Time service, configuring NTP servers, and forcing a time sync.
-  Resolves common time drift and synchronization issues.
-
+  Fixes Windows time synchronization by setting the timezone, resetting the Windows Time service, configuring NTP servers, and forcing a time sync. Resolves common time drift and synchronization issues.
 
   Usage Notes:
-
   - Sets timezone (configurable in script)
-
   - Unregisters and re-registers w32time service
-
   - Configures SpecialPollInterval to 86400 seconds (24 hours)
-
   - Sets service triggers for network connectivity
-
   - Uses pool.ntp.org servers by default
-
   - Forces immediate time resync
 
-
   Requirements:
-
   - Windows 10/11
-
   - Administrator privileges
-
   - Network connectivity to NTP servers
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6582476168459661312"
+favourite: false
+shared: true
+scriptId: '6582476168459661312'
 lastPushedChecksum: sha256:2a5b7085817c1386
-lastPushedMetaChecksum: sha256:6425c28fda6c7d1c
+lastPushedMetaChecksum: sha256:d7f05a3be7562cf4

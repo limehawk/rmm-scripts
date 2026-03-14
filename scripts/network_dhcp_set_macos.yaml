@@ -1,47 +1,30 @@
 name: network_dhcp_set_macos.sh
 description: Configures macOS network interface to use DHCP for automatic IP addressing
 language: Bash
+tags:
+- Mac
+- Network
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Network
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Configures a macOS network interface to use DHCP for automatic IP addressing.
-  Toggles the network service off and on to ensure the new DHCP settings take
-  effect immediately.
-
+  Configures a macOS network interface to use DHCP for automatic IP addressing. Toggles the network service off and on to ensure the new DHCP settings take effect immediately.
 
   Usage Notes
-
   -----------
-
   - Auto-detects primary network interface if not specified
-
   - Edit INTERFACE variable to target a specific interface (en0, en1, etc.)
-
   - Temporarily disrupts network connectivity during toggle
-
   - TOGGLE_DELAY controls wait time between off/on (default: 2 seconds)
 
-
   Requirements
-
   ------------
-
   - Root/sudo access required
-
   - macOS 10.14 or later
-
   - networksetup command available
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059105630117888"
+favourite: false
+shared: false
+scriptId: '259059105630117888'
 lastPushedChecksum: sha256:0aedf22695283c5f
-lastPushedMetaChecksum: sha256:9828843b05b73be5
+lastPushedMetaChecksum: sha256:ffa512be99795c55

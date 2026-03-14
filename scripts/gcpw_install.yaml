@@ -1,44 +1,31 @@
 name: gcpw_install.ps1
-description: Downloads, installs, and configures Google Credential Provider for
-  Windows (GCPW)
+description: Downloads, installs, and configures Google Credential Provider for Windows (GCPW)
 language: PowerShell
+tags:
+- Applications
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Downloads, installs, and configures Google Credential Provider for Windows
-  (GCPW). Sets allowed domains and enrollment token in the system registry.
-
+  Downloads, installs, and configures Google Credential Provider for Windows (GCPW). Sets allowed domains and enrollment token in the system registry.
 
   ## Usage
-
   Provide the following SuperOps runtime variables:
-
   - `YourDomainsHere` - Comma-separated list of allowed Google Workspace domains
-
   - `YourEnrollmentTokenHere` - GCPW enrollment token from Google Admin Console
 
-
   ## Requirements
-
   - Windows 10/11 or Windows Server
-
   - Administrator privileges
-
   - Internet access
-
   - Valid Google Workspace enrollment token
+favourite: false
+shared: false
 runtimeVariables:
-  - name: YourDomainsHere
-  - name: YourEnrollmentTokenHere
-placeholderVariables: []
-scriptId: "259059096159379456"
+- name: YourDomainsHere
+- name: YourEnrollmentTokenHere
+scriptId: '259059096159379456'
 lastPushedChecksum: sha256:1ddbb53a5a1326f0
-lastPushedMetaChecksum: sha256:e25e371224b8ad1a
+lastPushedMetaChecksum: sha256:58ef5976addebc1b

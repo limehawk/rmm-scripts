@@ -1,53 +1,34 @@
 name: winre_restore.ps1
 description: Restores Windows Recovery Environment by downloading Winre.wim and ReAgent.xml
 language: PowerShell
+tags:
+- Disk
+- Recovery
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Disk
-  - Recovery
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
   Restores Windows Recovery Environment (WinRE) by downloading Winre.wim and
-
-  ReAgent.xml files from a specified URL and placing them in the Recovery
-  folder.
-
+  ReAgent.xml files from a specified URL and placing them in the Recovery folder.
   Fixes systems where WinRE has been corrupted or deleted.
 
-
   Usage
-
   -----
-
   - Configure download URLs for Winre.wim and ReAgent.xml in script
-
   - Disables WinRE before restore, re-enables after
-
   - Downloads files to TEMP then moves to Recovery folder
-
   - Uses curl with retry and timeout
 
-
   Requirements
-
   ------------
-
   - Windows 10/11
-
   - Administrator privileges
-
   - Network connectivity to download URLs
-
   - Valid WinRE files hosted at specified URLs
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059250698510336"
+favourite: false
+shared: false
+scriptId: '259059250698510336'
 lastPushedChecksum: sha256:2ee202fdbbaf51a9
-lastPushedMetaChecksum: sha256:3ebf11ba0a737e85
+lastPushedMetaChecksum: sha256:f1084d57ad666d1f

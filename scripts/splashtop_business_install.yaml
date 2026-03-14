@@ -1,44 +1,29 @@
 name: splashtop_business_install.ps1
 description: Downloads and silently installs Splashtop Business client on Windows
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Downloads and silently installs the Splashtop Business client application.
-  This is the end-user remote access client, not the streamer agent.
-
+  Downloads and silently installs the Splashtop Business client application. This is the end-user remote access client, not the streamer agent.
 
   Usage Notes
-
   -----------
-
   - Downloads MSI installer from official Splashtop servers
-
   - Installs silently with logging
-
   - Cleans up installer file after installation
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - Administrator privileges
-
   - Internet connectivity
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059182331355136"
+favourite: false
+shared: false
+scriptId: '259059182331355136'
 lastPushedChecksum: sha256:85da6779dae31735
-lastPushedMetaChecksum: sha256:19d53ff5fceec761
+lastPushedMetaChecksum: sha256:9b3197c4cef77a60

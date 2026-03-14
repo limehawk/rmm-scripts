@@ -1,43 +1,28 @@
 name: superops_agent_uninstall_windows.ps1
-description: Uninstalls SuperOps RMM agent using official uninstaller or
-  registry-based MSI method
+description: Uninstalls SuperOps RMM agent using official uninstaller or registry-based MSI method
 language: PowerShell
+tags:
+- Cleanup
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Uninstalls the SuperOps RMM agent from Windows systems. Attempts to use the
-  vendor's official uninstall program first, then falls back to registry-based
-  MSI uninstallation if the official uninstaller is not found.
-
+  Uninstalls the SuperOps RMM agent from Windows systems. Attempts to use the vendor's official uninstall program first, then falls back to registry-based MSI uninstallation if the official uninstaller is not found.
 
   Usage Notes:
-
   - No inputs required - auto-detects installed SuperOps agent
-
   - Searches for SuperOps uninstall.exe in common installation directories
-
   - Falls back to registry search for MSI uninstall information
-
   - Executes MSI uninstall with silent parameters if needed
 
-
   Requirements:
-
   - Windows PowerShell 5.1 or later
-
   - Administrator privileges
-
   - SuperOps RMM agent currently installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059206855450624"
+favourite: false
+shared: false
+scriptId: '259059206855450624'
 lastPushedChecksum: sha256:01b0590ef0a4b2ac
-lastPushedMetaChecksum: sha256:115c8829c85686bd
+lastPushedMetaChecksum: sha256:11669255756dc630

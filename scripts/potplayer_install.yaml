@@ -1,49 +1,32 @@
 name: potplayer_install.ps1
 description: Downloads and silently installs PotPlayer media player (auto-selects 32/64-bit)
 language: PowerShell
+tags:
+- Applications
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Downloads and silently installs PotPlayer media player. Automatically selects
-  the correct version (32-bit or 64-bit) based on system architecture.
-
+  Downloads and silently installs PotPlayer media player. Automatically selects the correct version (32-bit or 64-bit) based on system architecture.
 
   Usage Notes
-
   -----------
-
   - Fetches PotPlayer website to find download links
-
   - Selects appropriate version based on OS architecture
-
   - Downloads installer to temp directory
-
   - Installs silently using /S switch
-
   - Cleans up installer file after completion
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - Administrator privileges
-
   - Internet connectivity
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059121564278784"
+favourite: false
+shared: false
+scriptId: '259059121564278784'
 lastPushedChecksum: sha256:7533ac610d424652
-lastPushedMetaChecksum: sha256:2af30bd2be314753
+lastPushedMetaChecksum: sha256:fe8487668e7418b9

@@ -1,13 +1,11 @@
 name: mrt_scan.ps1
 description: Runs Microsoft Malicious Software Removal Tool with configurable scan mode
 language: PowerShell
+tags:
+- Antivirus
+- Windows
 runAs: SYSTEM_USER
 timeout: 60
-tags:
-  - Antivirus
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -30,9 +28,10 @@ readme: |
   - Administrator privileges
   - PowerShell 5.1+
   - SuperOps module available
+favourite: false
+shared: true
 runtimeVariables:
-  - name: QuickOrFull
-placeholderVariables: []
-scriptId: "5428837218762698752"
+- name: QuickOrFull
+scriptId: '5428837218762698752'
 lastPushedChecksum: sha256:869633f2768cf87a
-lastPushedMetaChecksum: sha256:9a224bdcf5900826
+lastPushedMetaChecksum: sha256:dec5331b7daaefbb

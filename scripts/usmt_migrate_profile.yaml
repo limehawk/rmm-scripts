@@ -1,31 +1,19 @@
 name: usmt_migrate_profile.ps1
-description: Interactive USMT tool for backing up and restoring user profiles
-  across machines
+description: Interactive USMT tool for backing up and restoring user profiles across machines
 language: PowerShell
+tags:
+- Administration
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Interactive USMT (User State Migration Tool) backup and restore utility for
-  remote terminal sessions. Enables backing up user profiles from one machine
-  and restoring them to another, including documents, settings, and application
-  data.
-
+  Interactive USMT (User State Migration Tool) backup and restore utility for remote terminal sessions. Enables backing up user profiles from one machine and restoring them to another, including documents, settings, and application data.
 
   Usage Notes
-
   -----------
-
   - Run interactively - presents menu-driven interface
-
   - Backup options include:
     - Documents, Desktop, Downloads, Pictures, Music, Videos
     - Favorites/Bookmarks, AppData (Roaming and Local)
@@ -36,20 +24,14 @@ readme: >
     - Create new local account during restore
   - USMT tools are auto-downloaded if not present
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server
-
   - Administrator privileges required
-
   - Internet connectivity (for initial USMT download)
-
   - Sufficient disk space for migration store
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059222848331776"
+favourite: false
+shared: false
+scriptId: '259059222848331776'
 lastPushedChecksum: sha256:8717c0e7d606b23a
-lastPushedMetaChecksum: sha256:7ebd0d76664a661e
+lastPushedMetaChecksum: sha256:dc184877d7bf6359

@@ -1,35 +1,24 @@
 name: ds_store_disable_macos.sh
 description: Prevents macOS from creating .DS_Store files on network shares
 language: Bash
+tags:
+- Mac
+- Maintenance
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Maintenance
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Prevents macOS from creating .DS_Store files on network shares. These files
-  contain folder metadata and can clutter network drives, causing issues for
-  non-Mac users accessing shared folders.
-
+  Prevents macOS from creating .DS_Store files on network shares. These files contain folder metadata and can clutter network drives, causing issues for non-Mac users accessing shared folders.
 
   ## Usage
-
   - Run the script as the current user
-
   - Log out and back in (or reboot) for changes to take effect
 
-
   ## Requirements
-
   - macOS operating system
-
   - No special privileges required (runs as current user)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059088395722752"
+favourite: false
+shared: false
+scriptId: '259059088395722752'
 lastPushedChecksum: sha256:6a32e8ee9e2fd422
-lastPushedMetaChecksum: sha256:f232d106d158edfb
+lastPushedMetaChecksum: sha256:4f4bd3e3e06d4b57

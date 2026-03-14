@@ -1,45 +1,30 @@
 name: splashtop_service_restart.ps1
 description: Restarts Splashtop Remote Service on Windows to resolve connectivity issues
 language: PowerShell
+tags:
+- Services
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Services
-  - Software
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Restarts the Splashtop Remote Service to resolve connectivity or performance
-  issues with Splashtop remote access.
-
+  Restarts the Splashtop Remote Service to resolve connectivity or performance issues with Splashtop remote access.
 
   Usage Notes
-
   -----------
-
   - Default service: SplashtopRemoteService
-
   - Wait time after restart: 3 seconds
-
   - Reports final service status
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - Administrator privileges
-
   - Splashtop Streamer installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "3769539001587634176"
+favourite: false
+shared: true
+scriptId: '3769539001587634176'
 lastPushedChecksum: sha256:af58133e2ca89fc7
-lastPushedMetaChecksum: sha256:05f5db7ade5dc306
+lastPushedMetaChecksum: sha256:849b8782a91b44de

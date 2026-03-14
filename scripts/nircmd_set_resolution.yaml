@@ -1,48 +1,31 @@
 name: nircmd_set_resolution.ps1
 description: Changes display resolution using NirSoft NirCmd utility
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Changes the display resolution using NirSoft's NirCmd utility. Downloads
-  NirCmd if not already present, then sets the specified resolution.
-
+  Changes the display resolution using NirSoft's NirCmd utility. Downloads NirCmd if not already present, then sets the specified resolution.
 
   Usage Notes
-
   -----------
-
   - Edit resolutionWidth, resolutionHeight, and colorDepth variables
-
   - Supported resolutions: 640-7680 width, 480-4320 height
-
   - Color depth options: 8, 16, 24, or 32 bits
-
   - Display must support the requested resolution
-
   - NirCmd downloaded from official NirSoft website
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server
-
   - Internet access for NirCmd download
-
   - Display must support requested resolution
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059112915623936"
+favourite: false
+shared: false
+scriptId: '259059112915623936'
 lastPushedChecksum: sha256:46e9a7858aa5218f
-lastPushedMetaChecksum: sha256:34aad0fa8e17ec1a
+lastPushedMetaChecksum: sha256:5dcc41c49a3a6689

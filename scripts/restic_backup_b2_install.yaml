@@ -1,66 +1,41 @@
 name: restic_backup_b2_install.ps1
-description: Installs Restic, configures B2 repository, and schedules daily
-  immutable backups
+description: Installs Restic, configures B2 repository, and schedules daily immutable backups
 language: PowerShell
+tags:
+- Backup
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 30
-tags:
-  - Backup
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  All-in-one installer for Restic backup to Backblaze B2 with immutable storage.
-  Installs Restic via winget, initializes an encrypted B2 repository scoped to
-  the machine hostname, generates a daily backup script with embedded
-  credentials, and creates a Windows Scheduled Task.
-
+  All-in-one installer for Restic backup to Backblaze B2 with immutable storage. Installs Restic via winget, initializes an encrypted B2 repository scoped to the machine hostname, generates a daily backup script with embedded credentials, and creates a Windows Scheduled Task.
 
   Usage Notes
-
   -----------
-
-  - Fill in B2 credentials, bucket name, repo password, and client name before
-  deploying
-
-  - Default backup paths cover user Documents, Desktop, Downloads, Pictures, and
-  Videos
-
+  - Fill in B2 credentials, bucket name, repo password, and client name before deploying
+  - Default backup paths cover user Documents, Desktop, Downloads, Pictures, and Videos
   - Scheduled task runs daily at 2:00 AM as SYSTEM
-
   - Install directory is ACL-locked to SYSTEM + Administrators
-
-  - B2 Object Lock (governance mode) provides 30-day immutability for ransomware
-  protection
-
+  - B2 Object Lock (governance mode) provides 30-day immutability for ransomware protection
   - Retention policy: 7 daily, 4 weekly, 6 monthly snapshots
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server 2016+
-
   - Administrator privileges
-
   - PowerShell 5.1+
-
   - winget (App Installer) available
-
   - Network access to Backblaze B2
+favourite: false
+shared: false
 runtimeVariables:
-  - name: B2KeyId
-  - name: B2AppKey
-  - name: B2BucketName
-  - name: RepoPassword
-  - name: ClientName
-placeholderVariables: []
-scriptId: "6720104393029890048"
+- name: B2KeyId
+- name: B2AppKey
+- name: B2BucketName
+- name: RepoPassword
+- name: ClientName
+scriptId: '6720104393029890048'
 lastPushedChecksum: sha256:162e9a33bf5e76ce
-lastPushedMetaChecksum: sha256:d03fce66be71808f
+lastPushedMetaChecksum: sha256:981a793b22ebc639

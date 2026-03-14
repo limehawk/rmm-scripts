@@ -1,40 +1,26 @@
 name: duplicati_backup_status.ps1
 description: Monitors Duplicati backup jobs via local API and reports status
 language: PowerShell
+tags:
+- Backup
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Backup
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Monitors Duplicati backup jobs via the local API. Authenticates to the
-  Duplicati web service, queries configured backups, and reports their status
-  including metrics like backup size, file count, and next scheduled run.
-
+  Monitors Duplicati backup jobs via the local API. Authenticates to the Duplicati web service, queries configured backups, and reports their status including metrics like backup size, file count, and next scheduled run.
 
   ## Usage
-
-  - Set `$duplicatiPassword` to your Duplicati Web UI password (leave empty if
-  no password)
-
+  - Set `$duplicatiPassword` to your Duplicati Web UI password (leave empty if no password)
   - Set `$duplicatiPort` to the port where Duplicati runs (default 8200)
-
   - Exits with code 1 if any backup job has failed
 
-
   ## Requirements
-
   - Windows OS
-
   - Duplicati 2.0+ installed and running
-
   - Web UI password set (or empty for no password)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059094657818624"
+favourite: false
+shared: false
+scriptId: '259059094657818624'
 lastPushedChecksum: sha256:360e0d7aeefcb55f
-lastPushedMetaChecksum: sha256:9be10086ea7b2ebc
+lastPushedMetaChecksum: sha256:51e5d2e51265375e

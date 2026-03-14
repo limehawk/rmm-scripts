@@ -1,13 +1,11 @@
 name: rename_workstation_manual.ps1
 description: Rename a Windows device with manual client override and sync to SuperOps
 language: PowerShell
+tags:
+- Administration
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Administration
-  - Windows
-shared: true
-favourite: false
 readme: |
   Purpose
   -------
@@ -38,19 +36,21 @@ readme: |
   - Administrator privileges
   - SuperOps agent installed
   - Internet access for SuperOps API
+favourite: false
+shared: true
 runtimeVariables:
-  - name: YourApiKeyHere
-  - name: YourCustomClientHere
+- name: YourApiKeyHere
+- name: YourCustomClientHere
 placeholderVariables:
-  - name: YourAssetIdHere
-    label: Asset ID
-    column: assetId
-  - name: YourAssetNameHere
-    label: Asset name
-    column: name
-  - name: YourClientNameHere
-    label: Client name
-    column: client.name
-scriptId: "8083647452427669504"
+- name: YourAssetIdHere
+  label: Asset ID
+  column: assetId
+- name: YourAssetNameHere
+  label: Asset name
+  column: name
+- name: YourClientNameHere
+  label: Client name
+  column: client.name
+scriptId: '8083647452427669504'
 lastPushedChecksum: sha256:0993815bfe34d2fb
-lastPushedMetaChecksum: sha256:7b5555d9900717fc
+lastPushedMetaChecksum: sha256:fb3c8cbc254a5fe4

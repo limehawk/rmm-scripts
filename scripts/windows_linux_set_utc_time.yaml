@@ -1,45 +1,29 @@
 name: windows_linux_set_utc_time.ps1
 description: Configures Windows to use UTC hardware clock for dual-boot Linux compatibility
 language: PowerShell
+tags:
+- Linux
+- Maintenance
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Linux
-  - Maintenance
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Configures Windows to use UTC for the hardware clock instead of local time.
-  This prevents the clock from being wrong when switching between Windows and
-  Linux on dual-boot systems, as Linux uses UTC by default.
-
+  Configures Windows to use UTC for the hardware clock instead of local time. This prevents the clock from being wrong when switching between Windows and Linux on dual-boot systems, as Linux uses UTC by default.
 
   Usage Notes
-
   -----------
-
   - Sets RealTimeIsUniversal registry value to 1 in TimeZoneInformation
-
   - No configurable inputs required
-
   - Run once after installing Windows on a dual-boot system
 
-
   Requirements
-
   ------------
-
   - PowerShell 5.1 or later
-
   - Administrator privileges (required for HKLM access)
-
   - Windows 10/11
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059240497963008"
+favourite: false
+shared: false
+scriptId: '259059240497963008'
 lastPushedChecksum: sha256:424ae2c5ad972585
-lastPushedMetaChecksum: sha256:fcc4830f90866a92
+lastPushedMetaChecksum: sha256:678c529a633e5b59

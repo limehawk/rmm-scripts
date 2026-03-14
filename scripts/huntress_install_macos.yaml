@@ -1,49 +1,33 @@
 name: huntress_install_macos.sh
-description: Downloads and installs Huntress Agent on macOS endpoints for
-  managed detection and response
+description: Downloads and installs Huntress Agent on macOS endpoints for managed detection and response
 language: Bash
+tags:
+- Antivirus
+- Mac
+- Software
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Antivirus
-  - Mac
-  - Software
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Downloads and installs the Huntress Agent on macOS systems. Huntress provides
-  managed detection and response (MDR) services. This script handles the
-  download, validation, and installation of the agent with proper logging.
-
+  Downloads and installs the Huntress Agent on macOS systems. Huntress provides managed detection and response (MDR) services. This script handles the download, validation, and installation of the agent with proper logging.
 
   ## Usage
-
   Provide the following SuperOps runtime variables:
-
   - `ACCOUNT_KEY` - Your Huntress account secret key (32-char hex)
-
   - `ORG_KEY` - Organization key for agent affiliation
-
-  - `INSTALL_SYSTEM_EXTENSION` - Whether to install system extension (requires
-  MDM pre-configuration)
-
+  - `INSTALL_SYSTEM_EXTENSION` - Whether to install system extension (requires MDM pre-configuration)
 
   ## Requirements
-
   - macOS operating system
-
   - Root/sudo privileges
-
   - Network connectivity to huntress.io
-
   - Valid Huntress account key and organization key
+favourite: false
+shared: false
 runtimeVariables:
-  - name: ACCOUNT_KEY
-  - name: ORG_KEY
-  - name: INSTALL_SYSTEM_EXTENSION
-placeholderVariables: []
-scriptId: "259059099158306816"
+- name: ACCOUNT_KEY
+- name: ORG_KEY
+- name: INSTALL_SYSTEM_EXTENSION
+scriptId: '259059099158306816'
 lastPushedChecksum: sha256:910ea6231cde662c
-lastPushedMetaChecksum: sha256:735ed78864a99e54
+lastPushedMetaChecksum: sha256:055e993d7ae7ef1e

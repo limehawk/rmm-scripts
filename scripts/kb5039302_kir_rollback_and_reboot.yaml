@@ -1,37 +1,24 @@
 name: kb5039302_kir_rollback_and_reboot.bat
-description: Applies Known Issue Rollback (KIR) for KB5039302 via registry and
-  forces system restart
+description: Applies Known Issue Rollback (KIR) for KB5039302 via registry and forces system restart
 language: Bat
+tags:
+- Services
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Services
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Applies Microsoft Known Issue Rollback (KIR) for KB5039302 by updating the
-  registry, then forces a system restart with automatic app recovery to apply
-  the changes.
-
+  Applies Microsoft Known Issue Rollback (KIR) for KB5039302 by updating the registry, then forces a system restart with automatic app recovery to apply the changes.
 
   ## Usage
-
-  No inputs required. The script automatically adds the KIR registry override
-  and initiates a 60-second countdown restart.
-
+  No inputs required. The script automatically adds the KIR registry override and initiates a 60-second countdown restart.
 
   ## Requirements
-
   - Windows operating system affected by KB5039302
-
   - Administrator privileges
-
   - System will restart automatically after execution
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6351689847169097728"
+favourite: false
+shared: true
+scriptId: '6351689847169097728'
 lastPushedChecksum: sha256:06974ad3013df4fd
-lastPushedMetaChecksum: sha256:12de8163bddba449
+lastPushedMetaChecksum: sha256:5c1b537624f2b789

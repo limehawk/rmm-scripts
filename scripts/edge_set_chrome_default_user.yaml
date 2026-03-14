@@ -1,43 +1,27 @@
 name: edge_set_chrome_default_user.ps1
 description: Sets Google Chrome as default browser for current user via SetUserFTA
 language: PowerShell
+tags:
+- Applications
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Sets Google Chrome as the default browser for the current user. Uses
-  SetUserFTA to properly set file associations with the correct UserChoice hash
-  that Windows 10/11 requires. MUST run as the logged-in user (not SYSTEM) -
-  default browser settings are per-user and stored in HKCU with hash validation.
-
+  Sets Google Chrome as the default browser for the current user. Uses SetUserFTA to properly set file associations with the correct UserChoice hash that Windows 10/11 requires. MUST run as the logged-in user (not SYSTEM) - default browser settings are per-user and stored in HKCU with hash validation.
 
   ## Usage
-
   - Run as logged-in user (NOT as SYSTEM)
-
-  - Configure boolean settings at top of script for specific associations (http,
-  https, .htm, .html)
-
+  - Configure boolean settings at top of script for specific associations (http, https, .htm, .html)
   - Set `$cleanUserStartup = $true` to remove Edge from user's startup programs
 
-
   ## Requirements
-
   - PowerShell 5.1 or later
-
   - Must run as logged-in user (NOT as SYSTEM)
-
   - Google Chrome must be installed
-
   - Internet access (to download SetUserFTA if needed)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "7562203575531061248"
+favourite: false
+shared: false
+scriptId: '7562203575531061248'
 lastPushedChecksum: sha256:d582f3d04bb02139
-lastPushedMetaChecksum: sha256:18dadf48210218b6
+lastPushedMetaChecksum: sha256:552f93587742e5e5

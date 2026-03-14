@@ -1,52 +1,33 @@
 name: disk_cleanup.ps1
 description: Runs Windows Disk Cleanup plus SoftwareDistribution and WinSxS cleanup
 language: PowerShell
+tags:
+- Cleanup
+- Disk
+- Windows
 runAs: SYSTEM_USER
 timeout: 180
-tags:
-  - Cleanup
-  - Disk
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Runs Windows Disk Cleanup utility on all fixed local drives, plus targeted
-  cleanups for SoftwareDistribution, WinSxS, and Search Index to free up disk
-  space.
-
+  Runs Windows Disk Cleanup utility on all fixed local drives, plus targeted cleanups for SoftwareDistribution, WinSxS, and Search Index to free up disk space.
 
   ## Usage Notes
-
   - Shows disk space before/after each drive cleanup
-
   - Progress updates every 60 seconds while cleanmgr runs
-
   - 30 minute timeout per drive for cleanmgr
-
   - Runs cleanmgr.exe with /verylowdisk flag on all fixed drives
-
   - Performs DISM WinSxS cleanup on C: drive
-
   - Clears SoftwareDistribution folder
-
   - Rebuilds Search Index
-
   - Shows total freed space at completion
-
   - Reboot recommended after completion
 
-
   ## Requirements
-
   - Windows 10/11 with cleanmgr.exe and DISM
-
   - WMI service running
-
   - Admin privileges for DISM/services
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "5261212187550191616"
+favourite: false
+shared: true
+scriptId: '5261212187550191616'
 lastPushedChecksum: sha256:2496e05767011ab7
-lastPushedMetaChecksum: sha256:a19a257f33665e4a
+lastPushedMetaChecksum: sha256:e494e70da04ee02b

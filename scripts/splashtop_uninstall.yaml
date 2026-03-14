@@ -1,41 +1,28 @@
 name: splashtop_uninstall.ps1
 description: Uninstalls Splashtop Streamer from Windows using MSI service
 language: PowerShell
+tags:
+- Cleanup
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Cleanup
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Uninstalls Splashtop Streamer from a Windows system using the Windows
-  Installer service (MSI uninstall).
-
+  Uninstalls Splashtop Streamer from a Windows system using the Windows Installer service (MSI uninstall).
 
   Usage Notes:
-
   - Searches for Splashtop Streamer in installed products
-
   - Retrieves the product GUID automatically
-
   - Executes silent uninstall via CIM method
-
   - Product name can be customized via $productName variable
 
-
   Requirements:
-
   - Windows OS
-
   - Administrator privileges
-
   - Splashtop Streamer installed
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059190602522624"
+favourite: false
+shared: false
+scriptId: '259059190602522624'
 lastPushedChecksum: sha256:0800aca199e5aa18
-lastPushedMetaChecksum: sha256:94525b2791b02bce
+lastPushedMetaChecksum: sha256:70d98d91bc9cbc56

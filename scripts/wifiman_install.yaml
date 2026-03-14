@@ -1,47 +1,31 @@
 name: wifiman_install.ps1
 description: Installs Ubiquiti WiFiman Desktop application using winget
 language: PowerShell
+tags:
+- Network
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Installs Ubiquiti WiFiman Desktop application using winget. Automatically
-  installs winget if not present on the system.
-
+  Installs Ubiquiti WiFiman Desktop application using winget. Automatically installs winget if not present on the system.
 
   Usage Notes
-
   -----------
-
   - No inputs required - package ID is hardcoded
-
   - Automatically checks for and installs winget if missing
-
   - Uses NuGet provider and PowerShell Gallery for winget installation
-
   - Accepts package agreements automatically for unattended install
 
-
   Requirements
-
   ------------
-
   - Windows 10 1809+ or Windows 11
-
   - Administrator privileges
-
   - Internet connectivity
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059235116670976"
+favourite: false
+shared: false
+scriptId: '259059235116670976'
 lastPushedChecksum: sha256:22ab242925134ed1
-lastPushedMetaChecksum: sha256:f0a85579028a166c
+lastPushedMetaChecksum: sha256:df67ea0642523286

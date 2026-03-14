@@ -1,46 +1,30 @@
 name: splashtop_streamer_install_debian_amd64.sh
 description: Downloads and installs Splashtop Streamer agent on Debian/Ubuntu AMD64 systems
 language: Bash
+tags:
+- Linux
+- Software
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Linux
-  - Software
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Downloads and installs the Splashtop Streamer agent on Debian/Ubuntu systems
-  running AMD64 architecture.
-
+  Downloads and installs the Splashtop Streamer agent on Debian/Ubuntu systems running AMD64 architecture.
 
   Usage Notes
-
   -----------
-
   - Downloads package from official Splashtop servers
-
   - Installs deb package with dependency resolution
-
   - Cleans up downloaded files after installation
 
-
   Requirements
-
   ------------
-
   - Debian/Ubuntu Linux (AMD64 architecture)
-
   - Root/sudo privileges
-
   - Internet connectivity
-
   - wget and tar packages
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059185107984384"
+favourite: false
+shared: false
+scriptId: '259059185107984384'
 lastPushedChecksum: sha256:0d1eb15b627f4539
-lastPushedMetaChecksum: sha256:b14040a10727ff99
+lastPushedMetaChecksum: sha256:2c230ea4717571b5

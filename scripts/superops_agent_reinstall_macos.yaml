@@ -1,49 +1,31 @@
 name: superops_agent_reinstall_macos.sh
 description: Uninstalls and reinstalls SuperOps RMM agent on macOS
 language: Bash
+tags:
+- Mac
+- Software
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Mac
-  - Software
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose:
-
-  Performs a complete reinstallation of the SuperOps RMM agent on macOS by
-  uninstalling the current agent and installing a new version from a provided
-  URL. Useful for agent upgrades or fixing corrupted installations.
-
+  Performs a complete reinstallation of the SuperOps RMM agent on macOS by uninstalling the current agent and installing a new version from a provided URL. Useful for agent upgrades or fixing corrupted installations.
 
   Usage Notes:
-
   - PKGURL environment variable must be set by RMM platform
-
   - Uses background process to handle reinstall after uninstall
-
   - Downloads new agent to /tmp directory
-
   - 5-second polling interval for uninstall completion
-
   - Uses official SuperOps uninstall script at /Library/superops/uninstall.sh
 
-
   Requirements:
-
   - macOS
-
   - Sudo privileges
-
   - Internet access
-
   - SuperOps RMM agent currently installed
-
   - PKGURL environment variable set by RMM platform
-
   - curl command (standard on macOS)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059197846085632"
+favourite: false
+shared: false
+scriptId: '259059197846085632'
 lastPushedChecksum: sha256:174ea4eea6e05f07
-lastPushedMetaChecksum: sha256:2d20ac4b2c534643
+lastPushedMetaChecksum: sha256:a72df2bf61ae8426

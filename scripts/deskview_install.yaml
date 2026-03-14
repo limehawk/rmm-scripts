@@ -1,39 +1,26 @@
 name: deskview_install.ps1
 description: Installs DeskView utility to startup folder for desktop icons display
 language: PowerShell
+tags:
+- Software
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Software
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   ## Purpose
-
-  Downloads deskview.exe utility to the Windows Startup folder so it runs
-  automatically at user login. DeskView displays desktop icons in a compact
-  window.
-
+  Downloads deskview.exe utility to the Windows Startup folder so it runs automatically at user login. DeskView displays desktop icons in a compact window.
 
   ## Usage Notes
-
   - Downloads from trusted GitHub repository
-
   - Installs to common Startup folder for all users
-
   - Runs automatically at user login
 
-
   ## Requirements
-
   - Windows OS
-
   - Administrator privileges
-
   - Internet connectivity
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "2363511650220425216"
+favourite: false
+shared: false
+scriptId: '2363511650220425216'
 lastPushedChecksum: sha256:dca5111c6a4c7b0b
-lastPushedMetaChecksum: sha256:64d3a59235e9596d
+lastPushedMetaChecksum: sha256:f3780bd9ae367985

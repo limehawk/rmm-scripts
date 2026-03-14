@@ -1,59 +1,35 @@
 name: onedrive_remove_complete.ps1
-description: Completely removes Microsoft OneDrive with startup suppression and
-  registry cleanup
+description: Completely removes Microsoft OneDrive with startup suppression and registry cleanup
 language: PowerShell
+tags:
+- Applications
+- Cleanup
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Applications
-  - Cleanup
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Performs a complete, multi-path uninstallation of Microsoft OneDrive with
-  permanent startup suppression. Stops running processes, executes the official
-  Microsoft uninstall utility against all known install paths (system and
-  Office), removes scheduled tasks, and applies registry policies to prevent
-  reinstallation.
-
+  Performs a complete, multi-path uninstallation of Microsoft OneDrive with permanent startup suppression. Stops running processes, executes the official Microsoft uninstall utility against all known install paths (system and Office), removes scheduled tasks, and applies registry policies to prevent reinstallation.
 
   Usage Notes
-
   -----------
-
   - Stops all running OneDrive processes
-
   - Executes OneDriveSetup.exe /uninstall for each found path
-
   - Removes all OneDrive scheduled tasks
-
   - Sets HKLM GPO DisableFileSyncNGSC=1 to prevent startup
-
   - Removes HKCU Run key OneDrive entry
-
   - Sets Explorer policy to hide OneDrive from navigation pane
-
   - Cleans Default User profile to prevent OneDrive on new accounts
-
   - Reboot recommended for full cleanup
 
-
   Requirements
-
   ------------
-
   - Windows with PowerShell 5.1 or later
-
   - Administrator privileges
-
   - No network requirements (local operations only)
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "6668060130075115520"
+favourite: false
+shared: true
+scriptId: '6668060130075115520'
 lastPushedChecksum: sha256:e1f4ee52cb2ad974
-lastPushedMetaChecksum: sha256:717b199f78f7c3d0
+lastPushedMetaChecksum: sha256:de09b317179414dc

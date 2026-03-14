@@ -1,14 +1,11 @@
 name: wol_enable.ps1
-description: Enables Wake-on-LAN in BIOS and Windows NIC settings for Dell, HP,
-  and Lenovo systems
+description: Enables Wake-on-LAN in BIOS and Windows NIC settings for Dell, HP, and Lenovo systems
 language: PowerShell
+tags:
+- Network
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Network
-  - Windows
-shared: false
-favourite: false
 readme: |
   Purpose
   -------
@@ -32,8 +29,8 @@ readme: |
   - Administrator privileges
   - Internet connectivity for module installation
   - Supported manufacturer: Dell, HP, or Lenovo
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059260295077888"
+favourite: false
+shared: false
+scriptId: '259059260295077888'
 lastPushedChecksum: sha256:2af7e13609778071
-lastPushedMetaChecksum: sha256:d2b9fda26d70fbe9
+lastPushedMetaChecksum: sha256:9b292ccc1dd5d5be

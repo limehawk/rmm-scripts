@@ -1,49 +1,31 @@
 name: macos_auto_updates_enable.sh
 description: Enables all automatic update settings on macOS for system and App Store updates
 language: Bash
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Windows
-shared: false
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Enables all automatic update settings on macOS including automatic checking,
-  downloading, and installation of macOS updates, App Store updates, and
-  security/critical updates. Ensures systems stay patched and secure.
-
+  Enables all automatic update settings on macOS including automatic checking, downloading, and installation of macOS updates, App Store updates, and security/critical updates. Ensures systems stay patched and secure.
 
   Settings Enabled
-
   ----------------
-
   - AutomaticCheckEnabled: Check for updates automatically
-
   - AutomaticDownload: Download updates in background
-
   - AutoUpdate: App Store auto-updates
-
   - ConfigDataInstall: Config data file updates
-
   - CriticalUpdateInstall: Security updates
-
   - AutomaticallyInstallMacOSUpdates: macOS system updates
 
-
   Requirements
-
   ------------
-
   - macOS 10.14 or later
-
   - Root/sudo privileges
-runtimeVariables: []
-placeholderVariables: []
-scriptId: "259059101830078464"
+favourite: false
+shared: false
+scriptId: '259059101830078464'
 lastPushedChecksum: sha256:25ead792bd41f224
-lastPushedMetaChecksum: sha256:81b618287e80177e
+lastPushedMetaChecksum: sha256:1fac23acbec532f1

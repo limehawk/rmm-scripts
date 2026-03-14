@@ -1,62 +1,41 @@
 name: maintenance_reboot.ps1
-description: System reboot with graceful or force mode when uptime exceeds
-  threshold or reboot flags detected
+description: System reboot with graceful or force mode when uptime exceeds threshold or reboot flags detected
 language: PowerShell
+tags:
+- Maintenance
+- Services
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
-tags:
-  - Maintenance
-  - Services
-  - Windows
-shared: true
-favourite: false
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Performs system reboot when uptime exceeds threshold or reboot flags are
-  detected. Supports two modes:
-
+  Performs system reboot when uptime exceeds threshold or reboot flags are detected. Supports two modes:
 
   GRACEFUL MODE (default) - For servers/workstations with active users
-
   - Warns users before rebooting (configurable delay)
-
   - Skips reboot if critical apps running (QuickBooks, SQL, etc.)
-
   - Apps get chance to save data and close cleanly
 
-
   FORCE MODE - For after-hours maintenance windows
-
   - Immediate forced reboot, no warning
-
   - Guaranteed to reboot regardless of running apps
 
-
   Usage Notes
-
   -----------
-
   - Set graceful_true_or_false runtime variable to control mode
-
   - Set maxuptimedays to control uptime threshold (default: 7 days)
-
   - Checks CBS RebootPending, WU RebootRequired, and PendingFileRename flags
 
-
   Requirements
-
   ------------
-
   - PowerShell 5.1+
-
   - Local Administrator rights
+favourite: false
+shared: true
 runtimeVariables:
-  - name: graceful_true_or_false
-  - name: maxuptimedays
-placeholderVariables: []
-scriptId: "7521762971991781376"
+- name: graceful_true_or_false
+- name: maxuptimedays
+scriptId: '7521762971991781376'
 lastPushedChecksum: sha256:7f7bd5e13d21a1a0
-lastPushedMetaChecksum: sha256:d1c3e8715ef135ac
+lastPushedMetaChecksum: sha256:7a2e0bc44a15a4e6
