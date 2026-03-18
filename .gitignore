@@ -11,6 +11,10 @@ docs/superops_scripts.json
 .env
 .env.*
 
+# Superpowers brainstorm/specs/plans (local working docs)
+docs/superpowers/
+.superpowers/
+
 # Temporary files
 *.tmp
 *.bak
