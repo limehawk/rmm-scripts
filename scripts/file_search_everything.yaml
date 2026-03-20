@@ -1,5 +1,5 @@
 name: file_search_everything.ps1
-description: Searches entire system for files matching a pattern using Everything
+description: Searches all fixed drives for files matching a pattern
 language: PowerShell
 tags:
 - Utilities
@@ -9,24 +9,20 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Deploys Voidtools Everything to a Windows endpoint, searches for files matching a hardcoded pattern, and outputs results to stdout. Everything indexes NTFS volumes in seconds, making full-drive searches near-instant. If Everything was not previously installed, the script cleans it up afterward.
+  Searches all fixed local drives for files matching a wildcard pattern using native PowerShell. No third-party tools required.
 
   Usage Notes
   -----------
-  - Detects execution context (SYSTEM vs user) and resolves winget accordingly
-  - Installs Everything via winget if not already present
-  - Starts Everything service and waits for index to build (60s timeout)
-  - Runs search and outputs matching file paths to stdout
-  - Cleans up: stops service, uninstalls if script installed it
-  - Index timeout: 60 seconds max, polls every 2 seconds
-  - Search scope: all NTFS volumes indexed by Everything
+  - Enumerates all fixed drives (DriveType 3)
+  - Recursively searches each drive with Get-ChildItem
+  - Skips inaccessible directories silently
+  - Outputs full paths of all matches
 
   Requirements
   ------------
-  - Windows 10 1709+ or Windows 11 (winget required)
-  - Administrator privileges
-  - NTFS filesystem
-  - $searchTerm: file name pattern to search for (Everything syntax)
+  - PowerShell 5.1 or later
+  - Administrator privileges recommended for full access
+  - $searchPattern: wildcard pattern (e.g., *landtrust*, *.pdf)
 favourite: false
 shared: false
 scriptId: '294786742098796544'
