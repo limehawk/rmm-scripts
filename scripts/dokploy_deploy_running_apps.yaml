@@ -2,8 +2,8 @@ name: dokploy_deploy_running_apps.sh
 description: Triggers deployments for all currently running Dokploy apps
 language: Bash
 tags:
+- Linux
 - Maintenance
-- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |

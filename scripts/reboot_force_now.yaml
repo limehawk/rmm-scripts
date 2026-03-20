@@ -1,5 +1,9 @@
-name: reboot_force_now
+name: reboot_force_now.ps1
+description: Forces an immediate system reboot without user prompts
 language: PowerShell
+tags:
+- Maintenance
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
@@ -18,6 +22,8 @@ readme: |
   ------------
   - PowerShell 5.1 or later
   - Administrator privileges
+favourite: false
+shared: false
 scriptId: '1356766166757322752'
 lastPushedChecksum: sha256:eba09f277fefc277
 lastPushedMetaChecksum: sha256:5b142e707a535fac

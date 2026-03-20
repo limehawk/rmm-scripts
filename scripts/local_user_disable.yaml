@@ -1,10 +1,35 @@
 name: local_user_disable.ps1
 description: Disables a local user account without deleting profile data
 language: PowerShell
+tags:
+- Security
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
+readme: |
+  Purpose
+  -------
+  Disables a local user account so it cannot be used to log in. The user profile and all data are preserved on disk. Use this for offboarding when data retention is required.
+
+  Usage Notes
+  -----------
+  - Validates username input
+  - Checks user exists and current enabled status
+  - Disables the local user account
+  - Logs off any active sessions for that user
+  - Preserves user profile and all files
+  - Account can be re-enabled with Enable-LocalUser
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - PowerShell 5.1+
+  - $UsernameToDisable: local username to disable (SuperOps runtime variable)
 favourite: false
 shared: false
+runtimeVariables:
+- name: UsernameToDisable
 scriptId: '1216153894295945216'
 lastPushedChecksum: sha256:5b6f181cb86e8af7
 lastPushedMetaChecksum: sha256:d669b19e513bcb7f

@@ -3,7 +3,7 @@ description: Identifies and removes orphaned Docker volumes to free space
 language: Bash
 tags:
 - Cleanup
-- Windows
+- Linux
 runAs: SYSTEM_USER
 timeout: 15
 readme: |

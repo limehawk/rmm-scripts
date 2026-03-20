@@ -1,5 +1,9 @@
-name: outlook_link_handling_fix
+name: outlook_link_handling_fix.ps1
+description: Configures Outlook to open hyperlinks in the default browser
 language: PowerShell
+tags:
+- Applications
+- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
@@ -20,6 +24,8 @@ readme: |
   - PowerShell 5.1 or later
   - No administrator privileges required (HKCU is user-writable)
   - Microsoft Office 2016 or later (Office 16.0)
+favourite: false
+shared: false
 scriptId: '2150691589661024256'
 lastPushedChecksum: sha256:bfcb50c6b844cef4
 lastPushedMetaChecksum: sha256:f2b6b9825ce105c2

@@ -2,8 +2,8 @@ name: flush_dns.sh
 description: Flushes DNS cache on macOS across all supported versions
 language: Bash
 tags:
+- macOS
 - Network
-- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |

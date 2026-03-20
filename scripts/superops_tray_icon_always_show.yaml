@@ -4,7 +4,7 @@ language: PowerShell
 tags:
 - Software
 - Windows
-runAs: SYSTEM_USER
+runAs: LOGGED_IN_USER
 timeout: 15
 readme: |
   Purpose

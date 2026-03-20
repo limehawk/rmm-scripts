@@ -2,8 +2,8 @@ name: macos_auto_updates_enable.sh
 description: Enables all automatic update settings on macOS
 language: Bash
 tags:
+- macOS
 - Maintenance
-- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |

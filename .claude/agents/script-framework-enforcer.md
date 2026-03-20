@@ -207,6 +207,24 @@ If reviewing a MODIFIED script (not new), verify:
 
 When reviewing a script, also validate its companion sidecar YAML file (`scripts/<name>.yaml`):
 
+### Required Sidecar Fields
+
+Every sidecar YAML must contain these fields:
+
+| Field | Required Value | Source |
+|---|---|---|
+| `name` | `<filename>` with extension (e.g., `reboot_force_now.ps1`) | Must match the script filename exactly |
+| `description` | One-line summary | Must match script's DESCRIPTION line exactly |
+| `language` | `PowerShell` or `Bash` | Derived from file extension |
+| `tags` | Non-empty list | At least one tag |
+| `runAs` | `SYSTEM_USER`, `LOGGED_IN_USER`, or `ROOT` | Must be present |
+| `timeout` | Positive integer | Must be present |
+| `readme` | Multi-line plain text | Derived from script README block |
+| `favourite` | `true` or `false` | Must be present |
+| `shared` | `true` or `false` | Must be present |
+
+Optional fields (do not flag if absent): `scriptId`, `lastPushedChecksum`, `lastPushedMetaChecksum`, `runtimeVariables`, `placeholderVariables`
+
 ### README Field Validation
 
 The sidecar `readme` field must match content derived from the script's embedded README block. Validate using this section mapping:

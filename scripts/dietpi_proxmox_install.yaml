@@ -2,8 +2,8 @@ name: dietpi_proxmox_install.sh
 description: Creates lightweight DietPi Debian 12 VM on Proxmox
 language: Bash
 tags:
+- Linux
 - Software
-- Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |

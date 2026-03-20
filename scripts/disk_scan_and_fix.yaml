@@ -3,7 +3,7 @@ description: Comprehensive disk and volume health check for macOS
 language: Bash
 tags:
 - Disk
-- Windows
+- macOS
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
