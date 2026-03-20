@@ -9,7 +9,7 @@ A PowerShell script deployed to Windows endpoints via RMM (SuperOps/Datto/NinjaR
 
 ## Approach
 
-Use Everything's built-in CLI capabilities (`Everything.exe -search <pattern> -export-csv <file>`) for near-instant full-drive file search. This avoids the separate `es.exe` download — Everything.exe itself supports command-line search and CSV export. Install via winget if not already present, perform the search, and uninstall if the script installed it.
+Use Everything's built-in CLI capabilities (`Everything.exe -search <pattern>`) for near-instant full-drive file search. This avoids the separate `es.exe` download — Everything.exe itself supports command-line search with stdout output. Install via winget if not already present, perform the search, and uninstall if the script installed it.
 
 ## Hardcoded Inputs
 
@@ -34,20 +34,15 @@ Use Everything's built-in CLI capabilities (`Everything.exe -search <pattern> -e
 
 ### 4. Start Everything & Wait for Index
 - Install and start the Everything service via `Everything.exe -install-service` and `Everything.exe -start-service` (works in SYSTEM context without a desktop session).
-- Poll readiness by running a known-good search (e.g., `Everything.exe -search notepad.exe -export-csv`) until results appear.
+- Poll readiness by running a known-good search (e.g., `Everything.exe -search notepad.exe`) until results appear.
 - Poll every 2 seconds, timeout after 60 seconds total.
 
-### 5. Search
-- Run `Everything.exe -search $searchTerm -export-csv $csvPath` where `$csvPath` is a temp file.
-- Parse CSV output — each row is a matching file with full path.
-
-### 6. Output Results
-- Print each matching file path to stdout.
-- Print summary: total count of matches.
+### 5. Search & Output
+- Run `Everything.exe -search $searchTerm` — results go directly to stdout, one path per line.
+- Count results and print summary.
 - If no matches: "No files found matching: $searchTerm"
 
-### 7. Cleanup
-- Remove temp CSV file.
+### 6. Cleanup
 - If `$scriptInstalledEverything` is true:
   - Stop and remove the Everything service: `Everything.exe -uninstall-service`
   - Uninstall via winget with `--silent --force`.
@@ -93,7 +88,7 @@ Use Everything's built-in CLI capabilities (`Everything.exe -search <pattern> -e
 
 ## Key Technical Details
 
-- **No es.exe dependency** — `Everything.exe` supports `-search` and `-export-csv` flags directly, eliminating the need for a separate es.exe download.
+- **No es.exe dependency** — `Everything.exe` supports `-search` with stdout output directly, eliminating the need for a separate es.exe download.
 - **Service mode for SYSTEM context** — `Everything.exe -install-service` / `-start-service` runs headless without a desktop session, which is how RMM scripts execute.
 - **SYSTEM context winget** — `Get-Command winget` fails under SYSTEM; must resolve full path via `Resolve-Path` in WindowsApps.
 - **Index build time** — typically 1-3 seconds for a standard Windows install (~100k-200k files). 60-second timeout is generous.
