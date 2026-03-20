@@ -1,5 +1,5 @@
 name: printers_remove_all.ps1
-description: Removes all printers, drivers, and ports from Windows using PowerShell
+description: Removes all printers, drivers, and ports from Windows
 language: PowerShell
 tags:
 - Cleanup

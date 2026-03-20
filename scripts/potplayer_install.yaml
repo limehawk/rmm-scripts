@@ -1,5 +1,5 @@
 name: potplayer_install.ps1
-description: Downloads and silently installs PotPlayer media player (auto-selects 32/64-bit)
+description: Downloads and silently installs PotPlayer media player
 language: PowerShell
 tags:
 - Applications

@@ -1,5 +1,5 @@
 name: windows_firewall_toggle.ps1
-description: Toggles Windows Firewall state for all profiles (Domain, Private, Public)
+description: Enables or disables Windows Firewall for all profiles
 language: PowerShell
 tags:
 - Firewall

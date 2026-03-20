@@ -1,5 +1,5 @@
 name: windows_linux_set_utc_time.ps1
-description: Configures Windows to use UTC hardware clock for dual-boot Linux compatibility
+description: Fixes time drift on Windows/Linux dual-boot systems
 language: PowerShell
 tags:
 - Linux

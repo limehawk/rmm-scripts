@@ -1,5 +1,5 @@
 name: dell_command_update.ps1
-description: Installs Dell Command Update via winget and applies driver/firmware updates silently
+description: Installs Dell Command Update and applies driver/firmware updates
 language: PowerShell
 tags:
 - Maintenance

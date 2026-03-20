@@ -1,5 +1,5 @@
 name: superops_agent_uninstall_windows_legacy.ps1
-description: Uninstalls legacy SuperOps agent on Windows via WMI IdentifyingNumber
+description: Uninstalls legacy SuperOps agent via WMI IdentifyingNumber
 language: PowerShell
 tags:
 - Cleanup

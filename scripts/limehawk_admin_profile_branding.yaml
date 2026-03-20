@@ -1,5 +1,5 @@
 name: limehawk_admin_profile_branding.ps1
-description: Creates and manages MSP admin accounts with SuperOps password sync and branding
+description: Creates and manages MSP admin accounts with SuperOps password sync
 language: PowerShell
 tags:
 - Maintenance

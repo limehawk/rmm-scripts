@@ -1,5 +1,5 @@
 name: openssh_server_setup.ps1
-description: Installs and configures OpenSSH Server on Windows for remote SSH access, restricted to Administrators
+description: Installs and configures OpenSSH Server on Windows
 language: PowerShell
 tags:
 - Remote Access

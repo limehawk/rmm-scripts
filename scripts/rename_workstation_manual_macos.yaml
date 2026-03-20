@@ -1,5 +1,5 @@
 name: rename_workstation_manual_macos.sh
-description: Rename a macOS device with manual client override
+description: Renames macOS device with custom name via RMM variable
 language: Bash
 tags:
 - Administration

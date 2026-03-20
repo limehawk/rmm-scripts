@@ -1,5 +1,5 @@
 name: file_search_everything.ps1
-description: ''
+description: Searches entire system for files matching a pattern using Everything
 language: PowerShell
 runAs: SYSTEM_USER
 timeout: 15

@@ -1,5 +1,5 @@
 name: synology_backup_agent_install.ps1
-description: Installs Synology Active Backup for Business Agent on Windows using winget
+description: Installs Synology Active Backup for Business Agent via winget
 language: PowerShell
 tags:
 - Backup

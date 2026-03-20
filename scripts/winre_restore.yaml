@@ -1,5 +1,5 @@
 name: winre_restore.ps1
-description: Restores Windows Recovery Environment by downloading Winre.wim and ReAgent.xml
+description: Restores Windows Recovery Environment from system image
 language: PowerShell
 tags:
 - Disk

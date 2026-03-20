@@ -1,5 +1,5 @@
 name: maintenance_reboot.ps1
-description: System reboot with graceful or force mode when uptime exceeds threshold or reboot flags detected
+description: System reboot with graceful or force mode for maintenance
 language: PowerShell
 tags:
 - Maintenance

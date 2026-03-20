@@ -1,5 +1,5 @@
 name: choco_upgrade_all.ps1
-description: Upgrades all Chocolatey-managed packages to their latest versions with auto-confirmation
+description: Upgrades all Chocolatey-managed packages to latest versions
 language: PowerShell
 tags:
 - Patch

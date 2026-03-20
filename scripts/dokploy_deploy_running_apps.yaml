@@ -1,5 +1,5 @@
 name: dokploy_deploy_running_apps.sh
-description: Triggers deployments for all currently running Dokploy applications via API
+description: Triggers deployments for all currently running Dokploy apps
 language: Bash
 tags:
 - Maintenance

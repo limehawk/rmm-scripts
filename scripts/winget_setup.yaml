@@ -1,5 +1,5 @@
 name: winget_setup.ps1
-description: Installs winget (Windows Package Manager) for RMM environments using AppX method
+description: Installs winget (Windows Package Manager) for RMM environments
 language: PowerShell
 tags:
 - Patch

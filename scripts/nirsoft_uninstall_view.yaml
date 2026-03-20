@@ -1,5 +1,5 @@
 name: nirsoft_uninstall_view.ps1
-description: Uses NirSoft UninstallView to uninstall software matching wildcard patterns
+description: Uses NirSoft UninstallView to uninstall software matching patterns
 language: PowerShell
 tags:
 - Cleanup

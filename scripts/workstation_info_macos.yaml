@@ -1,5 +1,5 @@
 name: workstation_info_macos.sh
-description: Displays system info popup dialog for macOS user self-service via RMM tray icon
+description: Displays system info popup dialog for macOS user self-service
 language: Bash
 tags:
 - Mac

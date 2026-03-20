@@ -1,5 +1,5 @@
 name: reboot_on_uptime_macos.sh
-description: Reboots macOS/Linux when uptime exceeds configured threshold (default 14 days)
+description: Reboots macOS when uptime exceeds configured threshold
 language: Bash
 tags:
 - Mac

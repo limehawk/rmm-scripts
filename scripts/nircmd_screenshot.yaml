@@ -1,5 +1,5 @@
 name: nircmd_screenshot.ps1
-description: Captures screenshot of current display using NirSoft NirCmd utility
+description: Captures screenshot using NirSoft NirCmd utility
 language: PowerShell
 tags:
 - Maintenance

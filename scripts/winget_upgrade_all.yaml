@@ -1,5 +1,5 @@
 name: winget_upgrade_all.ps1
-description: Upgrades all winget-managed packages to latest versions with logging
+description: Upgrades all winget-managed packages to latest versions
 language: PowerShell
 tags:
 - Patch

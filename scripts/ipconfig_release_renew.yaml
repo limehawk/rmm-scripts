@@ -1,5 +1,5 @@
 name: ipconfig_release_renew.ps1
-description: Releases and renews IP addresses on DHCP-enabled adapters and flushes DNS cache
+description: Releases and renews IP addresses on DHCP-enabled adapters
 language: PowerShell
 tags:
 - Network

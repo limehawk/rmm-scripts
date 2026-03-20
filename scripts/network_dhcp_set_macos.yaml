@@ -1,5 +1,5 @@
 name: network_dhcp_set_macos.sh
-description: Configures macOS network interface to use DHCP for automatic IP addressing
+description: Configures macOS network interface to use DHCP for automatic IP
 language: Bash
 tags:
 - Mac

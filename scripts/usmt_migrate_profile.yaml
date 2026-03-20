@@ -1,5 +1,5 @@
 name: usmt_migrate_profile.ps1
-description: Interactive USMT tool for backing up and restoring user profiles across machines
+description: Interactive USMT backup/restore for remote terminal sessions
 language: PowerShell
 tags:
 - Administration

@@ -1,5 +1,5 @@
 name: antivirus_status.ps1
-description: Reports third-party antivirus status to SuperOps custom fields, excluding Windows Defender
+description: Reports third-party antivirus status to SuperOps custom fields
 language: PowerShell
 tags:
 - Antivirus

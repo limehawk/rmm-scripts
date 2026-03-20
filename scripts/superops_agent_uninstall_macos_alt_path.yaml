@@ -1,5 +1,5 @@
 name: superops_agent_uninstall_macos_alt_path.sh
-description: Uninstalls SuperOps agent from macOS alternate /Library/limehawk path
+description: Uninstalls SuperOps agent from alternate /Library/limehawk path
 language: Bash
 tags:
 - Cleanup

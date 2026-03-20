@@ -1,5 +1,5 @@
 name: power_profile_always_on.ps1
-description: Creates custom always-on power plan for workstations that should never sleep on AC power
+description: Creates custom always-on power plan for workstations
 language: PowerShell
 tags:
 - Maintenance

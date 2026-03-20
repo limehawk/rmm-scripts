@@ -1,5 +1,5 @@
 name: printer_install_linux.sh
-description: Installs network printers on Linux using CUPS/lpadmin with PPD driver support
+description: Installs network printer via IPP using lpadmin on Linux
 language: Bash
 tags:
 - Linux

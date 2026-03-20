@@ -1,5 +1,5 @@
 name: directory_cleanup.ps1
-description: Deletes files and directories older than specified days with logging
+description: Deletes files and directories older than specified days
 language: PowerShell
 tags:
 - Cleanup

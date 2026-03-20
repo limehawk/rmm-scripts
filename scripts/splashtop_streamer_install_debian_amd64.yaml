@@ -1,5 +1,5 @@
 name: splashtop_streamer_install_debian_amd64.sh
-description: Downloads and installs Splashtop Streamer agent on Debian/Ubuntu AMD64 systems
+description: Installs Splashtop Streamer on Debian/Ubuntu AMD64 systems
 language: Bash
 tags:
 - Linux

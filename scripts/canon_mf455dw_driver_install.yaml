@@ -1,5 +1,5 @@
 name: canon_mf455dw_driver_install.ps1
-description: Downloads and installs Canon imageCLASS MF455dw printer drivers with optional queue creation
+description: Downloads and installs Canon imageCLASS MF455dw printer drivers
 language: PowerShell
 tags:
 - Software

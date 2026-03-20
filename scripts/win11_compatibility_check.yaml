@@ -1,5 +1,5 @@
 name: win11_compatibility_check.ps1
-description: Checks hardware requirements for Windows 11 upgrade eligibility
+description: Checks hardware requirements for Windows 11 upgrade
 language: PowerShell
 tags:
 - Monitoring

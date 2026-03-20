@@ -1,5 +1,5 @@
 name: winget_install_package.ps1
-description: Installs a software package using winget with SuperOps runtime variable for package name
+description: Installs software package using winget with SuperOps integration
 language: PowerShell
 tags:
 - Patch

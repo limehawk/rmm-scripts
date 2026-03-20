@@ -1,5 +1,5 @@
 name: splashtop_service_restart_macos.sh
-description: Restarts Splashtop Streamer service on macOS to resolve connectivity issues
+description: Restarts Splashtop Streamer service on macOS
 language: Bash
 tags:
 - Mac

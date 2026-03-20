@@ -1,5 +1,5 @@
 name: stdrename_install_toggle.ps1
-description: Toggles installation of stdrename file renaming utility on Windows
+description: Toggles installation of stdrename file renaming utility
 language: PowerShell
 tags:
 - Software

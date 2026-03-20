@@ -1,5 +1,5 @@
 name: windows_product_key_to_superops.ps1
-description: Retrieves Windows product key from registry and syncs to SuperOps custom field
+description: Retrieves Windows product key and syncs to SuperOps custom field
 language: PowerShell
 tags:
 - Software

@@ -1,5 +1,5 @@
 name: printer_install_macos.sh
-description: Installs network printers on macOS using CUPS/lpadmin with PPD driver support
+description: Installs network printer via IPP using lpadmin on macOS
 language: Bash
 tags:
 - Mac

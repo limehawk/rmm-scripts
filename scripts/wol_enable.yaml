@@ -1,5 +1,5 @@
 name: wol_enable.ps1
-description: Enables Wake-on-LAN in BIOS and Windows NIC settings for Dell, HP, and Lenovo systems
+description: Enables Wake-on-LAN settings for Ethernet adapters
 language: PowerShell
 tags:
 - Network

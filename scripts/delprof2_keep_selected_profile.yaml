@@ -1,5 +1,5 @@
 name: delprof2_keep_selected_profile.ps1
-description: Deletes all Windows user profiles except the specified one and protected profiles
+description: Deletes all profiles EXCEPT the specified one and protected ones
 language: PowerShell
 tags:
 - Administration

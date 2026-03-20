@@ -1,5 +1,5 @@
 name: superops_agent_uninstall_linux.sh
-description: Uninstalls SuperOps RMM agent from Linux using the vendor uninstall script
+description: Uninstalls SuperOps RMM agent from Linux using vendor script
 language: Bash
 tags:
 - Cleanup

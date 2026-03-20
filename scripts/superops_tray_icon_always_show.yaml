@@ -1,5 +1,5 @@
 name: superops_tray_icon_always_show.ps1
-description: Configures Windows to always show the SuperOps tray icon in the notification area
+description: Configures Windows to always show SuperOps tray icon
 language: PowerShell
 tags:
 - Software

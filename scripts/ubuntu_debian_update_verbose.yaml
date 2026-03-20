@@ -1,5 +1,5 @@
 name: ubuntu_debian_update_verbose.sh
-description: Automates Ubuntu/Debian package updates with verbose output and reboot detection
+description: Updates all packages on Ubuntu/Debian with verbose output
 language: Bash
 tags:
 - Linux

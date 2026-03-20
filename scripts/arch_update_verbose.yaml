@@ -1,5 +1,5 @@
 name: arch_update_verbose.sh
-description: Automates Arch Linux/Omarchy package updates with verbose output
+description: Updates all packages on Arch Linux/Omarchy with verbose output
 language: Bash
 tags:
 - Linux

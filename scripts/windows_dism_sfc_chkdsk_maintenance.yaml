@@ -1,5 +1,5 @@
 name: windows_dism_sfc_chkdsk_maintenance.ps1
-description: Runs DISM, SFC, and chkdsk for Windows system file repair and maintenance
+description: Runs DISM, SFC, and chkdsk for Windows system file repair
 language: PowerShell
 tags:
 - Maintenance

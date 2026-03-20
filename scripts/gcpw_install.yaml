@@ -1,5 +1,5 @@
 name: gcpw_install.ps1
-description: Downloads, installs, and configures Google Credential Provider for Windows (GCPW)
+description: Downloads, installs, and configures Google Credential Provider for Windows
 language: PowerShell
 tags:
 - Applications

@@ -1,5 +1,5 @@
 name: local_user_disable.ps1
-description: ''
+description: Disables a local user account without deleting profile data
 language: PowerShell
 runAs: SYSTEM_USER
 timeout: 15

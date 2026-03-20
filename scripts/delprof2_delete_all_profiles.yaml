@@ -1,5 +1,5 @@
 name: delprof2_delete_all_profiles.ps1
-description: Deletes ALL Windows user profiles except protected ones (gaia, administrator) using DelProf2
+description: Deletes ALL Windows user profiles except protected ones
 language: PowerShell
 tags:
 - Administration

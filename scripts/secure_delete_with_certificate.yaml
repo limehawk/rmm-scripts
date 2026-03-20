@@ -1,5 +1,5 @@
 name: secure_delete_with_certificate.ps1
-description: Securely deletes files with DoD-compliant overwriting and generates certificate of destruction
+description: Securely deletes files with DoD-compliant overwriting and audit trail
 language: PowerShell
 tags:
 - Cleanup

@@ -253,11 +253,20 @@ Security
 - Two-space YAML indent (matching existing sidecars)
 - Blank line between sections, no trailing blank line after last section
 
+### Description Field Validation
+
+The sidecar `description` field must exactly match the script header's DESCRIPTION line. The script is the source of truth.
+
+- Parse the DESCRIPTION line from the script header (e.g., `DESCRIPTION : Downloads and silently installs 1Password using official MSI`)
+- Compare against the sidecar's `description:` field
+- Flag if they differ — the sidecar must be updated to match the script
+
 ### Validation Checks
 1. Sidecar YAML file exists for the script
-2. `readme` field is present and non-empty
-3. `readme` uses plain-text format (no `#` or `##` markdown headers)
-4. Content reflects the script's current README sections (flag if script header changed but sidecar readme appears stale)
+2. `description` field matches the script's DESCRIPTION line exactly
+3. `readme` field is present and non-empty
+4. `readme` uses plain-text format (no `#` or `##` markdown headers)
+5. Content reflects the script's current README sections (flag if script header changed but sidecar readme appears stale)
 
 ---
 

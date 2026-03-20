@@ -1,5 +1,5 @@
 name: time_sync_fix.ps1
-description: Fixes Windows time synchronization by resetting NTP configuration and forcing sync
+description: Fixes Windows time synchronization by resetting NTP configuration
 language: PowerShell
 tags:
 - Maintenance

@@ -1,5 +1,5 @@
 name: splashtop_service_restart.ps1
-description: Restarts Splashtop Remote Service on Windows to resolve connectivity issues
+description: Restarts Splashtop Remote Service to resolve connectivity issues
 language: PowerShell
 tags:
 - Services

@@ -1,5 +1,5 @@
 name: delprof2_delete_specific_profile.ps1
-description: Deletes only the specified Windows user profile using DelProf2 utility
+description: Deletes only the specified Windows user profile
 language: PowerShell
 tags:
 - Administration

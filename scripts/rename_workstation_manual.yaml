@@ -1,5 +1,5 @@
 name: rename_workstation_manual.ps1
-description: Rename a Windows device with manual client override and sync to SuperOps
+description: Renames Windows device with custom client segment override
 language: PowerShell
 tags:
 - Administration

@@ -1,5 +1,5 @@
 name: deskview_install.ps1
-description: Installs DeskView utility to startup folder for desktop icons display
+description: Installs DeskView utility to startup folder for desktop icons
 language: PowerShell
 tags:
 - Software

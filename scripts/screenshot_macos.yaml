@@ -1,5 +1,5 @@
 name: screenshot_macos.sh
-description: Captures screenshot of all displays on macOS with timestamped filename
+description: Captures screenshot of all displays on macOS
 language: Bash
 tags:
 - Mac

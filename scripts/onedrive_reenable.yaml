@@ -1,5 +1,5 @@
 name: onedrive_reenable.ps1
-description: Reverses OneDrive blocking policies and reinstalls OneDrive from Microsoft CDN
+description: Removes OneDrive blocking policies and reinstalls OneDrive
 language: PowerShell
 tags:
 - Applications

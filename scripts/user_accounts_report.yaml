@@ -1,5 +1,5 @@
 name: user_accounts_report.ps1
-description: Generates report of local user accounts, group memberships, sessions, and profiles
+description: Generates report of local user accounts and group memberships
 language: PowerShell
 tags:
 - Administration

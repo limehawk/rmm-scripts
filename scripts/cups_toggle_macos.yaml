@@ -1,5 +1,5 @@
 name: cups_toggle_macos.sh
-description: Toggles the CUPS web interface on/off for printer administration on macOS/Linux
+description: Toggles CUPS web interface on/off for printer administration
 language: Bash
 tags:
 - Mac

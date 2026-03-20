@@ -1,5 +1,5 @@
 name: superops_agent_uninstaller.ps1
-description: Uninstalls SuperOps agent via WMI/CIM with diagnostic reporting and cleanup suggestions
+description: Uninstalls SuperOps agent via WMI/CIM with diagnostic reporting
 language: PowerShell
 tags:
 - Cleanup

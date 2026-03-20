@@ -1,5 +1,5 @@
 name: windows11_compatibility_checker.ps1
-description: Comprehensive Windows 11 compatibility checker with TPM, SecureBoot, RAM, CPU validation
+description: Checks TPM, SecureBoot, RAM, CPU compatibility for Windows 11
 language: PowerShell
 tags:
 - Monitoring

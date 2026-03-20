@@ -1,5 +1,5 @@
 name: disk_cleanup.ps1
-description: Runs Windows Disk Cleanup plus SoftwareDistribution and WinSxS cleanup
+description: Runs Windows Disk Cleanup plus SoftwareDistribution/WinSxS cleanup
 language: PowerShell
 tags:
 - Cleanup

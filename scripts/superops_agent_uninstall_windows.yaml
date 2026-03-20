@@ -1,5 +1,5 @@
 name: superops_agent_uninstall_windows.ps1
-description: Uninstalls SuperOps RMM agent using official uninstaller or registry-based MSI method
+description: Uninstalls SuperOps RMM agent using official or registry method
 language: PowerShell
 tags:
 - Cleanup

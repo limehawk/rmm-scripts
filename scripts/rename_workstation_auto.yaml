@@ -1,5 +1,5 @@
 name: rename_workstation_auto.ps1
-description: Rename a Windows device and sync the same name to SuperOps
+description: Auto-renames Windows device using CLIENT3-USER-UUID pattern
 language: PowerShell
 tags:
 - Administration

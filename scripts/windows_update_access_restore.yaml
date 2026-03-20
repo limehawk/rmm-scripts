@@ -1,5 +1,5 @@
 name: windows_update_access_restore.ps1
-description: Removes SetDisableUXWUAccess registry key to restore Windows Update access
+description: Restores user access to Windows Update settings
 language: PowerShell
 tags:
 - Patch

@@ -1,5 +1,5 @@
 name: google_update_trigger.ps1
-description: Triggers Google Update scheduled task to force an immediate check for Chrome updates
+description: Triggers Google Update scheduled task to check for Chrome updates
 language: PowerShell
 tags:
 - Applications

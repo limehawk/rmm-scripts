@@ -1,5 +1,5 @@
 name: winreagent_cleanup.ps1
-description: Deletes C:\$WinREAgent folder to free disk space after WinRE updates
+description: Cleans up WinREAgent folder to free disk space
 language: PowerShell
 tags:
 - Cleanup

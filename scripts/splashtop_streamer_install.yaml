@@ -1,5 +1,5 @@
 name: splashtop_streamer_install.ps1
-description: Silently installs Splashtop Streamer agent for remote access on Windows
+description: Silently installs Splashtop Streamer agent for remote access
 language: PowerShell
 tags:
 - Software

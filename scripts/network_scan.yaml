@@ -1,5 +1,5 @@
 name: network_scan.ps1
-description: Scans IP address range using multi-threaded ping to discover active hosts on the network
+description: Scans IP address range using multi-threaded ping to discover active hosts
 language: PowerShell
 tags:
 - Network

@@ -1,5 +1,5 @@
 name: remote_wipe.ps1
-description: Initiates MDM remote wipe to factory reset Windows device (IRREVERSIBLE)
+description: Initiates MDM remote wipe to factory reset Windows device
 language: PowerShell
 tags:
 - Security

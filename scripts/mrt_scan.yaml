@@ -1,5 +1,5 @@
 name: mrt_scan.ps1
-description: Runs Microsoft Malicious Software Removal Tool with configurable scan mode
+description: Executes Windows Malicious Software Removal Tool with configurable scan mode
 language: PowerShell
 tags:
 - Antivirus

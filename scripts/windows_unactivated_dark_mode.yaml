@@ -1,5 +1,5 @@
 name: windows_unactivated_dark_mode.ps1
-description: Sets wallpaper and dark mode on non-activated Windows 11 via registry
+description: Sets wallpaper and dark mode on non-activated Windows 11
 language: PowerShell
 tags:
 - Maintenance

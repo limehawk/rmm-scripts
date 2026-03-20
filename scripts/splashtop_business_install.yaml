@@ -1,5 +1,5 @@
 name: splashtop_business_install.ps1
-description: Downloads and silently installs Splashtop Business client on Windows
+description: Downloads and installs Splashtop Business client silently
 language: PowerShell
 tags:
 - Software

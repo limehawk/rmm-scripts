@@ -1,5 +1,5 @@
 name: workstation_info_display.ps1
-description: Displays system info popup for user self-service via tray icon or RMM execution
+description: Displays system info popup for user self-service from tray icon
 language: PowerShell
 tags:
 - Monitoring

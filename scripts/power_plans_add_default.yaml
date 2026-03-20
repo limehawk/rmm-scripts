@@ -1,5 +1,5 @@
 name: power_plans_add_default.ps1
-description: Restores missing default Windows power plans (High Perf, Ultimate, Power Saver, Balanced)
+description: Restores missing default Windows power plans
 language: PowerShell
 tags:
 - Maintenance

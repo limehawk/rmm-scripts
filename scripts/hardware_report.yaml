@@ -1,5 +1,5 @@
 name: hardware_report.ps1
-description: Generates comprehensive hardware inventory report via CIM/WMI queries
+description: Generates comprehensive hardware inventory report via CIM queries
 language: PowerShell
 tags:
 - Monitoring

@@ -1,5 +1,5 @@
 name: dokploy_orphaned_volumes_cleanup.sh
-description: Identifies and removes orphaned Docker volumes to free disk space
+description: Identifies and removes orphaned Docker volumes to free space
 language: Bash
 tags:
 - Cleanup

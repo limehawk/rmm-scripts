@@ -1,5 +1,5 @@
 name: fix_agent_startup.ps1
-description: Fixes RMM agent service startup with recovery options and delayed start to prevent boot failures
+description: Fixes RMM agent service startup with recovery options and delayed start
 language: PowerShell
 tags:
 - Maintenance

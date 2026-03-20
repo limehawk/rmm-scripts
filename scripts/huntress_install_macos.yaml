@@ -1,5 +1,5 @@
 name: huntress_install_macos.sh
-description: Downloads and installs Huntress Agent on macOS endpoints for managed detection and response
+description: Installs Huntress Agent on macOS endpoints
 language: Bash
 tags:
 - Antivirus

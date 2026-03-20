@@ -1,5 +1,5 @@
 name: public_ip_to_superops.ps1
-description: Fetches public IP info from wtfismyip.com and syncs to SuperOps custom field
+description: Fetches public IP info from wtfismyip.com and syncs to SuperOps
 language: PowerShell
 tags:
 - Network

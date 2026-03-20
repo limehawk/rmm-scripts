@@ -1,5 +1,5 @@
 name: rename_to_snake_case.ps1
-description: Renames files in a directory to snake_case format
+description: Recursively renames files and folders to snake_case format
 language: PowerShell
 tags:
 - Maintenance

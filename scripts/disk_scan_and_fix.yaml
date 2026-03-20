@@ -1,5 +1,5 @@
 name: disk_scan_and_fix.sh
-description: Comprehensive disk and volume health check for macOS using diskutil
+description: Comprehensive disk and volume health check for macOS
 language: Bash
 tags:
 - Disk

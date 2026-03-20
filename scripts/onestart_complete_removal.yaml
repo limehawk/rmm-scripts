@@ -1,5 +1,5 @@
 name: onestart_complete_removal.ps1
-description: Completely removes OneStart.ai PUP from Windows using NirSoft UninstallView and manual cleanup
+description: Completely removes OneStart.ai PUP from Windows systems
 language: PowerShell
 tags:
 - Maintenance

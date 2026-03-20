@@ -1,5 +1,5 @@
 name: sentinelone_start_services.ps1
-description: Ensures all SentinelOne services are running on Windows systems
+description: Ensures all SentinelOne services are running on Windows
 language: PowerShell
 tags:
 - Antivirus

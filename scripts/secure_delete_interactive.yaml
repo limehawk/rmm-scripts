@@ -1,5 +1,5 @@
 name: secure_delete_interactive.ps1
-description: Interactive wizard for secure file deletion with DoD-compliant overwriting and certificate generation
+description: Interactive version of secure delete - prompts user for all inputs
 language: PowerShell
 tags:
 - Cleanup

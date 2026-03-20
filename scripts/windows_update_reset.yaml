@@ -1,5 +1,5 @@
 name: windows_update_reset.ps1
-description: Resets Windows Update components by clearing caches, re-registering DLLs, and restarting services
+description: Resets Windows Update components and clears cache
 language: PowerShell
 tags:
 - Antivirus

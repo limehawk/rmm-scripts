@@ -1,5 +1,5 @@
 name: restic_backup_b2_install.ps1
-description: Installs Restic, configures B2 repository, and schedules daily immutable backups
+description: Installs Restic, configures B2 repository, schedules daily backups
 language: PowerShell
 tags:
 - Backup

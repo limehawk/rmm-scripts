@@ -1,5 +1,5 @@
 name: windows_update_access_toggle.ps1
-description: Toggles user access to Windows Update settings in the Settings app
+description: Toggles user access to Windows Update in Settings app
 language: PowerShell
 tags:
 - Patch

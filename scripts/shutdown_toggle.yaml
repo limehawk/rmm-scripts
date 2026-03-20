@@ -1,5 +1,5 @@
 name: shutdown_toggle.ps1
-description: Schedules system shutdown with warning or cancels existing scheduled shutdown
+description: Toggles scheduled shutdown with warning message
 language: PowerShell
 tags:
 - Maintenance

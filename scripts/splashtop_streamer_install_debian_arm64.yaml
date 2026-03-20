@@ -1,5 +1,5 @@
 name: splashtop_streamer_install_debian_arm64.sh
-description: Downloads and installs Splashtop Streamer on Debian/Ubuntu ARM64 systems
+description: Installs Splashtop Streamer on Debian/Ubuntu ARM64 systems
 language: Bash
 tags:
 - Linux

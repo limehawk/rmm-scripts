@@ -1,5 +1,5 @@
 name: openssh_server_remove.ps1
-description: Removes OpenSSH Server, firewall rule, and cleans up config and host keys
+description: Removes OpenSSH Server, firewall rule, and cleans up config
 language: PowerShell
 tags:
 - Remote Access

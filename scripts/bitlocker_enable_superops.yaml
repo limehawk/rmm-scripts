@@ -1,5 +1,5 @@
 name: bitlocker_enable_superops.ps1
-description: Enables BitLocker with TPM protector and syncs recovery key to SuperOps custom fields
+description: Enables BitLocker with TPM and syncs recovery key to SuperOps
 language: PowerShell
 tags:
 - Security

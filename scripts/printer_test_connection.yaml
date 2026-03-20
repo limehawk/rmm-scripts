@@ -1,5 +1,5 @@
 name: printer_test_connection.sh
-description: Tests network printer connectivity via ping and reports pass/fail status
+description: Tests network printer connectivity via ping and IPP port check
 language: Bash
 tags:
 - Services

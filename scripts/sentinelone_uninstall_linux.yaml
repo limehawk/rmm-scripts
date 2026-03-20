@@ -1,5 +1,5 @@
 name: sentinelone_uninstall_linux.sh
-description: Uninstalls SentinelOne agent from Linux systems using sentinelctl
+description: Uninstalls SentinelOne agent from Linux using passphrase
 language: Bash
 tags:
 - Antivirus

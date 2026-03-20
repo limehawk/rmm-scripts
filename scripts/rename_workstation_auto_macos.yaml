@@ -1,5 +1,5 @@
 name: rename_workstation_auto_macos.sh
-description: Rename a macOS device using client name from RMM
+description: Auto-renames macOS device using CLIENT-USER-UUID pattern
 language: Bash
 tags:
 - Administration

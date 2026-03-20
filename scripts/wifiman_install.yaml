@@ -1,5 +1,5 @@
 name: wifiman_install.ps1
-description: Installs Ubiquiti WiFiman Desktop application using winget
+description: Installs Ubiquiti WiFiman Desktop via winget
 language: PowerShell
 tags:
 - Network

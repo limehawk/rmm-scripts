@@ -1,5 +1,5 @@
 name: synology_backup_agent_install_linux.sh
-description: Installs Synology Active Backup for Business Agent on Linux with prerequisite checks
+description: Installs Synology Active Backup for Business Agent on Linux
 language: Bash
 tags:
 - Backup

@@ -1,5 +1,5 @@
 name: delprof2_delete_old_profiles.ps1
-description: Deletes Windows user profiles older than specified days using DelProf2
+description: Deletes Windows user profiles older than specified days
 language: PowerShell
 tags:
 - Administration

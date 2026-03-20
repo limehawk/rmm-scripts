@@ -1,5 +1,5 @@
 name: wol_status_check.ps1
-description: Checks Wake-on-LAN status at BIOS and OS levels for Dell, HP, and Lenovo systems
+description: Checks Wake-on-LAN status at BIOS and OS levels
 language: PowerShell
 tags:
 - Network

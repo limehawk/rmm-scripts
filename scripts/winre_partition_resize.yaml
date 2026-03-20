@@ -1,5 +1,5 @@
 name: winre_partition_resize.ps1
-description: Extends WinRE partition by 250MB to resolve Windows update issues like KB5034441
+description: Extends WinRE partition by 250MB for Windows updates
 language: PowerShell
 tags:
 - Disk

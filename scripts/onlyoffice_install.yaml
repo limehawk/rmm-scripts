@@ -1,5 +1,5 @@
 name: onlyoffice_install.ps1
-description: Downloads and silently installs OnlyOffice Desktop Editors office suite
+description: Downloads and silently installs OnlyOffice Desktop Editors
 language: PowerShell
 tags:
 - Applications

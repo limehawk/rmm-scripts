@@ -1,5 +1,5 @@
 name: reset_nvram_reboot_macos.sh
-description: Resets NVRAM settings and schedules immediate macOS reboot
+description: Resets NVRAM and schedules immediate macOS reboot
 language: Bash
 tags:
 - Antivirus

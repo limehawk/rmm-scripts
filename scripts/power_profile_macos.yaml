@@ -1,5 +1,5 @@
 name: power_profile_macos.sh
-description: Configures always-on power settings for macOS laptops and desktops
+description: Configures always-on power settings for macOS systems
 language: Bash
 tags:
 - Mac
