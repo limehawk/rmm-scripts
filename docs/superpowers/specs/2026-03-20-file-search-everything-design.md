@@ -5,17 +5,17 @@
 
 ## Purpose
 
-A PowerShell script deployed to Windows endpoints via RMM (SuperOps/Datto/NinjaRMM) that searches the entire C:\ drive for files matching a hardcoded pattern using Voidtools Everything. Results are output to stdout for capture by the RMM platform.
+A PowerShell script deployed to Windows endpoints via RMM (SuperOps/Datto/NinjaRMM) that searches the entire system for files matching a hardcoded pattern using Voidtools Everything. Results are output to stdout for capture by the RMM platform.
 
 ## Approach
 
-Use Everything's `es.exe` command-line interface for near-instant full-drive file search. Install Everything via winget if not already present, perform the search, and uninstall if the script installed it (leave it alone if it was pre-existing).
+Use Everything's built-in CLI capabilities (`Everything.exe -search <pattern> -export-csv <file>`) for near-instant full-drive file search. This avoids the separate `es.exe` download — Everything.exe itself supports command-line search and CSV export. Install via winget if not already present, perform the search, and uninstall if the script installed it.
 
 ## Hardcoded Inputs
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `$searchTerm` | `*landtrust*` | Wildcard pattern passed to es.exe |
+| `$searchTerm` | `landtrust` | Search pattern passed to Everything (uses Everything search syntax) |
 
 ## Script Flow
 
@@ -26,19 +26,20 @@ Use Everything's `es.exe` command-line interface for near-instant full-drive fil
 - Detect SYSTEM vs user context (RMM runs as SYSTEM).
 - Resolve winget path accordingly (WindowsApps path resolution for SYSTEM context).
 - Check if Everything is already installed by looking for `Everything.exe` in Program Files.
+- Check if Everything.exe is already running (track with `$everythingWasRunning`).
 
 ### 3. Install Everything (conditional)
-- If Everything is not present, install via winget: `winget install voidtools.Everything --silent --accept-source-agreements --accept-package-agreements`
+- If Everything is not present, install via winget with `--silent --accept-source-agreements --accept-package-agreements`.
 - Set `$scriptInstalledEverything = $true` to track cleanup responsibility.
 
 ### 4. Start Everything & Wait for Index
-- Start `Everything.exe` (needed for es.exe IPC communication).
-- Poll `es.exe` with a simple query until it returns results (index is ready).
-- Timeout after 60 seconds — if index doesn't build, report error and exit 1.
+- Install and start the Everything service via `Everything.exe -install-service` and `Everything.exe -start-service` (works in SYSTEM context without a desktop session).
+- Poll readiness by running a known-good search (e.g., `Everything.exe -search notepad.exe -export-csv`) until results appear.
+- Poll every 2 seconds, timeout after 60 seconds total.
 
 ### 5. Search
-- Run `es.exe $searchTerm` and capture output.
-- Each result is a full file path, one per line.
+- Run `Everything.exe -search $searchTerm -export-csv $csvPath` where `$csvPath` is a temp file.
+- Parse CSV output — each row is a matching file with full path.
 
 ### 6. Output Results
 - Print each matching file path to stdout.
@@ -46,9 +47,13 @@ Use Everything's `es.exe` command-line interface for near-instant full-drive fil
 - If no matches: "No files found matching: $searchTerm"
 
 ### 7. Cleanup
-- Stop Everything.exe process.
-- If `$scriptInstalledEverything` is true: uninstall via winget and remove leftover files/dirs.
-- If Everything was pre-existing: leave it installed, just stop the process we started.
+- Remove temp CSV file.
+- If `$scriptInstalledEverything` is true:
+  - Stop and remove the Everything service: `Everything.exe -uninstall-service`
+  - Uninstall via winget with `--silent --force`.
+  - Remove leftover directories: `C:\Program Files\Everything\`, `$env:ProgramData\Everything\`.
+- If Everything was pre-existing but not running: stop the service we started.
+- If Everything was pre-existing and already running: leave it alone.
 
 ## Edge Cases
 
@@ -56,9 +61,10 @@ Use Everything's `es.exe` command-line interface for near-instant full-drive fil
 |----------|----------|
 | Winget not available | Error message with guidance, exit 1 |
 | Everything already installed | Skip install, skip uninstall, still run search |
+| Everything already running | Skip start, skip stop — don't disrupt user |
 | No results | Clean message: "No files found matching: ..." |
 | Index build timeout (60s) | Error message, attempt cleanup, exit 1 |
-| es.exe not found after install | Error message, attempt cleanup, exit 1 |
+| Multi-drive system | Everything indexes all NTFS volumes by default — results may include D:\, E:\, etc. |
 
 ## Console Sections
 
@@ -83,11 +89,12 @@ Use Everything's `es.exe` command-line interface for near-instant full-drive fil
 ## Exit Codes
 
 - 0 = Success (results found or no results — search completed)
-- 1 = Failure (winget missing, install failed, index timeout, es.exe not found)
+- 1 = Failure (winget missing, install failed, index timeout)
 
 ## Key Technical Details
 
-- **es.exe requires Everything.exe running** — it communicates via IPC, not through the Windows service directly.
+- **No es.exe dependency** — `Everything.exe` supports `-search` and `-export-csv` flags directly, eliminating the need for a separate es.exe download.
+- **Service mode for SYSTEM context** — `Everything.exe -install-service` / `-start-service` runs headless without a desktop session, which is how RMM scripts execute.
 - **SYSTEM context winget** — `Get-Command winget` fails under SYSTEM; must resolve full path via `Resolve-Path` in WindowsApps.
 - **Index build time** — typically 1-3 seconds for a standard Windows install (~100k-200k files). 60-second timeout is generous.
-- **Everything.exe path** — default install location is `C:\Program Files\Everything\Everything.exe`, with `es.exe` in the same directory.
+- **Everything search syntax** — not standard glob. Wildcards are implicit (searching `landtrust` matches any path containing that string). See Everything docs for advanced syntax.
