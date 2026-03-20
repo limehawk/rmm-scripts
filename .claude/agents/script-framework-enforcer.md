@@ -203,6 +203,64 @@ If reviewing a MODIFIED script (not new), verify:
 
 ---
 
+## Sidecar README Validation
+
+When reviewing a script, also validate its companion sidecar YAML file (`scripts/<name>.yaml`):
+
+### README Field Validation
+
+The sidecar `readme` field must match content derived from the script's embedded README block. Validate using this section mapping:
+
+| Script Section | Sidecar Section |
+|---|---|
+| PURPOSE | Purpose |
+| BEHAVIOR + SETTINGS | Usage Notes |
+| PREREQUISITES + REQUIRED INPUTS | Requirements |
+| SECURITY NOTES | Security (only if meaningful) |
+
+Skip these script sections — they are developer context, not operator-facing: DATA SOURCES & PRIORITY, ENDPOINTS, EXIT CODES, EXAMPLE RUN, CHANGELOG
+
+### Plain-Text Format
+
+The sidecar readme must use plain text (no markdown). SuperOps does not render markdown.
+
+```
+Purpose
+-------
+Flowing paragraph from PURPOSE section. Unwrap line breaks into continuous text.
+
+Usage Notes
+-----------
+- Bullet points from BEHAVIOR steps and SETTINGS values
+- Combine into concise operator-facing notes
+
+Requirements
+------------
+- From PREREQUISITES and REQUIRED INPUTS
+- Deduplicate overlapping items
+
+Security
+--------
+- Only include if SECURITY NOTES has meaningful content
+- Omit entire section if content is only boilerplate like "No secrets in logs"
+```
+
+### Format Rules
+- No markdown syntax (`#`, `**`, `##`) — SuperOps renders plain text only
+- Section headers: Title Case, underlined with `-` characters matching header length
+- Purpose: flowing paragraph (not bullets)
+- Usage Notes, Requirements, Security: bullet list with `- ` prefix
+- Two-space YAML indent (matching existing sidecars)
+- Blank line between sections, no trailing blank line after last section
+
+### Validation Checks
+1. Sidecar YAML file exists for the script
+2. `readme` field is present and non-empty
+3. `readme` uses plain-text format (no `#` or `##` markdown headers)
+4. Content reflects the script's current README sections (flag if script header changed but sidecar readme appears stale)
+
+---
+
 ## Output Format
 
 Report findings like this:
