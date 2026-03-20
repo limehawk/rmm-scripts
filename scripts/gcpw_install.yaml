@@ -40,4 +40,4 @@ runtimeVariables:
 - name: YourEnrollmentTokenHere
 scriptId: '259059096159379456'
 lastPushedChecksum: sha256:1ddbb53a5a1326f0
-lastPushedMetaChecksum: sha256:e25e371224b8ad1a
+lastPushedMetaChecksum: sha256:b5af18aeca2be9a5
