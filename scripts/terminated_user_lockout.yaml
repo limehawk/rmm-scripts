@@ -1,0 +1,34 @@
+name: terminated_user_lockout.ps1
+description: Immediately locks out a terminated user — resets password, disables account, locks workstation, forces logoff
+language: PowerShell
+tags:
+- Security
+- Windows
+- Offboarding
+runAs: SYSTEM_USER
+timeout: 30
+readme: |
+  Purpose
+  -------
+  Performs a full local lockout for a terminated employee in a single pass. Locks the workstation, resets the local account password to a random value, disables the account, and forces logoff of all active sessions.
+
+  Usage Notes
+  -----------
+  - Validates username input
+  - Locks workstation if target user has active console session
+  - Resets password to a random 32-character string (never logged)
+  - Disables the local user account
+  - Logs off all active sessions
+  - Preserves user profile and all files on disk
+  - Account can be re-enabled with Enable-LocalUser (new password required)
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - PowerShell 5.1+
+  - $TerminatedUsername: local username to lock out (SuperOps runtime variable)
+favourite: false
+shared: false
+runtimeVariables:
+- name: TerminatedUsername
