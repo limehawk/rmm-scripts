@@ -9,25 +9,24 @@ timeout: 60
 readme: |
   Purpose
   -------
-  Executes the built-in Windows Malicious Software Removal Tool (MRT.exe) with
-  configurable scan mode. Designed for RMM deployment via SuperOps, allowing
-  administrators to trigger Quick or Full silent scans on target endpoints.
-  Displays scan status and log preview upon completion.
+  Executes the built-in Windows Malicious Software Removal Tool (MRT.exe) with configurable scan mode. Designed for RMM deployment via SuperOps, allowing administrators to trigger Quick or Full silent scans on target endpoints. Displays scan status and log preview upon completion.
 
   Usage Notes
   -----------
-  - Set scan mode via SuperOps runtime variable $QuickOrFull (Quick or Full)
-  - Quick scan takes several minutes
-  - Full scan can take SEVERAL HOURS depending on disk size
-  - Displays last 50 lines of MRT log file after completion
-  - MRT exit code 0 indicates no infection found
+  - Validates administrative privileges before scanning
+  - Validates scan mode is Quick or Full
+  - Executes MRT with /Q for Quick or /F /Q for Full
+  - Waits for scan completion (minutes to hours depending on mode)
+  - Displays last 50 lines of MRT log file for review
+  - RMM variable injection configures $ScanMode at runtime
 
   Requirements
   ------------
   - Windows OS with MRT.exe (included by default)
   - Administrator privileges
   - PowerShell 5.1+
-  - SuperOps module available
+  - SuperOps module available via $SuperOpsModule variable
+  - $ScanMode set to Quick or Full (case-insensitive)
 favourite: false
 shared: true
 runtimeVariables:

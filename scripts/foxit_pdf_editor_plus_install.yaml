@@ -8,15 +8,21 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Installs Foxit PDF Editor from Microsoft Store source via winget. The MS Store version validates licenses server-side, supporting all Foxit subscription types including PDF Editor+, Suite Pro Teams, and other subscription SKUs.
 
-  ## Usage
-  - No inputs required - package ID is hardcoded
+  Usage Notes
+  -----------
+  - Verifies winget is available
+  - Installs Foxit PDF Editor from Microsoft Store source (package ID: XPDNZD76FP5JR7)
   - Silent install with automatic agreement acceptance
+  - Uses msstore source for proper subscription license validation
   - User must sign into Foxit account post-install to activate license
+  - No inputs required; package ID is hardcoded
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11 with winget installed
   - Administrator/SYSTEM privileges
   - Internet connectivity to Microsoft Store

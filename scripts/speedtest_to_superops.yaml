@@ -14,18 +14,21 @@ readme: |
 
   Usage Notes
   -----------
-  - Automatically downloads Speedtest CLI if not present
+  - Automatically downloads and extracts Speedtest CLI ZIP if not already present
+  - Executes speedtest with JSON output (auto-accepts license and GDPR terms)
+  - Calculates speeds in Mbps with full decimal precision
   - Sends four custom fields to SuperOps: Download Speed, Upload Speed, ISP, Speedtest URL
-  - Reports detailed metrics to console (ping, jitter, packet loss, server info)
-  - Speed values are in Mbps with full decimal precision
+  - Reports detailed metrics to console including ping, jitter, packet loss, and server info
+  - Downloads from https://install.speedtest.net/app/cli/
+  - Extraction path: $env:TEMP\SpeedtestCLI
 
   Requirements
   ------------
   - SuperOps PowerShell module must be available and authenticated
   - Internet connectivity for downloading CLI and running speedtest
-  - Write permissions to TEMP directory
+  - Write permissions to $env:TEMP directory
   - Windows with PowerShell 5.1+ or PowerShell 7+
-  - SuperOps custom fields must exist: Download Speed, Upload Speed, ISP, Speedtest URL
+  - SuperOps custom fields must exist: Download Speed (Decimal), Upload Speed (Decimal), ISP (Short Text), Speedtest URL (Short Text)
 favourite: false
 shared: true
 scriptId: '6533495977667035136'

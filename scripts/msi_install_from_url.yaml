@@ -13,9 +13,10 @@ readme: |
 
   Usage Notes
   -----------
-  - Set MSIURL runtime variable to the full URL of the MSI file
   - Uses curl for fast, reliable downloads with redirect support
+  - Extracts filename from URL, falls back to downloaded_package.msi
   - Runs msiexec with /qn (quiet, no UI) and /norestart flags
+  - Cleans up the temporary MSI file after installation
   - Exit code 3010 indicates success but reboot required
 
   Requirements
@@ -23,6 +24,7 @@ readme: |
   - PowerShell 5.1+
   - Admin rights
   - Network connectivity
+  - $MsiScriptUrl set to the full URL of the MSI file (via SuperOps $MSIURL)
 favourite: false
 shared: false
 runtimeVariables:

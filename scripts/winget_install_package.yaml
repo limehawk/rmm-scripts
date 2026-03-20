@@ -15,8 +15,9 @@ readme: |
   Usage Notes
   -----------
   - PackageName runtime variable specifies winget package ID (e.g., "Google.Chrome", "Mozilla.Firefox")
+  - Validates software name input before proceeding
+  - Searches for package to verify it exists in the repository
   - Silent installation mode with machine scope when available
-  - Validates package exists before installation
   - Accepts package and source agreements automatically
 
   Requirements

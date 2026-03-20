@@ -8,20 +8,29 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
-  Deletes ONLY the specified Windows user profile. All other profiles are left untouched. Uses DelProf2 utility.
+  Purpose
+  -------
+  Deletes ONLY the specified Windows user profile. All other profiles are left untouched. Uses DelProf2 utility downloaded directly from helgeklein.com.
 
-  ## Usage Notes
-  - Protects gaia, administrator from accidental deletion
-  - Downloads DelProf2 directly (no Chocolatey required)
-  - Cleans up after execution
-  - DESTRUCTIVE OPERATION - profile cannot be recovered
+  Usage Notes
+  -----------
+  - Validates that the target profile is not a protected profile
+  - Downloads and extracts DelProf2 if not already cached
+  - Executes delprof2.exe /u /id:PROFILENAME
+  - Refuses to delete gaia or administrator profiles
+  - Cleans up cached files after execution
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11
-  - Admin privileges required
-  - Internet access for DelProf2 download
-  - Runtime variable: `profile_to_delete` (username of the profile to delete)
+  - Administrator privileges
+  - Internet access for DelProf2 download from helgeklein.com
+  - Runtime variable: $profile_to_delete (username of profile to delete)
+
+  Security
+  --------
+  - DESTRUCTIVE OPERATION - deleted profile cannot be recovered
+  - Refuses to delete protected profiles (gaia, administrator)
 favourite: false
 shared: false
 runtimeVariables:

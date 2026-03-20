@@ -9,15 +9,17 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Installs winget (Windows Package Manager) on Windows systems using the most reliable installation method. Optimized for RMM environments running under SYSTEM context. Uses manual AppX installation method which is more reliable than Repair-WinGetPackageManager.
+  Installs winget (Windows Package Manager) on Windows systems using the most reliable installation method. Optimized for RMM environments running under SYSTEM context. Uses manual AppX installation method which is more reliable than Repair-WinGetPackageManager. Handles all OS versions including Windows 10, 11, and Server 2019+.
 
   Usage Notes
   -----------
-  - Downloads winget and dependencies from GitHub
-  - Installs VCLibs and UI.Xaml dependencies first
+  - Uses manual AppX installation method (most reliable for SYSTEM context)
+  - Downloads winget and dependencies (VCLibs, UI.Xaml) from GitHub
   - Configures PATH environment variable automatically
   - Skips installation if winget already exists (unless forceReinstall is true)
-  - Handles Windows 10, 11, and Server 2019+
+  - Configurable: forceReinstall (boolean), downloadTimeout (default 120s), skipServerCore (boolean)
+  - Installs for all users when possible
+  - Cleans up temporary files after installation
 
   Requirements
   ------------

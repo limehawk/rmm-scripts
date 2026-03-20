@@ -14,10 +14,11 @@ readme: |
 
   Usage Notes
   -----------
+  - Validates input parameters before proceeding
   - Downloads OnlyOffice MSI installer to temp directory
   - Installs silently using msiexec
   - Cleans up installer file after completion
-  - Downloads from official OnlyOffice website
+  - $downloadUrl points to official OnlyOffice website
 
   Requirements
   ------------

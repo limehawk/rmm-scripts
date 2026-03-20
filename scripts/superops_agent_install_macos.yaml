@@ -7,16 +7,20 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Downloads and installs the SuperOps RMM agent on macOS systems using the PKG installer format. Designed for automated deployment where the package download URL is provided as an environment variable.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - PKGURL environment variable must be set by RMM platform
   - Downloads PKG to /Users/Shared directory
   - Uses macOS installer command with -dumplog for detailed logging
+  - Installs silently to root (/) target
   - Installer handles cleanup after installation
 
-  Requirements:
+  Requirements
+  ------------
   - macOS
   - Sudo privileges
   - Internet access

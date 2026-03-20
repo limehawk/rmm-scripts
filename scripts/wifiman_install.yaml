@@ -14,10 +14,10 @@ readme: |
 
   Usage Notes
   -----------
-  - No inputs required - package ID is hardcoded
-  - Automatically checks for and installs winget if missing
-  - Uses NuGet provider and PowerShell Gallery for winget installation
-  - Accepts package agreements automatically for unattended install
+  - Package ID is hardcoded (UbiquitiInc.WiFimanDesktop)
+  - Validates input parameters before proceeding
+  - Checks if winget is installed; installs via PowerShell Gallery if missing
+  - Installs WiFiman using winget with unattended options
 
   Requirements
   ------------

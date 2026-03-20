@@ -8,19 +8,26 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Deletes ALL Windows user profiles except protected ones (gaia, administrator). Uses DelProf2 utility downloaded directly from helgeklein.com.
 
-  ## Usage Notes
-  - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
-  - Always protects: gaia and administrator profiles
-  - Downloads DelProf2 directly (no Chocolatey required)
-  - Automatically cleans up cached files after execution
+  Usage Notes
+  -----------
+  - Downloads and extracts DelProf2 if not already cached
+  - Executes delprof2.exe /u /ed:gaia /ed:administrator
+  - Always protects gaia and administrator profiles
+  - Cleans up cached files after execution
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11
   - Administrator privileges
   - Internet access for DelProf2 download from helgeklein.com
+
+  Security
+  --------
+  - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
 favourite: false
 shared: true
 scriptId: '7029137174820597760'

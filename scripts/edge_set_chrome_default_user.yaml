@@ -7,15 +7,22 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
-  Sets Google Chrome as the default browser for the current user. Uses SetUserFTA to properly set file associations with the correct UserChoice hash that Windows 10/11 requires. MUST run as the logged-in user (not SYSTEM) - default browser settings are per-user and stored in HKCU with hash validation.
+  Purpose
+  -------
+  Sets Google Chrome as the default browser for the current user. Uses SetUserFTA to properly set file associations with the correct UserChoice hash that Windows 10/11 requires. Must run as the logged-in user (not SYSTEM) because default browser settings are per-user and stored in HKCU with hash validation.
 
-  ## Usage
-  - Run as logged-in user (NOT as SYSTEM)
-  - Configure boolean settings at top of script for specific associations (http, https, .htm, .html)
-  - Set `$cleanUserStartup = $true` to remove Edge from user's startup programs
+  Usage Notes
+  -----------
+  - Verifies Chrome is installed
+  - Checks that script is NOT running as SYSTEM
+  - Downloads SetUserFTA if not present
+  - Sets Chrome as default for http, https, .htm, .html
+  - All options default to $true; set individual booleans to $false to skip specific associations
+  - $cleanUserStartup: remove Edge from user's startup programs
+  - SetUserFTA is hosted in the limehawk rmm-scripts repo; change URL if hosted elsewhere
 
-  ## Requirements
+  Requirements
+  ------------
   - PowerShell 5.1 or later
   - Must run as logged-in user (NOT as SYSTEM)
   - Google Chrome must be installed

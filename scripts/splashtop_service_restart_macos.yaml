@@ -10,13 +10,14 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Restarts the Splashtop Streamer service on macOS when remote access becomes unresponsive or connections fail. This is useful for resolving connectivity issues without requiring a full system reboot.
+  Restarts the Splashtop Streamer service on macOS when remote access becomes unresponsive or connections fail. Useful for resolving connectivity issues without requiring a full system reboot.
 
   Usage Notes
   -----------
+  - Validates that the plist path is configured and exists
   - Uses launchctl to manage the service lifecycle
-  - Unloads then reloads the Splashtop launch daemon
-  - All operations are local to the machine
+  - Unloads the Splashtop launch daemon (stops it), then reloads it (starts it)
+  - Plist path: /Library/LaunchDaemons/com.splashtop.streamer-for-admin.plist
 
   Requirements
   ------------

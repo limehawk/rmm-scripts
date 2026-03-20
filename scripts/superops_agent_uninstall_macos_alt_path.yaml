@@ -8,15 +8,18 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
-  Uninstalls the SuperOps agent from macOS systems by executing the agent's built-in uninstall script from an alternate path (/Library/limehawk).
+  Purpose
+  -------
+  Uninstalls the SuperOps agent from macOS systems by executing the agent's built-in uninstall script from an alternate path (/Library/limehawk). Use this for agents installed to the alternate limehawk path instead of the default SuperOps path.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Uses uninstall script at /Library/limehawk/uninstall.sh
   - Executes with sudo privileges
-  - For agents installed to the alternate limehawk path instead of default SuperOps path
+  - Reports completion status after uninstall
 
-  Requirements:
+  Requirements
+  ------------
   - macOS operating system
   - Sudo privileges
   - Uninstall script must exist at /Library/limehawk/uninstall.sh

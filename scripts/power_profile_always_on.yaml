@@ -14,20 +14,20 @@ readme: |
   Usage Notes
   -----------
   - Creates or reuses custom power plan based on High Performance
-  - Sets display, disk, standby, and hibernate timeouts
+  - Sets the custom plan as the active power plan
+  - Configures display, disk, standby, and hibernate timeouts for AC and DC power
   - Disables hibernation on desktops (no battery)
-  - Default settings: Display 30min, Disk 60min, Sleep never (AC)
+  - Default settings: Display 30min AC, Sleep never AC, Hibernate never AC
   - Windows 11: Custom plans work but are hidden in Settings app
   - To verify: Run control powercfg.cpl or powercfg /getactivescheme
-
-  Configurable options (hardcoded in script):
-  - Display/disk/standby/hibernate timeouts for AC and DC power
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server 2016+
   - Administrator privileges
   - High Performance power plan must exist
+  - $customPlanName: Name of the custom power plan
+  - Timeout variables: $displayTimeoutAC/DC, $diskTimeoutAC/DC, $standbyTimeoutAC/DC, $hibernateTimeoutAC/DC
 favourite: false
 shared: false
 scriptId: '259059132276531200'

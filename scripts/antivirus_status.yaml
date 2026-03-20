@@ -8,17 +8,25 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Checks for the presence and active status of third-party antivirus software on the system, excluding Windows/Microsoft Defender. Reports the active product name and boolean state to SuperOps custom fields for monitoring.
 
-  ## Usage Notes
-  - Queries SecurityCenter2 namespace for AV products with registry fallback
+  Usage Notes
+  -----------
+  - Validates that SuperOps module is available
+  - Detects OS type (client vs server)
+  - Queries installed AV products via SecurityCenter2 or registry fallback
+  - Checks enabled state via productState bitmask
   - Ignores Windows Defender entries; only reports third-party AV
   - Outputs AV name and enabled state (TRUE/FALSE) to SuperOps custom fields
+  - Confirms Windows Defender status in console output
+  - No configurable settings; all logic is fixed for third-party AV detection
 
-  ## Requirements
+  Requirements
+  ------------
   - PowerShell 5.1 or later
-  - Access to root\SecurityCenter2 namespace (requires local admin)
+  - Access to root\SecurityCenter2 namespace (requires local admin or equivalent)
   - SuperOps module available via $SuperOpsModule variable (provided by RMM)
 favourite: false
 shared: false

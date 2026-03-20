@@ -10,27 +10,27 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Performs system reboot when uptime exceeds threshold or reboot flags are detected. Supports two modes:
-
-  GRACEFUL MODE (default) - For servers/workstations with active users
-  - Warns users before rebooting (configurable delay)
-  - Skips reboot if critical apps running (QuickBooks, SQL, etc.)
-  - Apps get chance to save data and close cleanly
-
-  FORCE MODE - For after-hours maintenance windows
-  - Immediate forced reboot, no warning
-  - Guaranteed to reboot regardless of running apps
+  Performs system reboot when uptime exceeds threshold or reboot flags are detected. Supports graceful mode (default) for servers/workstations with active users, which warns users and skips reboot if critical apps are running, and force mode for after-hours maintenance windows with immediate reboot.
 
   Usage Notes
   -----------
-  - Set graceful_true_or_false runtime variable to control mode
-  - Set maxuptimedays to control uptime threshold (default: 7 days)
-  - Checks CBS RebootPending, WU RebootRequired, and PendingFileRename flags
+  - Calculates current uptime from last boot time
+  - Checks Windows registry for reboot-pending flags (CBS, WU, PendingFileRename)
+  - Graceful mode: configurable warning delay ($WarningMinutes, default 5)
+  - Graceful mode: skips reboot if critical apps running (QuickBooks, SQL, etc.)
+  - Force mode: immediate forced reboot, no user warning
+  - If neither uptime nor flags trigger, no action taken
+  - $GracefulReboot default: true
+  - $DefaultMaxUptimeDays default: 7
 
   Requirements
   ------------
   - PowerShell 5.1+
   - Local Administrator rights
+
+  Security
+  --------
+  - Force mode will not prompt users -- use for empty machines only
 favourite: false
 shared: true
 runtimeVariables:

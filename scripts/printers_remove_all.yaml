@@ -8,18 +8,28 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
-  Removes ALL installed printers, their associated ports, and unused printer drivers from Windows. Use with caution - this is a destructive operation that cannot be undone.
+  Purpose
+  -------
+  Removes ALL installed printers, their associated ports, and unused printer drivers from Windows. Use with caution -- this is a destructive operation that cannot be undone.
 
-  Usage Notes:
-  - Set $removeDrivers to control driver removal (default: true)
-  - Set $removePorts to control orphaned port removal (default: true)
-  - Reports count of removed printers, ports, and drivers
+  Usage Notes
+  -----------
+  - Enumerates and removes all installed printers
+  - Removes orphaned TCP/IP printer ports (optional)
+  - Removes unused printer drivers (optional)
+  - $removeDrivers: Control driver removal (default: true)
+  - $removePorts: Control orphaned port removal (default: true)
 
-  Requirements:
+  Requirements
+  ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges
   - Print Spooler service running
+
+  Security
+  --------
+  - Destructive operation -- removes ALL printers
+  - Cannot be undone without reinstalling printers
 favourite: false
 shared: false
 scriptId: '259059155206791168'

@@ -9,10 +9,7 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Renames a macOS device using a custom client segment with standardized
-  naming pattern: CLIENT-USER-UUID. Allows variable length client segment
-  override. Sets HostName, ComputerName, and LocalHostName.
-  Designed for RMM deployment with custom client naming.
+  Renames a macOS device using a custom client segment with standardized naming pattern: CLIENT-USER-UUID. Allows variable length client segment override. Sets HostName, ComputerName, and LocalHostName. Designed for RMM deployment with custom client naming.
 
   Usage Notes
   -----------

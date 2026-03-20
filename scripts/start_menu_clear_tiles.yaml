@@ -7,17 +7,21 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Removes all default pinned app tiles from the Windows 10 Start menu by modifying the registry. Restarts Explorer to apply changes immediately. Creates a clean Start menu without pre-configured tiles.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Must run in user context (not SYSTEM) to affect user's Start menu
-  - Modifies registry then restarts Explorer
+  - Modifies tile collection registry data then restarts Explorer
+  - Waits briefly for system to stabilize before restarting Explorer
   - Opens Start menu after restart to initialize new layout
   - Only affects current user's Start menu
   - Registry modification is reversible
 
-  Requirements:
+  Requirements
+  ------------
   - Windows 10 (does not apply to Windows 11)
   - Registry access to HKCU
 favourite: false

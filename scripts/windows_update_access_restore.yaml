@@ -14,9 +14,8 @@ readme: |
 
   Usage Notes
   -----------
-  - Checks for SetDisableUXWUAccess registry key
-  - Removes it if present
-  - Reports result (key removed or did not exist)
+  - Checks for SetDisableUXWUAccess registry key under HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+  - Removes the key if present; reports success if key did not exist
   - Counterpart to windows_update_access_toggle script
 
   Requirements

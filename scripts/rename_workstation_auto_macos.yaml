@@ -9,9 +9,7 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Automatically renames a macOS device using a standardized naming pattern:
-  CLIENT3-USER-UUID. Sets HostName, ComputerName, and LocalHostName.
-  Designed for RMM deployment with automatic client/user detection.
+  Automatically renames a macOS device using a standardized naming pattern: CLIENT3-USER-UUID. Sets HostName, ComputerName, and LocalHostName. Designed for RMM deployment with automatic client/user detection.
 
   Usage Notes
   -----------

@@ -8,19 +8,31 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Downloads, installs, and configures Google Credential Provider for Windows (GCPW). Sets allowed domains and enrollment token in the system registry.
 
-  ## Usage
-  Provide the following SuperOps runtime variables:
-  - `YourDomainsHere` - Comma-separated list of allowed Google Workspace domains
-  - `YourEnrollmentTokenHere` - GCPW enrollment token from Google Admin Console
+  Usage Notes
+  -----------
+  - Validates administrative privileges
+  - Downloads GCPW installer (32-bit or 64-bit based on OS)
+  - Installs GCPW silently
+  - Configures allowed domains in registry
+  - Configures enrollment token in registry
+  - $YourDomainsHere: comma-separated list of allowed Google Workspace domains (SuperOps runtime variable)
+  - $YourEnrollmentTokenHere: GCPW enrollment token from Google Admin Console (SuperOps runtime variable)
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges
   - Internet access
   - Valid Google Workspace enrollment token
+
+  Security
+  --------
+  - Enrollment token should be kept confidential
+  - Only listed domains will be allowed to login
 favourite: false
 shared: false
 runtimeVariables:

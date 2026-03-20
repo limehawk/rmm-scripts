@@ -8,19 +8,31 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
-  Detects and uninstalls common third-party antivirus software from Windows systems including McAfee, Sophos, and Microsoft Security Essentials. Designed for scenarios where existing AV must be removed before deploying a new endpoint protection solution.
+  Purpose
+  -------
+  Detects and uninstalls common third-party antivirus software from Windows systems including McAfee, Sophos, AVG, and Microsoft Security Essentials. Designed for scenarios where existing AV must be removed before deploying a new endpoint protection solution.
 
-  ## Usage Notes
-  - Uses multiple detection methods: registry, services, file paths, packages, and WMI
-  - Attempts silent uninstall via packages, WMI, and MCPR tool (for McAfee)
+  Usage Notes
+  -----------
+  - Validates execution environment (must run as Administrator)
+  - Detects each AV product using registry, services, file paths, packages, and WMI
+  - Stops services before uninstallation
+  - Attempts removal via multiple methods (packages, WMI, vendor-specific tools)
+  - Downloads MCPR (McAfee Consumer Product Removal) tool if needed
+  - Downloads AVG Clear tool if needed
+  - Uses silent/quiet uninstall methods where possible
   - No reboot is forced, though some AV may require it for complete removal
-  - Tamper protection may need to be disabled first on some products
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows PowerShell 5.1 or PowerShell 7+
   - Administrator privileges
-  - Internet access (optional, for downloading MCPR tool)
+  - Internet access (optional, for downloading MCPR and AVG Clear tools)
+
+  Security
+  --------
+  - Some antivirus may require tamper protection to be disabled first
+  - A reboot may be required after uninstallation for complete removal
 favourite: false
 shared: false
 scriptId: '259059054442831872'

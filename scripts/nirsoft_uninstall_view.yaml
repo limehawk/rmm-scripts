@@ -13,17 +13,19 @@ readme: |
 
   Usage Notes
   -----------
-  - Edit appName variable with application name or pattern to uninstall
+  - Edit $appName variable with application name or pattern to uninstall
   - Supports wildcards (e.g., Adobe*, *Chrome*, etc.)
-  - Downloads appropriate version based on system architecture (32/64-bit)
-  - UninstallView is downloaded from official NirSoft website
+  - Determines system architecture and downloads appropriate 32/64-bit version
+  - Extracts to limehawk\nirsoft directory
+  - Runs uninstall command with wildcard matching
+  - Cleans up downloaded zip file after extraction
   - Check manually after execution to confirm uninstallation
 
   Requirements
   ------------
   - Windows OS
   - Administrator privileges
-  - Internet connectivity
+  - Internet connectivity (downloads from official NirSoft website)
 favourite: false
 shared: false
 scriptId: '259059118645043200'

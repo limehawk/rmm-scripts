@@ -10,13 +10,15 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Uninstalls the SentinelOne agent from Linux systems using the sentinelctl command. Verifies the agent is installed before attempting removal.
+  Uninstalls the SentinelOne agent from Linux systems using the sentinelctl command. Verifies the agent is installed and sentinelctl is available before attempting removal.
 
   Usage Notes
   -----------
   - No hardcoded inputs required
-  - Uses sentinelctl uninstall command
-  - Agent may have tamper protection enabled
+  - Verifies root privileges before proceeding
+  - Checks if sentinelctl command is available in PATH
+  - Runs sentinelctl uninstall to remove the agent
+  - Agent may have tamper protection enabled which could block removal
 
   Requirements
   ------------

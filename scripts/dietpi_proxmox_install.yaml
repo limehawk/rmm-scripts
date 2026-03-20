@@ -7,19 +7,26 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Downloads and runs the DietPi Debian 12 Bookworm VM installer for Proxmox. Creates a lightweight Debian-based VM optimized for low resource usage.
 
-  ## Usage Notes
-  - Downloads installer from limehawk/proxmox-scripts repository
-  - Script is fetched over HTTPS
-  - Executes remote code - review source before running
+  Usage Notes
+  -----------
+  - Downloads the installer script from limehawk/proxmox-scripts repository on GitHub
+  - Executes the installer via bash and returns its exit code
+  - No hardcoded inputs required; installer is fetched from remote source
 
-  ## Requirements
+  Requirements
+  ------------
   - Proxmox VE host
   - Run from Proxmox shell (not inside a VM)
   - Internet access to GitHub
   - curl installed
+
+  Security
+  --------
+  - Executes remote code fetched over HTTPS - review source before running
 favourite: false
 shared: false
 scriptId: '259059076156743680'

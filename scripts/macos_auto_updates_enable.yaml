@@ -11,14 +11,12 @@ readme: |
   -------
   Enables all automatic update settings on macOS including automatic checking, downloading, and installation of macOS updates, App Store updates, and security/critical updates. Ensures systems stay patched and secure.
 
-  Settings Enabled
-  ----------------
-  - AutomaticCheckEnabled: Check for updates automatically
-  - AutomaticDownload: Download updates in background
-  - AutoUpdate: App Store auto-updates
-  - ConfigDataInstall: Config data file updates
-  - CriticalUpdateInstall: Security updates
-  - AutomaticallyInstallMacOSUpdates: macOS system updates
+  Usage Notes
+  -----------
+  - Verifies root/sudo privileges before making changes
+  - Enables AutomaticCheckEnabled, AutomaticDownload, AutoUpdate
+  - Enables ConfigDataInstall, CriticalUpdateInstall, AutomaticallyInstallMacOSUpdates
+  - Verifies all settings were applied after enabling
 
   Requirements
   ------------

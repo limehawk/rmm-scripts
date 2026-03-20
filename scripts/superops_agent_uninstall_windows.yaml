@@ -8,16 +8,19 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Uninstalls the SuperOps RMM agent from Windows systems. Attempts to use the vendor's official uninstall program first, then falls back to registry-based MSI uninstallation if the official uninstaller is not found.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - No inputs required - auto-detects installed SuperOps agent
   - Searches for SuperOps uninstall.exe in common installation directories
-  - Falls back to registry search for MSI uninstall information
-  - Executes MSI uninstall with silent parameters if needed
+  - Falls back to registry search (including WOW6432Node) for MSI uninstall information
+  - Executes MSI uninstall with silent parameters (/qn /norestart) if needed
 
-  Requirements:
+  Requirements
+  ------------
   - Windows PowerShell 5.1 or later
   - Administrator privileges
   - SuperOps RMM agent currently installed

@@ -15,17 +15,18 @@ readme: |
   Usage Notes
   -----------
   - Stops all running OneDrive processes
-  - Executes OneDriveSetup.exe /uninstall for each found path
+  - Executes OneDriveSetup.exe /uninstall for each found path (System32, SysWOW64, Office x86, Office x64)
   - Removes all OneDrive scheduled tasks
-  - Sets HKLM GPO DisableFileSyncNGSC=1 to prevent startup
+  - Sets HKLM GPO DisableFileSyncNGSC=1 to prevent startup for all users
   - Removes HKCU Run key OneDrive entry
   - Sets Explorer policy to hide OneDrive from navigation pane
   - Cleans Default User profile to prevent OneDrive on new accounts
+  - $cleanDefaultProfile controls Default User cleanup (default: true)
   - Reboot recommended for full cleanup
 
   Requirements
   ------------
-  - Windows with PowerShell 5.1 or later
+  - PowerShell 5.1 or later
   - Administrator privileges
   - No network requirements (local operations only)
 favourite: false

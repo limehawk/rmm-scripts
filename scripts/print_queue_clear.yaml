@@ -7,19 +7,25 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Resets and clears the Windows print queue by stopping the Print Spooler service, removing all queued print jobs from the spooler directory, and restarting the service. Resolves common printing issues caused by stuck or corrupted print jobs.
 
-  Usage Notes:
-  - Stops Print Spooler service before clearing files
-  - Uses retry logic (3 attempts) for locked files
+  Usage Notes
+  -----------
+  - Checks current status of Print Spooler service
+  - Stops the Print Spooler service and waits for handles to release
+  - Removes print job files with retry logic (3 attempts per file)
   - Reports successfully removed and locked files separately
-  - Configurable timeouts for service stop/start (default: 30 seconds each)
+  - Restarts the Print Spooler service and verifies it is running
 
-  Requirements:
+  Requirements
+  ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges
   - Print Spooler service must exist
+  - $serviceName: Print Spooler service name (default: "Spooler")
+  - $stopTimeout / $startTimeout: Service timeout in seconds (default: 30)
 favourite: false
 shared: false
 scriptId: '259059135199961088'

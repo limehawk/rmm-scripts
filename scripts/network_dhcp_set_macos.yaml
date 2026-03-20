@@ -13,10 +13,12 @@ readme: |
 
   Usage Notes
   -----------
-  - Auto-detects primary network interface if not specified
+  - Detects primary network interface automatically, falls back to en0
   - Edit INTERFACE variable to target a specific interface (en0, en1, etc.)
-  - Temporarily disrupts network connectivity during toggle
+  - Disables the network service, sets DHCP, then re-enables the service
+  - Verifies DHCP configuration after applying
   - TOGGLE_DELAY controls wait time between off/on (default: 2 seconds)
+  - Temporarily disrupts network connectivity during toggle
 
   Requirements
   ------------

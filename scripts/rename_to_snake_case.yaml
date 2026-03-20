@@ -9,17 +9,17 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Recursively renames all files and folders in a directory to snake_case format.
-  Converts spaces, hyphens, and other non-alphanumeric characters to underscores
-  and lowercases all characters.
+  Recursively renames all files and folders in a directory to snake_case format. Converts spaces, hyphens, and other non-alphanumeric characters to underscores and lowercases all characters.
 
   Usage Notes
   -----------
   - Set target directory via SuperOps runtime variable $YourTargetPathHere
+  - Converts to lowercase, replaces non-alphanumeric characters with underscores
+  - Trims leading/trailing underscores from names
   - Processes child items first (bottom-up) to avoid path issues
   - Skips items already in snake_case format
   - Reports each rename operation and final counts
-  - WARNING: Cannot be undone - backup important directories first
+  - WARNING: Cannot be undone -- backup important directories first
 
   Requirements
   ------------

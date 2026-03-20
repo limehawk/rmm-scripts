@@ -13,9 +13,10 @@ readme: |
 
   Usage Notes
   -----------
-  - Downloads installer DMG from official Splashtop servers
-  - Mounts DMG, installs package, then unmounts and cleans up
-  - Installer is removed after installation
+  - Downloads installer DMG from official Splashtop servers (v3.7.2.0)
+  - Mounts the DMG, installs the package, then unmounts
+  - Installer DMG is removed after installation
+  - Mount directory: /Volumes/Splashtop Business
 
   Requirements
   ------------

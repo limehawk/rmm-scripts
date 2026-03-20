@@ -13,8 +13,8 @@ readme: |
 
   Usage Notes
   -----------
-  - Checks current state of SetDisableUXWUAccess registry key
-  - Toggles the state (adds or removes key)
+  - Checks current state of SetDisableUXWUAccess registry key under HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+  - Toggles the state by adding or removing the key
   - Reports new state after toggle
   - Use windows_update_access_restore to always enable access
 

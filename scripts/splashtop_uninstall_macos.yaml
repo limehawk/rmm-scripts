@@ -8,17 +8,20 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Completely removes Splashtop Streamer from macOS including all related files, launch daemons, kernel extensions, and preferences. Performs a thorough cleanup of all Splashtop components.
 
-  Usage Notes:
-  - Run with sudo privileges
+  Usage Notes
+  -----------
   - Kills all running Splashtop processes
-  - Removes applications, daemons, kernel extensions, audio plugins
-  - Clears preferences, caches, and package receipts
+  - Unloads launch daemons and agents
+  - Removes Splashtop Streamer, Splashtop Streamer for Business, and SplashtopRemote applications
+  - Removes kernel extensions, audio plugins, preferences, caches, and package receipts
   - Data removal is permanent
 
-  Requirements:
+  Requirements
+  ------------
   - macOS
   - Root/sudo privileges
 favourite: false

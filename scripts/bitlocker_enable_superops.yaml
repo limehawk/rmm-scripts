@@ -8,20 +8,32 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Enables BitLocker on the OS drive using TPM and Recovery Password protectors. Ensures protectors are not duplicated, prints recovery key to console for RMM log capture, and syncs the recovery key to SuperOps custom fields.
 
-  ## Usage Notes
-  - Uses XTS-AES 256 encryption method with used-space-only mode for faster encryption
-  - Rotates Recovery Password protector when Force=$true (default)
-  - Recovery key is printed to console and synced to SuperOps custom fields
+  Usage Notes
+  -----------
+  - Validates administrative privileges and SuperOps module
+  - Ensures BDESVC (BitLocker Service) is running and set to Automatic
+  - Checks TPM status and adds TPM protector if available
+  - Rotates Recovery Password protector when Force is true (default)
+  - Initiates encryption with XTS-AES 256, used-space-only mode
   - No reboot required to start encryption (skip hardware test enabled)
+  - Retrieves and displays recovery key, then syncs to SuperOps custom fields
+  - Target drive default: C:
 
-  ## Requirements
+  Requirements
+  ------------
   - PowerShell 5.1 or later
   - Windows 10/11 Pro or Enterprise with BitLocker feature enabled
   - Administrator privileges
   - SuperOps module available via $SuperOpsModule
+
+  Security
+  --------
+  - Recovery Password is printed to console (captured by RMM logs)
+  - Recovery Password is synced to SuperOps custom fields
 favourite: false
 shared: false
 scriptId: '6523706799125475328'

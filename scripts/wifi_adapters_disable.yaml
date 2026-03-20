@@ -13,16 +13,16 @@ readme: |
 
   Usage Notes
   -----------
-  - No inputs required
-  - Automatically categorizes adapters as Wi-Fi, Wired, or Other
-  - Only disables adapters categorized as Wi-Fi
-  - Ethernet/wired adapters are not affected
-  - Displays detailed list of all adapters before processing
+  - Checks for administrative privileges before proceeding
+  - Enumerates all network adapters including hidden ones
+  - Categorizes adapters as Wi-Fi, Wired, or Other
+  - Displays detailed list of all adapters for review
+  - Disables all Wi-Fi adapters; Ethernet/wired adapters are not affected
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server
-  - Administrator privileges required
+  - Administrator privileges
   - Get-NetAdapter cmdlet available
 favourite: false
 shared: false

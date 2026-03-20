@@ -13,14 +13,13 @@ readme: |
 
   Usage Notes
   -----------
-  - Configurable operations via hardcoded flags:
-    - RunDismScan: Check for image corruption
-    - RunDismRestore: Repair image (only if corruption found)
-    - RunChkdsk: Check disk integrity
-    - RunSfc: System File Checker
-  - Smart logic: RestoreHealth only runs if ScanHealth finds corruption
-  - Optional reboot scheduling after maintenance
-  - Full output captured for logging
+  - Configurable operations via hardcoded flags: RunDismScan, RunDismRestore, RunChkdsk, RunSfc
+  - DISM RestoreHealth only runs if ScanHealth detects corruption (saves time on healthy systems)
+  - chkdsk runs against all fixed local drives (DriveType 3)
+  - ChkdskParameters default to /scan; use /f /r for full check
+  - Optional RebootAfterMaintenance with 5-minute warning (default: false)
+  - Failed operations are reported but script continues to next operation
+  - DISM operates in online mode against the running Windows installation
 
   Requirements
   ------------
@@ -28,6 +27,11 @@ readme: |
   - Administrator privileges required
   - Windows 8.1/Server 2012 R2 or later for DISM commands
   - Sufficient disk space for repair operations
+
+  Security
+  --------
+  - Operations may cause system modifications and require reboots
+  - Requires elevated permissions to modify system components
 favourite: false
 shared: true
 scriptId: '1907390810231676928'

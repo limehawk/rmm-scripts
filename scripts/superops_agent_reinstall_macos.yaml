@@ -7,17 +7,21 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Performs a complete reinstallation of the SuperOps RMM agent on macOS by uninstalling the current agent and installing a new version from a provided URL. Useful for agent upgrades or fixing corrupted installations.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - PKGURL environment variable must be set by RMM platform
   - Uses background process to handle reinstall after uninstall
   - Downloads new agent to /tmp directory
   - 5-second polling interval for uninstall completion
   - Uses official SuperOps uninstall script at /Library/superops/uninstall.sh
+  - Monitors agent processes to ensure clean uninstall before installing
 
-  Requirements:
+  Requirements
+  ------------
   - macOS
   - Sudo privileges
   - Internet access

@@ -9,16 +9,14 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Displays a popup dialog showing system information to the end user on macOS.
-  Designed to be triggered from the RMM tray icon for user self-service. Provides
-  quick access to basic system details without opening System Preferences.
+  Displays a popup dialog showing system information to the end user on macOS. Designed to be triggered from the RMM tray icon for user self-service. Provides quick access to basic system details without opening System Preferences.
 
-  Usage
-  -----
-  - Collects system information via macOS commands
-  - Displays popup to user using AppleScript dialog
-  - Runs in background so popup remains after script exits
-  - Shows: OS name/version, computer name, user, CPU, RAM, IP address
+  Usage Notes
+  -----------
+  - Collects OS name/version (sw_vers), computer name (scutil), CPU/RAM (sysctl), IP address (ipconfig)
+  - Builds and displays an AppleScript dialog with system information
+  - Runs dialog in background so popup remains after script exits
+  - Script exits immediately; popup stays open for the user
 
   Requirements
   ------------

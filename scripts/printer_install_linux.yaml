@@ -16,16 +16,12 @@ readme: |
   -----------
   - Detects OS and verifies Linux
   - Installs CUPS if needed and enabled
-  - Verifies or finds PPD file
-  - Removes existing printers with same name
+  - Verifies or finds PPD file in standard search paths
+  - Removes existing printers with same name before installing
   - Installs each configured printer via lpadmin
   - Enables and accepts jobs for each printer
-
-  Configurable options (hardcoded in script):
-  - PRINTERS: Array of "hostname|location|display_name" entries
-  - PROTOCOL: lpd, ipp, or socket
-  - PPD_PATH: Path to the PPD driver file
-  - AUTO_INSTALL_CUPS: Whether to install CUPS if missing
+  - Default protocol: lpd
+  - PPD search paths: /usr/share/cups/model/, /usr/share/ppd/, /etc/cups/ppd/
 
   Requirements
   ------------
@@ -33,6 +29,10 @@ readme: |
   - Root/sudo privileges
   - Internet access for package installation
   - PPD file for the printer model
+  - PRINTERS: Array of "hostname|location|display_name" entries
+  - PROTOCOL: lpd, ipp, or socket
+  - PPD_PATH: Path to the PPD driver file
+  - AUTO_INSTALL_CUPS: Whether to install CUPS if missing
 favourite: false
 shared: false
 scriptId: '259059136814768128'

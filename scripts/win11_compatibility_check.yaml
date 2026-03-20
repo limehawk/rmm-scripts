@@ -13,11 +13,10 @@ readme: |
 
   Usage Notes
   -----------
-  - No inputs required
-  - Checks each requirement independently
-  - Reports pass/fail status for each component
-  - Provides overall compatibility verdict
-  - Lists specific issues if not compatible
+  - Checks processor specifications, RAM capacity, and disk space
+  - Checks TPM version and Secure Boot status
+  - Reports pass/fail for each component independently
+  - Provides overall compatibility verdict with specific issues listed
 
   Requirements
   ------------

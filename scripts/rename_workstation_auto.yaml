@@ -9,12 +9,7 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Rename a Windows device and sync the same name to SuperOps.
-
-  Naming pattern (max 15 chars): CLIENT3-USERUUID
-  - CLIENT3: 3-char abbreviation of client name (always forced)
-  - USER: Sanitized username, maximized, truncated if needed
-  - UUID: SMBIOS UUID tail, at least 3 chars
+  Renames a Windows device using the pattern CLIENT3-USERUUID (max 15 chars) and syncs the same name to SuperOps. CLIENT3 is a 3-char abbreviation of the client name, USER is the sanitized username (maximized, truncated if needed), and UUID is the SMBIOS UUID tail (at least 3 chars).
 
   Usage Notes
   -----------

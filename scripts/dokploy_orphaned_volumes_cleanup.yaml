@@ -7,17 +7,29 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Scans Docker containers and Swarm services to identify volumes that are not currently mounted or in use. Provides detailed information about orphaned volumes including size, creation date, and mount point. Can optionally remove orphaned volumes automatically to free up disk space.
 
-  ## Usage
-  - Set `AUTO_REMOVE=true` to automatically remove orphaned volumes
-  - Set `AUTO_REMOVE=false` for safe mode (list only)
+  Usage Notes
+  -----------
+  - Scans all Docker containers (running and stopped) for volume mounts
+  - Scans all Docker Swarm services for volume usage
+  - Compares all system volumes against used volumes
+  - Displays detailed information for each orphaned volume
+  - Optionally removes orphaned volumes if AUTO_REMOVE is true
+  - Set AUTO_REMOVE to true to automatically remove orphaned volumes, false for safe mode (list only)
 
-  ## Requirements
+  Requirements
+  ------------
   - Docker installed and running
   - Root/sudo access for volume inspection and removal
   - Docker Swarm (optional, script works without it)
+
+  Security
+  --------
+  - Requires privileged access to Docker daemon
+  - Volume data is permanently deleted when removed
 favourite: false
 shared: false
 scriptId: '259059085669425152'

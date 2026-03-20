@@ -13,15 +13,18 @@ readme: |
 
   Usage Notes
   -----------
-  - Screenshots saved to C:\limehawk\nirsoft\screenshots by default
-  - Filename format: screenshot_YYYYMMDD-HHmmss.png
-  - Automatically downloads correct NirCmd version (x64 or x86)
-  - NirCmd is downloaded from official NirSoft website
+  - Creates destination directories if they do not exist
+  - Downloads correct NirCmd version (x64 or x86) based on OS architecture
+  - Extracts NirCmd from zip archive
+  - Captures screenshot with timestamped filename
+  - Cleans up temporary zip file after extraction
+  - $destinationFolder default: C:\limehawk\nirsoft
+  - $screenshotFolder default: C:\limehawk\nirsoft\screenshots
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server
-  - Internet access for NirCmd download
+  - Internet access for NirCmd download (official NirSoft website)
   - Write permissions to destination folder
 favourite: false
 shared: false

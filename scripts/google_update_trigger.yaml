@@ -7,13 +7,18 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Triggers the Google Update scheduled task to force an immediate check for Chrome and other Google product updates.
 
-  ## Usage
-  No inputs required. The script automatically finds and triggers GoogleUpdateTaskMachineUA scheduled tasks.
+  Usage Notes
+  -----------
+  - Searches for scheduled tasks matching "GoogleUpdateTaskMachineUA"
+  - Starts matching tasks and reports status
+  - No inputs required; task name pattern is hardcoded
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11
   - Google Chrome or other Google products installed
   - Administrator privileges

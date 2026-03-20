@@ -16,17 +16,10 @@ readme: |
   -----------
   - Downloads driver package if URL provided
   - Sets up PPD file (local or downloaded)
-  - Removes existing printers with same name
+  - Removes existing printers with same name before installing
   - Installs each configured printer via lpadmin
   - Supports lpd, ipp, and ipps protocols
-
-  Configurable options (hardcoded in script):
-  - PRINTERS: Array of "hostname|location|display_name" entries
-  - PROTOCOL: lpd, ipp, or ipps
-  - PPD_SOURCE: "local" or "url"
-  - PPD_PATH: Path to local PPD file
-  - PPD_URL: URL to download PPD file
-  - DRIVER_URL: Optional driver package URL
+  - Default: lpd protocol, local PPD source, sharing disabled, abort-job error policy
 
   Requirements
   ------------
@@ -34,6 +27,11 @@ readme: |
   - Root/sudo privileges
   - PPD file for the printer model
   - Network access to printers and PPD URL (if using URL)
+  - PRINTERS: Array of "hostname|location|display_name" entries
+  - PROTOCOL: lpd, ipp, or ipps
+  - PPD_SOURCE: "local" or "url"
+  - PPD_PATH / PPD_URL: PPD file path or download URL
+  - DRIVER_URL: Optional driver package URL
 favourite: false
 shared: false
 scriptId: '259059146683965440'

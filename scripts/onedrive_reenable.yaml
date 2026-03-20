@@ -13,18 +13,18 @@ readme: |
 
   Usage Notes
   -----------
+  - Validates administrative privileges
   - Removes HKLM GPO DisableFileSyncNGSC policy
   - Removes Explorer DisableOneDriveFileSync policy
   - Optionally cleans Default User profile policies
   - Downloads and installs OneDrive from Microsoft CDN
-
-  Configurable options (hardcoded in script):
-  - $installOneDrive: Download and install OneDrive (default: true)
-  - $cleanDefaultProfile: Also clean Default User profile (default: true)
+  - $installOneDrive: download and install OneDrive (default: true)
+  - $cleanDefaultProfile: also clean Default User profile (default: true)
+  - OneDrive download URL: https://go.microsoft.com/fwlink/?linkid=844652
 
   Requirements
   ------------
-  - Windows with PowerShell 5.1 or later
+  - PowerShell 5.1 or later
   - Administrator privileges
   - Network connectivity to Microsoft CDN (for installation)
 favourite: false

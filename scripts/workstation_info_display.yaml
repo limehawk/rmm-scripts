@@ -9,17 +9,16 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Collects and displays comprehensive workstation information including operating
-  system details, computer name, current user, CPU specifications, memory capacity,
-  network adapter configuration, and hardware serial number. Designed for quick
-  troubleshooting access via tray icon menu or RMM execution.
+  Collects and displays comprehensive workstation information including operating system details, computer name, current user, CPU specifications, memory capacity, network adapter configuration, and hardware serial number. Designed for quick troubleshooting access via tray icon menu or RMM execution with dual output modes.
 
-  Usage
-  -----
-  - DisplayMode: popup (Windows Forms message box) or console (text output)
-  - IncludeNetwork: Whether to include detailed network adapter information
-  - PopupTitle: Title text for the popup message box
-  - Collects OS, hardware, and network info via CIM/WMI queries
+  Usage Notes
+  -----------
+  - DisplayMode: "popup" (Windows Forms message box) or "console" (text output for RMM capture)
+  - IncludeNetwork: whether to include detailed network adapter information (default: true)
+  - PopupTitle: title text for the popup message box (default: "Workstation Information")
+  - Uses CIM/WMI queries for hardware and OS data collection
+  - Network adapter information limited to enabled adapters only
+  - Memory sizes reported in GB with 2 decimal precision
   - Missing or unavailable information reported as N/A
 
   Requirements

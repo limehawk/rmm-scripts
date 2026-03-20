@@ -7,17 +7,20 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Performs a comprehensive health check on all mounted disks and volumes on macOS. Verifies partition maps, file systems, and SMART status where supported.
 
-  ## Usage Notes
+  Usage Notes
+  -----------
   - Auto-detects all mounted disks
-  - Checks partition map health
-  - Verifies HFS and APFS volumes
+  - Verifies partition map for each disk
+  - Checks file system health for HFS and APFS volumes
   - Reports SMART status when available
-  - Read-only operations (verification only)
+  - Read-only operations (verification only, no modifications)
 
-  ## Requirements
+  Requirements
+  ------------
   - macOS operating system
   - Root/sudo privileges
 favourite: false

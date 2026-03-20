@@ -14,8 +14,10 @@ readme: |
 
   Usage Notes
   -----------
-  - Processes all network services automatically
-  - Preserves original enabled/disabled state of each service
+  - Lists all network services and processes each one
+  - Records initial enabled/disabled state before toggling
+  - Disables each service, waits briefly, then re-enables
+  - Restores original state if a service was previously disabled
   - TOGGLE_DELAY controls wait time between off/on (default: 2 seconds)
   - Temporarily disrupts network connectivity during refresh
 

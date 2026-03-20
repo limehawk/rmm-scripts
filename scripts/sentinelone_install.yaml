@@ -10,28 +10,29 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Installs SentinelOne endpoint agent silently using a site token. Downloads
-  the installer from ConnectWise CDN (or custom URL) and performs installation
-  with verification. Skips if already installed.
-
-  NOTE: The installed version will auto-update based on your S1 console
-  Auto-Upgrade Policy settings. Initial installer version does not matter.
+  Installs SentinelOne endpoint agent silently using a site token. Downloads the installer from ConnectWise CDN (or custom URL) and performs installation with verification. Skips if already installed. The installed version will auto-update based on your S1 console Auto-Upgrade Policy settings, so the initial installer version does not matter.
 
   Usage Notes
   -----------
-  - Set SiteToken via runtime variable (get from S1 Console > Sentinels > Site Info)
+  - Checks if SentinelOne is already installed (optional skip)
   - Auto-detects 32-bit vs 64-bit OS
-  - Supports EXE or MSI installer (MSI recommended)
-  - Verifies installation success with multiple attempts
+  - Supports EXE or MSI installer ($UseExe toggle, MSI recommended)
+  - Downloads installer from ConnectWise CDN or custom URL
+  - Verifies installation success with multiple retry attempts
   - Cleans up temporary files after completion
-  - Skips installation if SentinelOne already present
 
   Requirements
   ------------
-  - Windows 10/11
+  - Windows 10/11 or Windows Server
   - Administrator privileges
-  - PowerShell 5.1+
+  - PowerShell 5.1 or later
   - Network access to download URL (ConnectWise CDN or custom)
+  - $SiteToken: SentinelOne site token (get from S1 Console > Sentinels > Site Info)
+
+  Security
+  --------
+  - Site token is embedded in script -- protect accordingly
+  - Default CDN URL uses HTTPS
 favourite: false
 shared: false
 runtimeVariables:

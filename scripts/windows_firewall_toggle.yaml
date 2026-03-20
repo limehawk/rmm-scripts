@@ -13,16 +13,19 @@ readme: |
 
   Usage Notes
   -----------
-  - No inputs required - automatically detects current state
-  - Affects all firewall profiles simultaneously
+  - No inputs required; automatically detects current state and toggles
+  - Affects all firewall profiles: Domain, Private, Public
   - Verifies new state after toggle
-  - WARNING: Disabling firewall reduces system security
-  - Use with caution in production environments
 
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges required
+
+  Security
+  --------
+  - Disabling firewall reduces system security
+  - Use with caution in production environments
 favourite: false
 shared: true
 scriptId: '6103852407269097472'

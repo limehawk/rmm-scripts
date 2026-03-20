@@ -7,18 +7,29 @@ tags:
 runAs: SYSTEM_USER
 timeout: 5
 readme: |
-  ## Purpose
-  Stops and removes the OpenSSH Server from Windows. Removes the firewall rule, uninstalls the Windows capability, and cleans up the sshd config directory including host keys.
+  Purpose
+  -------
+  Stops and removes the OpenSSH Server from Windows. Removes the firewall rule, uninstalls the Windows capability, and optionally cleans up the sshd configuration directory.
 
-  ## Usage Notes
-  - Removes firewall rule OpenSSH-Server-In-TCP
-  - Deletes C:\ProgramData\ssh (config, host keys, authorized_keys)
-  - Removes default shell registry key
-  - Safe to run if OpenSSH is already uninstalled (exits 0)
+  Usage Notes
+  -----------
+  - Stops the sshd and ssh-agent services
+  - Removes the Windows Firewall rule OpenSSH-Server-In-TCP
+  - Removes the default shell registry key
+  - Uninstalls the OpenSSH.Server Windows capability
+  - Removes sshd config directory if configured (default: true)
+  - $RemoveConfig controls whether to delete C:\ProgramData\ssh (default: true)
+  - $RemoveHostKeys controls whether to delete host keys with config (default: true)
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows Server 2019+ or Windows 10 1809+
   - Administrator privileges
+
+  Security
+  --------
+  - Host keys are deleted by default to prevent reuse
+  - Config removal ensures no stale authorized_keys remain
 favourite: false
 shared: false
 scriptId: '6700531945296977920'

@@ -9,19 +9,17 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Enables Wake-on-LAN (WOL) in both BIOS/UEFI and Windows NIC settings. Supports
-  Dell, HP, and Lenovo systems with manufacturer-specific BIOS modules. Also
-  enables WOL on all capable network adapters in Windows.
+  Enables Wake-on-LAN (WOL) in both BIOS/UEFI and Windows NIC settings. Supports Dell, HP, and Lenovo systems with manufacturer-specific BIOS modules. Also enables WOL on all capable network adapters in Windows.
 
-  Usage
-  -----
-  - Auto-detects system manufacturer
-  - Installs required PowerShell modules (NuGet, PSGallery)
-  - Configures BIOS WOL setting using manufacturer-specific module
-  - Enables WOL on all capable Windows NICs
+  Usage Notes
+  -----------
+  - Auto-detects system manufacturer via CIM
+  - Checks and installs required PowerShell modules (NuGet, PSGallery)
+  - Installs manufacturer-specific BIOS module if needed
   - Dell: Uses DellBIOSProvider, sets WakeOnLan to LANOnly
   - HP: Uses HPCMSL, sets Wake On Lan to Boot to Hard Drive
   - Lenovo: Uses WMI, sets WakeOnLAN to Primary
+  - Enables MSPower_DeviceWakeEnable on all capable Windows NICs
 
   Requirements
   ------------
@@ -29,6 +27,11 @@ readme: |
   - Administrator privileges
   - Internet connectivity for module installation
   - Supported manufacturer: Dell, HP, or Lenovo
+
+  Security
+  --------
+  - Modifies BIOS settings (requires admin)
+  - Installs PowerShell modules from PSGallery
 favourite: false
 shared: false
 scriptId: '259059260295077888'

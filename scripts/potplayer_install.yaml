@@ -25,6 +25,7 @@ readme: |
   - Windows OS
   - Administrator privileges
   - Internet connectivity
+  - $baseUrl: Base URL for PotPlayer website to scrape download links
 favourite: false
 shared: false
 scriptId: '259059121564278784'

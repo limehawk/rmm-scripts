@@ -14,9 +14,12 @@ readme: |
 
   Usage Notes
   -----------
-  - Auto-detects NinjaOne installation path from registry or service
+  - Auto-detects NinjaOne installation path from registry
   - Disables uninstall prevention before running MSI uninstaller
   - Stops and removes NinjaRMMAgent, nmsmanager, and lockhart services
+  - Kills running processes after service removal
+  - Removes installation directories and data directories
+  - Cleans up registry entries in HKLM
   - Removes Ninja Remote components and virtual display driver
   - Creates transcript log in Windows\temp for review
 

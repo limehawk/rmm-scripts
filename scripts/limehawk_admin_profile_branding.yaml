@@ -7,24 +7,25 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
-  Standardized Limehawk MSP automation to:
-  1. Rename built-in Administrator (SID *-500) to "hawkadmin" and disable it
-  2. Create/update "limehawk" MSP admin account (enabled for daily use)
-  3. Generate strong passwords for both, push to SuperOps custom fields
-  4. Clean up old MSP accounts (m5sadmin, tlitlocal, clientadmin)
-  5. Apply account pictures and wallpaper branding
+  Purpose
+  -------
+  Standardized Limehawk MSP automation that renames the built-in Administrator (SID *-500) to "hawkadmin" and disables it, creates or updates the "limehawk" MSP admin account for daily use, generates strong passwords for both accounts and pushes them to SuperOps custom fields, cleans up old MSP accounts (m5sadmin, tlitlocal, clientadmin), and applies account pictures and wallpaper branding.
 
-  ## Usage
-  Requires SuperOps module with Send-CustomField cmdlet. Configure via hardcoded settings:
-  - Account names and custom field mappings
-  - Branding asset paths (profile photo, wallpaper)
-  - Password length (default: 16 characters)
+  Usage Notes
+  -----------
+  - Built-in admin identified by SID *-500, not by name
+  - If limehawk account exists, password is reset (safe for existing clients)
+  - Account picture and wallpaper operations are best-effort (no-throw)
+  - Requires SuperOps module with Send-CustomField cmdlet
+  - Configure account names, custom field mappings, branding asset paths, and password length via hardcoded settings
+  - Password length defaults to 16 characters
 
-  ## Requirements
+  Requirements
+  ------------
   - PowerShell 5.1+
   - Run as local Administrator (elevated)
-  - SuperOps module available with custom fields: "Built-in Admin Password", "MSP Admin Password"
+  - SuperOps module available ($SuperOpsModule)
+  - SuperOps custom fields: "Built-in Admin Password", "MSP Admin Password"
 favourite: false
 shared: false
 scriptId: '3077420686222594048'

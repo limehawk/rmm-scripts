@@ -13,14 +13,14 @@ readme: |
 
   Usage Notes
   -----------
-  - Sets RealTimeIsUniversal registry value to 1 in TimeZoneInformation
+  - Sets RealTimeIsUniversal DWORD to 1 in HKLM\System\CurrentControlSet\Control\TimeZoneInformation
   - No configurable inputs required
   - Run once after installing Windows on a dual-boot system
 
   Requirements
   ------------
   - PowerShell 5.1 or later
-  - Administrator privileges (required for HKLM access)
+  - Administrator privileges (required for HKLM registry access)
   - Windows 10/11
 favourite: false
 shared: false

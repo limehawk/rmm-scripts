@@ -7,15 +7,19 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Downloads deskview.exe utility to the Windows Startup folder so it runs automatically at user login. DeskView displays desktop icons in a compact window.
 
-  ## Usage Notes
-  - Downloads from trusted GitHub repository
-  - Installs to common Startup folder for all users
-  - Runs automatically at user login
+  Usage Notes
+  -----------
+  - Validates input parameters before proceeding
+  - Downloads deskview.exe to the common Startup folder for all users
+  - Runs automatically at user login after installation
+  - Configurable variable: $downloadUrl
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS
   - Administrator privileges
   - Internet connectivity

@@ -7,19 +7,29 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Creates or updates a local administrator account with a cryptographically secure random password. If the account exists, resets the password. If not, creates the account and adds it to the Administrators group.
 
-  ## Usage
-  Provide the following SuperOps runtime variable:
-  - `NewAdminUsername` - Username for the local admin account
+  Usage Notes
+  -----------
+  - Generates cryptographically secure random password (16 characters)
+  - Checks if user account exists
+  - If exists: resets password; if not: creates account and adds to Administrators group
+  - Password output to console for RMM custom field capture
+  - Password includes uppercase, lowercase, numbers, and special characters
+  - $NewAdminUsername: username for the local admin account (SuperOps runtime variable)
 
-  Password is output to console for RMM custom field capture.
-
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11
   - Admin privileges required
   - PowerShell 5.1+
+
+  Security
+  --------
+  - Password generated using RNGCryptoServiceProvider
+  - Consider storing password securely in RMM custom fields
 favourite: false
 shared: true
 runtimeVariables:

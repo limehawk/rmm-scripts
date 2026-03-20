@@ -13,17 +13,18 @@ readme: |
 
   Usage Notes
   -----------
-  - Edit resolutionWidth, resolutionHeight, and colorDepth variables
-  - Supported resolutions: 640-7680 width, 480-4320 height
-  - Color depth options: 8, 16, 24, or 32 bits
-  - Display must support the requested resolution
-  - NirCmd downloaded from official NirSoft website
+  - Creates destination directory if it does not exist
+  - Downloads NirCmd (x86 version for compatibility) from official NirSoft website
+  - Extracts NirCmd from zip archive
+  - Sets display resolution to specified values and cleans up zip file
+  - Edit $resolutionWidth, $resolutionHeight, and $colorDepth variables
+  - $destinationFolder default: C:\limehawk\nircmd
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server
   - Internet access for NirCmd download
-  - Display must support requested resolution
+  - Display must support the requested resolution
 favourite: false
 shared: false
 scriptId: '259059112915623936'

@@ -9,16 +9,19 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Installs the Synology Active Backup for Business Agent on Windows using winget. This agent enables centralized backup management from a Synology NAS.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Validates winget availability before installation
   - Installs silently using winget package manager
   - Package ID: Synology.ActiveBackupForBusinessAgent
   - After installation, connect to your Synology NAS to configure backup tasks
 
-  Requirements:
+  Requirements
+  ------------
   - Windows 10 1809+ or Windows 11
   - Administrator privileges
   - winget (App Installer) installed

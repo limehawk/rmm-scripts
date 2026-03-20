@@ -7,15 +7,18 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Upgrades all Chocolatey-managed packages to their latest versions using the choco upgrade all command with automatic confirmation.
 
-  ## Usage Notes
-  - Auto-confirm enabled (-y flag) for unattended operation
-  - No configuration required; operates on all installed Chocolatey packages
-  - Package downloads use configured Chocolatey sources
+  Usage Notes
+  -----------
+  - Checks if Chocolatey is installed before proceeding
+  - Runs choco upgrade all with auto-confirmation flag (-y) for unattended operation
+  - Operates on all installed Chocolatey packages; no configuration required
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS
   - Administrator privileges
   - Chocolatey package manager installed

@@ -7,18 +7,22 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
-  Toggles installation of stdrename - a command-line file/folder renaming utility. If installed, uninstalls it. If not installed, downloads and installs it. Installs to System32 for system-wide availability.
+  Purpose
+  -------
+  Toggles installation of stdrename, a command-line file and folder renaming utility. If installed, uninstalls it. If not installed, downloads and installs it. Installs to System32 for system-wide availability.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Toggle behavior: if installed it uninstalls, if not installed it installs
   - Downloads from GitHub releases (latest version)
   - Installs to C:\Windows\System32 for PATH accessibility
 
-  Requirements:
+  Requirements
+  ------------
   - Windows 10/11
   - Admin privileges (writing to System32)
   - Internet connectivity for download
+  - $DownloadUrl and $InstallPath variables defined in script
 favourite: false
 shared: true
 scriptId: '2703029945385623552'

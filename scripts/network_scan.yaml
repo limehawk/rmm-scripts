@@ -13,9 +13,12 @@ readme: |
 
   Usage Notes
   -----------
-  - Edit startIP and endIP variables to set scan range
-  - Set disableDNS to true to skip hostname resolution (faster)
-  - Adjust threads variable to control concurrency (default: 32)
+  - Edit $startIP and $endIP variables to set scan range
+  - Validates IP address range before scanning
+  - Creates runspace pool for parallel execution
+  - Set $disableDNS to true to skip hostname resolution (faster)
+  - Adjust $threads variable to control concurrency (default: 32)
+  - $pingAttempts controls number of ping attempts per IP (default: 1)
   - Results sorted by IP address with hostname if DNS enabled
 
   Requirements

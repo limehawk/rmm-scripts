@@ -7,19 +7,23 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Silently installs or upgrades the Splashtop Streamer agent for remote access. Configured to hide the system tray icon by default.
 
-  Usage Notes:
-  - Update $installerPath variable to match your deploy installer location
+  Usage Notes
+  -----------
+  - Validates installer path is provided and file exists
+  - Runs silent installation with parameters: prevercheck, no confirmation, hidden window, hidden tray icon
+  - Installer must be pre-staged at the specified path before running
   - Default path: C:\temp\Splashtop_Streamer_Windows_DEPLOY_INSTALLER.exe
-  - Runs silent installation with hidden window and tray icon
-  - Installer must be pre-staged at the specified path
 
-  Requirements:
+  Requirements
+  ------------
   - Windows OS
   - Administrator privileges
   - Splashtop deploy installer downloaded to specified path
+  - $installerPath: full path to the Splashtop Streamer deploy installer EXE
 favourite: false
 shared: false
 scriptId: '259059183686115328'

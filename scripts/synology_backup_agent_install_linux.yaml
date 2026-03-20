@@ -9,10 +9,12 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Installs the Synology Active Backup for Business Agent on Linux systems. Includes prerequisite checks for architecture, kernel headers, and required tools.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Downloads agent from global.download.synology.com
   - Agent version: 2.7.1-3235
   - Architecture: x86_64 only
@@ -20,7 +22,8 @@ readme: |
   - Verifies kernel headers and required tools before installation
   - Cleans up temporary files after installation
 
-  Requirements:
+  Requirements
+  ------------
   - Debian 10/11/12 or Ubuntu 16.04-24.04 (x86_64 only)
   - Root/sudo privileges
   - linux-headers for current kernel

@@ -7,18 +7,24 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Tests network connectivity to configured printers by pinging their hostnames/IPs. Reports success/failure for each printer and optionally sends an email alert if any tests fail.
 
-  Usage Notes:
-  - Configure PRINTERS array with printer hostnames or IP addresses
-  - Performs DNS lookup for failed connections as diagnostics
+  Usage Notes
+  -----------
+  - Pings each configured printer and records pass/fail status
+  - Performs DNS lookup for failed printers as diagnostics
   - Optional email alerts via sendmail when failures occur
-  - Default: 2 ping packets with 5 second timeout
+  - Ping count: 2 packets, timeout: 5 seconds
+  - Email alerts disabled by default
 
-  Requirements:
+  Requirements
+  ------------
   - macOS or Linux
   - Network access to printer hosts
+  - PRINTERS: Array of printer hostnames or IP addresses
+  - SEND_EMAIL / MAIL_TO / MAIL_FROM: Email notification settings
   - (Optional) sendmail for email alerts
 favourite: false
 shared: false

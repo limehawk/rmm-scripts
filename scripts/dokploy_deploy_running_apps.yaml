@@ -7,19 +7,31 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
-  Automates the deployment process for all running Dokploy applications. Fetches application metadata via the Dokploy API, checks each app's status, and triggers deployments only for apps that are currently running. Idle applications are skipped.
+  Purpose
+  -------
+  Automates the deployment process for all running Dokploy applications. Fetches application metadata via the Dokploy API, checks each app's status, and triggers deployments only for apps that are currently running. Idle applications are skipped to prevent unnecessary resource usage and deployment conflicts.
 
-  ## Usage Notes
-  - Configure DOKPLOY_DOMAIN and API_TOKEN in script before running
-  - Adds 2-second delay between deployments to avoid API rate limits
+  Usage Notes
+  -----------
+  - Fetches all application IDs from Dokploy via API
+  - Retrieves application info including status, name, and project
   - Skips applications with "idle" status
-  - API calls use HTTPS for encrypted communication
+  - Triggers deployment for applications with "running" status
+  - Adds 2-second delay between deployments to avoid API rate limits
+  - DOKPLOY_DOMAIN: set to your Dokploy domain (e.g., "app.dokploy.com")
+  - API_TOKEN: set to your API token from Dokploy profile settings
 
-  ## Requirements
+  Requirements
+  ------------
   - curl installed
   - Network connectivity to Dokploy domain
   - Valid Dokploy API token with deployment permissions
+
+  Security
+  --------
+  - API token must be kept secure and not committed to version control
+  - Replace API_TOKEN placeholder before running
+  - API calls use HTTPS for encrypted communication
 favourite: false
 shared: false
 scriptId: '259059084121726976'

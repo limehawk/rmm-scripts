@@ -20,12 +20,18 @@ readme: |
   - Removes leftover files and folders from AppData, ProgramData, Program Files
   - Backs up registry keys to SystemDrive\limehawk\registry_backup before removal
   - Cleans up registry keys in HKCU and HKLM
+  - $appName default: OneStart
 
   Requirements
   ------------
-  - Windows with PowerShell 5.1 or later
-  - Administrator privileges
+  - Windows PowerShell 5.1+
+  - Administrative privileges required
   - Internet access for UninstallView download
+
+  Security
+  --------
+  - Only removes OneStart-related items using known paths and patterns
+  - Registry keys are backed up before removal for recovery if needed
 favourite: false
 shared: false
 scriptId: '6295817723329372160'

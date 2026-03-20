@@ -7,17 +7,28 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Releases and renews IP addresses on all DHCP-enabled network adapters, and flushes the DNS cache. Useful for resolving network connectivity issues caused by stale DHCP leases or DNS cache problems.
 
-  ## Usage
-  Configure via hardcoded setting in the script:
-  - `FlushDns` - Whether to flush DNS cache after renewal (default: true)
+  Usage Notes
+  -----------
+  - Queries all network adapters for DHCP-enabled interfaces
+  - For each DHCP adapter: releases IP, then renews IP
+  - Flushes DNS cache if enabled
+  - Reports results for each adapter
+  - Targets only DHCP-enabled adapters; static IP adapters are skipped
+  - $FlushDns: whether to flush DNS cache after renewal (default $true)
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS with network adapters
-  - DHCP-enabled network adapters (static IP adapters are skipped)
+  - DHCP-enabled network adapters
   - Admin privileges recommended for DNS flush
+
+  Security
+  --------
+  - Temporarily disconnects network during release/renew
 favourite: false
 shared: false
 scriptId: '259059100479512576'

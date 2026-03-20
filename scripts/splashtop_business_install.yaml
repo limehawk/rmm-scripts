@@ -13,15 +13,19 @@ readme: |
 
   Usage Notes
   -----------
-  - Downloads MSI installer from official Splashtop servers
-  - Installs silently with logging
+  - Downloads MSI installer from official Splashtop redirect URL
+  - Creates temporary directory if needed
+  - Installs silently via msiexec with verbose logging
   - Cleans up installer file after installation
+  - Uses curl.exe if available, falls back to Invoke-WebRequest
 
   Requirements
   ------------
   - Windows OS
   - Administrator privileges
   - Internet connectivity
+  - $downloadUrl: URL to Splashtop Business MSI installer
+  - $tempDirectory: directory for temporary installer storage
 favourite: false
 shared: false
 scriptId: '259059182331355136'

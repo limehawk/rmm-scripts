@@ -13,11 +13,12 @@ readme: |
 
   Usage Notes
   -----------
+  - Checks Windows version requirements before proceeding
+  - Locates winget executable in WindowsApps directory
   - Runs winget upgrade --all with silent options
   - Accepts all package agreements automatically
   - Logs output to Windows temp directory
   - Cleans up logs older than 14 days
-  - Locates winget executable in WindowsApps
 
   Requirements
   ------------

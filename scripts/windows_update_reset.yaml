@@ -16,17 +16,24 @@ readme: |
   Usage Notes
   -----------
   - Stops BITS, wuauserv, appidsvc, cryptsvc services
-  - Clears SoftwareDistribution, catroot2, and QMGR data
+  - Flushes DNS cache and clears BITS download queue data
+  - Renames SoftwareDistribution and catroot2 folders (creates .bak for recovery)
+  - Resets BITS and wuauserv security descriptors
   - Re-registers 30+ Windows Update related DLLs
   - Resets Winsock
-  - Creates .bak folders for recovery
-  - Optional reboot after reset (configure RebootAfterReset)
+  - Restarts all services after reset
+  - Optional RebootAfterReset (default: false)
 
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
   - Internet connectivity for updates after reset
+
+  Security
+  --------
+  - Modifies system registry and service configurations
+  - Creates .bak folders for recovery of renamed directories
 favourite: false
 shared: false
 scriptId: '259059246441291776'

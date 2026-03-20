@@ -8,15 +8,21 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Removes Google Credential Provider for Windows (GCPW) registry keys and folders to allow for a clean reinstallation or complete removal.
 
-  ## Usage
-  - Run as Administrator or via RMM as SYSTEM
+  Usage Notes
+  -----------
+  - Deletes GCPW-related registry keys
+  - Deletes Chrome enrollment registry keys
+  - Removes GCPW policy and credential folders
+  - Reports results for each operation
   - No inputs required
-  - Does NOT uninstall GCPW itself (use Programs & Features for that)
+  - Does NOT uninstall GCPW itself (use Programs and Features for that)
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges
 favourite: false

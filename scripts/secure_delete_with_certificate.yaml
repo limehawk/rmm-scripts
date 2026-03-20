@@ -14,17 +14,29 @@ readme: |
 
   Usage Notes
   -----------
-  - Configure target path, output directory, and operator name before running
-  - Set dryRun to true to test without actual deletion
-  - Certificate includes SHA-256 and MD5 hashes for verification
-  - Supports recursive deletion with the recursive setting
+  - Configure $targetPath, $outputDirectory, and $operatorName before running
+  - Set $dryRun to $true to test without actual deletion
+  - Generates unique session ID for audit trail
+  - Captures complete system information (hardware, OS, user, network)
+  - Calculates SHA-256 and MD5 hashes for each file (dual hash for verification)
+  - Records file attributes, timestamps, size, and NTFS alternate data streams
+  - Verifies each file no longer exists post-deletion
+  - Supports recursive deletion with the $recursive setting
+  - Optional HTML certificate generation via $generateHtml
+  - Configurable overwrite passes via $overwritePasses (default: 3)
+  - Optional $caseReference, $witnessName, and $notes fields for legal documentation
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server
   - PowerShell 5.1 or later
-  - Administrator privileges recommended
-  - Microsoft SDelete (auto-installed via winget if enabled)
+  - Administrator privileges recommended for complete metadata access
+  - Microsoft SDelete (auto-installed via winget if $autoInstallSDelete is enabled)
+
+  Security
+  --------
+  - Certificate contains file paths and hashes which may be sensitive
+  - Store certificates securely according to legal requirements
 favourite: false
 shared: false
 scriptId: '259059170738298880'

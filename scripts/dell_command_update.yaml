@@ -7,18 +7,23 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Installs Dell Command Update via winget and runs it to scan and apply driver/firmware updates silently. Designed for automated Dell system maintenance in RMM environments.
 
-  ## Usage Notes
+  Usage Notes
+  -----------
+  - Verifies winget is available, then installs Dell Command Update if not present
   - Configures DCU for silent operation: auto-suspend BitLocker, disable user consent prompts
+  - Scans for available updates and outputs log to console
   - Applies updates without rebooting (reboot=disable)
   - Logs scan and apply operations to C:\dell\logs
-  - Script will fail on non-Dell hardware
+  - Hardcoded variables: DcuCliPath, DcuLogPath, WingetId
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10 1809+ or Windows 11 with winget
-  - Dell system hardware
+  - Dell system hardware (script will fail on non-Dell systems)
   - Administrator privileges
 favourite: false
 shared: true

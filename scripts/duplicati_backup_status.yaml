@@ -7,15 +7,23 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Monitors Duplicati backup jobs via the local API. Authenticates to the Duplicati web service, queries configured backups, and reports their status including metrics like backup size, file count, and next scheduled run.
 
-  ## Usage
-  - Set `$duplicatiPassword` to your Duplicati Web UI password (leave empty if no password)
-  - Set `$duplicatiPort` to the port where Duplicati runs (default 8200)
-  - Exits with code 1 if any backup job has failed
+  Usage Notes
+  -----------
+  - Validates input parameters
+  - Authenticates to Duplicati API
+  - Queries all configured backup jobs
+  - Checks status of each job (Success, Warning, Error, etc.)
+  - Reports metrics: size, file count, progress, next schedule
+  - Exits with code 1 if any job has failed
+  - $duplicatiPassword: set to your Duplicati Web UI password (leave empty if no password)
+  - $duplicatiPort: port where Duplicati runs (default 8200)
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS
   - Duplicati 2.0+ installed and running
   - Web UI password set (or empty for no password)

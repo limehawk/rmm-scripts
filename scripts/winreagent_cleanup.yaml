@@ -14,10 +14,11 @@ readme: |
 
   Usage Notes
   -----------
-  - Checks if C:\$WinREAgent folder exists
-  - If exists, deletes folder and all contents recursively
-  - Handles hidden/system folder deletion
-  - Safe to run - exits successfully if folder does not exist
+  - FolderPath defaults to C:\$WinREAgent
+  - Checks if folder exists before attempting deletion
+  - Deletes folder and all contents recursively
+  - Handles hidden/system folder attributes
+  - Exits successfully if folder does not exist
 
   Requirements
   ------------

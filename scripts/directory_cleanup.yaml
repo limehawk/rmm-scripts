@@ -8,18 +8,21 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Cleans up files and directories older than a specified number of days. Logs deleted items to a file in the target folder.
 
-  ## Usage Notes
-  - Recursively scans subdirectories
-  - Removes empty directories after file cleanup
-  - Creates deleted_files.log in the target folder
+  Usage Notes
+  -----------
+  - Recursively scans subdirectories for files older than the specified threshold
+  - Deletes matching files and removes empty directories afterward
+  - Creates deleted_files.log in the target folder with details of each deletion
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS
-  - Runtime variable: `runtime_folderPath` (path to the folder to clean up)
-  - Runtime variable: `runtime_days` (number of days old a file must be to be deleted)
+  - Runtime variable: $runtime_folderPath (path to the folder to clean up)
+  - Runtime variable: $runtime_days (number of days old a file must be to be deleted)
 favourite: false
 shared: false
 runtimeVariables:

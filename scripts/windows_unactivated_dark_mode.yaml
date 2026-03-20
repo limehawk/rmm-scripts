@@ -14,15 +14,16 @@ readme: |
   Usage Notes
   -----------
   - Downloads wallpaper from configured URL to Public Pictures
-  - Sets dark mode for both Apps and System themes
+  - Sets dark mode registry keys for both Apps and System themes
+  - Sets wallpaper path in registry and applies via UpdatePerUserSystemParameters
   - Restarts Explorer to apply theme changes immediately
-  - Optional UTC clock fix for dual-boot systems
-  - Configure inputs: wallpaperUrl, wallpaperPath, enableDarkMode, fixUtcClock
+  - Optional UTC clock fix for dual-boot systems (fixUtcClock)
+  - Configurable inputs: wallpaperUrl, wallpaperPath, enableDarkMode, fixUtcClock
 
   Requirements
   ------------
   - PowerShell 5.1 or later
-  - Administrator privileges
+  - Administrator privileges (required for UTC clock fix)
   - Internet access for wallpaper download
 favourite: false
 shared: false

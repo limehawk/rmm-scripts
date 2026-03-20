@@ -8,16 +8,19 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Uninstalls Splashtop Streamer from a Windows system using the Windows Installer service (MSI uninstall).
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - Searches for Splashtop Streamer in installed products
   - Retrieves the product GUID automatically
   - Executes silent uninstall via CIM method
   - Product name can be customized via $productName variable
 
-  Requirements:
+  Requirements
+  ------------
   - Windows OS
   - Administrator privileges
   - Splashtop Streamer installed

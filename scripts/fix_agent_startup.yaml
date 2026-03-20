@@ -8,19 +8,24 @@ tags:
 runAs: SYSTEM_USER
 timeout: 5
 readme: |
-  ## Purpose
-  Configures the RMM agent service with proper recovery options (restart on failure) and delayed automatic start to prevent startup failures on slow or overloaded machines where services timeout during boot.
+  Purpose
+  -------
+  Configures the RMM agent service with proper recovery options and delayed automatic start to prevent startup failures on slow or overloaded machines where services timeout during boot.
 
-  ## Usage Notes
-  - Default service name is "limehawk" — change $ServiceName variable for
-    other RMM agents
-
-  - Uses registry for delayed start (compatible with Server 2019 PowerShell
-    which lacks AutomaticDelayedStart enum)
-
+  Usage Notes
+  -----------
+  - Locates the RMM agent service by name
+  - Reports current service status and startup type
+  - Sets service recovery options (restart on failure)
+  - Sets service to Automatic (Delayed Start) via registry
   - Reports recent crash events from Event Viewer for diagnosis
+  - Default service name is "limehawk"; change $ServiceName for other RMM agents
+  - Recovery: restart after 60s, 60s, then 120s; reset failure count every 24 hours
+  - Uses registry for delayed start (compatible with Server 2019 PowerShell which lacks AutomaticDelayedStart enum)
+  - Event log lookback defaults to 3 days
 
-  ## Requirements
+  Requirements
+  ------------
   - Windows OS
   - Administrator privileges
   - RMM agent installed

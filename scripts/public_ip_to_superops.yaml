@@ -14,16 +14,19 @@ readme: |
   Usage Notes
   -----------
   - Queries wtfismyip.com/json for public IP details
+  - Parses JSON response and formats into readable multiline text
   - Formats IP, Location, Hostname, ISP, Country, and Tor Exit status
-  - Sends formatted multiline text to SuperOps "Public IP" custom field
-  - No external binaries required (uses Invoke-RestMethod)
+  - Sends formatted text to SuperOps "Public IP" custom field
+  - Uses Invoke-RestMethod (no external binaries required)
 
   Requirements
   ------------
   - SuperOps PowerShell module must be available and authenticated
   - Internet connectivity to reach wtfismyip.com
   - Windows with PowerShell 5.1+ or PowerShell 7+
-  - SuperOps custom field must exist: Public IP (Multiline Text)
+  - SuperOps custom field "Public IP" (Multiline Text) must exist in tenant
+  - $apiUrl: wtfismyip.com JSON endpoint
+  - $customFieldName: SuperOps custom field name
 favourite: false
 shared: true
 scriptId: '582443736728412160'

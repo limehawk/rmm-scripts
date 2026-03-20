@@ -7,14 +7,18 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Prevents macOS from creating .DS_Store files on network shares. These files contain folder metadata and can clutter network drives, causing issues for non-Mac users accessing shared folders.
 
-  ## Usage
-  - Run the script as the current user
-  - Log out and back in (or reboot) for changes to take effect
+  Usage Notes
+  -----------
+  - Sets DSDontWriteNetworkStores to true via defaults command
+  - Displays confirmation message
+  - Logout or reboot is required for changes to take effect
 
-  ## Requirements
+  Requirements
+  ------------
   - macOS operating system
   - No special privileges required (runs as current user)
 favourite: false

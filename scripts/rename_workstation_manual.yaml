@@ -9,13 +9,7 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Rename a Windows device and sync the same name to SuperOps.
-
-  Naming pattern (max 15 chars): CLIENT-USERUUID
-  - CLIENT: Custom override $YourCustomClientHere, else from $YourClientNameHere
-    (variable length, sanitized A-Z0-9, trimmed if needed)
-  - USER: Sanitized username, maximized, truncated if needed
-  - UUID: SMBIOS UUID tail, at least 3 chars
+  Renames a Windows device using the pattern CLIENT-USERUUID (max 15 chars) and syncs the same name to SuperOps. CLIENT is a custom override from $YourCustomClientHere (variable length, sanitized A-Z0-9), falling back to $YourClientNameHere. USER is the sanitized username (maximized, truncated if needed), and UUID is the SMBIOS UUID tail (at least 3 chars).
 
   Usage Notes
   -----------

@@ -7,17 +7,22 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  ## Purpose
+  Purpose
+  -------
   Adds or removes a local user from the Administrators group. Idempotent operation that ensures the user's group membership aligns with the requested action.
 
-  ## Usage
-  Provide the following SuperOps runtime variable:
-  - `TargetUsername` - The local user account to manage
+  Usage Notes
+  -----------
+  - Validates user exists before operation
+  - Checks current membership status
+  - Adds or removes from Administrators group
+  - Reports final status
+  - Operates on the built-in Administrators group
+  - $TargetUsername: the local user account to manage (SuperOps runtime variable)
+  - $Action: set to "add" or "remove" (hardcoded setting)
 
-  Configure the action via hardcoded setting:
-  - `Action` - "add" or "remove"
-
-  ## Requirements
+  Requirements
+  ------------
   - Windows 10/11
   - Admin privileges required
   - Target user must exist locally

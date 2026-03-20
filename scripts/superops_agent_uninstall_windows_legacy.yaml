@@ -8,16 +8,19 @@ tags:
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
-  Purpose:
+  Purpose
+  -------
   Uninstalls the legacy SuperOps agent on Windows systems using the product's IdentifyingNumber. Intended for environments where the agent cannot be uninstalled via standard methods or newer uninstallers.
 
-  Usage Notes:
+  Usage Notes
+  -----------
   - No inputs required - IdentifyingNumber is hardcoded
   - Queries WMI Win32_Product class to locate and uninstall
   - Designed for silent, unattended execution
   - Use this for older SuperOps agent installations
 
-  Requirements:
+  Requirements
+  ------------
   - PowerShell 2.0 or later
   - Administrative privileges
   - WMI service must be running

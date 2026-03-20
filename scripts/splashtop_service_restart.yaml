@@ -14,15 +14,17 @@ readme: |
 
   Usage Notes
   -----------
+  - Validates service name input and checks service exists
   - Default service: SplashtopRemoteService
-  - Wait time after restart: 3 seconds
-  - Reports final service status
+  - Restarts the service and waits 3 seconds
+  - Reports final service status (Running or warning)
 
   Requirements
   ------------
   - Windows OS
   - Administrator privileges
   - Splashtop Streamer installed
+  - $serviceName: name of the Splashtop service to restart
 favourite: false
 shared: true
 scriptId: '3769539001587634176'

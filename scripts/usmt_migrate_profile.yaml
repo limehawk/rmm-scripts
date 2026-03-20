@@ -13,22 +13,18 @@ readme: |
 
   Usage Notes
   -----------
-  - Run interactively - presents menu-driven interface
-  - Backup options include:
-    - Documents, Desktop, Downloads, Pictures, Music, Videos
-    - Favorites/Bookmarks, AppData (Roaming and Local)
-    - Printers, Wallpaper settings
-    - Optional encryption for backup security
-  - Restore options:
-    - Merge to existing account
-    - Create new local account during restore
+  - Run interactively via menu-driven interface
+  - Backup options: Documents, Desktop, Downloads, Pictures, Music, Videos, Favorites/Bookmarks, AppData, Printers, Wallpaper settings
+  - Optional encryption for backup security
+  - Restore options: merge to existing account or create new local account
   - USMT tools are auto-downloaded if not present
+  - Default store path: C:\MigrationStore
 
   Requirements
   ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges required
-  - Internet connectivity (for initial USMT download)
+  - Internet connectivity for initial USMT download
   - Sufficient disk space for migration store
 favourite: false
 shared: false
