@@ -1,0 +1,7 @@
+name: file_search_everything_debug.ps1
+language: PowerShell
+runAs: SYSTEM_USER
+timeout: 15
+scriptId: '370297646124347392'
+lastPushedChecksum: sha256:cfcb124d6bfbf902
+lastPushedMetaChecksum: sha256:d8140124a7df19c2
