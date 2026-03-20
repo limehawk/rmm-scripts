@@ -7,24 +7,25 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : File Search                                                 v3.0.0
+ SCRIPT   : File Search                                                 v4.0.0
  AUTHOR   : Limehawk.io
  DATE     : March 2026
  USAGE    : .\file_search_everything.ps1
 ================================================================================
  FILE     : file_search_everything.ps1
- DESCRIPTION : Searches all fixed drives for files matching a pattern
+ DESCRIPTION : Searches all fixed drives for files matching a pattern via NTFS MFT
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
  PURPOSE
 
-   Searches all fixed local drives for files matching a wildcard pattern.
-   Returns full paths of all matches. No third-party tools required.
+   Searches all fixed NTFS drives by reading the Master File Table directly
+   via fsutil. Much faster than Get-ChildItem because it reads the MFT
+   sequentially instead of walking the directory tree. No third-party tools.
 
  DATA SOURCES & PRIORITY
 
-   1) Local filesystem via Get-ChildItem
+   1) NTFS Master File Table via fsutil usn enumdata
 
  REQUIRED INPUTS
 
@@ -33,25 +34,28 @@ $ErrorActionPreference = 'Stop'
 
  SETTINGS
 
-   - Searches all fixed drives (DriveType 3)
-   - Skips inaccessible directories silently
+   - Searches all fixed NTFS drives (DriveType 3)
+   - Resolves full paths only for matches (not entire MFT)
 
  BEHAVIOR
 
    1. Validates search pattern
    2. Enumerates all fixed drives
-   3. Recursively searches each drive for matching files
-   4. Outputs full paths and total count
+   3. Streams MFT entries via fsutil usn enumdata per drive
+   4. Filters filenames inline using wildcard match
+   5. Resolves full paths for matches via fsutil file queryfilenamebyid
+   6. Outputs results
 
  PREREQUISITES
 
+   - Windows 10/11 with NTFS volumes
+   - Administrator privileges (required for MFT access)
    - PowerShell 5.1 or later
-   - Administrator privileges recommended for full access
 
  SECURITY NOTES
 
-   - Read-only file system scan
-   - No file contents are read or transmitted
+   - Read-only MFT scan, no file contents accessed
+   - May show entries for recently deleted files (MFT not yet overwritten)
 
  ENDPOINTS
 
@@ -68,10 +72,10 @@ $ErrorActionPreference = 'Stop'
    ==============================================================
    Search Pattern : *landtrust*
 
-   [RUN] FILE SEARCH
+   [RUN] MFT SEARCH
    ==============================================================
-   Scanning drive : C:\
-   Scanning drive : D:\
+   Scanning drive : C:
+   Scanning drive : D:
 
    [INFO] SEARCH RESULTS
    ==============================================================
@@ -86,7 +90,8 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
- 2026-03-20 v3.0.0 Rewrite using native PowerShell - no third-party tools
+ 2026-03-20 v4.0.0 Rewrite using NTFS MFT via fsutil for fast search
+ 2026-03-20 v3.0.0 Native PowerShell Get-ChildItem approach
  2026-03-20 v2.0.0 Simplified Everything-based version
  2026-03-20 v1.0.0 Initial release
 ================================================================================
@@ -102,6 +107,38 @@ function Write-Section([string]$Type, [string]$Name) {
     Write-Host "=============================================================="
 }
 
+function Search-MFT([string]$Volume, [string]$Pattern) {
+    $hits = [System.Collections.Generic.List[string]]::new()
+    $currentFileName = $null
+    $currentParentRef = $null
+
+    fsutil usn enumdata 0 0 1 $Volume | ForEach-Object {
+        if ($_ -match '^\s*File Name\s+:\s+(.+)') {
+            $currentFileName = $Matches[1].Trim()
+        }
+        elseif ($_ -match '^\s*Parent File Ref#\s+:\s+(.+)') {
+            $currentParentRef = $Matches[1].Trim()
+            if ($currentFileName -like $Pattern) {
+                $fullPath = $null
+                try {
+                    $resolved = fsutil file queryfilenamebyid $Volume $currentParentRef 2>&1
+                    if ($resolved -match '\\\\[?\\]+(.+)') {
+                        $fullPath = Join-Path $Matches[1] $currentFileName
+                    }
+                } catch {}
+                if (-not $fullPath) {
+                    $fullPath = "$Volume\<unresolved>\$currentFileName"
+                }
+                $hits.Add($fullPath)
+            }
+            $currentFileName = $null
+            $currentParentRef = $null
+        }
+    }
+
+    return $hits
+}
+
 try {
     Write-Section 'info' 'INPUT VALIDATION'
     if ([string]::IsNullOrWhiteSpace($searchPattern)) {
@@ -109,23 +146,22 @@ try {
     }
     Write-Host "  Search Pattern : $searchPattern"
 
-    Write-Section 'run' 'FILE SEARCH'
+    Write-Section 'run' 'MFT SEARCH'
     $drives = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3" | Select-Object -ExpandProperty DeviceID
-    $allResults = @()
+    $allResults = [System.Collections.Generic.List[string]]::new()
 
     foreach ($drive in $drives) {
-        $root = "$drive\"
-        Write-Host "  Scanning drive : $root"
-        $found = Get-ChildItem -Path $root -Filter $searchPattern -Recurse -File -ErrorAction SilentlyContinue
-        if ($found) {
-            $allResults += $found
+        Write-Host "  Scanning drive : $drive"
+        $results = Search-MFT -Volume $drive -Pattern $searchPattern
+        if ($results.Count -gt 0) {
+            $allResults.AddRange($results)
         }
     }
 
     Write-Section 'info' 'SEARCH RESULTS'
     if ($allResults.Count -gt 0) {
-        foreach ($file in $allResults) {
-            Write-Host "  $($file.FullName)"
+        foreach ($path in $allResults) {
+            Write-Host "  $path"
         }
         Write-Host "  --------------------------------------------------------------"
         Write-Host "  Total Matches : $($allResults.Count)"
