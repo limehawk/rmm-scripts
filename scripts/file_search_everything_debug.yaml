@@ -3,5 +3,5 @@ language: PowerShell
 runAs: SYSTEM_USER
 timeout: 15
 scriptId: '370297646124347392'
-lastPushedChecksum: sha256:cfcb124d6bfbf902
+lastPushedChecksum: sha256:ccf04345ff9f02f5
 lastPushedMetaChecksum: sha256:d8140124a7df19c2
