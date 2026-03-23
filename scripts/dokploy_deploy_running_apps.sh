@@ -7,174 +7,275 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v1.1.1
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.1.0
 #  AUTHOR   : Limehawk.io
-#  DATE     : January 2026
+#  DATE     : March 2026
 #  USAGE    : ./dokploy_deploy_running_apps.sh
 # ================================================================================
 #  FILE     : dokploy_deploy_running_apps.sh
-#  DESCRIPTION : Triggers deployments for all currently running Dokploy apps
+#  DESCRIPTION : Redeploys all running Dokploy apps via local API
 # --------------------------------------------------------------------------------
 #  README
 # --------------------------------------------------------------------------------
 #  PURPOSE
 #
-#    Automates the deployment process for all running Dokploy applications.
-#  Fetches application metadata via the Dokploy API, checks each app's
-#  status, and triggers deployments only for apps that are currently
-#  running. Idle applications are skipped to prevent unnecessary resource
-#  usage and deployment conflicts.
+#    Automates redeployment of all running Dokploy applications by querying
+#    the Dokploy PostgreSQL database for application status, then triggering
+#    deployments via the local Dokploy API. Uses the API key and hits
+#    localhost to avoid external routing issues.
 #
-#  CONFIGURATION
-#  -----------------------------------------------------------------------
-#  - DOKPLOY_DOMAIN: Your Dokploy domain (e.g., "app.dokploy.com")
-#  - API_TOKEN: API token from Dokploy profile settings
+#  DATA SOURCES & PRIORITY
+#
+#    - Dokploy PostgreSQL database (application table)
+#    - Local Dokploy API (localhost:3000)
+#
+#  REQUIRED INPUTS
+#
+#    All inputs are hardcoded in the script body:
+#      - DOKPLOY_DB_CONTAINER: Name filter for Dokploy postgres container
+#      - DOKPLOY_LOCAL_URL: Local Dokploy API base URL
+#      - API_KEY_NAME: Name of the API key to look up in Dokploy database
+#
+#  SETTINGS
+#
+#    Configuration defaults:
+#      - DOKPLOY_DB_CONTAINER: "dokploy-postgres" (container name filter)
+#      - DOKPLOY_LOCAL_URL: "http://localhost:3000" (internal API)
+#      - API_KEY_NAME: "claude-key" (looked up in Dokploy apikey table)
 #
 #  BEHAVIOR
-#  -----------------------------------------------------------------------
-#  1. Fetches all application IDs from Dokploy via API
-#  2. Iterates through each application ID
-#  3. Retrieves application info including status, name, and project
-#  4. Skips applications with "idle" status
-#  5. Triggers deployment for applications with "running" status
-#  6. Displays progress and results for each application
-#  7. Adds 2-second delay between deployments to avoid API rate limits
+#
+#    1. Queries the Dokploy database for all applications
+#    2. Skips applications with "idle" status
+#    3. Triggers deployment via application.deploy API for non-idle apps in parallel
+#    4. Waits for all deployments and reports results
 #
 #  PREREQUISITES
-#  -----------------------------------------------------------------------
-#  - curl installed
-#  - Network connectivity to Dokploy domain
-#  - Valid Dokploy API token with deployment permissions
-#  - Dokploy domain properly configured
+#
+#    - Dokploy running with PostgreSQL container accessible
+#    - Script must run on the Dokploy host server
+#    - curl installed
 #
 #  SECURITY NOTES
-#  -----------------------------------------------------------------------
-#  - API token must be kept secure and not committed to version control
-#  - Replace API_TOKEN placeholder before running
-#  - API calls use HTTPS for encrypted communication
-#  - No sensitive data logged to console
+#
+#    - API key read from database at runtime, never hardcoded
+#    - No secrets in logs
+#    - All API calls are localhost-only, no external network traffic
+#
+#  ENDPOINTS
+#
+#    - http://localhost:3000/api/application.deploy (local API)
 #
 #  EXIT CODES
-#  -----------------------------------------------------------------------
-#  0 - Success (all deployments processed)
-#  1 - Failure (error occurred during execution)
 #
-#  EXAMPLE OUTPUT
-#  -----------------------------------------------------------------------
+#    0 - Success (all deployments processed)
+#    1 - Failure (error occurred during execution)
 #
-#    [RUN] FETCHING APPLICATIONS
+#  EXAMPLE RUN
+#
+#    [INFO] INPUT VALIDATION
 #    ==============================================================
-#    Fetching all application IDs...
-#    Found all applications. Starting status check...
+#    All inputs validated.
+#
+#    [RUN] QUERYING DATABASE
+#    ==============================================================
+#    Found 21 applications. Filtering by status...
 #
 #    [RUN] PROCESSING APPLICATIONS
 #    ==============================================================
-#    Fetching info for app: abc123def456
-#    Skipping 'idle' app: Project: MyProject, App: MyApp (ID: abc123def456)
+#    Skipping idle app : frontend (applicationId: abc123)
+#    Queued for deployment : hudu-app
+#    Queued for deployment : it-tools
 #
-#    Fetching info for app: xyz789ghi012
-#    Triggering deployment for 'running' app: Project: WebApp, App: Frontend (ID: xyz789ghi012)
-#    Deployment triggered for WebApp - Frontend.
+#    [RUN] DEPLOYING 15 APPLICATIONS (PARALLEL)
+#    ==============================================================
+#    [OK] hudu-app
+#    [OK] it-tools
+#    [ERROR] backend
+#
+#    [OK] FINAL STATUS
+#    ==============================================================
+#    Redeployed : 14
+#    Skipped (idle) : 6
+#    Failed : 1
 #
 #    [OK] SCRIPT COMPLETED
 #    ==============================================================
-#    All deployments have been processed!
 #
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-03-23 v3.1.0 Switch to application.deploy API via localhost
+#  2026-03-22 v3.0.0 Rewrite to use database + localhost webhooks
+#  2026-03-22 v2.0.1 Fix field delimiter — use pipe instead of tab for parsing
+#  2026-03-22 v2.0.0 Rewrite to use Docker Swarm directly, no API token needed
 #  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
 #  2025-12-23 v1.1.0 Updated to Limehawk Script Framework
 #  2024-11-18 v1.0.0 Initial release
 # ================================================================================
 
 # ============================================================================
-# CONFIGURATION SETTINGS - Modify these as needed
+# HARDCODED INPUTS
 # ============================================================================
-# Replace with your Dokploy domain (e.g., "app.dokploy.com")
-DOKPLOY_DOMAIN="YOUR_DOMAIN_HERE"
-# Replace with your API token from Dokploy profile settings
-API_TOKEN="API_TOKEN_HERE"
+DOKPLOY_DB_CONTAINER="dokploy-postgres"                  # Dokploy postgres container name
+DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal API URL
+API_KEY_NAME="claude-key"                                # Name of API key in Dokploy
 # ============================================================================
 
-# Set to exit immediately if a command exits with a non-zero status.
 set -e
 
+# ============================================================================
+# INPUT VALIDATION
+# ============================================================================
 echo ""
-echo "[RUN] FETCHING APPLICATIONS"
+echo "[INFO] INPUT VALIDATION"
 echo "=============================================================="
-echo "Fetching all application IDs..."
 
-# 1. Get ALL application IDs
-ALL_IDS=$(curl -s -X GET \
-  "https://$DOKPLOY_DOMAIN/api/project.all" \
-  -H "accept: application/json" \
-  -H "x-api-key: $API_TOKEN" | \
-  grep -o '"applicationId":"[^"]*"' | \
-  cut -d '"' -f 4 | sort -u)
+ERROR_OCCURRED=false
+ERROR_TEXT=""
 
-# Check if we got any IDs at all
-if [ -z "$ALL_IDS" ]; then
-  echo "No applications found."
-  echo ""
-  echo "[OK] SCRIPT COMPLETED"
-  echo "=============================================================="
-  exit 0
+if [[ -z "$DOKPLOY_DB_CONTAINER" ]]; then
+    ERROR_OCCURRED=true
+    ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_DB_CONTAINER is not configured"
 fi
 
-echo "Found all applications. Starting status check..."
+if [[ -z "$DOKPLOY_LOCAL_URL" ]]; then
+    ERROR_OCCURRED=true
+    ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_LOCAL_URL is not configured"
+fi
 
+if [[ "$ERROR_OCCURRED" = true ]]; then
+    echo -e "$ERROR_TEXT"
+    echo ""
+    exit 1
+fi
+
+echo "All inputs validated."
+
+# ============================================================================
+# QUERY DATABASE
+# ============================================================================
+echo ""
+echo "[RUN] QUERYING DATABASE"
+echo "=============================================================="
+
+DB_CONTAINER=$(docker ps -q -f "name=$DOKPLOY_DB_CONTAINER")
+
+if [[ -z "$DB_CONTAINER" ]]; then
+    echo ""
+    echo "[ERROR] ERROR OCCURRED"
+    echo "=============================================================="
+    echo "Dokploy postgres container not found."
+    echo ""
+    exit 1
+fi
+
+# Fetch API key from database by name
+API_TOKEN=$(docker exec "$DB_CONTAINER" psql -U dokploy -d dokploy -t -A \
+    -c "SELECT id FROM apikey WHERE name = '$API_KEY_NAME' AND enabled = true LIMIT 1" 2>/dev/null)
+
+if [[ -z "$API_TOKEN" ]]; then
+    echo ""
+    echo "[ERROR] ERROR OCCURRED"
+    echo "=============================================================="
+    echo "API key '$API_KEY_NAME' not found or disabled in Dokploy."
+    echo ""
+    exit 1
+fi
+
+echo "API key loaded."
+
+# Query: app name, project name, status, applicationId (pipe-delimited, no headers)
+APP_DATA=$(docker exec "$DB_CONTAINER" psql -U dokploy -d dokploy -t -A -F '|' \
+    -c "SELECT a.name, p.name, a.\"applicationStatus\", a.\"applicationId\" FROM application a JOIN environment e ON a.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"" 2>/dev/null)
+
+if [[ -z "$APP_DATA" ]]; then
+    echo "No applications found in database."
+    echo ""
+    echo "[OK] SCRIPT COMPLETED"
+    echo "=============================================================="
+    exit 0
+fi
+
+APP_COUNT=$(echo "$APP_DATA" | wc -l)
+echo "Found $APP_COUNT applications. Filtering by status..."
+
+# ============================================================================
+# PROCESS APPLICATIONS
+# ============================================================================
 echo ""
 echo "[RUN] PROCESSING APPLICATIONS"
 echo "=============================================================="
 
-# 2. Loop through ALL IDs and check them one by one
-for ID in $ALL_IDS
-do
-  echo "Fetching info for app: $ID"
+SKIPPED_IDLE=0
+DEPLOY_LIST=""
 
-  # Call application.one ONCE and store the response
-  APP_INFO=$(curl -s -X GET \
-    "https://$DOKPLOY_DOMAIN/api/application.one?applicationId=$ID" \
-    -H "accept: application/json" \
-    -H "x-api-key: $API_TOKEN")
+while IFS='|' read -r APP_NAME PROJECT_NAME APP_STATUS APP_ID; do
+    DISPLAY_NAME="$PROJECT_NAME/$APP_NAME"
 
-  # Extract the status
-  APP_STATUS=$(echo "$APP_INFO" | \
-    grep -o '"applicationStatus":"[^"]*"' | \
-    cut -d '"' -f 4)
+    if [[ "$APP_STATUS" == "idle" ]]; then
+        echo "Skipping idle app : $DISPLAY_NAME"
+        SKIPPED_IDLE=$((SKIPPED_IDLE + 1))
+        continue
+    fi
 
-  # Extract all "name" fields
-  ALL_NAMES=$(echo "$APP_INFO" | \
-    grep -o '"name":"[^"]*"' | \
-    cut -d '"' -f 4)
+    echo "Queued for deployment : $DISPLAY_NAME"
+    DEPLOY_LIST="${DEPLOY_LIST}${DISPLAY_NAME}|${APP_ID}"$'\n'
+done <<< "$APP_DATA"
 
-  # The first name is the Application Name
-  APP_NAME=$(echo "$ALL_NAMES" | head -n 1)
-  # The last name is the Project Name
-  PROJECT_NAME=$(echo "$ALL_NAMES" | tail -n 1)
+# Remove trailing newline
+DEPLOY_LIST=$(echo "$DEPLOY_LIST" | sed '/^$/d')
 
+if [[ -z "$DEPLOY_LIST" ]]; then
+    echo "No running applications to deploy."
+    echo ""
+    echo "[OK] FINAL STATUS"
+    echo "=============================================================="
+    echo "Redeployed : 0"
+    echo "Skipped (idle) : $SKIPPED_IDLE"
+    echo "Failed : 0"
+    echo ""
+    echo "[OK] SCRIPT COMPLETED"
+    echo "=============================================================="
+    exit 0
+fi
 
-  # 3. Check the status and decide to deploy or skip
-  if [ "$APP_STATUS" == "idle" ]; then
-    echo "Skipping 'idle' app: Project: $PROJECT_NAME, App: $APP_NAME (ID: $ID)"
-  else
-    echo "Triggering deployment for 'running' app ($APP_STATUS): Project: $PROJECT_NAME, App: $APP_NAME (ID: $ID)"
+DEPLOY_COUNT=$(echo "$DEPLOY_LIST" | wc -l)
 
-    curl --fail -s -X POST \
-      "https://$DOKPLOY_DOMAIN/api/application.deploy" \
-      -H "accept: application/json" \
-      -H "Content-Type: application/json" \
-      -H "x-api-key: $API_TOKEN" \
-      -d "{\"applicationId\": \"$ID\"}"
+echo ""
+echo "[RUN] DEPLOYING $DEPLOY_COUNT APPLICATIONS (PARALLEL)"
+echo "=============================================================="
 
-    echo "Deployment triggered for $PROJECT_NAME - $APP_NAME."
-    sleep 2
-  fi
-  echo ""
-done
+RESULTS_FILE=$(mktemp)
+
+echo "$DEPLOY_LIST" | xargs -P 0 -I {} sh -c '
+    APP_NAME=$(echo "{}" | cut -d"|" -f1)
+    APP_ID=$(echo "{}" | cut -d"|" -f2)
+    RESPONSE=$(curl -s -w "|%{http_code}" --max-time 30 -X POST "'"$DOKPLOY_LOCAL_URL"'/api/application.deploy" -H "Content-Type: application/json" -H "x-api-key: '"$API_TOKEN"'" -d "{\"applicationId\": \"$APP_ID\"}" 2>&1)
+    HTTP_CODE=$(echo "$RESPONSE" | tail -c 4 | tr -d "|")
+    if [ "$HTTP_CODE" = "200" ]; then
+        echo "[OK] $APP_NAME"
+    else
+        echo "[ERROR] $APP_NAME (HTTP $HTTP_CODE)"
+    fi
+' | tee "$RESULTS_FILE"
+
+DEPLOYED=$(grep -c "^\[OK\]" "$RESULTS_FILE" 2>/dev/null || echo 0)
+FAILED=$(grep -c "^\[ERROR\]" "$RESULTS_FILE" 2>/dev/null || echo 0)
+rm -f "$RESULTS_FILE"
+
+# ============================================================================
+# FINAL STATUS
+# ============================================================================
+echo ""
+echo "[OK] FINAL STATUS"
+echo "=============================================================="
+echo "Redeployed : $DEPLOYED"
+echo "Skipped (idle) : $SKIPPED_IDLE"
+echo "Failed : $FAILED"
 
 echo ""
 echo "[OK] SCRIPT COMPLETED"
 echo "=============================================================="
-echo "All deployments have been processed!"
+
+exit 0
