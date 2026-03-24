@@ -2,30 +2,46 @@ name: splashtop_business_install.ps1
 description: Installs Splashtop Business client via winget
 language: PowerShell
 tags:
-- Software
-- Windows
+  - Software
+  - Windows
 runAs: SYSTEM_USER
 timeout: 15
-readme: |
+readme: >
   Purpose
+
   -------
-  Installs the Splashtop Business client application using winget (Windows Package Manager). This is the end-user remote access client, not the streamer agent.
+
+  Installs the Splashtop Business client application using winget (Windows
+  Package Manager). This is the end-user remote access client, not the streamer
+  agent.
+
 
   Usage Notes
+
   -----------
+
   - Uses winget to install Splashtop.SplashtopBusiness package
+
   - Detects SYSTEM vs user context for winget path resolution
+
   - Handles already-installed case gracefully
+
   - Silent installation with automatic agreement acceptance
 
+
   Requirements
+
   ------------
+
   - Windows OS
+
   - Administrator privileges
+
   - Winget installed (run winget_setup.ps1 if needed)
+
   - Internet connectivity
 favourite: false
 shared: false
-scriptId: '259059182331355136'
-lastPushedChecksum: sha256:85da6779dae31735
-lastPushedMetaChecksum: sha256:ead2de6f1a7f4fac
+scriptId: "259059182331355136"
+lastPushedChecksum: sha256:de86051d4da42af9
+lastPushedMetaChecksum: sha256:84d1e3214b651905
