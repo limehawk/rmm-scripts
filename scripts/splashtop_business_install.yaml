@@ -1,5 +1,5 @@
 name: splashtop_business_install.ps1
-description: Downloads and installs Splashtop Business client silently
+description: Installs Splashtop Business client via winget
 language: PowerShell
 tags:
 - Software
@@ -9,23 +9,21 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Downloads and silently installs the Splashtop Business client application. This is the end-user remote access client, not the streamer agent.
+  Installs the Splashtop Business client application using winget (Windows Package Manager). This is the end-user remote access client, not the streamer agent.
 
   Usage Notes
   -----------
-  - Downloads MSI installer from official Splashtop redirect URL
-  - Creates temporary directory if needed
-  - Installs silently via msiexec with verbose logging
-  - Cleans up installer file after installation
-  - Uses curl.exe if available, falls back to Invoke-WebRequest
+  - Uses winget to install Splashtop.SplashtopBusiness package
+  - Detects SYSTEM vs user context for winget path resolution
+  - Handles already-installed case gracefully
+  - Silent installation with automatic agreement acceptance
 
   Requirements
   ------------
   - Windows OS
   - Administrator privileges
+  - Winget installed (run winget_setup.ps1 if needed)
   - Internet connectivity
-  - $downloadUrl: URL to Splashtop Business MSI installer
-  - $tempDirectory: directory for temporary installer storage
 favourite: false
 shared: false
 scriptId: '259059182331355136'
