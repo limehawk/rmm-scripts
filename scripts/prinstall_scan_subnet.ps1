@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Scan Subnet v1.0.0
+SCRIPT  : Prinstall Scan Subnet v1.1.0
 AUTHOR  : Limehawk.io
 DATE      : March 2026
 USAGE   : .\prinstall_scan_subnet.ps1
@@ -83,6 +83,7 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-03-25 v1.1.0 Make subnet optional, auto-detect local subnet when blank
 2026-03-25 v1.0.0 Initial release - prinstall subnet scan wrapper
 ================================================================================
 #>
@@ -104,11 +105,8 @@ Write-Host "=============================================================="
 $errorOccurred = $false
 $errorText = ""
 
-if ([string]::IsNullOrWhiteSpace($subnet) -or $subnet -eq '$' + 'YourSubnetHere') {
-    $errorOccurred = $true
-    if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- SuperOps runtime variable `$YourSubnetHere was not replaced."
-}
+# Treat unreplaced placeholder as empty (auto-detect local subnet)
+if ($subnet -eq '$' + 'YourSubnetHere') { $subnet = '' }
 
 if ([string]::IsNullOrWhiteSpace($prinstallDir)) {
     $errorOccurred = $true
@@ -126,7 +124,11 @@ if ($errorOccurred) {
 
 $exePath = "$prinstallDir\prinstall.exe"
 
-Write-Host "Subnet          : $subnet"
+if ([string]::IsNullOrWhiteSpace($subnet)) {
+    Write-Host "Subnet          : (auto-detect local)"
+} else {
+    Write-Host "Subnet          : $subnet"
+}
 Write-Host "Prinstall       : $exePath"
 Write-Host "Inputs validated successfully"
 
@@ -160,11 +162,19 @@ Write-Host ""
 Write-Host "[RUN] SCAN SUBNET"
 Write-Host "=============================================================="
 
-Write-Host "Scanning $subnet for printers..."
+if ([string]::IsNullOrWhiteSpace($subnet)) {
+    Write-Host "Scanning local subnet for printers..."
+} else {
+    Write-Host "Scanning $subnet for printers..."
+}
 Write-Host ""
 
 try {
-    & $exePath scan $subnet --verbose 2>&1 | ForEach-Object { Write-Host $_ }
+    $scanArgs = @('scan', '--verbose')
+    if (-not [string]::IsNullOrWhiteSpace($subnet)) {
+        $scanArgs = @('scan', $subnet, '--verbose')
+    }
+    & $exePath @scanArgs 2>&1 | ForEach-Object { Write-Host $_ }
     $scanExitCode = $LASTEXITCODE
 } catch {
     Write-Host ""
