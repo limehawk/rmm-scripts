@@ -26,9 +26,24 @@ Key points:
 - Include ASCII art header and README block
 - Exit 0 on success, exit 1 on failure
 
-## Version Bumping (MANDATORY)
+## Script Framework Engine (MANDATORY)
 
-When modifying ANY existing script, you **MUST** update:
+The `script-framework-engine` agent is the single authority for framework compliance. It operates in four modes:
+
+- **validate** — Read-only compliance check. Report violations.
+- **fix** — Auto-repair header formatting, regenerate sidecar readme, sync sidecar fields.
+- **scaffold** — Generate a new framework-compliant script + YAML sidecar from a description.
+- **bump** — Increment version, update DATE, add CHANGELOG stub.
+
+**When to use each mode:**
+- After creating or modifying any `.ps1` or `.sh` file, run in **validate** mode before committing.
+- When the user asks to create a new script, run in **scaffold** mode.
+- When modifying an existing script, run in **bump** mode first to increment the version.
+- When sidecar YAMLs are stale or the user asks to fix formatting, run in **fix** mode.
+
+### Version Bumping
+
+When modifying ANY existing script, the version **MUST** be updated:
 1. **VERSION** - Increment appropriately (major.minor.patch)
    - Major: Breaking changes or significant rewrites
    - Minor: New features or functionality
@@ -36,7 +51,5 @@ When modifying ANY existing script, you **MUST** update:
 2. **CHANGELOG** - Add entry at top: `YYYY-MM-DD vX.Y.Z Description of changes`
 3. **README sections** - Update any affected sections (PURPOSE, BEHAVIOR, REQUIRED INPUTS, etc.)
 
-## Validation (MANDATORY)
-
-After creating or modifying any `.ps1` or `.sh` script, run the `script-framework-enforcer` agent to validate compliance before committing.
+Use `script-framework-engine` in **bump** mode to automate version increments.
 
