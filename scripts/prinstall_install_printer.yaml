@@ -1,0 +1,31 @@
+name: prinstall_install_printer.ps1
+description: Installs a network printer using prinstall (port + driver + queue)
+language: PowerShell
+tags:
+- Printers
+- Windows
+runAs: SYSTEM_USER
+timeout: 10
+readme: |
+  Purpose
+  -------
+  Installs a network printer on Windows using prinstall. Creates the TCP/IP port, installs the matched driver, and adds the printer queue in one step.
+
+  Usage Notes
+  -----------
+  - Printer IP required via SuperOps runtime variable $YourPrinterIpHere
+  - Driver name optional via $YourDriverNameHere (auto-detects if not set)
+  - Display name optional via $YourPrinterNameHere (uses model name if not set)
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - prinstall.exe installed
+  - Network access to printer IP
+  - $YourPrinterIpHere: Printer IP address
+  - $YourDriverNameHere: (optional) Specific driver name
+  - $YourPrinterNameHere: (optional) Display name for the printer
+favourite: false
+shared: false

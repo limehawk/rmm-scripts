@@ -1,0 +1,28 @@
+name: prinstall_scan_subnet.ps1
+description: Scans a subnet for network printers using prinstall
+language: PowerShell
+tags:
+- Printers
+- Windows
+runAs: SYSTEM_USER
+timeout: 5
+readme: |
+  Purpose
+  -------
+  Scans a subnet for network printers using prinstall's SNMP and port discovery. Returns printer IPs, models, and status.
+
+  Usage Notes
+  -----------
+  - Uses prinstall scan with SNMP + port check discovery
+  - Subnet provided via SuperOps runtime variable $YourSubnetHere
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - prinstall.exe installed
+  - Network access to target subnet
+  - UDP 161 (SNMP) and/or TCP 9100 not blocked
+  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24)
+favourite: false
+shared: false
