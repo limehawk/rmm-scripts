@@ -30,6 +30,10 @@ readme: |
   - $YourPrinterNameHere: (optional) Display name for the printer
 favourite: false
 shared: false
+runtimeVariables:
+- name: YourPrinterIpHere
+- name: YourDriverNameHere
+- name: YourPrinterNameHere
 scriptId: "263150824947322880"
 lastPushedChecksum: sha256:473c83b8ea871023
 lastPushedMetaChecksum: sha256:a667191e3d33349f

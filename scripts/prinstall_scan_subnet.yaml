@@ -41,6 +41,8 @@ readme: >
   - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24)
 favourite: false
 shared: false
+runtimeVariables:
+- name: YourSubnetHere
 scriptId: "8962138500796297216"
 lastPushedChecksum: sha256:041d066b9c9aa7e2
 lastPushedMetaChecksum: sha256:e503f2641619fe6f
