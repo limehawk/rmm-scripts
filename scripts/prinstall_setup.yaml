@@ -2,26 +2,47 @@ name: prinstall_setup.ps1
 description: Installs or uninstalls prinstall from GitHub releases
 language: PowerShell
 tags:
-- Software
-- Windows
+  - Software
+  - Windows
 runAs: SYSTEM_USER
 timeout: 10
-readme: |
+readme: >
   Purpose
+
   -------
-  Installs or uninstalls prinstall. Install mode downloads the latest release from GitHub and extracts the binary to C:\ProgramData\prinstall\. Uninstall mode removes the binary and install directory. Prinstall is a CLI/TUI tool for discovering network printers, matching drivers, and installing them on Windows.
+
+  Installs or uninstalls prinstall. Install mode downloads the latest release
+  from GitHub and extracts the binary to C:\ProgramData\prinstall\. Uninstall
+  mode removes the binary and install directory. Prinstall is a CLI/TUI tool for
+  discovering network printers, matching drivers, and installing them on
+  Windows.
+
 
   Usage Notes
+
   -----------
+
   - Set $action to 'install' or 'uninstall'
-  - Install: queries GitHub Releases API for latest version, downloads and extracts
+
+  - Install: queries GitHub Releases API for latest version, downloads and
+  extracts
+
   - Uninstall: removes install directory and all contents
+
   - Verifies binary by running prinstall --version after install
 
+
   Requirements
+
   ------------
+
   - Windows OS
+
   - Administrator privileges
+
   - Internet connectivity to github.com (install only)
 favourite: false
 shared: false
+scriptId: "263150827971416064"
+lastPushedChecksum: sha256:70aeecc736499b6c
+lastPushedMetaChecksum: sha256:6ad8cb8e336a2e3d
