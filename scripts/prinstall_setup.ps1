@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v1.1.0
+SCRIPT  : Prinstall Setup v1.1.1
 AUTHOR  : Limehawk.io
 DATE      : March 2026
 USAGE   : .\prinstall_setup.ps1
@@ -135,6 +135,7 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-03-25 v1.1.1 Fix curl stderr triggering ErrorActionPreference Stop
 2026-03-25 v1.1.0 Add uninstall action mode
 2026-03-25 v1.0.0 Initial release - prinstall setup via GitHub releases
 ================================================================================
@@ -289,7 +290,7 @@ try {
 
     $curlPath = "$env:SystemRoot\System32\curl.exe"
     if (Test-Path $curlPath) {
-        & $curlPath -L -o $zipPath $downloadUrl 2>&1 | Out-Null
+        & $curlPath --silent --show-error --fail -L -o $zipPath $downloadUrl
     } else {
         Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
     }
