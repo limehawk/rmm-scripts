@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v1.1.1
+SCRIPT  : Prinstall Setup v1.2.0
 AUTHOR  : Limehawk.io
 DATE      : March 2026
 USAGE   : .\prinstall_setup.ps1
@@ -27,10 +27,10 @@ README
    2) GitHub release asset (prinstall-windows-amd64.zip)
 
  REQUIRED INPUTS
-   - $action     : 'install' or 'uninstall'
-   - $repoOwner  : GitHub repository owner
-   - $repoName   : GitHub repository name
-   - $installDir : Directory to install/uninstall prinstall.exe
+   - $actionInput : 'yes' to install, 'no' to uninstall (SuperOps: $YourInstallYesUninstallNoHere)
+   - $repoOwner   : GitHub repository owner
+   - $repoName    : GitHub repository name
+   - $installDir  : Directory to install/uninstall prinstall.exe
 
  SETTINGS
    - Downloads latest release automatically via GitHub API
@@ -135,6 +135,7 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-03-25 v1.2.0 Use SuperOps runtime variable for install/uninstall (yes/no)
 2026-03-25 v1.1.1 Fix curl stderr triggering ErrorActionPreference Stop
 2026-03-25 v1.1.0 Add uninstall action mode
 2026-03-25 v1.0.0 Initial release - prinstall setup via GitHub releases
@@ -145,7 +146,7 @@ Set-StrictMode -Version Latest
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-$action     = 'install'    # 'install' or 'uninstall'
+$actionInput = "$YourInstallYesUninstallNoHere"   # 'yes' = install, 'no' = uninstall
 $repoOwner  = 'limehawk'
 $repoName   = 'prinstall'
 $installDir = "$env:ProgramData\prinstall"
@@ -160,10 +161,22 @@ Write-Host "=============================================================="
 $errorOccurred = $false
 $errorText = ""
 
-if ($action -ne 'install' -and $action -ne 'uninstall') {
+if ([string]::IsNullOrWhiteSpace($actionInput) -or $actionInput -eq '$' + 'YourInstallYesUninstallNoHere') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- Action must be 'install' or 'uninstall' (got: $action)"
+    $errorText += "- SuperOps runtime variable `$YourInstallYesUninstallNoHere was not replaced."
+}
+
+# Map yes/no to install/uninstall
+$action = switch ($actionInput.Trim().ToLower()) {
+    'yes' { 'install' }
+    'no'  { 'uninstall' }
+    default {
+        $errorOccurred = $true
+        if ($errorText.Length -gt 0) { $errorText += "`n" }
+        $errorText += "- Must be 'yes' (install) or 'no' (uninstall), got: $actionInput"
+        ''
+    }
 }
 
 if ($action -eq 'install') {

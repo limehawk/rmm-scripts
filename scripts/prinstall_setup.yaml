@@ -22,7 +22,7 @@ readme: >
 
   -----------
 
-  - Set $action to 'install' or 'uninstall'
+  - Set runtime variable to 'yes' (install) or 'no' (uninstall)
 
   - Install: queries GitHub Releases API for latest version, downloads and
   extracts
@@ -43,6 +43,8 @@ readme: >
   - Internet connectivity to github.com (install only)
 favourite: false
 shared: false
+runtimeVariables:
+- name: YourInstallYesUninstallNoHere
 scriptId: "263150827971416064"
 lastPushedChecksum: sha256:2c6f5d901a3d37f9
 lastPushedMetaChecksum: sha256:6ad8cb8e336a2e3d
