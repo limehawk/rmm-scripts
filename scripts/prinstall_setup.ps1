@@ -27,7 +27,7 @@ README
    2) GitHub release asset (prinstall-windows-amd64.zip)
 
  REQUIRED INPUTS
-   - $actionInput : 'install' or 'uninstall' (SuperOps: $YourActionHere)
+   - $actionInput : 'yes' to install, 'no' to uninstall (SuperOps: $InstallYesUninstallNo)
    - $repoOwner   : GitHub repository owner
    - $repoName    : GitHub repository name
    - $installDir  : Directory to install/uninstall prinstall.exe
@@ -147,7 +147,7 @@ Set-StrictMode -Version Latest
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-$actionInput = "$YourActionHere"   # 'install' or 'uninstall'
+$actionInput = "$InstallYesUninstallNo"   # 'yes' = install, 'no' = uninstall
 $repoOwner  = 'limehawk'
 $repoName   = 'prinstall'
 $installDir = "$env:ProgramData\prinstall"
@@ -162,17 +162,22 @@ Write-Host "=============================================================="
 $errorOccurred = $false
 $errorText = ""
 
-if ([string]::IsNullOrWhiteSpace($actionInput) -or $actionInput -eq '$' + 'YourActionHere') {
+if ([string]::IsNullOrWhiteSpace($actionInput) -or $actionInput -eq '$' + 'InstallYesUninstallNo') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- SuperOps runtime variable `$YourActionHere was not replaced. Use 'install' or 'uninstall'."
+    $errorText += "- SuperOps runtime variable `$InstallYesUninstallNo was not replaced. Use 'yes' or 'no'."
 }
 
-$action = $actionInput.Trim().ToLower()
-if ($action -ne 'install' -and $action -ne 'uninstall') {
-    $errorOccurred = $true
-    if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- Action must be 'install' or 'uninstall' (got: $actionInput)"
+# Map yes/no to install/uninstall
+$action = switch ($actionInput.Trim().ToLower()) {
+    'yes' { 'install' }
+    'no'  { 'uninstall' }
+    default {
+        $errorOccurred = $true
+        if ($errorText.Length -gt 0) { $errorText += "`n" }
+        $errorText += "- Must be 'yes' (install) or 'no' (uninstall), got: $actionInput"
+        ''
+    }
 }
 
 if ($action -eq 'install') {

@@ -22,7 +22,7 @@ readme: >
 
   -----------
 
-  - Set YourActionHere to 'install' or 'uninstall'
+  - Set InstallYesUninstallNo to 'yes' (install) or 'no' (uninstall)
 
   - Install: queries GitHub Releases API for latest version, downloads and
   extracts
@@ -44,7 +44,7 @@ readme: >
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourActionHere
+- name: InstallYesUninstallNo
 scriptId: "263150827971416064"
 lastPushedChecksum: sha256:2c6f5d901a3d37f9
 lastPushedMetaChecksum: sha256:6ad8cb8e336a2e3d
