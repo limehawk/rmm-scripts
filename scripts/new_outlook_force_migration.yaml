@@ -1,0 +1,32 @@
+name: new_outlook_force_migration.ps1
+description: Forces migration to New Outlook and hides toggle to prevent revert to Classic
+language: PowerShell
+tags:
+- Applications
+- Windows
+- Outlook
+runAs: SYSTEM_USER
+timeout: 60
+readme: |
+  Purpose
+  -------
+  Forces all user profiles on a machine to migrate to New Outlook and prevents them from switching back to Classic Outlook. Applies per-user registry keys across all loaded and unloaded user hives (runs as SYSTEM via RMM), and sets machine-wide HKLM policies to enforce New Outlook as the default mail client.
+
+  Usage Notes
+  -----------
+  - Enumerates all user profiles from the registry ProfileList
+  - Temporarily loads unloaded ntuser.dat hives to apply per-user keys
+  - Sets DoNewOutlookAutoMigration, UseNewOutlook, and HideNewOutlookToggle per user
+  - Applies machine-wide HKLM policies (NewOutlookMigrationComplete, UseNewOutlook, OneWinNativeOutlookEnabled)
+  - Unloads any hives that were temporarily loaded
+  - All four options default to $true (full lockdown to New Outlook)
+  - Set individual options to $false to keep specific behaviors
+  - Users will not be able to revert to Classic Outlook without admin intervention
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges required (runs as SYSTEM via RMM)
+  - Windows 10/11
+favourite: false
+shared: false
