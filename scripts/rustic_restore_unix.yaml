@@ -1,0 +1,42 @@
+name: rustic_restore_unix.sh
+description: Restores files from a rustic backup snapshot (Linux/macOS)
+language: Bash
+tags:
+- Backup
+- Linux
+- macOS
+runAs: SYSTEM_USER
+timeout: 120
+readme: |
+  Purpose
+  -------
+  Targeted file and directory restore from a rustic backup snapshot on Linux and macOS. Reads the existing rustic TOML configuration to connect to the configured backend, lists available snapshots for reference, then restores the specified path from a chosen snapshot (or "latest") to a given destination directory.
+
+  Usage Notes
+  -----------
+  - Defaults SNAPSHOT_ID to "latest" if left empty or unreplaced
+  - Lists available snapshots before restoring (informational; non-fatal if it fails)
+  - Creates the destination directory automatically if it does not exist
+  - Runs: rustic restore "<snapshot>:<restore-path>" "<destination>"
+  - Restored files inherit the permissions stored in the snapshot
+  - Reads backend credentials from /etc/rustic/rustic.toml — no credentials on the command line
+
+  Requirements
+  ------------
+  - rustic installed at /usr/local/bin/rustic (deploy rustic_install_unix.sh first)
+  - /etc/rustic/rustic.toml configured with valid backend credentials
+  - Linux or macOS with root privileges
+  - Network access to the configured backend
+  - SuperOps runtime variables: YourRestorePath, YourDestination
+  - Optional: YourSnapshotId (defaults to "latest")
+
+  Security
+  --------
+  - No credentials are passed on the command line
+  - rustic reads backend credentials exclusively from the TOML config file
+favourite: false
+shared: false
+runtimeVariables:
+- name: YourSnapshotId
+- name: YourRestorePath
+- name: YourDestination
