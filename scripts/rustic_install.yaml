@@ -1,0 +1,59 @@
+name: rustic_install.ps1
+description: Installs Rustic, configures backend repository, schedules daily backups
+language: PowerShell
+tags:
+- Backup
+- Software
+- Windows
+runAs: SYSTEM_USER
+timeout: 30
+readme: |
+  Purpose
+  -------
+  All-in-one installer for Rustic backup with multi-backend support (B2, S3, local, SFTP, REST). Downloads the Rustic binary from GitHub releases (SHA256-verified), generates a TOML configuration profile with backend-specific settings, initializes an encrypted repository scoped to the machine hostname, deploys a daily backup runner script, and creates a Windows Scheduled Task. Designed for deployment via SuperOps RMM to client workstations and servers.
+
+  Usage Notes
+  -----------
+  - Validates all hardcoded inputs including backend-specific conditional requirements
+  - Downloads Rustic v0.11.1 from GitHub releases with SHA256 verification
+  - Skips download if correct version is already installed
+  - ACL-locks install directory to SYSTEM + Administrators only
+  - Generates TOML config profile tailored to the selected backend type
+  - Initializes encrypted repository (skips if already exists)
+  - Generates daily backup script with log rotation (keeps 30 days)
+  - Backup script runs: backup, forget --prune, check --read-data-subset
+  - Creates Windows Scheduled Task for daily execution as SYSTEM
+  - Runs dry-run backup to verify connectivity and path access
+  - Default backup paths: Documents, Desktop, Downloads, Pictures, Videos
+  - Default excludes: temp files, cache directories, OneDrive, Recycle Bin, large binaries, dev artifacts
+  - Retention policy: 7 daily, 4 weekly, 6 monthly snapshots
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server 2016+
+  - Administrator privileges (runs as SYSTEM via RMM)
+  - tar.exe available (built into Windows 10 1803+)
+  - Network access to GitHub releases and the configured backend
+  - SuperOps runtime variables: YourBackendType, YourBackendPath, YourRepoPassword, YourClientName
+  - Conditional: YourBackendKeyId, YourBackendAppKey (B2/S3), YourBackendRegion (S3)
+  - Optional: YourBackupPaths, YourExcludePatterns, YourBackupHour
+
+  Security
+  --------
+  - Backend credentials are embedded in the TOML config file
+  - Install directory is ACL-locked to SYSTEM + Administrators
+  - Repo password encrypts all backup data at rest
+  - No secrets printed to console output
+favourite: false
+shared: false
+runtimeVariables:
+- name: YourBackendType
+- name: YourBackendPath
+- name: YourRepoPassword
+- name: YourClientName
+- name: YourBackendKeyId
+- name: YourBackendAppKey
+- name: YourBackendRegion
+- name: YourBackupPaths
+- name: YourExcludePatterns
+- name: YourBackupHour
