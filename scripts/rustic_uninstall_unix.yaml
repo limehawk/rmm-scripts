@@ -1,0 +1,35 @@
+name: rustic_uninstall_unix.sh
+description: Removes rustic binary, config, schedule, and logs (Linux/macOS)
+language: Bash
+tags:
+- Backup
+- Linux
+- macOS
+- Software
+runAs: SYSTEM_USER
+timeout: 5
+readme: |
+  Purpose
+  -------
+  Removes all components installed by rustic_install_unix.sh. Detects OS (Linux/macOS), stops and disables the backup schedule (systemd timer on Linux, launchd plist on macOS), removes the Rustic binary and backup runner script, and deletes the configuration directory and log directory. The remote backup repository is NOT touched.
+
+  Usage Notes
+  -----------
+  - Detects OS (Linux/macOS) automatically
+  - Linux: stops and disables rustic-backup.timer and rustic-backup.service, then reloads systemd daemon
+  - macOS: unloads and removes /Library/LaunchDaemons/io.limehawk.rustic-backup.plist
+  - Removes /usr/local/bin/rustic (binary)
+  - Removes /usr/local/bin/rustic-backup.sh (runner script)
+  - Removes /etc/rustic (config directory, recursive)
+  - Removes /var/log/rustic (log directory, recursive)
+  - Each path is reported as found/removed or not found
+  - Partial removal is acceptable; script always exits 0
+  - Remote backup repository and its data are NOT deleted
+
+  Requirements
+  ------------
+  - Linux or macOS
+  - Root privileges (runs as root via RMM)
+  - No runtime variables required
+favourite: false
+shared: false
