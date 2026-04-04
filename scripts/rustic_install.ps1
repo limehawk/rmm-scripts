@@ -258,7 +258,15 @@ $isBackupHourEmpty = [string]::IsNullOrWhiteSpace($backupHourRaw) -or $backupHou
 if ($isBackupHourEmpty) {
     $backupHour = 2
 } else {
-    $backupHour = [int]$backupHourRaw
+    $parsed = 0
+    if (-not [int]::TryParse($backupHourRaw, [ref]$parsed)) {
+        $errorOccurred = $true
+        if ($errorText.Length -gt 0) { $errorText += "`n" }
+        $errorText += "- Backup hour '$backupHourRaw' is not a valid integer."
+        $backupHour = 2
+    } else {
+        $backupHour = $parsed
+    }
 }
 
 # ==== VALIDATION ====
@@ -343,6 +351,10 @@ if ($errorOccurred) {
 
 # ==== BUILD DISPLAY VALUES (no secrets) ====
 $hostName = $env:COMPUTERNAME
+if ([string]::IsNullOrWhiteSpace($hostName)) {
+    $hostName = 'UNKNOWN'
+    Write-Host "[WARN] COMPUTERNAME is empty, using 'UNKNOWN' as hostname"
+}
 $repoRoot = "/$clientName/$hostName"
 
 switch ($backendType) {
