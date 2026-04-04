@@ -10,16 +10,16 @@ timeout: 120
 readme: |
   Purpose
   -------
-  Targeted file and directory restore from a rustic backup snapshot on Linux and macOS. Reads the existing rustic TOML configuration to connect to the configured backend, lists available snapshots for reference, then restores the specified path from a chosen snapshot (or "latest") to a given destination directory.
+  Targeted file and directory restore from a rustic backup snapshot on Linux and macOS. Reads the existing rustic TOML configuration to connect to the configured backend, lists available snapshots for reference, then restores the specified path from a chosen snapshot (or "latest") to a given destination directory. Designed for deployment via SuperOps RMM.
 
   Usage Notes
   -----------
   - Defaults SNAPSHOT_ID to "latest" if left empty or unreplaced
+  - Hardcoded paths: rustic binary at /usr/local/bin/rustic, config at /etc/rustic/rustic.toml
   - Lists available snapshots before restoring (informational; non-fatal if it fails)
   - Creates the destination directory automatically if it does not exist
   - Runs: rustic restore "<snapshot>:<restore-path>" "<destination>"
   - Restored files inherit the permissions stored in the snapshot
-  - Reads backend credentials from /etc/rustic/rustic.toml — no credentials on the command line
 
   Requirements
   ------------

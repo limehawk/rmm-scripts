@@ -9,16 +9,16 @@ timeout: 120
 readme: |
   Purpose
   -------
-  Targeted file restore from a rustic backup snapshot. Operator provides a snapshot ID (or "latest"), a source path within the snapshot, and a local destination path. Uses the rustic binary and TOML configuration deployed by rustic_install.ps1.
+  Targeted file restore from a rustic backup snapshot. Operator provides a snapshot ID (or "latest"), a source path within the snapshot, and a local destination path via SuperOps runtime variables. Uses the existing rustic binary and TOML configuration deployed by rustic_install.ps1.
 
   Usage Notes
   -----------
   - Snapshot ID defaults to "latest" if left empty or unreplaced
+  - All settings are in the TOML profile deployed by rustic_install.ps1
   - Lists available snapshots before restoring so the operator can confirm the correct snapshot
   - Creates the destination directory if it does not exist
   - Runs: rustic restore "<snapshotId>:<restorePath>" <destination>
   - Sets RUSTIC_CONFIG_FILE environment variable and clears it after execution
-  - Requires rustic_install.ps1 to have been deployed on the target machine
 
   Requirements
   ------------

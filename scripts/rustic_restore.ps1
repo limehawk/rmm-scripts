@@ -37,6 +37,10 @@ $ErrorActionPreference = 'Stop'
      - $YourRestorePath : Path within the snapshot to restore (e.g., C:\Users\alice\Documents)
      - $YourDestination : Local destination path (e.g., C:\Restore\Documents)
 
+ SETTINGS
+
+   None — all settings are in the TOML profile deployed by rustic_install.ps1.
+
  BEHAVIOR
 
    The script performs the following actions in order:
@@ -58,6 +62,16 @@ $ErrorActionPreference = 'Stop'
    - rustic_install.ps1 previously deployed on this machine
    - Rustic binary at C:\ProgramData\Limehawk\Rustic\bin\rustic.exe
    - Config at C:\ProgramData\Limehawk\Rustic\rustic.toml
+
+ SECURITY NOTES
+
+   - No credentials are printed to console output
+   - All secrets remain in the TOML config file
+   - RUSTIC_CONFIG_FILE env var is cleared after execution
+
+ ENDPOINTS
+
+   - None — all backend endpoints are defined in the TOML profile
 
  EXIT CODES
 

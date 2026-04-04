@@ -9,18 +9,18 @@ timeout: 120
 readme: |
   Purpose
   -------
-  Scheduled backup runner for Rustic. Reads configuration from the TOML profile written by rustic_install.ps1 and executes a full backup cycle: backup snapshot, retention prune, and a lightweight integrity check on a random 1% data subset. Designed to be invoked by the Windows Scheduled Task created during installation, or manually via SuperOps RMM.
+  Scheduled backup runner for Rustic. Reads configuration from the TOML profile written by rustic_install.ps1 and executes a full backup cycle: backup snapshot, retention prune, and a lightweight integrity check on a random 1% data subset. Intended to be invoked by the Windows Scheduled Task created during installation, or manually via SuperOps RMM.
 
   Usage Notes
   -----------
   - No runtime variables required — all configuration is read from the TOML profile
-  - Run rustic_install.ps1 first to deploy the binary, TOML config, and Scheduled Task
-  - Verifies rustic.exe and rustic.toml exist before proceeding (exits 1 if missing)
+  - Validates rustic.exe and rustic.toml exist (exits 1 if missing)
+  - Ensures log directory exists before running
   - Sets RUSTIC_CONFIG_FILE environment variable, clears it in a finally block
   - Backup step is fatal: exits 1 if rustic backup fails (no snapshot was created)
   - Prune step is non-fatal: warns and continues if rustic forget --prune fails
   - Integrity check is non-fatal: warns and continues if rustic check fails
-  - All rustic output is piped to console with two-space indent for clean RMM logs
+  - Integrity check scope: --read-data-subset=1/100 (1% of data per run)
   - Reports duration and per-step status in the final summary
 
   Requirements

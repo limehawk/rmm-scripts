@@ -33,6 +33,14 @@
 #
 #    None. No runtime variables required.
 #
+#  SETTINGS
+#
+#    Hardcoded paths:
+#      - Binary  : /usr/local/bin/rustic
+#      - Runner  : /usr/local/bin/rustic-backup.sh
+#      - Config  : /etc/rustic
+#      - Logs    : /var/log/rustic
+#
 #  BEHAVIOR
 #
 #    The script performs the following actions in order:
@@ -58,6 +66,10 @@
 #
 #    - Remote backup repository and its data are not affected
 #    - Config files (which contain backend credentials) are deleted
+#
+#  ENDPOINTS
+#
+#    None — no network access required
 #
 #  EXIT CODES
 #
@@ -86,7 +98,7 @@
 #      Result : SUCCESS
 #      Note   : Remote backup repository was NOT deleted
 #
-#    [OK] SCRIPT COMPLETE
+#    [OK] SCRIPT COMPLETED
 #    ==============================================================
 #
 # --------------------------------------------------------------------------------
@@ -203,7 +215,7 @@ print_header "[OK] FINAL STATUS"
 echo "  Result : SUCCESS"
 echo "  Note   : Remote backup repository was NOT deleted"
 
-print_header "[OK] SCRIPT COMPLETE"
+print_header "[OK] SCRIPT COMPLETED"
 echo ""
 
 exit 0

@@ -25,6 +25,20 @@ $ErrorActionPreference = 'Stop'
    logs). Does NOT delete the remote backup repository. Safe to run even if
    components are already absent — partial removal is acceptable.
 
+ DATA SOURCES & PRIORITY
+
+   - Local filesystem only; no network access required
+
+ REQUIRED INPUTS
+
+   None. No runtime variables required.
+
+ SETTINGS
+
+   Hardcoded values:
+     - Install directory : C:\ProgramData\Limehawk\Rustic
+     - Scheduled task    : Limehawk Rustic Backup
+
  BEHAVIOR
 
    The script performs the following actions in order:
@@ -36,6 +50,15 @@ $ErrorActionPreference = 'Stop'
 
    - Windows 10/11 or Windows Server 2016+
    - Administrator privileges (runs as SYSTEM via RMM)
+
+ SECURITY NOTES
+
+   - Remote backup repository and its data are not affected
+   - Config files (which contain backend credentials) are deleted locally
+
+ ENDPOINTS
+
+   None — no network access required
 
  EXIT CODES
 

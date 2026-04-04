@@ -10,7 +10,7 @@ timeout: 120
 readme: |
   Purpose
   -------
-  Executes a full Rustic backup cycle on Linux and macOS: runs a backup against the configured repository, applies retention policy with prune, and performs a partial integrity check on the repository. Reads all configuration from /etc/rustic/rustic.toml. Intended to run on a schedule (systemd timer or launchd plist) or invoked directly via SuperOps RMM.
+  Executes a full Rustic backup cycle on Linux and macOS: runs a backup against the configured repository, applies retention policy with prune, and performs a partial integrity check on the repository. Reads all configuration from /etc/rustic/rustic.toml. Intended to be run on a schedule (systemd timer or launchd plist) or invoked directly via SuperOps RMM.
 
   Usage Notes
   -----------
@@ -18,6 +18,7 @@ readme: |
   - Exports RUSTIC_CONFIG_FILE to direct rustic to the TOML configuration
   - Backup step is fatal: script exits 1 if rustic backup fails
   - Retention (forget --prune) and integrity check (check --read-data-subset=1/100) are non-fatal: failures emit a warning but do not abort
+  - Integrity check scope: --read-data-subset=1/100 (1% of data per run)
   - Reports total duration in the final status block
   - No runtime variables required; all settings come from the TOML config
 

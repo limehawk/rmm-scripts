@@ -71,6 +71,10 @@
 #    - Destination directory is created by this script (mkdir -p)
 #    - Restored files inherit the permissions stored in the snapshot
 #
+#  ENDPOINTS
+#
+#    - None — all backend endpoints are defined in the TOML profile
+#
 #  EXIT CODES
 #
 #    0 = Success
@@ -100,7 +104,7 @@
 #    ==============================================================
 #      Destination  : /tmp/restore/nginx
 #
-#    [OK] SCRIPT COMPLETE
+#    [OK] SCRIPT COMPLETED
 #    ==============================================================
 #
 # --------------------------------------------------------------------------------
@@ -212,6 +216,6 @@ echo "[OK] FINAL STATUS"
 echo "=============================================================="
 echo "  Destination  : ${DESTINATION}"
 echo ""
-echo "[OK] SCRIPT COMPLETE"
+echo "[OK] SCRIPT COMPLETED"
 echo "=============================================================="
 exit 0

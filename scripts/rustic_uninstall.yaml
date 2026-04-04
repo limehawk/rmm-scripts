@@ -10,14 +10,19 @@ timeout: 5
 readme: |
   Purpose
   -------
-  Removes all local Rustic components from the machine: the Windows Scheduled Task and the entire install directory (binary, config, backup script, and logs). Does NOT delete the remote backup repository. Safe to run even if components are already absent — partial removal is acceptable and always exits 0.
+  Removes all local Rustic components from the machine: the Windows Scheduled Task and the entire install directory (binary, config, backup script, and logs). Does NOT delete the remote backup repository. Safe to run even if components are already absent — partial removal is acceptable.
 
   Usage Notes
   -----------
-  - Removes the 'Limehawk Rustic Backup' scheduled task if it exists
-  - Removes C:\ProgramData\Limehawk\Rustic and all contents recursively
+  - No runtime variables required
+  - Install directory: C:\ProgramData\Limehawk\Rustic
+  - Scheduled task name: Limehawk Rustic Backup
+  - Removes the scheduled task if it exists
+  - Removes the install directory and all contents recursively
   - Reports found/not-found for each component before acting
   - Always exits 0 — cleanup is idempotent
+  - Remote backup repository and its data are not affected
+  - Config files (which contain backend credentials) are deleted locally
 
   Requirements
   ------------

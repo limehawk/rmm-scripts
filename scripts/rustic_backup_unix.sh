@@ -67,6 +67,10 @@
 #    - No credentials are printed to console output
 #    - All secrets remain in the TOML config file (chmod 600)
 #
+#  ENDPOINTS
+#
+#    - None — all backend endpoints are defined in the TOML profile
+#
 #  EXIT CODES
 #
 #    0 = Success
@@ -98,7 +102,7 @@
 #      Result   : SUCCESS
 #      Duration : 42s
 #
-#    [OK] SCRIPT COMPLETE
+#    [OK] SCRIPT COMPLETED
 #    ==============================================================
 #
 # --------------------------------------------------------------------------------
@@ -123,7 +127,7 @@ if [[ ! -x "${RUSTIC_BIN}" ]]; then
     echo "  rustic binary not found or not executable: ${RUSTIC_BIN}"
     echo "  Run rustic_install_unix.sh to install rustic first."
     echo ""
-    echo "[ERROR] SCRIPT COMPLETE"
+    echo "[ERROR] SCRIPT COMPLETED"
     echo "=============================================================="
     exit 1
 fi
@@ -134,7 +138,7 @@ if [[ ! -f "${CONFIG_FILE}" ]]; then
     echo "  Config file not found: ${CONFIG_FILE}"
     echo "  Run rustic_install_unix.sh to generate the configuration."
     echo ""
-    echo "[ERROR] SCRIPT COMPLETE"
+    echo "[ERROR] SCRIPT COMPLETED"
     echo "=============================================================="
     exit 1
 fi
@@ -196,6 +200,6 @@ echo "  Result   : SUCCESS"
 echo "  Duration : ${DURATION}s"
 
 echo ""
-echo "[OK] SCRIPT COMPLETE"
+echo "[OK] SCRIPT COMPLETED"
 echo "=============================================================="
 exit 0

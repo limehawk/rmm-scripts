@@ -1,5 +1,5 @@
 name: rustic_install_unix.sh
-description: Installs rustic, configures backup profile, schedules daily backups (Linux/macOS)
+description: Installs Rustic, configures backend repository, schedules daily backups
 language: Bash
 tags:
 - Backup
