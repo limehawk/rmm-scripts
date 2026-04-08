@@ -2,61 +2,108 @@ name: rustic_install_unix.sh
 description: Installs Rustic, configures backend repository, schedules daily backups
 language: Bash
 tags:
-- Backup
-- Linux
-- macOS
-- Software
+  - Backup
+  - Linux
+  - Software
+  - macOS
 runAs: SYSTEM_USER
 timeout: 30
-readme: |
+readme: >
   Purpose
+
   -------
-  All-in-one installer for Rustic backup on Linux and macOS with multi-backend support (B2, S3, local, SFTP, REST). Detects OS and architecture, downloads the Rustic binary from GitHub releases (SHA256-verified), generates a TOML configuration profile with backend-specific settings, initializes an encrypted repository scoped to the machine hostname, deploys a daily backup runner script, and creates a systemd timer (Linux) or launchd plist (macOS). Designed for deployment via SuperOps RMM.
+
+  All-in-one installer for Rustic backup on Linux and macOS with multi-backend
+  support (B2, S3, local, SFTP, REST). Detects OS and architecture, downloads
+  the Rustic binary from GitHub releases (SHA256-verified), generates a TOML
+  configuration profile with backend-specific settings, initializes an encrypted
+  repository scoped to the machine hostname, deploys a daily backup runner
+  script, and creates a systemd timer (Linux) or launchd plist (macOS). Designed
+  for deployment via SuperOps RMM.
+
 
   Usage Notes
+
   -----------
+
   - Detects OS (Linux/macOS) and architecture (x86_64/aarch64/arm64/armv7l)
+
   - Downloads Rustic v0.11.1 from GitHub releases with SHA256 verification
+
   - Skips download if correct version is already installed
+
   - Config directory chmod 700, config file chmod 600
+
   - Generates TOML config profile tailored to the selected backend type
+
   - Initializes encrypted repository (skips if already exists)
-  - Generates daily backup script with log rotation (deletes logs older than 30 days)
+
+  - Generates daily backup script with log rotation (deletes logs older than 30
+  days)
+
   - Backup script runs: backup, forget --prune, check --read-data-subset
+
   - Linux: creates systemd timer and service for daily execution
+
   - macOS: creates launchd plist in /Library/LaunchDaemons for daily execution
+
   - Runs dry-run backup to verify connectivity and path access
+
   - Default backup paths (Linux): /home, /etc, /var/lib
+
   - Default backup paths (macOS): /Users, /etc
-  - Default excludes: temp files, caches, .DS_Store, dev artifacts, large binaries
+
+  - Default excludes: temp files, caches, .DS_Store, dev artifacts, large
+  binaries
+
   - Retention policy: 7 daily, 4 weekly, 6 monthly snapshots
 
+
   Requirements
+
   ------------
+
   - Linux (glibc or musl) or macOS 11+
+
   - Root privileges (runs as root via RMM)
+
   - curl and tar installed
+
   - Network access to GitHub releases and the configured backend
-  - SuperOps runtime variables: YourBackendType, YourBackendPath, YourRepoPassword, YourClientName
-  - Conditional: YourBackendKeyId, YourBackendAppKey (B2/S3), YourBackendRegion (S3)
+
+  - SuperOps runtime variables: YourBackendType, YourBackendPath,
+  YourRepoPassword, YourClientName
+
+  - Conditional: YourBackendKeyId, YourBackendAppKey (B2/S3), YourBackendRegion
+  (S3)
+
   - Optional: YourBackupPaths, YourExcludePatterns, YourBackupHour
 
+
   Security
+
   --------
+
   - Backend credentials are embedded in the TOML config file
+
   - Config directory is chmod 700, config file is chmod 600
+
   - Repo password encrypts all backup data at rest
+
   - No secrets printed to console output
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourBackendType
-- name: YourBackendPath
-- name: YourRepoPassword
-- name: YourClientName
-- name: YourBackendKeyId
-- name: YourBackendAppKey
-- name: YourBackendRegion
-- name: YourBackupPaths
-- name: YourExcludePatterns
-- name: YourBackupHour
+  - name: YourBackendType
+  - name: YourBackendPath
+  - name: YourRepoPassword
+  - name: YourClientName
+  - name: YourBackendKeyId
+  - name: YourBackendAppKey
+  - name: YourBackendRegion
+  - name: YourBackupPaths
+  - name: YourExcludePatterns
+  - name: YourBackupHour
+scriptId: "410238224496156672"
+lastPushedChecksum: sha256:6f06c1d9e9f5d54b
+lastPushedMetaChecksum: sha256:63821947f073743c

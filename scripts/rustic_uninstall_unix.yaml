@@ -2,33 +2,61 @@ name: rustic_uninstall_unix.sh
 description: Removes rustic binary, config, schedule, and logs (Linux/macOS)
 language: Bash
 tags:
-- Backup
-- Linux
-- macOS
-- Software
+  - Backup
+  - Linux
+  - Software
+  - macOS
 runAs: SYSTEM_USER
 timeout: 5
-readme: |
+readme: >
   Purpose
+
   -------
-  Removes all components installed by rustic_install_unix.sh. Detects OS (Linux/macOS), stops and disables the backup schedule (systemd timer on Linux, launchd plist on macOS), removes the Rustic binary and backup runner script, and deletes the configuration directory and log directory. The remote backup repository is NOT touched.
+
+  Removes all components installed by rustic_install_unix.sh. Detects OS
+  (Linux/macOS), stops and disables the backup schedule (systemd timer on Linux,
+  launchd plist on macOS), removes the Rustic binary and backup runner script,
+  and deletes the configuration directory and log directory. The remote backup
+  repository is NOT touched.
+
 
   Usage Notes
+
   -----------
+
   - No runtime variables required
-  - Hardcoded paths: /usr/local/bin/rustic, /usr/local/bin/rustic-backup.sh, /etc/rustic, /var/log/rustic
+
+  - Hardcoded paths: /usr/local/bin/rustic, /usr/local/bin/rustic-backup.sh,
+  /etc/rustic, /var/log/rustic
+
   - Detects OS (Linux/macOS) automatically
-  - Linux: stops and disables rustic-backup.timer and rustic-backup.service, then reloads systemd daemon
-  - macOS: unloads and removes /Library/LaunchDaemons/io.limehawk.rustic-backup.plist
+
+  - Linux: stops and disables rustic-backup.timer and rustic-backup.service,
+  then reloads systemd daemon
+
+  - macOS: unloads and removes
+  /Library/LaunchDaemons/io.limehawk.rustic-backup.plist
+
   - Removes binary, runner script, config directory, and log directory
+
   - Each path is reported as found/removed or not found
+
   - Partial removal is acceptable; script always exits 0
+
   - Remote backup repository and its data are NOT deleted
+
   - Config files (which contain backend credentials) are deleted
 
+
   Requirements
+
   ------------
+
   - Linux or macOS
+
   - Root privileges (runs as root via RMM)
 favourite: false
 shared: false
+scriptId: "23710496185253888"
+lastPushedChecksum: sha256:6361db8bf61c78a0
+lastPushedMetaChecksum: sha256:1b1a3a5c48efa734

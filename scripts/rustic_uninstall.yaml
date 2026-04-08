@@ -2,31 +2,54 @@ name: rustic_uninstall.ps1
 description: Removes rustic binary, config, scheduled task, and logs
 language: PowerShell
 tags:
-- Backup
-- Software
-- Windows
+  - Backup
+  - Software
+  - Windows
 runAs: SYSTEM_USER
 timeout: 5
-readme: |
+readme: >
   Purpose
+
   -------
-  Removes all local Rustic components from the machine: the Windows Scheduled Task and the entire install directory (binary, config, backup script, and logs). Does NOT delete the remote backup repository. Safe to run even if components are already absent — partial removal is acceptable.
+
+  Removes all local Rustic components from the machine: the Windows Scheduled
+  Task and the entire install directory (binary, config, backup script, and
+  logs). Does NOT delete the remote backup repository. Safe to run even if
+  components are already absent — partial removal is acceptable.
+
 
   Usage Notes
+
   -----------
+
   - No runtime variables required
+
   - Install directory: C:\ProgramData\Limehawk\Rustic
+
   - Scheduled task name: Limehawk Rustic Backup
+
   - Removes the scheduled task if it exists
+
   - Removes the install directory and all contents recursively
+
   - Reports found/not-found for each component before acting
+
   - Always exits 0 — cleanup is idempotent
+
   - Remote backup repository and its data are not affected
+
   - Config files (which contain backend credentials) are deleted locally
 
+
   Requirements
+
   ------------
+
   - Windows 10/11 or Windows Server 2016+
+
   - Administrator privileges (runs as SYSTEM via RMM)
 favourite: false
 shared: false
+scriptId: "510503530475876352"
+lastPushedChecksum: sha256:3e899b4f1ae514a7
+lastPushedMetaChecksum: sha256:49d6ce483bd37720
