@@ -7,6 +7,9 @@ docs/superops_scripts.json
 # Local config files
 .mcp.json
 
+# Claude Code skills (may contain internal paths/tooling)
+.claude/skills/
+
 # Environment files
 .env
 .env.*
