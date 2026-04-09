@@ -1,0 +1,41 @@
+name: bitlocker_superops_enable.ps1
+description: Enables BitLocker with TPM and syncs recovery key to SuperOps
+language: PowerShell
+tags:
+- Security
+- Software
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Enables BitLocker on the OS drive using TPM and Recovery Password protectors. Ensures protectors are not duplicated, prints recovery key to console for RMM log capture, and syncs the recovery key to SuperOps custom fields.
+
+  Usage Notes
+  -----------
+  - Validates administrative privileges and SuperOps module
+  - Ensures BDESVC (BitLocker Service) is running and set to Automatic
+  - Checks TPM status and adds TPM protector if available
+  - Rotates Recovery Password protector when Force is true (default)
+  - Initiates encryption with XTS-AES 256, used-space-only mode
+  - No reboot required to start encryption (skip hardware test enabled)
+  - Retrieves and displays recovery key, then syncs to SuperOps custom fields
+  - Target drive default: C:
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Windows 10/11 Pro or Enterprise with BitLocker feature enabled
+  - Administrator privileges
+  - SuperOps module available via $SuperOpsModule
+
+  Security
+  --------
+  - Recovery Password is printed to console (captured by RMM logs)
+  - Recovery Password is synced to SuperOps custom fields
+favourite: false
+shared: false
+scriptId: '6523706799125475328'
+lastPushedChecksum: sha256:91af63d4d505357f
+lastPushedMetaChecksum: sha256:ddcccf8a9de967c2

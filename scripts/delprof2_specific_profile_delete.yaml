@@ -1,0 +1,40 @@
+name: delprof2_specific_profile_delete.ps1
+description: Deletes only the specified Windows user profile
+language: PowerShell
+tags:
+- Administration
+- Cleanup
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Deletes ONLY the specified Windows user profile. All other profiles are left untouched. Uses DelProf2 utility downloaded directly from helgeklein.com.
+
+  Usage Notes
+  -----------
+  - Validates that the target profile is not a protected profile
+  - Downloads and extracts DelProf2 if not already cached
+  - Executes delprof2.exe /u /id:PROFILENAME
+  - Refuses to delete gaia or administrator profiles
+  - Cleans up cached files after execution
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - Internet access for DelProf2 download from helgeklein.com
+  - Runtime variable: $profile_to_delete (username of profile to delete)
+
+  Security
+  --------
+  - DESTRUCTIVE OPERATION - deleted profile cannot be recovered
+  - Refuses to delete protected profiles (gaia, administrator)
+favourite: false
+shared: false
+runtimeVariables:
+- name: profile_to_delete
+scriptId: '259059070683176960'
+lastPushedChecksum: sha256:79af0bb2cd848701
+lastPushedMetaChecksum: sha256:d1ff45e37d2f0b1b

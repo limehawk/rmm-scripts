@@ -1,0 +1,37 @@
+name: windows11_compatibility_check.ps1
+description: Checks TPM, SecureBoot, RAM, CPU compatibility for Windows 11
+language: PowerShell
+tags:
+- Monitoring
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Evaluates system compatibility for Windows 11 upgrade by checking hardware requirements including TPM 2.0, Secure Boot, CPU compatibility, RAM, storage, and UEFI firmware. Identifies blockers preventing upgrade and attempts to enable required features where possible. Designed for RMM deployment to assess upgrade readiness across a fleet of devices.
+
+  Usage Notes
+  -----------
+  - Configurable minimum requirements: MinimumRamGB (default 4), MinimumStorageGB (default 64)
+  - CheckOnly mode for read-only assessment (default: true)
+  - Optional AttemptAutoFix to enable TPM or Secure Boot if hardware supports it (default: false)
+  - Checks TPM version/status, Secure Boot, CPU against known compatible list, RAM, storage, and UEFI firmware
+  - Reports all blockers with specific remediation steps
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges required
+  - Windows 10 or Windows 11 operating system
+  - TPM and Secure Boot cmdlets available (built into Windows)
+
+  Security
+  --------
+  - Changing BIOS settings (TPM, Secure Boot) requires system reboot
+  - Auto-fix operations are potentially disruptive to the system
+favourite: false
+shared: false
+scriptId: '259059237931048960'
+lastPushedChecksum: sha256:0ed5896400e0cfd8
+lastPushedMetaChecksum: sha256:ae3a2936189e128f

@@ -1,0 +1,29 @@
+name: time_utc_set.ps1
+description: Fixes time drift on Windows/Linux dual-boot systems
+language: PowerShell
+tags:
+- Linux
+- Maintenance
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Configures Windows to use UTC for the hardware clock instead of local time. This prevents the clock from being wrong when switching between Windows and Linux on dual-boot systems, as Linux uses UTC by default.
+
+  Usage Notes
+  -----------
+  - Sets RealTimeIsUniversal DWORD to 1 in HKLM\System\CurrentControlSet\Control\TimeZoneInformation
+  - No configurable inputs required
+  - Run once after installing Windows on a dual-boot system
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges (required for HKLM registry access)
+  - Windows 10/11
+favourite: false
+shared: false
+scriptId: '259059240497963008'
+lastPushedChecksum: sha256:424ae2c5ad972585
+lastPushedMetaChecksum: sha256:551277b7ae03b95b

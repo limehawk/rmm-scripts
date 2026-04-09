@@ -1,0 +1,32 @@
+name: public_ip_export_superops_macos.sh
+description: Fetches public IP info from wtfismyip.com and outputs formatted results
+language: Bash
+tags:
+- Linux
+- Network
+- macOS
+runAs: ROOT
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Queries wtfismyip.com/json to retrieve public IP address, ISP, geolocation, and hostname information. Formats the results into readable stdout output. Note: macOS/Linux SuperOps agents do not support Send-CustomField, so results are output only.
+
+  Usage Notes
+  -----------
+  - Queries wtfismyip.com/json for public IP details
+  - Parses JSON response using python3
+  - Formats IP, Location, Hostname, ISP, Country, and Tor Exit status
+  - Outputs to stdout (no custom field sync on macOS/Linux)
+  - Curl timeout: 30 seconds
+
+  Requirements
+  ------------
+  - curl and python3 installed (both pre-installed on macOS)
+  - Internet connectivity to reach wtfismyip.com
+  - API_URL: wtfismyip.com JSON endpoint (hardcoded)
+favourite: false
+shared: true
+scriptId: '8476301307730685952'
+lastPushedChecksum: sha256:94948ee4aa84ac43
+lastPushedMetaChecksum: sha256:8c65662cf6302d1c

@@ -1,0 +1,29 @@
+name: workstation_reboot_force.ps1
+description: Forces an immediate system reboot without user prompts
+language: PowerShell
+tags:
+- Maintenance
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Forces an immediate system reboot, closing all applications without saving or prompting. Designed for RMM deployment when a machine needs to be rebooted regardless of user activity or open applications.
+
+  Usage Notes
+  -----------
+  - Initiates forced immediate reboot via shutdown.exe
+  - Force mode enabled: closes applications without prompting
+  - Timeout: 0 seconds (immediate reboot)
+  - Users will lose unsaved work
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges
+favourite: false
+shared: false
+scriptId: '1356766166757322752'
+lastPushedChecksum: sha256:eba09f277fefc277
+lastPushedMetaChecksum: sha256:67a0b69e5dce41a3

@@ -1,0 +1,33 @@
+name: superops_tray_icon_show_always.ps1
+description: Configures Windows to always show SuperOps tray icon
+language: PowerShell
+tags:
+- Software
+- Windows
+runAs: LOGGED_IN_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Configures Windows system tray settings to always show the SuperOps RMM agent tray icon. Ensures the SuperOps icon remains visible in the system tray notification area rather than being hidden in the overflow.
+
+  Usage Notes
+  -----------
+  - MUST RUN AS LOGGED-IN USER - NOT SYSTEM
+  - Modifies HKCU registry which is per-user
+  - Running as SYSTEM will modify SYSTEM's registry, not the user's
+  - Sets IsPromoted=1 for SuperOps notification entries
+  - Exits gracefully (exit 0) if registry path does not exist yet
+  - No restart required - changes take effect on next tray icon update
+
+  Requirements
+  ------------
+  - Windows 11 (build 22000 or later) - older Windows not supported
+  - PowerShell 5.1 or later
+  - Must run as logged-in user (not SYSTEM)
+  - SuperOps agent must be installed
+favourite: false
+shared: false
+scriptId: '7562208783506063360'
+lastPushedChecksum: sha256:9d91d2ec7427e827
+lastPushedMetaChecksum: sha256:3f0cc792881bf18d

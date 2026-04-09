@@ -1,0 +1,37 @@
+name: delprof2_selected_profile_keep.ps1
+description: Deletes all profiles EXCEPT the specified one and protected ones
+language: PowerShell
+tags:
+- Administration
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Deletes ALL Windows user profiles EXCEPT the specified profile and protected ones (gaia, administrator). Uses DelProf2 utility downloaded directly from helgeklein.com.
+
+  Usage Notes
+  -----------
+  - Downloads and extracts DelProf2 if not already cached
+  - Executes delprof2.exe /u /ed:PROFILENAME /ed:gaia /ed:administrator
+  - Always protects gaia and administrator profiles in addition to the specified profile
+  - Cleans up cached files after execution
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - Internet access for DelProf2 download from helgeklein.com
+  - Runtime variable: $profile_to_keep (username of profile to preserve)
+
+  Security
+  --------
+  - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
+favourite: false
+shared: false
+runtimeVariables:
+- name: profile_to_keep
+scriptId: '259059074357387264'
+lastPushedChecksum: sha256:faf7c08af491b757
+lastPushedMetaChecksum: sha256:2b41d69e9f131827
