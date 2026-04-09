@@ -2,29 +2,54 @@ name: outlook_new_restore.ps1
 description: Reinstalls the New Outlook app and re-enables the Try the new Outlook toggle
 language: PowerShell
 tags:
+  - Cleanup
   - Endpoint Management
   - Outlook
-  - Cleanup
 runAs: SYSTEM_USER
 timeout: 10
-readme: |
+readme: >
   Purpose
+
   -------
-  Reverses the remove_new_outlook.ps1 script by reinstalling the New Outlook (Microsoft.OutlookForWindows) app and re-enabling the "Try the new Outlook" toggle in Classic Outlook. Used when an organization wants to roll back the removal and allow users to access New Outlook again.
+
+  Reverses the remove_new_outlook.ps1 script by reinstalling the New Outlook
+  (Microsoft.OutlookForWindows) app and re-enabling the "Try the new Outlook"
+  toggle in Classic Outlook. Used when an organization wants to roll back the
+  removal and allow users to access New Outlook again.
+
 
   Usage Notes
+
   -----------
+
   - Resolves winget path with SYSTEM context awareness for RMM compatibility
+
   - Installs Microsoft.OutlookForWindows via winget with silent and accept flags
-  - Falls back to Add-AppxPackage with Microsoft Store URI if winget is unavailable
-  - Recreates the OutlookUpdate registry key under UScheduler so Windows Update can provision the app again
-  - Removes the HideNewOutlookToggle registry value from loaded user hives to re-enable the toggle in Classic Outlook
-  - No configurable inputs required - targets Microsoft.OutlookForWindows specifically
+
+  - Falls back to Add-AppxPackage with Microsoft Store URI if winget is
+  unavailable
+
+  - Recreates the OutlookUpdate registry key under UScheduler so Windows Update
+  can provision the app again
+
+  - Removes the HideNewOutlookToggle registry value from loaded user hives to
+  re-enable the toggle in Classic Outlook
+
+  - No configurable inputs required - targets Microsoft.OutlookForWindows
+  specifically
+
 
   Requirements
+
   ------------
+
   - PowerShell 5.1 or later
+
   - Administrator privileges
+
   - winget recommended (falls back to Store URI if unavailable)
 favourite: false
 shared: true
+scriptId: "5166657565822578688"
+lastPushedChecksum: sha256:45a3649ff7a97649
+lastPushedMetaChecksum: sha256:54957025b33b31c8
