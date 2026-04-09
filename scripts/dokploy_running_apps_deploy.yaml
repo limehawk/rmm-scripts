@@ -2,63 +2,38 @@ name: dokploy_running_apps_deploy.sh
 description: Triggers deployments for all currently running Dokploy apps
 language: Bash
 tags:
-  - Linux
-  - Maintenance
+- Linux
+- Maintenance
 runAs: SYSTEM_USER
 timeout: 15
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Automates the deployment process for all running Dokploy applications. Fetches
-  application metadata via the Dokploy API, checks each app's status, and
-  triggers deployments only for apps that are currently running. Idle
-  applications are skipped to prevent unnecessary resource usage and deployment
-  conflicts.
-
+  Automates the deployment process for all running Dokploy applications. Fetches application metadata via the Dokploy API, checks each app's status, and triggers deployments only for apps that are currently running. Idle applications are skipped to prevent unnecessary resource usage and deployment conflicts.
 
   Usage Notes
-
   -----------
-
   - Fetches all application IDs from Dokploy via API
-
   - Retrieves application info including status, name, and project
-
   - Skips applications with "idle" status
-
   - Triggers deployment for applications with "running" status
-
   - Adds 2-second delay between deployments to avoid API rate limits
-
   - DOKPLOY_DOMAIN: set to your Dokploy domain (e.g., "app.dokploy.com")
-
   - API_TOKEN: set to your API token from Dokploy profile settings
 
-
   Requirements
-
   ------------
-
   - curl installed
-
   - Network connectivity to Dokploy domain
-
   - Valid Dokploy API token with deployment permissions
 
-
   Security
-
   --------
-
   - API token must be kept secure and not committed to version control
-
   - Replace API_TOKEN placeholder before running
-
   - API calls use HTTPS for encrypted communication
 favourite: false
 shared: false
-scriptId: "259059084121726976"
-lastPushedChecksum: sha256:4c7cfde0eaf99c0c
-lastPushedMetaChecksum: sha256:ded26292ba883a89
+scriptId: '259059084121726976'
+lastPushedChecksum: sha256:5834fc94ba215055
+lastPushedMetaChecksum: sha256:5483c08a3ad54c2b
