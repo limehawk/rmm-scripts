@@ -212,6 +212,77 @@ Increment version, update DATE, add CHANGELOG entry.
 
 ---
 
+## Filename Naming Convention
+
+All script filenames must follow this pattern:
+
+```
+{target}[_{qualifier}]_{verb}[_{verb_modifier}][_{platform}].{ext}
+```
+
+### Segments
+
+| Segment | Required | Description | Examples |
+|---|---|---|---|
+| `target` | yes | What the script acts on — app name, subsystem, or component | `rustic`, `splashtop`, `outlook`, `dns`, `disk` |
+| `qualifier` | no | Scope or specificity within the target | `agent`, `streamer`, `new`, `old_profiles`, `admin` |
+| `verb` | yes | The action — always comes after target/qualifier | `install`, `remove`, `enable`, `fix`, `scan`, `report` |
+| `verb_modifier` | no | Modifies how the verb operates — stays glued to the verb | `all`, `force`, `full`, `verbose` |
+| `platform` | no | OS/arch suffix — omit when obvious from extension | `macos`, `unix`, `linux`, `debian_amd64`, `debian_arm64` |
+| `ext` | yes | `.ps1` (PowerShell/Windows) or `.sh` (shell/unix) | — |
+
+### Rules
+
+1. **Verb goes last** (before platform/extension). The target is always first.
+   - ✅ `outlook_new_remove.ps1` — target, qualifier, verb
+   - ❌ `remove_new_outlook.ps1` — verb-first
+
+2. **Verb modifiers stay glued to the verb**, not treated as qualifiers.
+   - ✅ `choco_upgrade_all.ps1` — "upgrade all" is the action
+   - ✅ `printers_remove_all.ps1` — "remove all" is the action
+   - ✅ `workstation_reboot_force.ps1` — "reboot force" is the action
+   - ❌ `choco_all_upgrade.ps1` — reads unnaturally
+
+3. **Platform suffix is omitted** when the extension makes it obvious.
+   - `.ps1` implies Windows — no `_win` suffix needed
+   - `.sh` alone implies generic unix — add `_macos`, `_linux`, `_debian_amd64` only for platform-specific variants
+   - When both a `.ps1` and `.sh` exist for the same task, the `.sh` may use `_unix` suffix if clarity helps
+
+4. **snake_case only.** No hyphens, no dots (except the file extension), no camelCase.
+
+5. **Approved verb list** (non-exhaustive, extend as needed):
+   `install`, `uninstall`, `remove`, `restore`, `enable`, `disable`, `toggle`,
+   `create`, `delete`, `fix`, `scan`, `report`, `check`, `setup`, `cleanup`,
+   `upgrade`, `update`, `reset`, `flush`, `restart`, `reboot`, `migrate`,
+   `rename`, `search`, `display`, `show`, `backup`, `deploy`, `branding`
+
+6. **Approved verb modifiers:**
+   `all`, `force`, `full`, `verbose`, `now`, `complete`
+
+### Validation Behavior
+
+- In **validate** mode: flag non-compliant filenames in the report with a suggested rename
+- In **scaffold** mode: enforce the convention when generating the filename — ask the user if the inferred name looks right
+- In **fix** mode: flag non-compliant filenames but do NOT auto-rename (renaming has downstream effects on SuperOps script IDs, sidecars, etc.)
+
+### Examples
+
+| Filename | Compliant | Pattern | Notes |
+|---|---|---|---|
+| `rustic_install.ps1` | ✅ | target_verb | |
+| `rustic_install_unix.sh` | ✅ | target_verb_platform | |
+| `splashtop_streamer_install_debian_amd64.sh` | ✅ | target_qualifier_verb_platform | |
+| `delprof2_old_profiles_delete.ps1` | ✅ | target_qualifier_verb | |
+| `choco_upgrade_all.ps1` | ✅ | target_verb_modifier | |
+| `outlook_new_remove.ps1` | ✅ | target_qualifier_verb | |
+| `outlook_new_restore.ps1` | ✅ | target_qualifier_verb | |
+| `workstation_reboot_force.ps1` | ✅ | target_verb_modifier | |
+| `remove_new_outlook.ps1` | ❌ | verb-first | → `outlook_new_remove.ps1` |
+| `flush_dns.sh` | ❌ | verb-first | → `dns_flush.sh` |
+| `fix_agent_startup.ps1` | ❌ | verb-first | → `agent_startup_fix.ps1` |
+
+---
+
 ## General Rules
 
 - When in doubt about a rule, read the guidelines file. It is the source of truth, not your training data.

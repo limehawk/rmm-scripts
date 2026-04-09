@@ -1,4 +1,4 @@
-name: remove_new_outlook.ps1
+name: outlook_new_remove.ps1
 description: Removes the New Outlook (Microsoft.OutlookForWindows) app from all
   user profiles and prevents reinstallation
 language: PowerShell

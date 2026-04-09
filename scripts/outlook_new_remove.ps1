@@ -11,9 +11,9 @@ $ErrorActionPreference = 'Stop'
  SCRIPT   : Remove New Outlook                                           v1.0.0
  AUTHOR   : Limehawk.io
  DATE     : April 2026
- USAGE    : .\remove_new_outlook.ps1
+ USAGE    : .\outlook_new_remove.ps1
 ================================================================================
- FILE     : remove_new_outlook.ps1
+ FILE     : outlook_new_remove.ps1
  DESCRIPTION : Removes the New Outlook (Microsoft.OutlookForWindows) app from all user profiles and prevents reinstallation
 --------------------------------------------------------------------------------
  README

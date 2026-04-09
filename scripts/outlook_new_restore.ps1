@@ -11,9 +11,9 @@ $ErrorActionPreference = 'Stop'
  SCRIPT   : Restore New Outlook                                          v1.0.0
  AUTHOR   : Limehawk.io
  DATE     : April 2026
- USAGE    : .\restore_new_outlook.ps1
+ USAGE    : .\outlook_new_restore.ps1
 ================================================================================
- FILE     : restore_new_outlook.ps1
+ FILE     : outlook_new_restore.ps1
  DESCRIPTION : Reinstalls the New Outlook app and re-enables the Try the new Outlook toggle
 --------------------------------------------------------------------------------
  README
