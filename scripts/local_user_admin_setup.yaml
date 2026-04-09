@@ -2,40 +2,70 @@ name: local_user_admin_setup.ps1
 description: Creates a new local administrator account for employee onboarding
 language: PowerShell
 tags:
-- Administration
-- Windows
-- Onboarding
+  - Administration
+  - Onboarding
+  - Windows
 runAs: SYSTEM_USER
 timeout: 15
-readme: |
+readme: >
   Purpose
+
   -------
-  Creates a new local administrator account intended for employee onboarding. The account is created with a blank password and configured to force a password change at first interactive logon. The account is visible on the Windows login screen so the new employee can select it and set their own password immediately.
+
+  Creates a new local administrator account intended for employee onboarding.
+  The account is created with a blank password and configured to force a
+  password change at first interactive logon. The account is visible on the
+  Windows login screen so the new employee can select it and set their own
+  password immediately.
+
 
   Usage Notes
+
   -----------
+
   - Account is created with a blank password by design
+
   - Password change is forced at first logon via net user /logonpasswordchg:yes
+
   - Fails if the account already exists (setup only, not reset)
+
   - Account is added to the local Administrators group
+
   - $NewAdminUsername: account username (SuperOps runtime variable)
-  - $NewAdminFullName: display name shown on login screen (SuperOps runtime variable)
+
+  - $NewAdminFullName: display name shown on login screen (SuperOps runtime
+  variable)
+
 
   Requirements
+
   ------------
+
   - Windows 10/11
+
   - Admin privileges required (runs as SYSTEM via RMM)
+
   - PowerShell 5.1+
+
   - LocalAccounts module (built-in on Windows 10/11)
 
+
   Security
+
   --------
+
   - Blank password is intentional for onboarding workflow
+
   - Windows policy restricts blank password logon to the physical console only
+
   - Network logon with blank password is blocked by default
+
   - Employee must set a password at first interactive logon
 favourite: false
 shared: true
 runtimeVariables:
-- name: NewAdminUsername
-- name: NewAdminFullName
+  - name: NewAdminUsername
+  - name: NewAdminFullName
+scriptId: "5433798425135783936"
+lastPushedChecksum: sha256:27b074e11f4febb0
+lastPushedMetaChecksum: sha256:49d90743122ef974
