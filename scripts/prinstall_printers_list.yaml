@@ -2,27 +2,40 @@ name: prinstall_printers_list.ps1
 description: Lists installed printers on the system using prinstall
 language: PowerShell
 tags:
-- Printers
-- Windows
+  - Printers
+  - Windows
 runAs: SYSTEM_USER
 timeout: 5
-readme: |
+readme: >
   Purpose
+
   -------
-  Lists all locally installed printers (USB, network, virtual) using prinstall's list command. Useful for auditing printer installations via RMM or verifying a printer was added successfully.
+
+  Lists all locally installed printers (USB, network, virtual) using prinstall's
+  list command. Useful for auditing printer installations via RMM or verifying a
+  printer was added successfully.
+
 
   Usage Notes
+
   -----------
+
   - Enumerates all printers Windows knows about via Get-Printer
+
   - No runtime variables required
+
   - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
 
+
   Requirements
+
   ------------
+
   - Windows OS
+
   - prinstall.exe installed
 favourite: false
 shared: false
-scriptId: '2196938899106717696'
-lastPushedChecksum: sha256:f82d98200075cc8d
+scriptId: "2196938899106717696"
+lastPushedChecksum: sha256:24e5c5173b1a47a2
 lastPushedMetaChecksum: sha256:f7eca83a094723d0

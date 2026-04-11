@@ -2,8 +2,8 @@ name: prinstall_printer_remove.ps1
 description: Removes a printer and its orphaned driver/port using prinstall 0.3.0+
 language: PowerShell
 tags:
-- Printers
-- Windows
+  - Printers
+  - Windows
 runAs: SYSTEM_USER
 timeout: 10
 readme: |
@@ -33,4 +33,7 @@ readme: |
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourPrinterTargetHere
+  - name: YourPrinterTargetHere
+scriptId: "3997881900866027520"
+lastPushedChecksum: sha256:42c3caaf28b4a56e
+lastPushedMetaChecksum: sha256:d72701d9413f63e8

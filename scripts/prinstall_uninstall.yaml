@@ -2,27 +2,46 @@ name: prinstall_uninstall.ps1
 description: Removes prinstall binary, data directory, and audit history
 language: PowerShell
 tags:
-- Software
-- Windows
+  - Software
+  - Windows
 runAs: SYSTEM_USER
 timeout: 10
-readme: |
+readme: >
   Purpose
+
   -------
-  Uninstalls prinstall completely. Removes the binary, the machine-wide data directory at C:\ProgramData\prinstall\ (install history, config, driver staging), and any audit state. Use this when decommissioning prinstall on a machine or resetting it to a clean state.
+
+  Uninstalls prinstall completely. Removes the binary, the machine-wide data
+  directory at C:\ProgramData\prinstall\ (install history, config, driver
+  staging), and any audit state. Use this when decommissioning prinstall on a
+  machine or resetting it to a clean state.
+
 
   Usage Notes
+
   -----------
+
   - Set ConfirmUninstallHere to 'yes' to confirm and execute the uninstall
+
   - Removes the entire C:\ProgramData\prinstall\ directory tree
-  - Does NOT uninstall printers that prinstall previously added — run prinstall_printer_remove.ps1 first for a clean teardown
+
+  - Does NOT uninstall printers that prinstall previously added — run
+  prinstall_printer_remove.ps1 first for a clean teardown
+
   - Destructive: history.toml is deleted with no backup
 
+
   Requirements
+
   ------------
+
   - Windows OS
+
   - Administrator privileges
 favourite: false
 shared: false
 runtimeVariables:
-- name: ConfirmUninstallHere
+  - name: ConfirmUninstallHere
+scriptId: "3997881901927186432"
+lastPushedChecksum: sha256:6d9f02dff3ed6d86
+lastPushedMetaChecksum: sha256:64313bee91e6c3cd
