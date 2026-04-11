@@ -7,9 +7,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Scan Subnet v1.1.0
+SCRIPT  : Prinstall Scan Subnet v0.3.0
 AUTHOR  : Limehawk.io
-DATE      : March 2026
+DATE      : April 2026
 USAGE   : .\prinstall_subnet_scan.ps1
 FILE    : prinstall_subnet_scan.ps1
 DESCRIPTION : Scans a subnet for network printers using prinstall
@@ -83,6 +83,10 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.1.0).
+                  No functional changes — prinstall 0.3.0's multi-method scan
+                  pipeline (port probe + IPP + SNMP + local enum) works with
+                  the same `scan` subcommand and flags.
 2026-03-25 v1.1.0 Make subnet optional, auto-detect local subnet when blank
 2026-03-25 v1.0.0 Initial release - prinstall subnet scan wrapper
 ================================================================================

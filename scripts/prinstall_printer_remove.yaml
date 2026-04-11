@@ -1,0 +1,36 @@
+name: prinstall_printer_remove.ps1
+description: Removes a printer and its orphaned driver/port using prinstall 0.3.0+
+language: PowerShell
+tags:
+- Printers
+- Windows
+runAs: SYSTEM_USER
+timeout: 10
+readme: |
+  Purpose
+  -------
+  Removes a printer on Windows using prinstall 0.3.0+. Three-step cleanup with
+  orphan detection: queue -> driver (with -RemoveFromDriverStore to take the
+  underlying oem<N>.inf package with it) -> port. System drivers and non-IP
+  ports are automatically skipped. Idempotent — removing a non-existent
+  printer returns success.
+
+  Usage Notes
+  -----------
+  - Target can be an IP address or the exact printer queue name
+  - IP targets are resolved to queue names via the IP_<ip> port convention
+  - Set $keepDriver to $true to skip driver cleanup (leave driver staged)
+  - Set $keepPort to $true to skip port cleanup (leave port registered)
+  - Settle sleep + retry loop smooths over Windows spooler reference lag
+  - Requires prinstall.exe 0.3.0 or newer (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - prinstall.exe 0.3.0 or newer installed
+  - $YourPrinterTargetHere: Printer IP (e.g. "10.10.20.16") or exact queue name
+favourite: false
+shared: false
+runtimeVariables:
+- name: YourPrinterTargetHere

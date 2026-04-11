@@ -7,75 +7,109 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall List Printers v0.3.0
+SCRIPT  : Prinstall Remove Printer v0.3.0
 AUTHOR  : Limehawk.io
 DATE      : April 2026
-USAGE   : .\prinstall_printers_list.ps1
-FILE    : prinstall_printers_list.ps1
-DESCRIPTION : Lists installed printers on the system using prinstall
+USAGE   : .\prinstall_printer_remove.ps1
+FILE    : prinstall_printer_remove.ps1
+DESCRIPTION : Removes a printer and its orphaned driver/port using prinstall 0.3.0+
 ================================================================================
 README
 --------------------------------------------------------------------------------
  PURPOSE
-   Lists all locally installed printers (USB, network, virtual) using
-   prinstall's list command. Useful for auditing printer installations
-   via RMM or verifying a printer was added successfully.
+   Removes a printer on Windows using prinstall 0.3.0+. Three-step cleanup
+   with orphan detection:
+   1. Removes the printer queue (Remove-Printer)
+   2. Waits for the spooler to release references (settle sleep + retry loop)
+   3. Removes the driver if no other printer uses it, INCLUDING the underlying
+      oem<N>.inf package in the Windows driver store (via -RemoveFromDriverStore)
+   4. Removes the TCP/IP port if no other printer uses it
+
+   System drivers (Microsoft IPP Class Driver, Print to PDF, etc.) and non-IP
+   ports (USB001, LPT1, COM1, WSD-*) are automatically skipped — prinstall
+   only touches resources it would have created itself.
+
+   Designed for RMM deployment via SuperOps runtime variables.
 
  DATA SOURCES & PRIORITY
-   1) Windows Get-Printer data via prinstall
+   1) SuperOps runtime variable for printer target (IP or queue name)
+   2) Prinstall resolves IP targets to queue names via the IP_<ip> port
 
  REQUIRED INPUTS
-   - $prinstallDir : Directory where prinstall.exe is installed
+   - $printerTarget : IP address or printer queue name (SuperOps: $YourPrinterTargetHere)
+                       Examples: "10.10.20.16" or "Brother MFC-L2750DW series"
+   - $keepDriver    : Set to $true to skip driver cleanup (leave driver staged)
+   - $keepPort      : Set to $true to skip port cleanup (leave port registered)
+   - $prinstallDir  : Directory where prinstall.exe is installed
 
  SETTINGS
-   - Output format: verbose text for RMM console
+   - Idempotent — removing a non-existent printer returns success
+   - Driver and port cleanup are non-fatal on their own — only queue removal
+     failure is a fatal error
+   - --keep-driver and --keep-port give surgical control when another printer
+     on the same machine shares the driver or port
 
  BEHAVIOR
    1. Validates inputs and checks prinstall.exe exists
-   2. Runs prinstall list to enumerate installed printers
-   3. Outputs printer list to console
+   2. Runs `prinstall remove <target> --verbose` with any keep flags
+   3. Reports removal result + which cleanup steps ran
 
  PREREQUISITES
    - Windows OS
-   - prinstall.exe installed (run prinstall_setup.ps1 first)
+   - Administrator privileges
+   - prinstall.exe 0.3.0 or newer installed (run prinstall_setup.ps1 first)
 
  SECURITY NOTES
    - No secrets in logs
+   - Printer target visible in process args
 
  ENDPOINTS
-   - Not applicable (local query only)
+   - None (local operation only)
 
  EXIT CODES
-   - 0 = Success - list completed
-   - 1 = Failure - prinstall not found or list failed
+   - 0 = Success - printer removed (or was already absent)
+   - 1 = Failure - removal failed
 
  EXAMPLE RUN
 
    [INFO] INPUT VALIDATION
    ==============================================================
+   Target          : 10.10.20.16
+   Keep Driver     : false
+   Keep Port       : false
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
+   Version         : prinstall 0.3.0
    Inputs validated successfully
 
-   [RUN] LIST PRINTERS
+   [RUN] REMOVE PRINTER
    ==============================================================
-   Name                           Driver                         Port
-   ------------------------------ ------------------------------ ---------------
-   HP LaserJet Pro MFP M428fdw    HP Universal Print Driver      IP_192.168.1.10
-   Canon MF455dw                  Canon UFR II LT                IP_192.168.1.25
-   Microsoft Print to PDF         Microsoft Print To PDF         PORTPROMPT:
+   Removing printer at 10.10.20.16...
+
+   [remove] Looking up printer by port 'IP_10.10.20.16'
+   [remove] Resolved target '10.10.20.16' -> 'Brother MFC-L2750DW series'
+   [remove] Printer uses driver 'Brother Laser Type1 Class Driver' on port 'IP_10.10.20.16'
+   [remove] Remove-Printer -Name 'Brother MFC-L2750DW series' -Confirm:$false
+   [remove] Waiting 500ms for spooler to release references...
+   [remove] Remove-PrinterDriver -Name 'Brother Laser Type1 Class Driver' -RemoveFromDriverStore -Confirm:$false
+   [remove] Removed driver 'Brother Laser Type1 Class Driver' (including driver store package)
+   [remove] Remove-PrinterPort -Name 'IP_10.10.20.16' -Confirm:$false
+   [remove] Removed port 'IP_10.10.20.16'
+
+   Removed printer: Brother MFC-L2750DW series
+     - Port also removed (no other printers were using it)
+     - Driver also removed from driver store
 
    [OK] FINAL STATUS
    ==============================================================
    Status          : Success
+   Target          : 10.10.20.16
 
    [OK] SCRIPT COMPLETED
    ==============================================================
 
 CHANGELOG
 --------------------------------------------------------------------------------
-2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.0.0).
-                  No functional changes — `list` subcommand unchanged in 0.3.0.
-2026-03-25 v1.0.0 Initial release - prinstall list printers wrapper
+2026-04-11 v0.3.0 Initial release - prinstall remove wrapper for 0.3.0+
 ================================================================================
 #>
 Set-StrictMode -Version Latest
@@ -83,7 +117,10 @@ Set-StrictMode -Version Latest
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-$prinstallDir = "$env:ProgramData\prinstall"
+$printerTarget = "$YourPrinterTargetHere"    # IP address or printer queue name
+$keepDriver    = $false                      # Set to $true to skip driver cleanup
+$keepPort      = $false                      # Set to $true to skip port cleanup
+$prinstallDir  = "$env:ProgramData\prinstall"  # Where prinstall.exe is installed
 
 # ============================================================================
 # INPUT VALIDATION
@@ -94,6 +131,12 @@ Write-Host "=============================================================="
 
 $errorOccurred = $false
 $errorText = ""
+
+if ([string]::IsNullOrWhiteSpace($printerTarget) -or $printerTarget -eq '$' + 'YourPrinterTargetHere') {
+    $errorOccurred = $true
+    if ($errorText.Length -gt 0) { $errorText += "`n" }
+    $errorText += "- SuperOps runtime variable `$YourPrinterTargetHere was not replaced. Set it to the printer IP (e.g. '10.10.20.16') or the exact queue name (e.g. 'Brother MFC-L2750DW series')."
+}
 
 if ([string]::IsNullOrWhiteSpace($prinstallDir)) {
     $errorOccurred = $true
@@ -111,6 +154,9 @@ if ($errorOccurred) {
 
 $exePath = "$prinstallDir\prinstall.exe"
 
+Write-Host "Target          : $printerTarget"
+Write-Host "Keep Driver     : $keepDriver"
+Write-Host "Keep Port       : $keepPort"
 Write-Host "Prinstall       : $exePath"
 Write-Host "Inputs validated successfully"
 
@@ -138,20 +184,32 @@ try {
 }
 
 # ============================================================================
-# LIST PRINTERS
+# REMOVE PRINTER
 # ============================================================================
 Write-Host ""
-Write-Host "[RUN] LIST PRINTERS"
+Write-Host "[RUN] REMOVE PRINTER"
 Write-Host "=============================================================="
+Write-Host "Removing printer at $printerTarget..."
+Write-Host ""
 
 try {
-    & $exePath list 2>&1 | ForEach-Object { Write-Host $_ }
-    $listExitCode = $LASTEXITCODE
+    $removeArgs = @('remove', $printerTarget, '--verbose')
+
+    if ($keepDriver) {
+        $removeArgs += '--keep-driver'
+    }
+
+    if ($keepPort) {
+        $removeArgs += '--keep-port'
+    }
+
+    & $exePath @removeArgs 2>&1 | ForEach-Object { Write-Host $_ }
+    $removeExitCode = $LASTEXITCODE
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"
     Write-Host "=============================================================="
-    Write-Host "Prinstall list failed"
+    Write-Host "Prinstall remove failed"
     Write-Host "Error : $($_.Exception.Message)"
     exit 1
 }
@@ -160,11 +218,12 @@ try {
 # FINAL STATUS
 # ============================================================================
 
-if ($listExitCode -eq 0) {
+if ($removeExitCode -eq 0) {
     Write-Host ""
     Write-Host "[OK] FINAL STATUS"
     Write-Host "=============================================================="
     Write-Host "Status          : Success"
+    Write-Host "Target          : $printerTarget"
     Write-Host ""
     Write-Host "[OK] SCRIPT COMPLETED"
     Write-Host "=============================================================="
@@ -174,7 +233,8 @@ if ($listExitCode -eq 0) {
     Write-Host "[ERROR] FINAL STATUS"
     Write-Host "=============================================================="
     Write-Host "Status          : Failed"
-    Write-Host "Exit code       : $listExitCode"
+    Write-Host "Exit code       : $removeExitCode"
+    Write-Host "Target          : $printerTarget"
     Write-Host ""
     Write-Host "[ERROR] SCRIPT COMPLETED"
     Write-Host "=============================================================="

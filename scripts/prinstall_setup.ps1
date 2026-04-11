@@ -7,9 +7,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v1.2.1
+SCRIPT  : Prinstall Setup v0.3.0
 AUTHOR  : Limehawk.io
-DATE      : March 2026
+DATE      : April 2026
 USAGE   : .\prinstall_setup.ps1
 FILE    : prinstall_setup.ps1
 DESCRIPTION : Installs or uninstalls prinstall from GitHub releases
@@ -135,6 +135,9 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.2.1).
+                  No functional changes — GitHub releases API already pulls the
+                  latest version automatically.
 2026-03-25 v1.2.1 Rename runtime var to YourActionHere, accept install/uninstall directly
 2026-03-25 v1.2.0 Use SuperOps runtime variable for install/uninstall
 2026-03-25 v1.1.1 Fix curl stderr triggering ErrorActionPreference Stop
