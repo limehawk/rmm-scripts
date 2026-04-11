@@ -13,7 +13,7 @@ readme: |
 
   Usage Notes
   -----------
-  - Set InstallYesUninstallNo to 'yes' (install) or 'no' (uninstall)
+  - Set InstallOrUninstall to 'install' or 'uninstall'
   - Install: queries GitHub Releases API for latest version, downloads and extracts
   - Uninstall: removes install directory and all contents
   - Verifies binary by running prinstall --version after install
@@ -26,7 +26,7 @@ readme: |
 favourite: false
 shared: false
 runtimeVariables:
-- name: InstallYesUninstallNo
+- name: InstallOrUninstall
 scriptId: '263150827971416064'
 lastPushedChecksum: sha256:fb7288c6fb2f6ac9
 lastPushedMetaChecksum: sha256:912898d1f8ed1e72
