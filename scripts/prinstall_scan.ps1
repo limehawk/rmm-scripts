@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Scan Subnet v0.3.0
+SCRIPT  : Prinstall Scan Subnet v0.3.1
 AUTHOR  : Limehawk.io
 DATE      : April 2026
 USAGE   : .\prinstall_scan.ps1
@@ -17,40 +17,58 @@ DESCRIPTION : Scans a subnet for network printers using prinstall
 README
 --------------------------------------------------------------------------------
  PURPOSE
-   Scans a subnet for network printers using prinstall's SNMP and port
-   discovery. Returns printer IPs, models, and status. Designed for RMM
-   deployment to discover printers on a client network.
+   Scans a subnet for network printers using prinstall's full multi-method
+   discovery pipeline: TCP port probe (9100/631/515), IPP Get-Printer-
+   Attributes, SNMPv2c, and mDNS/Bonjour multicast browse. Returns
+   printer IPs, models, discovery methods used, and status. Designed for
+   RMM deployment to discover every printer on a client network — even
+   silent AirPrint-only printers that ignore SNMP.
 
  DATA SOURCES & PRIORITY
-   1) Prinstall SNMP/port scan results
-   2) SuperOps runtime variable for subnet
+   1) TCP port probe (9100 raw, 631 IPP, 515 LPR) to find live hosts
+   2) IPP Get-Printer-Attributes for make/model and IEEE 1284 device ID
+   3) SNMPv2c for vendor/model/serial/status enrichment
+   4) mDNS multicast browse (_ipp/_ipps/_pdl-datastream/_printer._tcp.local.)
+      catches AirPrint printers that don't respond to unicast probes
+   5) SuperOps runtime variable for subnet (optional — blank = auto-detect)
 
  REQUIRED INPUTS
-   - $subnet       : Subnet in CIDR notation (SuperOps: $YourSubnetHere)
+   - $subnet       : Subnet in CIDR notation (SuperOps: $YourSubnetHere).
+                     Leave blank to auto-detect the local subnet via
+                     Get-NetIPAddress on the primary NIC.
    - $prinstallDir : Directory where prinstall.exe is installed
 
  SETTINGS
-   - Discovery method: all (SNMP + port check)
+   - Discovery method: all (port + IPP + SNMP + mDNS)
    - SNMP community string: public (default)
    - Output format: verbose text for RMM console
 
  BEHAVIOR
    1. Validates inputs and checks prinstall.exe exists
-   2. Runs prinstall scan with specified subnet
-   3. Outputs discovered printers to console
+   2. If subnet is blank, prinstall auto-detects it from the local NIC
+   3. Runs `prinstall scan [subnet] --verbose` which executes the full
+      discovery pipeline in parallel and merges results
+   4. Outputs discovered printers to console with the method(s) that
+      found each one
 
  PREREQUISITES
    - Windows OS
    - prinstall.exe installed (run prinstall_setup.ps1 first)
    - Network access to target subnet
-   - UDP 161 (SNMP) and/or TCP 9100 (raw print) not blocked
+   - UDP 161 (SNMP), TCP 9100 (raw print), TCP 631 (IPP) not blocked
+   - UDP 5353 (mDNS) open on the NIC — the prinstall_setup.ps1 installer
+     pre-creates a "Prinstall (mDNS discovery)" firewall rule so the
+     mDNS pass works under SYSTEM-context RMM execution without friction
 
  SECURITY NOTES
    - No secrets in logs
    - SNMP community string visible in process args if non-default
+   - mDNS/IPP/SNMP traffic is normal service-discovery traffic and does
+     not authenticate against target printers
 
  ENDPOINTS
-   - Target subnet printers via UDP 161 and TCP 9100
+   - Target subnet printers via TCP 9100/631/515 and UDP 161
+   - Link-local multicast UDP 5353 (mDNS) — not routed off-segment
 
  EXIT CODES
    - 0 = Success - scan completed
@@ -62,27 +80,43 @@ README
    ==============================================================
    Subnet          : 192.168.1.0/24
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
+   Version         : prinstall 0.3.1
    Inputs validated successfully
 
    [RUN] SCAN SUBNET
    ==============================================================
    Scanning 192.168.1.0/24 for printers...
 
-   IP              Model                          Status
-   --------------- ------------------------------ ----------
-   192.168.1.10    HP LaserJet Pro MFP M428fdw    Ready
-   192.168.1.25    Canon imageCLASS MF455dw       Ready
+   [scan] Port scan found 3 candidates
+   [scan] 192.168.1.10: SNMP -> model "HP LaserJet Pro MFP M428fdw"
+   [scan] 192.168.1.25: IPP -> model "Canon imageCLASS MF455dw"
+   [mdns] resolved 1 unique printer(s)
+
+   IP              Model                          Source   Status
+   --------------- ------------------------------ -------- --------
+   192.168.1.10    HP LaserJet Pro MFP M428fdw    Network  Ready
+   192.168.1.25    Canon imageCLASS MF455dw       Network  Ready
+   192.168.1.50    Brother MFC-L2750DW series     Network  Unknown
+
+     3 printer(s)  ·  Port+IPP+SNMP 2  ·  mDNS 1
 
    [OK] FINAL STATUS
    ==============================================================
    Status          : Success
-   Printers found  : 2
+   Subnet          : 192.168.1.0/24
 
    [OK] SCRIPT COMPLETED
    ==============================================================
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-11 v0.3.1 Refresh for prinstall 0.3.1: document the new mDNS browse
+                  pass (bundled into the default `all` method), the
+                  working subnet auto-detect path, and the firewall rule
+                  pre-created by prinstall_setup.ps1 for UDP 5353. No
+                  wrapper logic changes — leaving $YourSubnetHere blank
+                  has always worked, prinstall 0.3.1 just finally honors
+                  it instead of erroring out.
 2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.1.0).
                   No functional changes — prinstall 0.3.0's multi-method scan
                   pipeline (port probe + IPP + SNMP + local enum) works with

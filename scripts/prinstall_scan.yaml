@@ -9,21 +9,23 @@ timeout: 5
 readme: |
   Purpose
   -------
-  Scans a subnet for network printers using prinstall's SNMP and port discovery. Returns printer IPs, models, and status.
+  Scans a subnet for network printers using prinstall 0.3.1's full multi-method discovery pipeline: TCP port probe (9100/631/515), IPP Get-Printer-Attributes, SNMPv2c, and mDNS/Bonjour multicast browse. Catches even silent AirPrint printers that ignore SNMP. Returns printer IPs, models, discovery method(s), and status.
 
   Usage Notes
   -----------
-  - Uses prinstall scan with SNMP + port check discovery
-  - Subnet provided via SuperOps runtime variable $YourSubnetHere
+  - Uses `prinstall scan [subnet] --verbose` with the default `all` method (port + IPP + SNMP + mDNS merged)
+  - Leave $YourSubnetHere blank to auto-detect the local subnet from the primary NIC
   - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+  - prinstall_setup.ps1 pre-creates a firewall rule so the mDNS pass works under SYSTEM execution
 
   Requirements
   ------------
   - Windows OS
-  - prinstall.exe installed
+  - prinstall.exe installed (run prinstall_setup.ps1 first)
   - Network access to target subnet
-  - UDP 161 (SNMP) and/or TCP 9100 not blocked
-  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24)
+  - UDP 161 (SNMP), TCP 9100 (raw), TCP 631 (IPP) open to target
+  - UDP 5353 (mDNS) allowed on the NIC — created by prinstall_setup.ps1
+  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24) or blank for auto-detect
 favourite: false
 shared: false
 runtimeVariables:
