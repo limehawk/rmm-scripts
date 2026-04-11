@@ -243,6 +243,17 @@ if ($action -eq 'uninstall') {
         }
     }
 
+    # Clean up the firewall rule so uninstall leaves no state behind
+    try {
+        $rule = Get-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+        if ($rule) {
+            Remove-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+            Write-Host "Removed firewall rule 'Prinstall (mDNS discovery)'"
+        }
+    } catch {
+        Write-Host "Warning: could not remove firewall rule: $($_.Exception.Message)"
+    }
+
     Write-Host ""
     Write-Host "[OK] FINAL STATUS"
     Write-Host "=============================================================="
@@ -377,6 +388,39 @@ try {
     Write-Host "=============================================================="
     Write-Host "Binary exists but --version check failed"
     Write-Host "Error : $($_.Exception.Message)"
+}
+
+# ============================================================================
+# FIREWALL
+# ============================================================================
+# prinstall 0.3.1+ runs an mDNS browse pass as part of `scan`. Multicast
+# responses come back on UDP 5353 and hit Windows Firewall on first run —
+# interactive users see a UAC-style prompt, SYSTEM-context RMM runs just
+# get silently blocked with no way to click through. Pre-create a rule
+# keyed to the binary path so the mDNS traffic flows without friction.
+Write-Host ""
+Write-Host "[RUN] FIREWALL"
+Write-Host "=============================================================="
+
+try {
+    $existing = Get-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+    if ($existing) {
+        Remove-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+    }
+    New-NetFirewallRule `
+        -DisplayName 'Prinstall (mDNS discovery)' `
+        -Description 'Allow prinstall.exe to receive mDNS multicast responses on UDP 5353 for network printer discovery.' `
+        -Direction Inbound `
+        -Action Allow `
+        -Program $exePath `
+        -Protocol UDP `
+        -LocalPort 5353 `
+        -Profile Any `
+        -Enabled True | Out-Null
+    Write-Host "Created firewall rule 'Prinstall (mDNS discovery)'"
+} catch {
+    Write-Host "Warning: could not create firewall rule: $($_.Exception.Message)"
+    Write-Host "         First interactive scan will prompt; SYSTEM-context scans may be blocked."
 }
 
 # ============================================================================

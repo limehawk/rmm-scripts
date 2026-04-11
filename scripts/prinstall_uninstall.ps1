@@ -185,6 +185,19 @@ try {
     exit 1
 }
 
+# Clean up the mDNS firewall rule created by prinstall_setup.ps1 so
+# uninstall leaves no state behind. Best-effort — a missing rule is
+# fine, we just don't want stale rules polluting the firewall table.
+try {
+    $rule = Get-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+    if ($rule) {
+        Remove-NetFirewallRule -DisplayName 'Prinstall (mDNS discovery)' -ErrorAction SilentlyContinue
+        Write-Host "Removed firewall rule 'Prinstall (mDNS discovery)'"
+    }
+} catch {
+    Write-Host "Warning: could not remove firewall rule: $($_.Exception.Message)"
+}
+
 # ============================================================================
 # VERIFY
 # ============================================================================
