@@ -10,8 +10,8 @@ $ErrorActionPreference = 'Stop'
 SCRIPT  : Prinstall Install Printer v0.3.0
 AUTHOR  : Limehawk.io
 DATE      : April 2026
-USAGE   : .\prinstall_printer_install.ps1
-FILE    : prinstall_printer_install.ps1
+USAGE   : .\prinstall_add.ps1
+FILE    : prinstall_add.ps1
 DESCRIPTION : Installs a network or USB printer using prinstall 0.3.0+
 ================================================================================
 README

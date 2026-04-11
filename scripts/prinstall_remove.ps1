@@ -7,88 +7,109 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Scan Subnet v0.3.0
+SCRIPT  : Prinstall Remove Printer v0.3.0
 AUTHOR  : Limehawk.io
 DATE      : April 2026
-USAGE   : .\prinstall_subnet_scan.ps1
-FILE    : prinstall_subnet_scan.ps1
-DESCRIPTION : Scans a subnet for network printers using prinstall
+USAGE   : .\prinstall_remove.ps1
+FILE    : prinstall_remove.ps1
+DESCRIPTION : Removes a printer and its orphaned driver/port using prinstall 0.3.0+
 ================================================================================
 README
 --------------------------------------------------------------------------------
  PURPOSE
-   Scans a subnet for network printers using prinstall's SNMP and port
-   discovery. Returns printer IPs, models, and status. Designed for RMM
-   deployment to discover printers on a client network.
+   Removes a printer on Windows using prinstall 0.3.0+. Three-step cleanup
+   with orphan detection:
+   1. Removes the printer queue (Remove-Printer)
+   2. Waits for the spooler to release references (settle sleep + retry loop)
+   3. Removes the driver if no other printer uses it, INCLUDING the underlying
+      oem<N>.inf package in the Windows driver store (via -RemoveFromDriverStore)
+   4. Removes the TCP/IP port if no other printer uses it
+
+   System drivers (Microsoft IPP Class Driver, Print to PDF, etc.) and non-IP
+   ports (USB001, LPT1, COM1, WSD-*) are automatically skipped — prinstall
+   only touches resources it would have created itself.
+
+   Designed for RMM deployment via SuperOps runtime variables.
 
  DATA SOURCES & PRIORITY
-   1) Prinstall SNMP/port scan results
-   2) SuperOps runtime variable for subnet
+   1) SuperOps runtime variable for printer target (IP or queue name)
+   2) Prinstall resolves IP targets to queue names via the IP_<ip> port
 
  REQUIRED INPUTS
-   - $subnet       : Subnet in CIDR notation (SuperOps: $YourSubnetHere)
-   - $prinstallDir : Directory where prinstall.exe is installed
+   - $printerTarget : IP address or printer queue name (SuperOps: $YourPrinterTargetHere)
+                       Examples: "192.168.1.50" or "Brother MFC-L2750DW series"
+   - $keepDriver    : Set to $true to skip driver cleanup (leave driver staged)
+   - $keepPort      : Set to $true to skip port cleanup (leave port registered)
+   - $prinstallDir  : Directory where prinstall.exe is installed
 
  SETTINGS
-   - Discovery method: all (SNMP + port check)
-   - SNMP community string: public (default)
-   - Output format: verbose text for RMM console
+   - Idempotent — removing a non-existent printer returns success
+   - Driver and port cleanup are non-fatal on their own — only queue removal
+     failure is a fatal error
+   - --keep-driver and --keep-port give surgical control when another printer
+     on the same machine shares the driver or port
 
  BEHAVIOR
    1. Validates inputs and checks prinstall.exe exists
-   2. Runs prinstall scan with specified subnet
-   3. Outputs discovered printers to console
+   2. Runs `prinstall remove <target> --verbose` with any keep flags
+   3. Reports removal result + which cleanup steps ran
 
  PREREQUISITES
    - Windows OS
-   - prinstall.exe installed (run prinstall_setup.ps1 first)
-   - Network access to target subnet
-   - UDP 161 (SNMP) and/or TCP 9100 (raw print) not blocked
+   - Administrator privileges
+   - prinstall.exe 0.3.0 or newer installed (run prinstall_setup.ps1 first)
 
  SECURITY NOTES
    - No secrets in logs
-   - SNMP community string visible in process args if non-default
+   - Printer target visible in process args
 
  ENDPOINTS
-   - Target subnet printers via UDP 161 and TCP 9100
+   - None (local operation only)
 
  EXIT CODES
-   - 0 = Success - scan completed
-   - 1 = Failure - prinstall not found or scan failed
+   - 0 = Success - printer removed (or was already absent)
+   - 1 = Failure - removal failed
 
  EXAMPLE RUN
 
    [INFO] INPUT VALIDATION
    ==============================================================
-   Subnet          : 192.168.1.0/24
+   Target          : 192.168.1.50
+   Keep Driver     : false
+   Keep Port       : false
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
+   Version         : prinstall 0.3.0
    Inputs validated successfully
 
-   [RUN] SCAN SUBNET
+   [RUN] REMOVE PRINTER
    ==============================================================
-   Scanning 192.168.1.0/24 for printers...
+   Removing printer at 192.168.1.50...
 
-   IP              Model                          Status
-   --------------- ------------------------------ ----------
-   192.168.1.10    HP LaserJet Pro MFP M428fdw    Ready
-   192.168.1.25    Canon imageCLASS MF455dw       Ready
+   [remove] Looking up printer by port 'IP_192.168.1.50'
+   [remove] Resolved target '192.168.1.50' -> 'Brother MFC-L2750DW series'
+   [remove] Printer uses driver 'Brother Laser Type1 Class Driver' on port 'IP_192.168.1.50'
+   [remove] Remove-Printer -Name 'Brother MFC-L2750DW series' -Confirm:$false
+   [remove] Waiting 500ms for spooler to release references...
+   [remove] Remove-PrinterDriver -Name 'Brother Laser Type1 Class Driver' -RemoveFromDriverStore -Confirm:$false
+   [remove] Removed driver 'Brother Laser Type1 Class Driver' (including driver store package)
+   [remove] Remove-PrinterPort -Name 'IP_192.168.1.50' -Confirm:$false
+   [remove] Removed port 'IP_192.168.1.50'
+
+   Removed printer: Brother MFC-L2750DW series
+     - Port also removed (no other printers were using it)
+     - Driver also removed from driver store
 
    [OK] FINAL STATUS
    ==============================================================
    Status          : Success
-   Printers found  : 2
+   Target          : 192.168.1.50
 
    [OK] SCRIPT COMPLETED
    ==============================================================
 
 CHANGELOG
 --------------------------------------------------------------------------------
-2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.1.0).
-                  No functional changes — prinstall 0.3.0's multi-method scan
-                  pipeline (port probe + IPP + SNMP + local enum) works with
-                  the same `scan` subcommand and flags.
-2026-03-25 v1.1.0 Make subnet optional, auto-detect local subnet when blank
-2026-03-25 v1.0.0 Initial release - prinstall subnet scan wrapper
+2026-04-11 v0.3.0 Initial release - prinstall remove wrapper for 0.3.0+
 ================================================================================
 #>
 Set-StrictMode -Version Latest
@@ -96,8 +117,10 @@ Set-StrictMode -Version Latest
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-$subnet       = "$YourSubnetHere"    # CIDR notation, e.g. 192.168.1.0/24
-$prinstallDir = "$env:ProgramData\prinstall"
+$printerTarget = "$YourPrinterTargetHere"    # IP address or printer queue name
+$keepDriver    = $false                      # Set to $true to skip driver cleanup
+$keepPort      = $false                      # Set to $true to skip port cleanup
+$prinstallDir  = "$env:ProgramData\prinstall"  # Where prinstall.exe is installed
 
 # ============================================================================
 # INPUT VALIDATION
@@ -109,8 +132,11 @@ Write-Host "=============================================================="
 $errorOccurred = $false
 $errorText = ""
 
-# Treat unreplaced placeholder as empty (auto-detect local subnet)
-if ($subnet -eq '$' + 'YourSubnetHere') { $subnet = '' }
+if ([string]::IsNullOrWhiteSpace($printerTarget) -or $printerTarget -eq '$' + 'YourPrinterTargetHere') {
+    $errorOccurred = $true
+    if ($errorText.Length -gt 0) { $errorText += "`n" }
+    $errorText += "- SuperOps runtime variable `$YourPrinterTargetHere was not replaced. Set it to the printer IP (e.g. '192.168.1.50') or the exact queue name (e.g. 'Brother MFC-L2750DW series')."
+}
 
 if ([string]::IsNullOrWhiteSpace($prinstallDir)) {
     $errorOccurred = $true
@@ -128,11 +154,9 @@ if ($errorOccurred) {
 
 $exePath = "$prinstallDir\prinstall.exe"
 
-if ([string]::IsNullOrWhiteSpace($subnet)) {
-    Write-Host "Subnet          : (auto-detect local)"
-} else {
-    Write-Host "Subnet          : $subnet"
-}
+Write-Host "Target          : $printerTarget"
+Write-Host "Keep Driver     : $keepDriver"
+Write-Host "Keep Port       : $keepPort"
 Write-Host "Prinstall       : $exePath"
 Write-Host "Inputs validated successfully"
 
@@ -160,31 +184,32 @@ try {
 }
 
 # ============================================================================
-# SCAN SUBNET
+# REMOVE PRINTER
 # ============================================================================
 Write-Host ""
-Write-Host "[RUN] SCAN SUBNET"
+Write-Host "[RUN] REMOVE PRINTER"
 Write-Host "=============================================================="
-
-if ([string]::IsNullOrWhiteSpace($subnet)) {
-    Write-Host "Scanning local subnet for printers..."
-} else {
-    Write-Host "Scanning $subnet for printers..."
-}
+Write-Host "Removing printer at $printerTarget..."
 Write-Host ""
 
 try {
-    $scanArgs = @('scan', '--verbose')
-    if (-not [string]::IsNullOrWhiteSpace($subnet)) {
-        $scanArgs = @('scan', $subnet, '--verbose')
+    $removeArgs = @('remove', $printerTarget, '--verbose')
+
+    if ($keepDriver) {
+        $removeArgs += '--keep-driver'
     }
-    & $exePath @scanArgs 2>&1 | ForEach-Object { Write-Host $_ }
-    $scanExitCode = $LASTEXITCODE
+
+    if ($keepPort) {
+        $removeArgs += '--keep-port'
+    }
+
+    & $exePath @removeArgs 2>&1 | ForEach-Object { Write-Host $_ }
+    $removeExitCode = $LASTEXITCODE
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"
     Write-Host "=============================================================="
-    Write-Host "Prinstall scan failed"
+    Write-Host "Prinstall remove failed"
     Write-Host "Error : $($_.Exception.Message)"
     exit 1
 }
@@ -193,12 +218,12 @@ try {
 # FINAL STATUS
 # ============================================================================
 
-if ($scanExitCode -eq 0) {
+if ($removeExitCode -eq 0) {
     Write-Host ""
     Write-Host "[OK] FINAL STATUS"
     Write-Host "=============================================================="
     Write-Host "Status          : Success"
-    Write-Host "Subnet          : $subnet"
+    Write-Host "Target          : $printerTarget"
     Write-Host ""
     Write-Host "[OK] SCRIPT COMPLETED"
     Write-Host "=============================================================="
@@ -208,8 +233,8 @@ if ($scanExitCode -eq 0) {
     Write-Host "[ERROR] FINAL STATUS"
     Write-Host "=============================================================="
     Write-Host "Status          : Failed"
-    Write-Host "Exit code       : $scanExitCode"
-    Write-Host "Subnet          : $subnet"
+    Write-Host "Exit code       : $removeExitCode"
+    Write-Host "Target          : $printerTarget"
     Write-Host ""
     Write-Host "[ERROR] SCRIPT COMPLETED"
     Write-Host "=============================================================="

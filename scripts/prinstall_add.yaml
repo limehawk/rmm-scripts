@@ -1,4 +1,4 @@
-name: prinstall_printer_install.ps1
+name: prinstall_add.ps1
 description: Installs a network or USB printer using prinstall 0.3.0+
 language: PowerShell
 tags:

@@ -1,4 +1,4 @@
-name: prinstall_printers_list.ps1
+name: prinstall_list.ps1
 description: Lists installed printers on the system using prinstall
 language: PowerShell
 tags:

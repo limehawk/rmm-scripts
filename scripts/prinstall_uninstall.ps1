@@ -46,7 +46,7 @@ README
  SECURITY NOTES
    - No secrets in logs
    - Does NOT uninstall printers that prinstall previously added — use
-     prinstall_printer_remove.ps1 for that first if you want a clean teardown
+     prinstall_remove.ps1 for that first if you want a clean teardown
    - Destructive: this script does not create backups of history.toml
 
  ENDPOINTS

@@ -1,4 +1,4 @@
-name: prinstall_subnet_scan.ps1
+name: prinstall_scan.ps1
 description: Scans a subnet for network printers using prinstall
 language: PowerShell
 tags:
