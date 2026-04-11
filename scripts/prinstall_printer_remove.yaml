@@ -29,7 +29,7 @@ readme: |
   - Windows OS
   - Administrator privileges
   - prinstall.exe 0.3.0 or newer installed
-  - $YourPrinterTargetHere: Printer IP (e.g. "10.10.20.16") or exact queue name
+  - $YourPrinterTargetHere: Printer IP (e.g. "192.168.1.50") or exact queue name
 favourite: false
 shared: false
 runtimeVariables:

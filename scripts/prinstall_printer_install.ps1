@@ -85,7 +85,7 @@ README
    [INFO] INPUT VALIDATION
    ==============================================================
    Mode            : Network
-   Printer IP      : 10.10.20.16
+   Printer IP      : 192.168.1.50
    Driver          : (auto-detect)
    Printer Name    : (auto-detect)
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
@@ -94,9 +94,9 @@ README
 
    [RUN] INSTALL PRINTER
    ==============================================================
-   Installing printer at 10.10.20.16...
+   Installing printer at 192.168.1.50...
 
-   [scan] 10.10.20.16: SNMP -> model "Brother MFC-L2750DW series"
+   [scan] 192.168.1.50: SNMP -> model "Brother MFC-L2750DW series"
    [add] IPP device ID: MFG:Brother;MDL:MFC-L2750DW series;CID:Brother Laser Type1;...
    [add] Auto-selected driver: Brother Universal Printer
    [add] Primary install failed. Trying catalog resolver with device ID...
@@ -108,7 +108,7 @@ README
    Printer installed successfully!
      Name:   Brother MFC-L2750DW series
      Driver: Brother Laser Type1 Class Driver
-     Port:   IP_10.10.20.16
+     Port:   IP_192.168.1.50
 
      WARNING: Installed via Microsoft Update Catalog.
               Matched HWID: 1284_CID_BROTHER_LASER_TYPE1.
@@ -117,7 +117,7 @@ README
    ==============================================================
    Status          : Success
    Printer         : Brother MFC-L2750DW series
-   IP              : 10.10.20.16
+   IP              : 192.168.1.50
 
    [OK] SCRIPT COMPLETED
    ==============================================================

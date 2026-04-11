@@ -37,7 +37,7 @@ README
 
  REQUIRED INPUTS
    - $printerTarget : IP address or printer queue name (SuperOps: $YourPrinterTargetHere)
-                       Examples: "10.10.20.16" or "Brother MFC-L2750DW series"
+                       Examples: "192.168.1.50" or "Brother MFC-L2750DW series"
    - $keepDriver    : Set to $true to skip driver cleanup (leave driver staged)
    - $keepPort      : Set to $true to skip port cleanup (leave port registered)
    - $prinstallDir  : Directory where prinstall.exe is installed
@@ -74,7 +74,7 @@ README
 
    [INFO] INPUT VALIDATION
    ==============================================================
-   Target          : 10.10.20.16
+   Target          : 192.168.1.50
    Keep Driver     : false
    Keep Port       : false
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
@@ -83,17 +83,17 @@ README
 
    [RUN] REMOVE PRINTER
    ==============================================================
-   Removing printer at 10.10.20.16...
+   Removing printer at 192.168.1.50...
 
-   [remove] Looking up printer by port 'IP_10.10.20.16'
-   [remove] Resolved target '10.10.20.16' -> 'Brother MFC-L2750DW series'
-   [remove] Printer uses driver 'Brother Laser Type1 Class Driver' on port 'IP_10.10.20.16'
+   [remove] Looking up printer by port 'IP_192.168.1.50'
+   [remove] Resolved target '192.168.1.50' -> 'Brother MFC-L2750DW series'
+   [remove] Printer uses driver 'Brother Laser Type1 Class Driver' on port 'IP_192.168.1.50'
    [remove] Remove-Printer -Name 'Brother MFC-L2750DW series' -Confirm:$false
    [remove] Waiting 500ms for spooler to release references...
    [remove] Remove-PrinterDriver -Name 'Brother Laser Type1 Class Driver' -RemoveFromDriverStore -Confirm:$false
    [remove] Removed driver 'Brother Laser Type1 Class Driver' (including driver store package)
-   [remove] Remove-PrinterPort -Name 'IP_10.10.20.16' -Confirm:$false
-   [remove] Removed port 'IP_10.10.20.16'
+   [remove] Remove-PrinterPort -Name 'IP_192.168.1.50' -Confirm:$false
+   [remove] Removed port 'IP_192.168.1.50'
 
    Removed printer: Brother MFC-L2750DW series
      - Port also removed (no other printers were using it)
@@ -102,7 +102,7 @@ README
    [OK] FINAL STATUS
    ==============================================================
    Status          : Success
-   Target          : 10.10.20.16
+   Target          : 192.168.1.50
 
    [OK] SCRIPT COMPLETED
    ==============================================================
@@ -135,7 +135,7 @@ $errorText = ""
 if ([string]::IsNullOrWhiteSpace($printerTarget) -or $printerTarget -eq '$' + 'YourPrinterTargetHere') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- SuperOps runtime variable `$YourPrinterTargetHere was not replaced. Set it to the printer IP (e.g. '10.10.20.16') or the exact queue name (e.g. 'Brother MFC-L2750DW series')."
+    $errorText += "- SuperOps runtime variable `$YourPrinterTargetHere was not replaced. Set it to the printer IP (e.g. '192.168.1.50') or the exact queue name (e.g. 'Brother MFC-L2750DW series')."
 }
 
 if ([string]::IsNullOrWhiteSpace($prinstallDir)) {
