@@ -2,34 +2,58 @@ name: prinstall_scan.ps1
 description: Scans a subnet for network printers using prinstall
 language: PowerShell
 tags:
-- Printers
-- Windows
+  - Printers
+  - Windows
 runAs: SYSTEM_USER
 timeout: 5
-readme: |
+readme: >
   Purpose
+
   -------
-  Scans a subnet for network printers using prinstall 0.3.1's full multi-method discovery pipeline: TCP port probe (9100/631/515), IPP Get-Printer-Attributes, SNMPv2c, and mDNS/Bonjour multicast browse. Catches even silent AirPrint printers that ignore SNMP. Returns printer IPs, models, discovery method(s), and status.
+
+  Scans a subnet for network printers using prinstall 0.3.1's full multi-method
+  discovery pipeline: TCP port probe (9100/631/515), IPP Get-Printer-Attributes,
+  SNMPv2c, and mDNS/Bonjour multicast browse. Catches even silent AirPrint
+  printers that ignore SNMP. Returns printer IPs, models, discovery method(s),
+  and status.
+
 
   Usage Notes
+
   -----------
-  - Uses `prinstall scan [subnet] --verbose` with the default `all` method (port + IPP + SNMP + mDNS merged)
-  - Leave $YourSubnetHere blank to auto-detect the local subnet from the primary NIC
+
+  - Uses `prinstall scan [subnet] --verbose` with the default `all` method (port
+  + IPP + SNMP + mDNS merged)
+
+  - Leave $YourSubnetHere blank to auto-detect the local subnet from the primary
+  NIC
+
   - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
-  - prinstall_setup.ps1 pre-creates a firewall rule so the mDNS pass works under SYSTEM execution
+
+  - prinstall_setup.ps1 pre-creates a firewall rule so the mDNS pass works under
+  SYSTEM execution
+
 
   Requirements
+
   ------------
+
   - Windows OS
+
   - prinstall.exe installed (run prinstall_setup.ps1 first)
+
   - Network access to target subnet
+
   - UDP 161 (SNMP), TCP 9100 (raw), TCP 631 (IPP) open to target
+
   - UDP 5353 (mDNS) allowed on the NIC — created by prinstall_setup.ps1
-  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24) or blank for auto-detect
+
+  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24) or blank for
+  auto-detect
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourSubnetHere
-scriptId: '8962138500796297216'
-lastPushedChecksum: sha256:b0516066d7cdcda7
-lastPushedMetaChecksum: sha256:1d9220ebdfd8c81c
+  - name: YourSubnetHere
+scriptId: "8962138500796297216"
+lastPushedChecksum: sha256:6de1f8aab2bd6751
+lastPushedMetaChecksum: sha256:d0c232dd15226953
