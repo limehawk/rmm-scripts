@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v0.3.0
+SCRIPT  : Prinstall Setup v0.4.0
 AUTHOR  : Limehawk.io
 DATE      : April 2026
 USAGE   : .\prinstall_setup.ps1
@@ -18,9 +18,11 @@ README
 --------------------------------------------------------------------------------
  PURPOSE
    Installs or uninstalls prinstall. Install mode downloads the latest release
-   from GitHub and extracts the binary to C:\ProgramData\prinstall\. Uninstall
-   mode removes the binary and install directory. Prinstall is a CLI/TUI tool
-   for discovering network printers, matching drivers, and installing them.
+   from GitHub, extracts the binary to C:\ProgramData\prinstall\, and adds
+   that directory to the machine PATH so techs can run `prinstall scan`
+   (etc.) without a full path. Uninstall mode removes the binary, the install
+   directory, the firewall rule, and the PATH entry. Prinstall is a CLI/TUI
+   tool for discovering network printers, matching drivers, and installing them.
 
  DATA SOURCES & PRIORITY
    1) GitHub Releases API (latest release metadata)
@@ -45,11 +47,15 @@ README
    3. Downloads the release ZIP asset
    4. Extracts prinstall.exe to install directory
    5. Verifies the binary runs successfully
-   6. Cleans up temporary files
+   6. Pre-creates Windows Firewall rule for mDNS (UDP 5353)
+   7. Adds install directory to machine PATH (idempotent)
+   8. Cleans up temporary files
 
    Uninstall:
    1. Validates input parameters
    2. Removes install directory and all contents
+   3. Removes the 'Prinstall (mDNS discovery)' firewall rule
+   4. Removes the install directory from the machine PATH
 
  PREREQUISITES
    - Windows OS
@@ -59,6 +65,8 @@ README
  SECURITY NOTES
    - No secrets in logs
    - Downloads only from official GitHub releases
+   - Modifies the machine PATH env var (HKLM\...\Session Manager\Environment)
+     — reverted on uninstall
 
  ENDPOINTS
    - https://api.github.com/repos/limehawk/prinstall/releases/latest
@@ -99,6 +107,14 @@ README
    prinstall 0.2.0
    Binary verified successfully
 
+   [RUN] FIREWALL
+   ==============================================================
+   Created firewall rule 'Prinstall (mDNS discovery)'
+
+   [RUN] PATH
+   ==============================================================
+   Added C:\ProgramData\prinstall to machine PATH
+
    [RUN] CLEANUP
    ==============================================================
    Removed temporary files
@@ -124,6 +140,8 @@ README
    ==============================================================
    Removing C:\ProgramData\prinstall...
    Directory removed
+   Removed firewall rule 'Prinstall (mDNS discovery)'
+   Removed C:\ProgramData\prinstall from machine PATH
 
    [OK] FINAL STATUS
    ==============================================================
@@ -135,6 +153,11 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-14 v0.4.0 Add install dir to machine PATH during install; remove on
+                  uninstall. Techs can now run `prinstall scan` (etc.) from
+                  any new shell without the full path. The current process
+                  PATH is patched in-memory too so follow-up commands in the
+                  same SuperOps run work immediately.
 2026-04-11 v0.3.0 Realign version scheme with prinstall app version (was v1.2.1).
                   No functional changes — GitHub releases API already pulls the
                   latest version automatically.
@@ -255,6 +278,23 @@ if ($action -eq 'uninstall') {
         }
     } catch {
         Write-Host "Warning: could not remove firewall rule: $($_.Exception.Message)"
+    }
+
+    # Strip the install dir from the machine PATH so uninstall leaves no
+    # stale entries behind. Case-insensitive, tolerant of trailing slashes.
+    try {
+        $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+        if (-not $machinePath) { $machinePath = '' }
+        $entries  = $machinePath -split ';' | Where-Object { $_ -ne '' }
+        $target   = $installDir.TrimEnd('\')
+        $filtered = @($entries | Where-Object { $_.TrimEnd('\') -ine $target })
+
+        if ($entries.Count -ne $filtered.Count) {
+            [Environment]::SetEnvironmentVariable('Path', ($filtered -join ';'), 'Machine')
+            Write-Host "Removed $installDir from machine PATH"
+        }
+    } catch {
+        Write-Host "Warning: could not update machine PATH: $($_.Exception.Message)"
     }
 
     Write-Host ""
@@ -424,6 +464,41 @@ try {
 } catch {
     Write-Host "Warning: could not create firewall rule: $($_.Exception.Message)"
     Write-Host "         First interactive scan will prompt; SYSTEM-context scans may be blocked."
+}
+
+# ============================================================================
+# PATH
+# ============================================================================
+# Add the install dir to the machine PATH so techs can run `prinstall scan`
+# (etc.) without typing the full path. New shells pick it up immediately;
+# the current process PATH is patched in-memory too so any follow-up
+# commands in this same SuperOps run can use the bare command.
+Write-Host ""
+Write-Host "[RUN] PATH"
+Write-Host "=============================================================="
+
+try {
+    $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+    if (-not $machinePath) { $machinePath = '' }
+    $entries = $machinePath -split ';' | Where-Object { $_ -ne '' }
+    $target  = $installDir.TrimEnd('\')
+
+    if ($entries | Where-Object { $_.TrimEnd('\') -ieq $target }) {
+        Write-Host "Install dir already on machine PATH"
+    } else {
+        $newPath = (@($entries) + $installDir) -join ';'
+        [Environment]::SetEnvironmentVariable('Path', $newPath, 'Machine')
+        Write-Host "Added $installDir to machine PATH"
+    }
+
+    # Patch the running process too so the rest of this job can use the
+    # bare `prinstall` command without a reboot or new session.
+    if (($env:Path -split ';') -notcontains $installDir) {
+        $env:Path = "$env:Path;$installDir"
+    }
+} catch {
+    Write-Host "Warning: could not update machine PATH: $($_.Exception.Message)"
+    Write-Host "         Techs will need to use the full path to prinstall.exe."
 }
 
 # ============================================================================
