@@ -2,26 +2,45 @@ name: prinstall_driver_list.ps1
 description: Lists drivers in the Windows driver store using prinstall 0.4.13+
 language: PowerShell
 tags:
-- Printers
-- Windows
-- Audit
+  - Audit
+  - Printers
+  - Windows
 runAs: SYSTEM_USER
 timeout: 5
-readme: |
+readme: >
   Purpose
+
   -------
-  Enumerates every driver in the Windows driver store via prinstall 0.4.13+. Useful for RMM audits and for discovering the exact driver name to feed into `prinstall_driver_remove.ps1`. Date column populates from Get-PrinterDriver's DriverDate field, with an INF DriverVer fallback for drivers Windows doesn't report a date for directly.
+
+  Enumerates every driver in the Windows driver store via prinstall 0.4.13+.
+  Useful for RMM audits and for discovering the exact driver name to feed into
+  `prinstall_driver_remove.ps1`. Date column populates from Get-PrinterDriver's
+  DriverDate field, with an INF DriverVer fallback for drivers Windows doesn't
+  report a date for directly.
+
 
   Usage Notes
+
   -----------
-  - Default output is a pretty table; set $asJson $true for a parseable JSON payload
+
+  - Default output is a pretty table; set $asJson $true for a parseable JSON
+  payload
+
   - Read-only — no admin privileges required
+
   - Requires prinstall.exe 0.4.13+ installed (run prinstall_setup.ps1 first)
 
+
   Requirements
+
   ------------
+
   - Windows OS
+
   - prinstall.exe 0.4.13 or newer installed
 favourite: false
 shared: false
 runtimeVariables: []
+scriptId: "3810878021474578432"
+lastPushedChecksum: sha256:ce1e9ba8cf18eec6
+lastPushedMetaChecksum: sha256:d1ef0f0a88f5605c
