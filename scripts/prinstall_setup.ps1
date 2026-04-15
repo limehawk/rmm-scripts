@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v0.4.0
+SCRIPT  : Prinstall Setup v0.4.17
 AUTHOR  : Limehawk.io
 DATE      : April 2026
 USAGE   : .\prinstall_setup.ps1
@@ -153,6 +153,19 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-15 v0.4.17 VERIFY step no longer reports "Status: Success" when the
+                   binary is blocked by Application Control / AppLocker. On
+                   WDAC-enforced boxes the extract + firewall + PATH steps
+                   all complete, but `--version` hits a native-command
+                   exception. Script now:
+                     1. Tracks a $verifyOk flag through to FINAL STATUS
+                     2. Matches the WDAC signature ("Application Control",
+                        "AppLocker", "blocked this file") and emits an
+                        ERROR branch pointing at prinstall_trust_codesign.ps1
+                     3. Exits 1 on any verify failure so RMM flags it for
+                        remediation instead of burying the fault
+                   Other verify failures (rare) get a WARN + exit 1. Happy
+                   path unchanged — still Success + exit 0.
 2026-04-14 v0.4.0 Add install dir to machine PATH during install; remove on
                   uninstall. Techs can now run `prinstall scan` (etc.) from
                   any new shell without the full path. The current process
@@ -421,16 +434,53 @@ if (-not (Test-Path $exePath)) {
     exit 1
 }
 
+# Track verify outcome so FINAL STATUS can reflect reality instead of
+# reporting "Success" on WDAC-blocked boxes where the binary was extracted
+# but cannot execute. Firewall + PATH steps still run below so a later
+# signing-cert deployment leaves no cleanup behind.
+$verifyOk = $false
+$blockedByPolicy = $false
+$verifyError = ''
+
 try {
     $versionOutput = & $exePath --version 2>&1
-    Write-Host $versionOutput
-    Write-Host "Binary verified successfully"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host $versionOutput
+        Write-Host "Binary verified successfully"
+        $verifyOk = $true
+    } else {
+        $verifyError = ($versionOutput | Out-String).Trim()
+    }
 } catch {
+    $verifyError = $_.Exception.Message
+    # Windows wraps WDAC / AppLocker denials in a NativeCommandException
+    # whose message contains one of these phrases. Match broadly so Smart
+    # App Control denials ("blocked this file") and classic AppLocker
+    # denials ("Application Control") both trip the same branch.
+    if ($verifyError -match 'Application Control|AppLocker|blocked this file') {
+        $blockedByPolicy = $true
+    }
+}
+
+if (-not $verifyOk) {
     Write-Host ""
-    Write-Host "[WARN] VERIFICATION"
-    Write-Host "=============================================================="
-    Write-Host "Binary exists but --version check failed"
-    Write-Host "Error : $($_.Exception.Message)"
+    if ($blockedByPolicy) {
+        Write-Host "[ERROR] VERIFICATION"
+        Write-Host "=============================================================="
+        Write-Host "Binary was blocked by Application Control / AppLocker policy:"
+        Write-Host "  $verifyError"
+        Write-Host ""
+        Write-Host "Files are in place but prinstall.exe cannot execute until the fleet"
+        Write-Host "trusts the code-signing cert. To fix:"
+        Write-Host "  1. Ensure this release is signed (selfsign setup in prinstall repo docs)"
+        Write-Host "  2. Run prinstall_trust_codesign.ps1 on this endpoint to import the cert"
+        Write-Host "  3. Re-run prinstall_setup.ps1"
+    } else {
+        Write-Host "[WARN] VERIFICATION"
+        Write-Host "=============================================================="
+        Write-Host "Binary exists but --version check failed"
+        Write-Host "Error : $verifyError"
+    }
 }
 
 # ============================================================================
@@ -519,14 +569,36 @@ try {
 # FINAL STATUS
 # ============================================================================
 Write-Host ""
-Write-Host "[OK] FINAL STATUS"
-Write-Host "=============================================================="
-Write-Host "Status          : Success"
-Write-Host "Version         : $tagName"
-Write-Host "Location        : $exePath"
-
-Write-Host ""
-Write-Host "[OK] SCRIPT COMPLETED"
-Write-Host "=============================================================="
-
-exit 0
+if ($verifyOk) {
+    Write-Host "[OK] FINAL STATUS"
+    Write-Host "=============================================================="
+    Write-Host "Status          : Success"
+    Write-Host "Version         : $tagName"
+    Write-Host "Location        : $exePath"
+    Write-Host ""
+    Write-Host "[OK] SCRIPT COMPLETED"
+    Write-Host "=============================================================="
+    exit 0
+} elseif ($blockedByPolicy) {
+    Write-Host "[ERROR] FINAL STATUS"
+    Write-Host "=============================================================="
+    Write-Host "Status          : Blocked by Application Control policy"
+    Write-Host "Version         : $tagName (files extracted, binary cannot execute)"
+    Write-Host "Location        : $exePath"
+    Write-Host "Action needed   : Import code-signing cert via prinstall_trust_codesign.ps1"
+    Write-Host ""
+    Write-Host "[ERROR] SCRIPT COMPLETED"
+    Write-Host "=============================================================="
+    exit 1
+} else {
+    Write-Host "[WARN] FINAL STATUS"
+    Write-Host "=============================================================="
+    Write-Host "Status          : Installed but verification failed"
+    Write-Host "Version         : $tagName"
+    Write-Host "Location        : $exePath"
+    Write-Host "Warning         : --version check did not succeed; see earlier output"
+    Write-Host ""
+    Write-Host "[WARN] SCRIPT COMPLETED"
+    Write-Host "=============================================================="
+    exit 1
+}
