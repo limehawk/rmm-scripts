@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Setup v0.4.17
+SCRIPT  : Prinstall Setup v0.4.18
 AUTHOR  : Limehawk.io
 DATE      : April 2026
 USAGE   : .\prinstall_setup.ps1
@@ -153,6 +153,16 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-16 v0.4.18 Strip Mark-of-the-Web from extracted files. Without this,
+                   the unsigned prinstall.exe trips SmartScreen / Defender
+                   SmartScreen on the very next invocation because the
+                   downloaded file is tagged as internet-sourced (Zone.Identifier
+                   ADS = Internet zone). One-line fix: pipe every extracted
+                   file through Unblock-File after Expand-Archive. Smart App
+                   Control on full-enforce boxes still blocks unsigned exes —
+                   that requires a real signing cert and is tracked
+                   separately. Also picks up prinstall v0.4.18 (driver add
+                   auto-picks unambiguous input).
 2026-04-15 v0.4.17 VERIFY step no longer reports "Status: Success" when the
                    binary is blocked by Application Control / AppLocker. On
                    WDAC-enforced boxes the extract + firewall + PATH steps
@@ -407,7 +417,16 @@ try {
 
     Write-Host "Extracting to $installDir..."
     Expand-Archive -Path $zipPath -DestinationPath $installDir -Force
-    Write-Host "Extraction complete"
+
+    # Strip Mark-of-the-Web (Zone.Identifier ADS) from every extracted file.
+    # Without this, the unsigned prinstall.exe trips SmartScreen / Defender
+    # SmartScreen on the very next invocation ("Windows protected your PC")
+    # because the file is tagged as internet-sourced. Unblock-File removes
+    # that ADS so Windows treats the binary as locally trusted.
+    # Smart App Control on full-enforce boxes still blocks unsigned exes —
+    # that needs a real signing cert and is tracked separately.
+    Get-ChildItem -Path $installDir -Recurse -File | Unblock-File
+    Write-Host "Extraction complete (Mark-of-the-Web stripped)"
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"
