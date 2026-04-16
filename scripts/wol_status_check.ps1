@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 
 ================================================================================
- SCRIPT  : Wake-on-LAN Status Check v1.0.3
+ SCRIPT  : Wake-on-LAN Status Check v1.0.4
  AUTHOR  : Limehawk.io
- DATE    : January 2026
+ DATE    : April 2026
  FILE    : wol_status_check.ps1
  DESCRIPTION : Checks Wake-on-LAN status at BIOS and OS levels
  USAGE   : .\wol_status_check.ps1
@@ -73,6 +73,7 @@ EXAMPLE RUN:
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-04-15 v1.0.4 Fix .Count on null when no package providers need installing
  2026-01-19 v1.0.3 Fixed EXAMPLE RUN section formatting
  2026-01-19 v1.0.2 Updated to two-line ASCII console output style
  2025-12-23 v1.0.1 Updated to Limehawk Script Framework
@@ -138,7 +139,7 @@ try {
     PrintKV "Manufacturer" $Manufacturer
 
     # Install required package providers
-    $installedProviders = Install-RequiredProviders
+    $installedProviders = @(Install-RequiredProviders)
     if ($installedProviders.Count -gt 0) {
         PrintKV "Installed Providers" ($installedProviders -join ", ")
     }
