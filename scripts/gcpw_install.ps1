@@ -87,8 +87,6 @@ EXAMPLE RUN:
  2024-12-01 v1.0.0 Initial release - migrated from SuperOps (sanitized)
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # SUPEROPS RUNTIME VARIABLES
 # ============================================================================
@@ -102,6 +100,9 @@ $enrollmentToken = "$YourEnrollmentTokenHere"
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
+
+Set-StrictMode -Version Latest
+
 function Write-Section {
     param([string]$title, [string]$status = "INFO")
     Write-Host ""

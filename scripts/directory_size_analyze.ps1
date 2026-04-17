@@ -93,8 +93,6 @@ $ErrorActionPreference = 'Stop'
 #>
 
 # Set strict mode (placed after README block)
-Set-StrictMode -Version Latest
-
 # ==== STATE (NO ARRAYS/LISTS) ====
 $errorOccurred = $false
 $errorText     = ""   # Accumulate newline-delimited messages.
@@ -112,6 +110,9 @@ $GduExeName       = 'gdu.exe'
 $CleanupAfterRun  = $true  # Set to $false to keep gdu cached for future runs
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($ScanPath) -or $ScanPath -eq '$' + 'YourTargetDirectoryHere') {
      $errorOccurred = $true
      if ($errorText.Length -gt 0) { $errorText += "`n" }

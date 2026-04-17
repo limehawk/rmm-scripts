@@ -68,8 +68,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -83,6 +81,9 @@ $DelProf2Url = "https://helgeklein.com/downloads/DelProf2/current/Delprof2%201.6
 $DelProf2CacheDir = Join-Path $env:TEMP "delprof2_cache"
 
 # ==== APPLY DEFAULTS ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($DaysOld) -or $DaysOld -eq '$days_old') {
     $DaysOld = "30"
 }

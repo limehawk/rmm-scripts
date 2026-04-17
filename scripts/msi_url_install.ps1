@@ -37,14 +37,15 @@ $ErrorActionPreference = 'Stop'
  2025-09-22 v1.0.0 Initial release: silent MSI install wrapper
 #>
 
-Set-StrictMode -Version Latest
-
 # --- Script Variables ---
 # NOTE: This is the URL placeholder that will be replaced.
 $MsiScriptUrl = "$MSIURL"
 
 # Extract filename from URL, use fallback if none found
 $MsiFileName = [System.IO.Path]::GetFileName($MsiScriptUrl)
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($MsiFileName) -or $MsiFileName -notmatch '\.msi$') {
     $MsiFileName = "downloaded_package.msi"
 }

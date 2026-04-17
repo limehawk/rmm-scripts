@@ -110,8 +110,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
@@ -143,6 +141,9 @@ $sessionsLogged = 0
 $Username = "$TerminatedUsername"
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($Username) -or $Username -eq '$' + 'TerminatedUsername') {
     $errorOccurred = $true
     $errorText = "- TerminatedUsername is required. Set this variable in SuperOps."

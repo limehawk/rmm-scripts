@@ -95,8 +95,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -108,6 +106,9 @@ $userExists = $false
 $Username = "$UsernameToDelete"  # Set to "listusers" to list all users
 
 # ==== HELPER FUNCTIONS ====
+
+Set-StrictMode -Version Latest
+
 function Show-LocalUsers {
     Write-Host ""
     Write-Host "[INFO] CURRENT LOCAL USERS"

@@ -45,9 +45,21 @@ Line 2: $ErrorActionPreference = 'Stop'
 Line 3: <# (opening comment block)
 Lines 4+: ASCII art, then README/CHANGELOG block
 After README: #> (closing comment block)
+Next: HARDCODED INPUTS block (reads all $YourSomethingHere placeholders FIRST)
 Next: Set-StrictMode -Version Latest
-After StrictMode: State variables, hardcoded inputs, validation, then main code
+After StrictMode: state variables, validation, then main code
 ```
+
+**IMPORTANT: Set-StrictMode MUST come *after* the HARDCODED INPUTS block.**
+SuperOps does literal text replacement on placeholders — if a tech leaves
+a field blank (or the variable isn't registered in the trigger), the
+`$YourSomethingHere` token survives in the script as a real PowerShell
+variable reference. Strict mode throws `VariableIsUndefined` on that
+reference before the `if ($var -eq '$' + 'YourSomethingHere')` fall-back
+check can run. Placing Set-StrictMode after the input reads lets
+`"$undefined"` expand quietly to an empty string, then the fall-back
+normalizes it. The rest of the script still benefits from strict-mode
+guardrails.
 
 ### Top Comment Block
 
@@ -212,7 +224,7 @@ When modifying an existing script, you **MUST** update:
 - No `param()` blocks - **FORBIDDEN**
 - No `$args` - **FORBIDDEN**
 - No `$env:` variables for script inputs - **FORBIDDEN**
-- Declare all inputs in one section after Set-StrictMode
+- Declare all inputs in one section **before** Set-StrictMode (see File Structure)
 
 **Example:**
 ```powershell

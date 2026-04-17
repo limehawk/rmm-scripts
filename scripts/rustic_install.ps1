@@ -163,8 +163,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText     = ""
@@ -193,6 +191,9 @@ $backupHourRaw      = "$YourBackupHour"        # Hour 0-23 (empty = default 2)
 $rusticVersion = '0.11.1'
 
 $defaultBackupPaths = @(
+
+Set-StrictMode -Version Latest
+
     'C:\Users\*\Documents'
     'C:\Users\*\Desktop'
     'C:\Users\*\Downloads'

@@ -90,8 +90,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -102,6 +100,9 @@ $Username = "$TargetUsername"
 $Action = "add"  # "add" or "remove"
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($Username) -or $Username -eq '$' + 'TargetUsername') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }

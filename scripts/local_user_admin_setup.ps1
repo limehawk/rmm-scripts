@@ -110,8 +110,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -121,6 +119,9 @@ $username = "$NewAdminUsername"
 $fullName = "$NewAdminFullName"
 
 # ==== HELPER FUNCTIONS ====
+
+Set-StrictMode -Version Latest
+
 function Write-Section {
     param([string]$Type, [string]$Name)
     $indicators = @{ 'info'='INFO'; 'run'='RUN'; 'ok'='OK'; 'warn'='WARN'; 'error'='ERROR' }

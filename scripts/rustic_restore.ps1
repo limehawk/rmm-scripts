@@ -117,8 +117,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText     = ""
@@ -142,6 +140,9 @@ $configFile = 'C:\ProgramData\Limehawk\Rustic\rustic.toml'
 
 # Snapshot ID: default to "latest" if empty or unreplaced
 $isSnapshotIdEmpty = [string]::IsNullOrWhiteSpace($snapshotIdRaw) -or $snapshotIdRaw -eq '$' + 'YourSnapshotId'
+
+Set-StrictMode -Version Latest
+
 if ($isSnapshotIdEmpty) {
     $snapshotId = 'latest'
 } else {

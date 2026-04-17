@@ -107,7 +107,6 @@
  2026-01-13 v1.0.0 Initial release with SuperOps ticket integration
 ================================================================================
 #>
-Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # ============================================================================
@@ -183,6 +182,8 @@ $ticketSubcategory = "Data Protection"
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
+
+Set-StrictMode -Version Latest
 
 function Invoke-SuperOpsGraphQL {
     param (

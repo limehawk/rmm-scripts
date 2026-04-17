@@ -157,8 +157,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ============================== SETTINGS =====================================
 $SUPEROPS_API_KEY        = "$YourApiKeyHere"
 $CUSTOM_CLIENT_SEG_INPUT = "$YourCustomClientHere"
@@ -174,6 +172,9 @@ $GraphQlEndpoint         = "https://api.superops.ai/msp"
 # ============================================================================
 
 # ============================== HELPERS ======================================
+
+Set-StrictMode -Version Latest
+
 function Get-Abbr3 {
     param([string]$s)
     if ([string]::IsNullOrWhiteSpace($s)) { return "" }

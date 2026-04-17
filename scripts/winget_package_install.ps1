@@ -85,8 +85,6 @@ CHANGELOG
 2025-12-03 v1.0.0 Initial release - winget package installer for SuperOps
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS (SuperOps runtime replacement)
 # ============================================================================
@@ -99,6 +97,8 @@ $PackageId = "$PackageName"    # Winget package ID - SuperOps replaces $PackageN
 
 $errorOccurred = $false
 $errorText = ""
+
+Set-StrictMode -Version Latest
 
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"

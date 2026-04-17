@@ -91,8 +91,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -103,6 +101,9 @@ $Password = "$NewPassword"
 $AddToAdmin = "No"  # "Yes" or "No"
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($Username) -or $Username -eq '$' + 'NewUsername') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }

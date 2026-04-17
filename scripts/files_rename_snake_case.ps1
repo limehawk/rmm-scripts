@@ -95,8 +95,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -107,6 +105,9 @@ $skippedCount = 0
 $TargetPath = "$YourTargetPathHere"
 
 # ==== HELPER FUNCTIONS ====
+
+Set-StrictMode -Version Latest
+
 function Convert-ToSnakeCase {
     param([string]$Name)
 

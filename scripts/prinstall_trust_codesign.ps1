@@ -121,8 +121,6 @@ CHANGELOG
                    prinstall repo. Version tracks prinstall app version.
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
@@ -131,6 +129,9 @@ $certPathInput = "$CertPath"   # optional; empty = use default
 # ============================================================================
 # INPUT VALIDATION
 # ============================================================================
+
+Set-StrictMode -Version Latest
+
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="

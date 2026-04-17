@@ -70,8 +70,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -85,6 +83,9 @@ $DelProf2Url = "https://helgeklein.com/downloads/DelProf2/current/Delprof2%201.6
 $DelProf2CacheDir = Join-Path $env:TEMP "delprof2_cache"
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($ProfileToDelete) -or $ProfileToDelete -eq '$profile_to_delete') {
     $errorOccurred = $true
     $errorText = "- profile_to_delete is required. Set this variable in SuperOps."

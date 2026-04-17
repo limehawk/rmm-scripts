@@ -96,8 +96,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText = ""
@@ -109,6 +107,9 @@ $Username = "$NewAdminUsername"
 $PasswordLength = 16
 
 # ==== HELPER FUNCTIONS ====
+
+Set-StrictMode -Version Latest
+
 function Get-SecureRandomPassword {
     param([int]$Length = 16)
 

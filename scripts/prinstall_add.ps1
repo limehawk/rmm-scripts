@@ -134,8 +134,6 @@ CHANGELOG
 2026-03-25 v1.0.0 Initial release - prinstall printer installation wrapper
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
@@ -149,6 +147,9 @@ $prinstallDir = "$env:ProgramData\prinstall"   # Where prinstall.exe is installe
 # ============================================================================
 # INPUT VALIDATION
 # ============================================================================
+
+Set-StrictMode -Version Latest
+
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="

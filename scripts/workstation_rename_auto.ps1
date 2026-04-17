@@ -153,8 +153,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ============================== SETTINGS =====================================
 $SUPEROPS_API_KEY        = "$YourApiKeyHere"
 $SUPEROPS_SUBDOMAIN      = "limehawk"
@@ -170,6 +168,9 @@ $GraphQlEndpoint         = "https://api.superops.ai/msp"
 
 # (helpers identical to manualname — but CLIENT_SEG is forced via Get-Abbr3)
 # ============================== HELPERS ======================================
+
+Set-StrictMode -Version Latest
+
 function Get-Abbr3 {
     param([string]$s)
     if ([string]::IsNullOrWhiteSpace($s)) { return "" }

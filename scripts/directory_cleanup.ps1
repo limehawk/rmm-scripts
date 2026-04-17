@@ -29,14 +29,15 @@
 #>
 
 $ErrorActionPreference = 'Stop'
-Set-StrictMode -Version Latest
-
 # Define variables
 $folderPath = "$runtime_folderPath"  # The path to the folder you want to clean up
 $days = $runtime_days                # The number of days old a file must be to be deleted
 $logFilePath = Join-Path -Path $folderPath -ChildPath "deleted_files.log"  # Log file path
 
 # Initialize log file with a header for this run
+
+Set-StrictMode -Version Latest
+
 Add-Content -Path $logFilePath -Value "Cleanup Log - $(Get-Date)" -Force
 Add-Content -Path $logFilePath -Value "-----------------------------------"
 

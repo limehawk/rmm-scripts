@@ -112,8 +112,6 @@ CHANGELOG
 2026-04-11 v0.3.0 Initial release - prinstall remove wrapper for 0.3.0+
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
@@ -125,6 +123,9 @@ $prinstallDir  = "$env:ProgramData\prinstall"  # Where prinstall.exe is installe
 # ============================================================================
 # INPUT VALIDATION
 # ============================================================================
+
+Set-StrictMode -Version Latest
+
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="

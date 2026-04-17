@@ -91,8 +91,6 @@ CHANGELOG
                    with optional cascade via $force. Requires prinstall 0.4.13+.
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
@@ -103,6 +101,9 @@ $prinstallDir = "$env:ProgramData\prinstall"   # Where prinstall.exe is installe
 # ============================================================================
 # INPUT VALIDATION
 # ============================================================================
+
+Set-StrictMode -Version Latest
+
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="

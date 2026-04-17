@@ -152,8 +152,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ==== STATE ====
 $errorOccurred = $false
 $errorText     = ""
@@ -169,6 +167,9 @@ $clientName     = "$ClientName"        # Short client ID for logs (e.g., bell, g
 
 # --- Backup Paths (workstation defaults) ---
 $backupPaths = @(
+
+Set-StrictMode -Version Latest
+
     'C:\Users\*\Documents'
     'C:\Users\*\Desktop'
     'C:\Users\*\Downloads'

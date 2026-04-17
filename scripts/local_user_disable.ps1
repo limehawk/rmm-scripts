@@ -93,8 +93,6 @@ $ErrorActionPreference = 'Stop'
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
@@ -124,6 +122,9 @@ $sessionsLogged = 0
 $Username = "$UsernameToDisable"
 
 # ==== VALIDATION ====
+
+Set-StrictMode -Version Latest
+
 if ([string]::IsNullOrWhiteSpace($Username) -or $Username -eq '$' + 'UsernameToDisable') {
     $errorOccurred = $true
     $errorText = "- UsernameToDisable is required. Set this variable in SuperOps."
