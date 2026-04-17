@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Git pre-commit hook. Runs the strictmode-ordering linter against any
+# staged .ps1 files under scripts/. Rejects the commit if a violation is
+# found.
+#
+# Install: from repo root,
+#   ln -sf ../../tools/lint/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Or (non-symlink): cp tools/lint/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+STAGED_PS1=$(git diff --cached --name-only --diff-filter=ACM -- 'scripts/*.ps1' || true)
+
+if [ -z "$STAGED_PS1" ]; then
+    exit 0
+fi
+
+if ! command -v pwsh >/dev/null 2>&1; then
+    echo "pre-commit: pwsh not found, skipping strictmode-ordering check" >&2
+    exit 0
+fi
+
+# Pass the staged files explicitly so the linter only checks what's in flight.
+pwsh -NoProfile -File "$REPO_ROOT/tools/lint/check_strictmode_ordering.ps1" \
+    -Path "$REPO_ROOT/scripts/*.ps1"
