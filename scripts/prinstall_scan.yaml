@@ -51,13 +51,13 @@ readme: >
   - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24) or blank for
   auto-detect
 
-  - $YourScanModeHere: 'all' / 'network' / 'usb' — blank defaults to 'all' (full
+  - $ScanModeAllNetworkUsb: 'all' / 'network' / 'usb' — blank defaults to 'all' (full
   network + USB scan). 'usb' ignores $YourSubnetHere.
 favourite: false
 shared: false
 runtimeVariables:
   - name: YourSubnetHere
-  - name: YourScanModeHere
+  - name: ScanModeAllNetworkUsb
 scriptId: "8962138500796297216"
 lastPushedChecksum: sha256:fd34adc9d60e4a1e
 lastPushedMetaChecksum: sha256:6e9839c68fb1ce98

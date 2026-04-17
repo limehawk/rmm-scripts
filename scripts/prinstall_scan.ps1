@@ -38,7 +38,7 @@ README
                      Get-NetIPAddress on the primary NIC. Ignored when
                      $scanMode is 'usb'.
    - $scanMode     : One of 'all' / 'network' / 'usb' (SuperOps:
-                     $YourScanModeHere). Blank/placeholder → 'all'.
+                     $ScanModeAllNetworkUsb). Blank/placeholder → 'all'.
                        - all     : network scan + USB enum (default)
                        - network : network scan only (--network-only)
                        - usb     : USB enum only (--usb-only), skips subnet
@@ -119,7 +119,7 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
-2026-04-17 v0.4.20 Add $YourScanModeHere runtime variable — 'all' / 'network'
+2026-04-17 v0.4.20 Add $ScanModeAllNetworkUsb runtime variable — 'all' / 'network'
                    / 'usb'. Covers the new `prinstall scan --network-only`
                    and `--usb-only` flags shipped in prinstall 0.4.1. Blank
                    or unreplaced placeholder defaults to 'all' so existing
@@ -150,7 +150,7 @@ Set-StrictMode -Version Latest
 # HARDCODED INPUTS
 # ============================================================================
 $subnet       = "$YourSubnetHere"      # CIDR notation, e.g. 192.168.1.0/24
-$scanMode     = "$YourScanModeHere"    # 'all' (default), 'network', or 'usb'
+$scanMode     = "$ScanModeAllNetworkUsb"    # 'all' (default), 'network', or 'usb'
 $prinstallDir = "$env:ProgramData\prinstall"
 
 # ============================================================================
@@ -168,7 +168,7 @@ if ($subnet -eq '$' + 'YourSubnetHere') { $subnet = '' }
 
 # Normalize scan mode: treat unreplaced placeholder as empty; empty → 'all'.
 # Trim + lowercase so SuperOps UI values like 'USB' or ' all ' work.
-if ($scanMode -eq '$' + 'YourScanModeHere') { $scanMode = '' }
+if ($scanMode -eq '$' + 'ScanModeAllNetworkUsb') { $scanMode = '' }
 $scanMode = $scanMode.Trim().ToLower()
 if ([string]::IsNullOrWhiteSpace($scanMode)) { $scanMode = 'all' }
 
