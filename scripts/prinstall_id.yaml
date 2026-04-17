@@ -2,53 +2,33 @@ name: prinstall_id.ps1
 description: Identifies a single printer by IP via SNMP using prinstall
 language: PowerShell
 tags:
-  - Printers
-  - Windows
+- Printers
+- Windows
 runAs: SYSTEM_USER
 timeout: 2
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Wraps the `prinstall id <ip>` subcommand to query a single printer via SNMP
-  and return model, serial number, and device status. Used by techs to verify a
-  printer's identity and reachability before running an add, or to confirm SNMP
-  is answering on an expected IP.
-
+  Wraps the `prinstall id <ip>` subcommand to query a single printer via SNMP and return model, serial number, and device status. Used by techs to verify a printer's identity and reachability before running an add, or to confirm SNMP is answering on an expected IP.
 
   Usage Notes
-
   -----------
-
   - Runs `prinstall id <printerIp>` and streams output to the console
-
-  - $YourIpHere is required — an unreplaced placeholder is treated as an input
-  error
-
-  - Unlike prinstall_scan, this script does not auto-detect anything; the target
-  IP must be supplied
-
+  - $YourIpHere is required — an unreplaced placeholder is treated as an input error
+  - Unlike prinstall_scan, this script does not auto-detect anything; the target IP must be supplied
   - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - prinstall.exe installed (run prinstall_setup.ps1 first)
-
   - Network access to the target printer
-
   - UDP 161 (SNMP) open to the printer
-
   - $YourIpHere: Target printer IP address (e.g. 192.168.1.10)
 favourite: false
 shared: false
 runtimeVariables:
-  - name: YourIpHere
-scriptId: "3999205553746558976"
-lastPushedChecksum: sha256:2a72df003ceb2fad
+- name: YourIpHere
+scriptId: '3999205553746558976'
+lastPushedChecksum: sha256:91572619c1d7fed7
 lastPushedMetaChecksum: sha256:1d1cd03ac02e37ba

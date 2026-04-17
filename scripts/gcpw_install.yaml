@@ -39,5 +39,5 @@ runtimeVariables:
 - name: YourDomainsHere
 - name: YourEnrollmentTokenHere
 scriptId: '259059096159379456'
-lastPushedChecksum: sha256:1ddbb53a5a1326f0
+lastPushedChecksum: sha256:6a01156dccfaf3c8
 lastPushedMetaChecksum: sha256:1f7990e51de95a7a

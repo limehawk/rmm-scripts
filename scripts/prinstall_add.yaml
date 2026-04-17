@@ -38,5 +38,5 @@ runtimeVariables:
 - name: YourDriverNameHere
 - name: YourPrinterNameHere
 scriptId: '263150824947322880'
-lastPushedChecksum: sha256:a004b0900bc88481
+lastPushedChecksum: sha256:875dd69a0c859562
 lastPushedMetaChecksum: sha256:4a694f547e85cb93

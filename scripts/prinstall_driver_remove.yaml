@@ -2,51 +2,32 @@ name: prinstall_driver_remove.ps1
 description: Removes a driver from the Windows driver store using prinstall 0.4.13+
 language: PowerShell
 tags:
-  - Printers
-  - Windows
+- Printers
+- Windows
 runAs: SYSTEM_USER
 timeout: 10
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Removes a print driver from the Windows driver store using prinstall 0.4.13+.
-  Target is either an exact driver name or a fuzzy/model string that resolves to
-  one staged driver. If the driver is in use by any printer queue, refuses
-  unless $force = $true (cascade — removes dependent queues first).
-
+  Removes a print driver from the Windows driver store using prinstall 0.4.13+. Target is either an exact driver name or a fuzzy/model string that resolves to one staged driver. If the driver is in use by any printer queue, refuses unless $force = $true (cascade — removes dependent queues first).
 
   Usage Notes
-
   -----------
-
-  - Set $YourDriverTargetHere to the driver name from `prinstall driver list` or
-  a fuzzy string
-
-  - Leave $force $false by default — only set to $true when you explicitly want
-  to destroy dependent queues
-
+  - Set $YourDriverTargetHere to the driver name from `prinstall driver list` or a fuzzy string
+  - Leave $force $false by default — only set to $true when you explicitly want to destroy dependent queues
   - Windows system drivers (Microsoft IPP Class Driver, etc.) cannot be removed
-
   - Requires prinstall.exe 0.4.13+ installed (run prinstall_setup.ps1 first)
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - Administrator privileges
-
   - prinstall.exe 0.4.13 or newer installed
-
   - $YourDriverTargetHere: Exact driver name OR fuzzy/model string
 favourite: false
 shared: false
 runtimeVariables:
-  - name: YourDriverTargetHere
-scriptId: "4989516846981857280"
-lastPushedChecksum: sha256:ffc7211fd9f065ba
+- name: YourDriverTargetHere
+scriptId: '4989516846981857280'
+lastPushedChecksum: sha256:aa81b9eb967e1db3
 lastPushedMetaChecksum: sha256:8ffd78c2536671cf

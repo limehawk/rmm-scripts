@@ -1,60 +1,41 @@
 name: prinstall_trust_codesign.ps1
-description: Imports the Prinstall self-signed code signing cert into
-  LocalMachine trust stores
+description: Imports the Prinstall self-signed code signing cert into LocalMachine trust stores
 language: PowerShell
 tags:
-  - Printers
-  - Security
-  - Windows
+- Printers
+- Security
+- Windows
 runAs: SYSTEM_USER
 timeout: 5
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Pushes the Prinstall self-signed code signing public cert
-  (prinstall-codesign.cer,
-
+  Pushes the Prinstall self-signed code signing public cert (prinstall-codesign.cer,
   bundled alongside this script) into Cert:\LocalMachine\Root and
-
   Cert:\LocalMachine\TrustedPublisher on managed endpoints. After this runs,
-
   signed prinstall.exe release binaries (v0.4.10+) pass Smart App Control
-
   without requiring a publicly-trusted commercial code signing cert.
-
   Idempotent — checks thumbprint before importing, safe to re-run.
 
-
   Usage Notes
-
   -----------
-
   - Deploy once per endpoint, typically as part of agent provisioning
-
   - Re-run is a no-op if the cert is already trusted (thumbprint match)
-
   - CertPath runtime variable is optional — leave empty to use the .cer
     bundled alongside this script
   - Pair with docs/selfsign-setup.md in the prinstall repo for the full
     signing flow (cert generation + GitHub Actions secret upload)
   - Cert is valid 10 years; renew by regenerating and re-running this script
 
-
   Requirements
-
   ------------
-
   - Windows OS
-
   - Administrator / SYSTEM privileges (LocalMachine stores require elevation)
-
   - prinstall-codesign.cer accessible (co-located with script, or via CertPath)
 favourite: false
 shared: false
 runtimeVariables:
-  - name: CertPath
-scriptId: "4989127989924872192"
-lastPushedChecksum: sha256:dc42c5a358e33b5c
+- name: CertPath
+scriptId: '4989127989924872192'
+lastPushedChecksum: sha256:cb3d19fc839edbb8
 lastPushedMetaChecksum: sha256:8b79a0de182ca97b

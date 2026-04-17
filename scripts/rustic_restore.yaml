@@ -2,58 +2,37 @@ name: rustic_restore.ps1
 description: Restores files from a rustic backup snapshot to a local destination
 language: PowerShell
 tags:
-  - Backup
-  - Windows
+- Backup
+- Windows
 runAs: SYSTEM_USER
 timeout: 120
-readme: >
+readme: |
   Purpose
-
   -------
-
-  Targeted file restore from a rustic backup snapshot. Operator provides a
-  snapshot ID (or "latest"), a source path within the snapshot, and a local
-  destination path via SuperOps runtime variables. Uses the existing rustic
-  binary and TOML configuration deployed by rustic_install.ps1.
-
+  Targeted file restore from a rustic backup snapshot. Operator provides a snapshot ID (or "latest"), a source path within the snapshot, and a local destination path via SuperOps runtime variables. Uses the existing rustic binary and TOML configuration deployed by rustic_install.ps1.
 
   Usage Notes
-
   -----------
-
   - Snapshot ID defaults to "latest" if left empty or unreplaced
-
   - All settings are in the TOML profile deployed by rustic_install.ps1
-
-  - Lists available snapshots before restoring so the operator can confirm the
-  correct snapshot
-
+  - Lists available snapshots before restoring so the operator can confirm the correct snapshot
   - Creates the destination directory if it does not exist
-
   - Runs: rustic restore "<snapshotId>:<restorePath>" <destination>
-
   - Sets RUSTIC_CONFIG_FILE environment variable and clears it after execution
 
-
   Requirements
-
   ------------
-
   - Windows 10/11 or Windows Server 2016+
-
   - Administrator privileges (runs as SYSTEM via RMM)
-
   - rustic_install.ps1 previously deployed (binary and config must exist)
-
   - SuperOps runtime variables: YourRestorePath, YourDestination
-
   - Optional: YourSnapshotId (defaults to "latest")
 favourite: false
 shared: false
 runtimeVariables:
-  - name: YourSnapshotId
-  - name: YourRestorePath
-  - name: YourDestination
-scriptId: "591566712086765568"
-lastPushedChecksum: sha256:8742eeec11ab77f3
+- name: YourSnapshotId
+- name: YourRestorePath
+- name: YourDestination
+scriptId: '591566712086765568'
+lastPushedChecksum: sha256:59f81da920ec0a94
 lastPushedMetaChecksum: sha256:6ae0a4eb5523ab65
