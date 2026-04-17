@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
-SCRIPT  : Prinstall Scan Subnet v0.3.1
+SCRIPT  : Prinstall Scan v0.4.20
 AUTHOR  : Limehawk.io
 DATE      : April 2026
 USAGE   : .\prinstall_scan.ps1
@@ -35,7 +35,13 @@ README
  REQUIRED INPUTS
    - $subnet       : Subnet in CIDR notation (SuperOps: $YourSubnetHere).
                      Leave blank to auto-detect the local subnet via
-                     Get-NetIPAddress on the primary NIC.
+                     Get-NetIPAddress on the primary NIC. Ignored when
+                     $scanMode is 'usb'.
+   - $scanMode     : One of 'all' / 'network' / 'usb' (SuperOps:
+                     $YourScanModeHere). Blank/placeholder → 'all'.
+                       - all     : network scan + USB enum (default)
+                       - network : network scan only (--network-only)
+                       - usb     : USB enum only (--usb-only), skips subnet
    - $prinstallDir : Directory where prinstall.exe is installed
 
  SETTINGS
@@ -44,10 +50,12 @@ README
    - Output format: verbose text for RMM console
 
  BEHAVIOR
-   1. Validates inputs and checks prinstall.exe exists
+   1. Validates inputs (including scan mode) and checks prinstall.exe exists
    2. If subnet is blank, prinstall auto-detects it from the local NIC
-   3. Runs `prinstall scan [subnet] --verbose` which executes the full
-      discovery pipeline in parallel and merges results
+   3. Runs one of:
+        `prinstall scan [subnet] --verbose`                 (mode = all)
+        `prinstall scan [subnet] --network-only --verbose`  (mode = network)
+        `prinstall scan --usb-only --verbose`               (mode = usb)
    4. Outputs discovered printers to console with the method(s) that
       found each one
 
@@ -78,14 +86,15 @@ README
 
    [INFO] INPUT VALIDATION
    ==============================================================
+   Scan mode       : all
    Subnet          : 192.168.1.0/24
    Prinstall       : C:\ProgramData\prinstall\prinstall.exe
-   Version         : prinstall 0.3.1
+   Version         : prinstall 0.4.20
    Inputs validated successfully
 
-   [RUN] SCAN SUBNET
+   [RUN] SCAN
    ==============================================================
-   Scanning 192.168.1.0/24 for printers...
+   Scanning 192.168.1.0/24 + USB for printers...
 
    [scan] Port scan found 3 candidates
    [scan] 192.168.1.10: SNMP -> model "HP LaserJet Pro MFP M428fdw"
@@ -110,6 +119,16 @@ README
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-04-17 v0.4.20 Add $YourScanModeHere runtime variable — 'all' / 'network'
+                   / 'usb'. Covers the new `prinstall scan --network-only`
+                   and `--usb-only` flags shipped in prinstall 0.4.1. Blank
+                   or unreplaced placeholder defaults to 'all' so existing
+                   SuperOps triggers keep working without reconfiguration.
+                   USB mode skips the subnet argument entirely (prinstall
+                   scan --usb-only doesn't accept a CIDR) and ignores
+                   $YourSubnetHere with a WARN if the user set both. Input
+                   normalization trims whitespace and lowercases so UI
+                   values like 'USB' or ' all ' work.
 2026-04-11 v0.3.1 Refresh for prinstall 0.3.1: document the new mDNS browse
                   pass (bundled into the default `all` method), the
                   working subnet auto-detect path, and the firewall rule
@@ -130,7 +149,8 @@ Set-StrictMode -Version Latest
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-$subnet       = "$YourSubnetHere"    # CIDR notation, e.g. 192.168.1.0/24
+$subnet       = "$YourSubnetHere"      # CIDR notation, e.g. 192.168.1.0/24
+$scanMode     = "$YourScanModeHere"    # 'all' (default), 'network', or 'usb'
 $prinstallDir = "$env:ProgramData\prinstall"
 
 # ============================================================================
@@ -145,6 +165,19 @@ $errorText = ""
 
 # Treat unreplaced placeholder as empty (auto-detect local subnet)
 if ($subnet -eq '$' + 'YourSubnetHere') { $subnet = '' }
+
+# Normalize scan mode: treat unreplaced placeholder as empty; empty → 'all'.
+# Trim + lowercase so SuperOps UI values like 'USB' or ' all ' work.
+if ($scanMode -eq '$' + 'YourScanModeHere') { $scanMode = '' }
+$scanMode = $scanMode.Trim().ToLower()
+if ([string]::IsNullOrWhiteSpace($scanMode)) { $scanMode = 'all' }
+
+$validModes = @('all', 'network', 'usb')
+if ($validModes -notcontains $scanMode) {
+    $errorOccurred = $true
+    if ($errorText.Length -gt 0) { $errorText += "`n" }
+    $errorText += "- Scan mode '$scanMode' is not valid. Use one of: all, network, usb."
+}
 
 if ([string]::IsNullOrWhiteSpace($prinstallDir)) {
     $errorOccurred = $true
@@ -162,7 +195,18 @@ if ($errorOccurred) {
 
 $exePath = "$prinstallDir\prinstall.exe"
 
-if ([string]::IsNullOrWhiteSpace($subnet)) {
+# Warn (don't fail) if the user set a subnet while mode = usb — USB enum
+# doesn't touch the network, so subnet is meaningless here. Clear the
+# subnet so the rest of the script treats it as unset.
+if ($scanMode -eq 'usb' -and -not [string]::IsNullOrWhiteSpace($subnet)) {
+    Write-Host "[WARN] Subnet '$subnet' is ignored when scan mode is 'usb'."
+    $subnet = ''
+}
+
+Write-Host "Scan mode       : $scanMode"
+if ($scanMode -eq 'usb') {
+    Write-Host "Subnet          : (not applicable)"
+} elseif ([string]::IsNullOrWhiteSpace($subnet)) {
     Write-Host "Subnet          : (auto-detect local)"
 } else {
     Write-Host "Subnet          : $subnet"
@@ -194,24 +238,44 @@ try {
 }
 
 # ============================================================================
-# SCAN SUBNET
+# SCAN
 # ============================================================================
 Write-Host ""
-Write-Host "[RUN] SCAN SUBNET"
+Write-Host "[RUN] SCAN"
 Write-Host "=============================================================="
 
-if ([string]::IsNullOrWhiteSpace($subnet)) {
-    Write-Host "Scanning local subnet for printers..."
-} else {
-    Write-Host "Scanning $subnet for printers..."
+switch ($scanMode) {
+    'usb'     { Write-Host "Enumerating USB-attached printers..." }
+    'network' {
+        if ([string]::IsNullOrWhiteSpace($subnet)) {
+            Write-Host "Scanning local subnet for network printers..."
+        } else {
+            Write-Host "Scanning $subnet for network printers..."
+        }
+    }
+    default   {
+        if ([string]::IsNullOrWhiteSpace($subnet)) {
+            Write-Host "Scanning local subnet + USB for printers..."
+        } else {
+            Write-Host "Scanning $subnet + USB for printers..."
+        }
+    }
 }
 Write-Host ""
 
 try {
-    $scanArgs = @('scan', '--verbose')
-    if (-not [string]::IsNullOrWhiteSpace($subnet)) {
-        $scanArgs = @('scan', $subnet, '--verbose')
+    $scanArgs = @('scan')
+    # USB-only skips the subnet arg — `prinstall scan --usb-only` doesn't
+    # touch the network and won't accept a CIDR target.
+    if ($scanMode -ne 'usb' -and -not [string]::IsNullOrWhiteSpace($subnet)) {
+        $scanArgs += $subnet
     }
+    switch ($scanMode) {
+        'network' { $scanArgs += '--network-only' }
+        'usb'     { $scanArgs += '--usb-only' }
+    }
+    $scanArgs += '--verbose'
+
     & $exePath @scanArgs 2>&1 | ForEach-Object { Write-Host $_ }
     $scanExitCode = $LASTEXITCODE
 } catch {
@@ -232,7 +296,10 @@ if ($scanExitCode -eq 0) {
     Write-Host "[OK] FINAL STATUS"
     Write-Host "=============================================================="
     Write-Host "Status          : Success"
-    Write-Host "Subnet          : $subnet"
+    Write-Host "Scan mode       : $scanMode"
+    if ($scanMode -ne 'usb') {
+        Write-Host "Subnet          : $subnet"
+    }
     Write-Host ""
     Write-Host "[OK] SCRIPT COMPLETED"
     Write-Host "=============================================================="
@@ -243,7 +310,10 @@ if ($scanExitCode -eq 0) {
     Write-Host "=============================================================="
     Write-Host "Status          : Failed"
     Write-Host "Exit code       : $scanExitCode"
-    Write-Host "Subnet          : $subnet"
+    Write-Host "Scan mode       : $scanMode"
+    if ($scanMode -ne 'usb') {
+        Write-Host "Subnet          : $subnet"
+    }
     Write-Host ""
     Write-Host "[ERROR] SCRIPT COMPLETED"
     Write-Host "=============================================================="
