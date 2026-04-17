@@ -33,5 +33,5 @@ runtimeVariables:
 - name: YourSubnetHere
 - name: ScanModeAllNetworkUsb
 scriptId: '8962138500796297216'
-lastPushedChecksum: sha256:4c23f399b5e99d3c
+lastPushedChecksum: sha256:d898ef3d1da45aa0
 lastPushedMetaChecksum: sha256:3cda503aa15f74ac
