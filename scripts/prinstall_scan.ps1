@@ -144,14 +144,21 @@ CHANGELOG
 2026-03-25 v1.0.0 Initial release - prinstall subnet scan wrapper
 ================================================================================
 #>
-Set-StrictMode -Version Latest
-
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
+# Read runtime-variable placeholders BEFORE enabling strict mode.
+# SuperOps substitutes these via literal string replacement, but if the
+# variable has no configured value the placeholder text (e.g. `$YourSubnetHere`)
+# may remain in the script as a real PowerShell variable reference — which
+# strict mode then treats as undefined and throws before our
+# fall-back-to-empty logic can kick in. Reading them first lets
+# "$undefined" → "" quietly, then strict mode guards the rest of the script.
 $subnet       = "$YourSubnetHere"      # CIDR notation, e.g. 192.168.1.0/24
 $scanMode     = "$ScanModeAllNetworkUsb"    # 'all' (default), 'network', or 'usb'
 $prinstallDir = "$env:ProgramData\prinstall"
+
+Set-StrictMode -Version Latest
 
 # ============================================================================
 # INPUT VALIDATION
