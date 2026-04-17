@@ -283,8 +283,19 @@ try {
     }
     $scanArgs += '--verbose'
 
-    & $exePath @scanArgs 2>&1 | ForEach-Object { Write-Host $_ }
-    $scanExitCode = $LASTEXITCODE
+    # Swap EAP to Continue for the subprocess: prinstall's verbose status
+    # lines go to stderr, and `2>&1` merges them into the pipeline as
+    # ErrorRecords. Under the script-level EAP=Stop, the first such record
+    # would fall into the catch below as a phantom failure. $LASTEXITCODE
+    # is the real signal.
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $exePath @scanArgs 2>&1 | ForEach-Object { Write-Host $_ }
+        $scanExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"

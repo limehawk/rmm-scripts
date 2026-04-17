@@ -273,8 +273,17 @@ try {
         $installArgs += $useName
     }
 
-    & $exePath @installArgs 2>&1 | ForEach-Object { Write-Host $_ }
-    $installExitCode = $LASTEXITCODE
+    # See prinstall_scan.ps1 for why we swap EAP for the subprocess call:
+    # prinstall's verbose output goes to stderr, and `2>&1` under EAP=Stop
+    # turns the first stderr line into a phantom terminating error.
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $exePath @installArgs 2>&1 | ForEach-Object { Write-Host $_ }
+        $installExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"

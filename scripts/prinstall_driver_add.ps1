@@ -238,8 +238,15 @@ try {
         $addArgs += '--no-verify'
     }
 
-    & $exePath @addArgs 2>&1 | ForEach-Object { Write-Host $_ }
-    $addExitCode = $LASTEXITCODE
+    # See prinstall_scan.ps1 for why we swap EAP for the subprocess call.
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $exePath @addArgs 2>&1 | ForEach-Object { Write-Host $_ }
+        $addExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"

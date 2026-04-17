@@ -176,8 +176,15 @@ Write-Host "Identifying printer at $printerIp..."
 Write-Host ""
 
 try {
-    & $exePath id $printerIp 2>&1 | ForEach-Object { Write-Host $_ }
-    $idExitCode = $LASTEXITCODE
+    # See prinstall_scan.ps1 for why we swap EAP for the subprocess call.
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $exePath id $printerIp 2>&1 | ForEach-Object { Write-Host $_ }
+        $idExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"

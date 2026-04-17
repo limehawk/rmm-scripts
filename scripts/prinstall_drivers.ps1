@@ -203,8 +203,15 @@ try {
     if (-not [string]::IsNullOrWhiteSpace($printerModel)) {
         $driverArgs += @('--model', $printerModel)
     }
-    & $exePath @driverArgs 2>&1 | ForEach-Object { Write-Host $_ }
-    $driversExitCode = $LASTEXITCODE
+    # See prinstall_scan.ps1 for why we swap EAP for the subprocess call.
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $exePath @driverArgs 2>&1 | ForEach-Object { Write-Host $_ }
+        $driversExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
 } catch {
     Write-Host ""
     Write-Host "[ERROR] ERROR OCCURRED"
