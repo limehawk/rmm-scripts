@@ -1,4 +1,4 @@
-name: 'webview2_repair_install.ps1'
+name: webview2_repair_install.ps1
 description: Detects and repairs broken Microsoft Edge WebView2 Runtime installs
 language: PowerShell
 tags:
@@ -32,3 +32,6 @@ readme: |
   - Internet connectivity to go.microsoft.com
 favourite: false
 shared: false
+scriptId: '8285620848163024896'
+lastPushedChecksum: sha256:eb622de3ac3b06f0
+lastPushedMetaChecksum: sha256:d13d1951baa25602
