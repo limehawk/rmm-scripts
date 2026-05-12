@@ -1,0 +1,34 @@
+name: cloudflared_status.ps1
+description: Reports cloudflared binary, service, and tunnel connectivity state
+language: PowerShell
+tags:
+- Monitoring
+- Software
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Field-triage view of a Windows endpoint's Cloudflare Tunnel connector. Reports the cloudflared binary version and install path, the Cloudflare Tunnel service Status and StartType, and a best-effort tunnel connectivity verdict pulled from the Windows Event Log with an outbound-socket fallback signal. Always exits 0 - absence of target is itself a valid status, not an error.
+
+  Usage Notes
+  -----------
+  - Resolves cloudflared.exe; if absent reports Not installed and exits 0
+  - Reports binary version and install path
+  - Reports service Status and StartType
+  - Reads recent Application log entries for tunnel connector events
+  - If no event log signal, falls back to Get-NetTCPConnection / Get-NetUDPEndpoint on port 7844
+  - Always prints which signal was used so the field tech knows the basis
+  - Service name is Cloudflare Tunnel
+  - Event log window is last 15 minutes
+  - Event log source is cloudflared (verify on a registered host with Get-WinEvent -ListProvider *cloud*)
+  - Connector port is 7844 (TCP and UDP)
+
+  Requirements
+  ------------
+  - Windows 10 1809+ / Windows Server 2019+
+  - Read access to the Application Event Log
+  - PowerShell 5.1 or later
+favourite: false
+shared: false
