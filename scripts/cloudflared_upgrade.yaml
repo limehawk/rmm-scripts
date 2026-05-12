@@ -33,3 +33,6 @@ readme: |
   - Outbound internet connectivity to Cloudflare edge (port 7844)
 favourite: false
 shared: false
+scriptId: '8286013405976064000'
+lastPushedChecksum: sha256:df3c507b8b3e95a9
+lastPushedMetaChecksum: sha256:117d26ec70b5a053

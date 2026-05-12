@@ -30,3 +30,6 @@ readme: |
   - Winget installed (used only if the package is registered)
 favourite: false
 shared: false
+scriptId: '6966692773090811904'
+lastPushedChecksum: sha256:f9aa02bdaa9c4cda
+lastPushedMetaChecksum: sha256:e93705c28e937d96
