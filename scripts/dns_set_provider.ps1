@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : DNS Set Provider                                             v1.0.0
+ SCRIPT   : DNS Set Provider                                             v1.0.1
  AUTHOR   : Limehawk.io
  DATE     : May 2026
  USAGE    : .\dns_set_provider.ps1
@@ -114,6 +114,8 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-14 v1.0.1 Force array on adapter enumeration so .Count works under
+                   Set-StrictMode when only one adapter is present
  2026-05-14 v1.0.0 Initial release - numbered DNS provider selector
 ================================================================================
 #>
@@ -216,10 +218,12 @@ Write-Host "[INFO] ENUMERATE ADAPTERS"
 Write-Host "=============================================================="
 
 # InterfaceType 6 = Ethernet, 71 = 802.11 wireless
-$adapters = Get-NetAdapter -Physical -ErrorAction SilentlyContinue |
-            Where-Object { $_.Status -eq 'Up' -and ($_.InterfaceType -eq 6 -or $_.InterfaceType -eq 71) }
+# Wrap in @() so a single-adapter result is still indexable and exposes .Count
+# under Set-StrictMode (otherwise a scalar throws PropertyNotFoundStrict).
+$adapters = @(Get-NetAdapter -Physical -ErrorAction SilentlyContinue |
+              Where-Object { $_.Status -eq 'Up' -and ($_.InterfaceType -eq 6 -or $_.InterfaceType -eq 71) })
 
-if (-not $adapters -or $adapters.Count -eq 0) {
+if ($adapters.Count -eq 0) {
     Write-Host ""
     Write-Host "[ERROR] NO ACTIVE ADAPTERS"
     Write-Host "=============================================================="
