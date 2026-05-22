@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local User Delete v1.3.2
+ SCRIPT   : Local User Delete v1.3.3
  AUTHOR   : Limehawk.io
- DATE      : January 2026
+ DATE      : May 2026
  USAGE    : .\local_user_delete.ps1
 ================================================================================
  FILE     : local_user_delete.ps1
@@ -88,6 +88,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.3.3 Enrich catch output; surface CIM profile-removal errors
  2026-01-19 v1.3.2 Updated to two-line ASCII console output style
  2025-12-23 v1.3.1 Updated to Limehawk Script Framework
  2025-12-03 v1.3.0 Use descriptive runtime variable name ($UsernameToDelete)
@@ -168,7 +169,7 @@ try {
             Write-Host "Profile removed via CIM"
             $profileRemoved = $true
         } catch {
-            Write-Host "CIM removal failed, trying filesystem..."
+            Write-Host "CIM removal failed ($($_.Exception.Message)), trying filesystem..."
         }
     }
 
@@ -198,6 +199,8 @@ try {
 } catch {
     $errorOccurred = $true
     $errorText = $_.Exception.Message
+    $errorText += "`n  Type  : $($_.Exception.GetType().Name)"
+    $errorText += "`n  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
 }
 
 if ($errorOccurred) {

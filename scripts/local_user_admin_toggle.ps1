@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local Admin Toggle v1.2.2
+ SCRIPT   : Local Admin Toggle v1.2.3
  AUTHOR   : Limehawk.io
- DATE      : January 2026
+ DATE      : May 2026
  USAGE    : .\local_user_admin_toggle.ps1
 ================================================================================
  FILE     : local_user_admin_toggle.ps1
@@ -84,6 +84,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.2.3 Enrich catch output with exception type and failing line
  2026-01-19 v1.2.2 Updated to two-line ASCII console output style
  2025-12-23 v1.2.1 Updated to Limehawk Script Framework
  2025-12-03 v1.2.0 Use descriptive runtime variable name ($TargetUsername); 2025-12-03 v1.1.0 Add SuperOps runtime variable validation; 2025-11-29 v1.0.0 Initial Style A implementation
@@ -194,6 +195,8 @@ try {
 } catch {
     $errorOccurred = $true
     $errorText = $_.Exception.Message
+    $errorText += "`n  Type  : $($_.Exception.GetType().Name)"
+    $errorText += "`n  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
 }
 
 if ($errorOccurred) {
