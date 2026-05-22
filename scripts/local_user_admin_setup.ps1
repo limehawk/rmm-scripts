@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local User Admin Setup                                      v1.0.0
+ SCRIPT   : Local User Admin Setup                                      v1.0.2
  AUTHOR   : Limehawk.io
- DATE     : April 2026
+ DATE     : May 2026
  USAGE    : .\local_user_admin_setup.ps1
 ================================================================================
  FILE     : local_user_admin_setup.ps1
@@ -106,6 +106,8 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.0.2 Enrich catch output with exception type and failing line
+ 2026-05-22 v1.0.1 Reject username matching the computer name (Windows error 2253)
  2026-04-08 v1.0.0 Initial release
 ================================================================================
 #>
@@ -136,6 +138,12 @@ if ([string]::IsNullOrWhiteSpace($username) -or $username -eq '$' + 'NewAdminUse
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
     $errorText += "- SuperOps runtime variable `$NewAdminUsername was not replaced."
+}
+
+if ($username -eq $env:COMPUTERNAME) {
+    $errorOccurred = $true
+    if ($errorText.Length -gt 0) { $errorText += "`n" }
+    $errorText += "- Username cannot match the computer name '$env:COMPUTERNAME' (Windows rejects this with error 2253)."
 }
 
 if ([string]::IsNullOrWhiteSpace($fullName) -or $fullName -eq '$' + 'NewAdminFullName') {
@@ -177,7 +185,10 @@ try {
     Write-Host "  Account created successfully"
 } catch {
     Write-Section -Type 'error' -Name 'ERROR OCCURRED'
-    Write-Host "  Failed to create account: $($_.Exception.Message)"
+    Write-Host "  Failed to create account."
+    Write-Host "  Error : $($_.Exception.Message)"
+    Write-Host "  Type  : $($_.Exception.GetType().Name)"
+    Write-Host "  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
 
     Write-Section -Type 'error' -Name 'FINAL STATUS'
     Write-Host "  Account creation failed. See error above."
@@ -200,13 +211,16 @@ try {
     Write-Host "  Password change flag set"
 } catch {
     Write-Section -Type 'error' -Name 'ERROR OCCURRED'
-    Write-Host "  Failed to configure account: $($_.Exception.Message)"
+    Write-Host "  Failed to configure account."
+    Write-Host "  Error : $($_.Exception.Message)"
+    Write-Host "  Type  : $($_.Exception.GetType().Name)"
+    Write-Host "  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
     Write-Host "  Rolling back account creation..."
     try {
         Remove-LocalUser -Name $username -ErrorAction Stop
         Write-Host "  Account removed. Safe to re-run this script."
     } catch {
-        Write-Host "  [WARN] Rollback failed: $($_.Exception.Message)"
+        Write-Host "  [WARN] Rollback failed: $($_.Exception.Message) [$($_.Exception.GetType().Name)]"
         Write-Host "  Manually remove account '$username' before re-running."
     }
 

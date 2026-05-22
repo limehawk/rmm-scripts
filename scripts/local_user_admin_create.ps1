@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local Admin Create v1.3.2
+ SCRIPT   : Local Admin Create v1.3.4
  AUTHOR   : Limehawk.io
- DATE      : January 2026
+ DATE      : May 2026
  USAGE    : .\local_user_admin_create.ps1
 ================================================================================
  FILE     : local_user_admin_create.ps1
@@ -89,6 +89,8 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.3.4 Enrich catch output with exception type and failing line
+ 2026-05-22 v1.3.3 Reject username matching the computer name (Windows error 2253)
  2026-01-19 v1.3.2 Updated to two-line ASCII console output style
  2025-12-23 v1.3.1 Updated to Limehawk Script Framework
  2025-12-03 v1.3.0 Use descriptive runtime variable name ($NewAdminUsername)
@@ -132,6 +134,12 @@ if ([string]::IsNullOrWhiteSpace($Username) -or $Username -eq '$' + 'NewAdminUse
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
     $errorText += "- Username is required (set via SuperOps runtime variable)."
+}
+
+if ($Username -eq $env:COMPUTERNAME) {
+    $errorOccurred = $true
+    if ($errorText.Length -gt 0) { $errorText += "`n" }
+    $errorText += "- Username cannot match the computer name '$env:COMPUTERNAME' (Windows rejects this with error 2253)."
 }
 
 if ($PasswordLength -lt 8) {
@@ -186,6 +194,8 @@ try {
 } catch {
     $errorOccurred = $true
     $errorText = $_.Exception.Message
+    $errorText += "`n  Type  : $($_.Exception.GetType().Name)"
+    $errorText += "`n  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
 }
 
 if ($errorOccurred) {
