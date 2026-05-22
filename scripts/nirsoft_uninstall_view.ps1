@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 
 ================================================================================
-SCRIPT  : NirSoft UninstallView v1.0.3
+SCRIPT  : NirSoft UninstallView v1.1.0
 AUTHOR  : Limehawk.io
-DATE      : January 2026
+DATE      : May 2026
 USAGE   : .\nirsoft_uninstall_view.ps1
 FILE    : nirsoft_uninstall_view.ps1
 DESCRIPTION : Uses NirSoft UninstallView to uninstall software matching patterns
@@ -22,7 +22,8 @@ PURPOSE:
     matching a specified pattern using wildcard matching.
 
 REQUIRED INPUTS:
-    $appName : Name or pattern of application to uninstall (supports wildcards)
+    $YourAppPatternHere : Name or pattern of application to uninstall
+                          (supports wildcards), via SuperOps runtime variable
 
 BEHAVIOR:
     1. Validates input parameters
@@ -78,19 +79,22 @@ EXAMPLE RUN:
 
 CHANGELOG
 --------------------------------------------------------------------------------
+2026-05-21 v1.1.0 Use SuperOps runtime variable $YourAppPatternHere (was hardcoded CHANGE_ME)
 2026-01-19 v1.0.3 Fixed EXAMPLE RUN section formatting
 2026-01-19 v1.0.2 Updated to two-line ASCII console output style
 2025-12-23 v1.0.1 Updated to Limehawk Script Framework
 2024-12-01 v1.0.0 Initial release - migrated from SuperOps
 ================================================================================
 #>
-Set-StrictMode -Version Latest
 
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-# Set the application name or pattern to uninstall (supports wildcards)
-$appName = 'CHANGE_ME'
+# Application name or pattern to uninstall (supports wildcards).
+# Set via SuperOps runtime variable $YourAppPatternHere.
+$appName = "$YourAppPatternHere"
+
+Set-StrictMode -Version Latest
 
 # ============================================================================
 # INPUT VALIDATION
@@ -102,10 +106,10 @@ Write-Host "=============================================================="
 $errorOccurred = $false
 $errorText = ""
 
-if ([string]::IsNullOrWhiteSpace($appName) -or $appName -eq 'CHANGE_ME') {
+if ([string]::IsNullOrWhiteSpace($appName) -or $appName -eq '$' + 'YourAppPatternHere') {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- Application name must be set (edit the script)"
+    $errorText += "- SuperOps runtime variable `$YourAppPatternHere was not replaced."
 }
 
 if ($errorOccurred) {
