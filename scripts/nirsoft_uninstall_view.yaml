@@ -13,7 +13,7 @@ readme: |
 
   Usage Notes
   -----------
-  - Edit $appName variable with application name or pattern to uninstall
+  - Set the SuperOps runtime variable $YourAppPatternHere to the application name or pattern to uninstall
   - Supports wildcards (e.g., Adobe*, *Chrome*, etc.)
   - Determines system architecture and downloads appropriate 32/64-bit version
   - Extracts to limehawk\nirsoft directory
@@ -26,8 +26,11 @@ readme: |
   - Windows OS
   - Administrator privileges
   - Internet connectivity (downloads from official NirSoft website)
+  - $YourAppPatternHere: application name or pattern to uninstall (SuperOps runtime variable)
 favourite: false
 shared: false
+runtimeVariables:
+- name: YourAppPatternHere
 scriptId: '259059118645043200'
 lastPushedChecksum: sha256:3e1127f7f8b04813
 lastPushedMetaChecksum: sha256:fc2966708a4a38d5
