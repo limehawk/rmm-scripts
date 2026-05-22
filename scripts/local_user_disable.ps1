@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local User Disable                                         v1.0.0
+ SCRIPT   : Local User Disable                                         v1.0.1
  AUTHOR   : Limehawk.io
- DATE     : March 2026
+ DATE     : May 2026
  USAGE    : .\local_user_disable.ps1
 ================================================================================
  FILE     : local_user_disable.ps1
@@ -89,6 +89,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.0.1 Enrich catch output; check logoff exit code
  2026-03-19 v1.0.0 Initial release
 ================================================================================
 #>
@@ -171,9 +172,13 @@ try {
         foreach ($session in $sessions) {
             if ($session -match '\s+(\d+)\s+') {
                 $sessionId = $Matches[1]
-                logoff $sessionId 2>$null
-                PrintKV "Logged off session" $sessionId
-                $sessionsLogged++
+                $logoffOutput = & logoff $sessionId 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    PrintKV "Logged off session" $sessionId
+                    $sessionsLogged++
+                } else {
+                    PrintKV "[WARN] Logoff failed" "session $sessionId ($logoffOutput)"
+                }
             }
         }
     } else {
@@ -183,6 +188,8 @@ try {
 } catch {
     $errorOccurred = $true
     $errorText = $_.Exception.Message
+    $errorText += "`n  Type  : $($_.Exception.GetType().Name)"
+    $errorText += "`n  Where : line $($_.InvocationInfo.ScriptLineNumber): $($_.InvocationInfo.Line.Trim())"
 }
 
 if ($errorOccurred) {
