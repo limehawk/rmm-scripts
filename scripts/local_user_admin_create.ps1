@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local Admin Create v1.3.4
+ SCRIPT   : Local Admin Create v1.3.5
  AUTHOR   : Limehawk.io
  DATE      : May 2026
  USAGE    : .\local_user_admin_create.ps1
@@ -89,6 +89,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.3.5 Set display name (FullName) to the username, not hardcoded text
  2026-05-22 v1.3.4 Enrich catch output with exception type and failing line
  2026-05-22 v1.3.3 Reject username matching the computer name (Windows error 2253)
  2026-01-19 v1.3.2 Updated to two-line ASCII console output style
@@ -182,7 +183,7 @@ try {
         Write-Host "Password reset successfully"
     } else {
         Write-Host "Account does not exist, creating..."
-        New-LocalUser -Name $Username -Password $securePass -FullName "Local Administrator" -Description "Local Administrator Account" -ErrorAction Stop | Out-Null
+        New-LocalUser -Name $Username -Password $securePass -FullName $Username -Description "Local Administrator Account" -ErrorAction Stop | Out-Null
         $actionTaken = "Created"
         Write-Host "Account created successfully"
 

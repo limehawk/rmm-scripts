@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Local User Create v1.2.4
+ SCRIPT   : Local User Create v1.2.5
  AUTHOR   : Limehawk.io
  DATE      : May 2026
  USAGE    : .\local_user_create.ps1
@@ -84,6 +84,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-05-22 v1.2.5 Set account display name (FullName) to the username
  2026-05-22 v1.2.4 Enrich catch output with exception type and failing line
  2026-05-22 v1.2.3 Reject username matching the computer name (Windows error 2253)
  2026-01-19 v1.2.2 Updated to two-line ASCII console output style
@@ -159,7 +160,7 @@ try {
     # Create the user
     Write-Host "Creating user account..."
     $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
-    New-LocalUser -Name $Username -Password $securePassword -Description "User created via RMM" -ErrorAction Stop | Out-Null
+    New-LocalUser -Name $Username -Password $securePassword -FullName $Username -Description "User created via RMM" -ErrorAction Stop | Out-Null
     Write-Host "User created successfully"
 
     # Add to Administrators if requested
