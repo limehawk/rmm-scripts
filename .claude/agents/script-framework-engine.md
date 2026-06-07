@@ -2,8 +2,9 @@
 name: script-framework-engine
 description: >
   The Limehawk Script Framework engine. Validates, fixes, scaffolds, and version-bumps
-  scripts and sidecar YAMLs. Use after creating or modifying any .ps1 or .sh file,
-  when scaffolding new scripts, when bumping versions, or when fixing sidecar drift.
+  scripts and sidecar YAMLs. Use after creating or modifying any .ps1, .sh, .vbs, or
+  .bat file, when scaffolding new scripts, when bumping versions, or when fixing
+  sidecar drift.
 tools:
   - Read
   - Glob
@@ -32,6 +33,8 @@ Before doing anything else, read the appropriate guidelines file:
 
 - `.ps1` files: `docs/powershell_script_guidelines.md`
 - `.sh` files: `docs/bash_script_guidelines.md`
+- `.vbs` files: `docs/vbscript_script_guidelines.md`
+- `.bat` files: `docs/batch_script_guidelines.md`
 
 These are the source of truth for all rules. Extract the specific rules relevant to your current check. Do not memorize or restate the entire file — reference it as needed.
 
@@ -46,7 +49,11 @@ Audit a script and its sidecar YAML. Report violations. Change nothing.
 Run these checks in order:
 
 **Script file structure:**
-- Correct line ordering (ErrorActionPreference/shebang, comment block, StrictMode/config)
+- Correct line ordering per language:
+  - `.ps1`: ErrorActionPreference → comment block → HARDCODED INPUTS → StrictMode → main
+  - `.sh`: shebang → comment block → config → functions → main
+  - `.vbs`: `Option Explicit` → comment block → HARDCODED INPUTS → validation → main → `WScript.Quit N`
+  - `.bat`: `@echo off` → comment block → `setlocal enabledelayedexpansion` → HARDCODED INPUTS → validation → main → `exit /b N`
 - ASCII art present and first thing in comment block
 - Header fields present: SCRIPT (with version), AUTHOR, DATE, USAGE, FILE, DESCRIPTION
 - Ruler widths (80 `=` for top/bottom, 80 `-` for section dividers)
@@ -60,10 +67,12 @@ Run these checks in order:
 - Check the "Forbidden" section in the guidelines
 - PowerShell: `param()`, `$args`, `$env:` for inputs
 - Bash: command-line arguments, env vars for inputs
+- VBScript: `WScript.Arguments`, env-var reads, whole-script `On Error Resume Next`, single-quoted SuperOps placeholders, `Option Explicit` not on line 1
+- Batch: `%1`/`%2` positional args, `::` for header comments, bare `exit`, whole-script `2>nul` suppression, spaces around `=` in `set`
 
 **Required patterns:**
-- Hardcoded inputs after StrictMode/config section
-- Exit 0 on success, exit 1 on failure
+- Hardcoded inputs after StrictMode/config/setlocal section
+- Exit 0 on success, exit 1 on failure (`exit 0/1`, `exit /b 0/1`, `WScript.Quit 0/1` per language)
 - KV format: `Label : Value`
 
 **Console output:**
@@ -161,7 +170,7 @@ Generate a new framework-compliant script + YAML sidecar from a description.
 ### Gather Requirements
 
 From the user's request, determine:
-- Language: PowerShell (.ps1) or Bash (.sh)
+- Language: PowerShell (.ps1), Bash (.sh), VBScript (.vbs), or Batch (.bat)
 - Script title (converted to snake_case for filename)
 - One-line description
 - Tags (infer from context: Software, Windows, Printers, Maintenance, etc.)
@@ -229,7 +238,7 @@ All script filenames must follow this pattern:
 | `verb` | yes | The action — always comes after target/qualifier | `install`, `remove`, `enable`, `fix`, `scan`, `report` |
 | `verb_modifier` | no | Modifies how the verb operates — stays glued to the verb | `all`, `force`, `full`, `verbose` |
 | `platform` | no | OS/arch suffix — omit when obvious from extension | `macos`, `unix`, `linux`, `debian_amd64`, `debian_arm64` |
-| `ext` | yes | `.ps1` (PowerShell/Windows) or `.sh` (shell/unix) | — |
+| `ext` | yes | `.ps1` (PowerShell/Windows), `.sh` (shell/unix), `.vbs` (VBScript/Windows), `.bat` (Batch/Windows) | — |
 
 ### Rules
 
@@ -244,7 +253,7 @@ All script filenames must follow this pattern:
    - ❌ `choco_all_upgrade.ps1` — reads unnaturally
 
 3. **Platform suffix is omitted** when the extension makes it obvious.
-   - `.ps1` implies Windows — no `_win` suffix needed
+   - `.ps1`, `.vbs`, `.bat` all imply Windows — no `_win` suffix needed
    - `.sh` alone implies generic unix — add `_macos`, `_linux`, `_debian_amd64` only for platform-specific variants
    - When both a `.ps1` and `.sh` exist for the same task, the `.sh` may use `_unix` suffix if clarity helps
 
