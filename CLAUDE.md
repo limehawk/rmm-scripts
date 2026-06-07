@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-Production-ready PowerShell and shell scripts for RMM platforms (SuperOps, Datto, NinjaRMM).
+Production-ready PowerShell, shell, VBScript, and batch scripts for RMM platforms (SuperOps, Datto, NinjaRMM).
 
 ## Repository Structure
 
-- `scripts/` - Production scripts (`.ps1` and `.sh`)
+- `scripts/` - Production scripts (`.ps1`, `.sh`, `.vbs`, `.bat`)
 - `docs/` - Documentation and style guidelines
 - `wiki/` - GitHub wiki content
 
@@ -19,10 +19,12 @@ Production-ready PowerShell and shell scripts for RMM platforms (SuperOps, Datto
 Read the complete guidelines before creating or modifying scripts:
 - PowerShell: `docs/powershell_script_guidelines.md`
 - Bash: `docs/bash_script_guidelines.md`
+- VBScript: `docs/vbscript_script_guidelines.md`
+- Batch: `docs/batch_script_guidelines.md`
 
 Key points:
 - Use snake_case filenames (`speedtest_to_superops.ps1`)
-- Hardcode all inputs (no `param()` blocks)
+- Hardcode all inputs (no `param()` blocks, no `WScript.Arguments`, no `%1`/`%2`)
 - Include ASCII art header and README block
 - Exit 0 on success, exit 1 on failure
 
@@ -36,7 +38,7 @@ The `script-framework-engine` agent is the single authority for framework compli
 - **bump** — Increment version, update DATE, add CHANGELOG stub.
 
 **When to use each mode:**
-- After creating or modifying any `.ps1` or `.sh` file, run in **validate** mode before committing.
+- After creating or modifying any `.ps1`, `.sh`, `.vbs`, or `.bat` file, run in **validate** mode before committing.
 - When the user asks to create a new script, run in **scaffold** mode.
 - When modifying an existing script, run in **bump** mode first to increment the version.
 - When sidecar YAMLs are stale or the user asks to fix formatting, run in **fix** mode.
