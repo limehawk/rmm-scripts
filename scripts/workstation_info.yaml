@@ -1,5 +1,5 @@
 name: workstation_info.vbs
-description: Displays system info popup message box for Windows user self-service via RMM tray
+description: Displays a popup with OS, computer, hardware, and network info
 language: VBScript
 tags:
 - Monitoring
@@ -10,22 +10,23 @@ readme: |
   Purpose
   -------
   Displays a popup message box showing system information to the end user.
-  Designed to be triggered from the RMM tray icon for user self-service.
+  Designed to be triggered from the RMM tray icon for user self-service so a
+  person can read their own machine name, serial, and specs without opening a
+  ticket.
 
-  Usage
-  -----
-  - Collects and displays via WMI:
-    - Operating System name and version
-    - Computer name and current user
-    - Serial number
-    - CPU name and core count
-    - Total RAM
-    - Network adapter info (name, IP, MAC)
+  Usage Notes
+  -----------
+  - Connects to the local WMI service (hard-fails if unreachable)
+  - Queries OS, computer, CPU, memory, BIOS, and network adapter info
+  - Renders a formatted summary via MsgBox (popup) or WScript.Echo (console)
+  - Output host: wscript.exe renders a MsgBox popup; cscript.exe prints to
+    stdout. The tray trigger uses wscript (popup) by default.
 
   Requirements
   ------------
-  - Windows 10/11
-  - No special privileges required
+  - Windows 10/11 with Windows Script Host enabled
+  - No special privileges required (local WMI read)
+  - Takes no configuration inputs
 favourite: false
 shared: false
 scriptId: '259059265290493952'
