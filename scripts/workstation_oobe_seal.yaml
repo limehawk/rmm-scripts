@@ -1,0 +1,39 @@
+name: workstation_oobe_seal.ps1
+description: Seals a configured Win11 image to a silent OOBE via sysprep
+language: PowerShell
+tags:
+- Administration
+- Windows
+- Provisioning
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Finishes provisioning an OEM Windows 11 machine that has been configured in audit mode. It removes any stale local admin account left over from a prior run, writes a sysprep answer file that auto-creates a local administrator and silently skips the out-of-box setup screens, then runs sysprep to generalize the image to OOBE and power the machine off. The next power-on runs a silent OOBE that creates the admin account, logs in once, and lands on the desktop.
+
+  Usage Notes
+  -----------
+  - Run interactively in audit mode as the built-in Administrator, NOT pushed by an RMM agent. The runAs enum is set to SYSTEM_USER as the closest match; the real context is the built-in Administrator on the audit-mode desktop from a USB.
+  - Validates the CONFIG values and rejects the placeholder password
+  - Removes a stale local admin account (and its profile) if present
+  - Writes the embedded answer file to C:\Windows\Temp\unattend.xml
+  - Runs sysprep /oobe /shutdown /unattend:<file>, which generalizes the image and POWERS THE MACHINE OFF
+  - OOBE screens hidden: EULA, OEM registration, online account, local account, wireless setup
+  - AutoLogon enabled once (LogonCount = 1) for the new admin
+  - The OOBE-skip works only because sysprep actively applies the answer file; dropping unattend.xml into C:\Windows\Panther or setting the ChildCompletion registry flag does NOT work on modern Windows 11
+  - Edit the CONFIG block before running: $adminName, $adminPassword, $timeZone
+
+  Requirements
+  ------------
+  - Windows 11 (OEM image), sitting in audit mode
+  - Running interactively as the built-in Administrator (audit-mode desktop)
+  - PowerShell 5.1+ with an elevated session
+
+  Security
+  --------
+  - The admin password is written in plain text into the answer file (a sysprep requirement). Sysprep deletes the answer file on successful generalize, but treat the configured password as sensitive.
+  - No working password ships with this script. The default is an obvious placeholder the operator must replace; the script refuses to run until it is changed.
+  - Change or rotate the OOBE-created admin password after first logon per your provisioning policy.
+favourite: false
+shared: true
