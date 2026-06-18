@@ -6,83 +6,107 @@ $ErrorActionPreference = 'Stop'
 ██║     ██║██║╚██╔╝██║██╔══╝  ██╔══██║██╔══██║██║███╗██║██╔═██╗
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
-
 ================================================================================
- SCRIPT  : Disk S.M.A.R.T. Status v1.0.0
- AUTHOR  : Limehawk.io
- DATE    : June 2026
- FILE    : disk_smart_status.ps1
+ SCRIPT   : Disk S.M.A.R.T. Status                                       v1.0.1
+ AUTHOR   : Limehawk.io
+ DATE     : June 2026
+ USAGE    : .\disk_smart_status.ps1
+================================================================================
+ FILE     : disk_smart_status.ps1
  DESCRIPTION : Reports S.M.A.R.T. predictive-failure health of all physical disks
- USAGE   : .\disk_smart_status.ps1
-================================================================================
+--------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
- PURPOSE:
-    Reports the S.M.A.R.T. / predictive-failure health of every physical disk
-    on the machine so the RMM dashboard can flag failing drives. Combines
-    PowerShell storage health, WMI predictive-failure status, and SMART
-    reliability counters into a single per-machine verdict.
+ PURPOSE
 
-REQUIRED INPUTS:
-    None
+   Reports the S.M.A.R.T. / predictive-failure health of every physical disk
+   on the machine so the RMM dashboard can flag failing drives. Combines
+   PowerShell storage health, WMI predictive-failure status, and SMART
+   reliability counters into a single per-machine verdict.
 
-BEHAVIOR:
-    1. Enumerates physical disks via Get-PhysicalDisk and reports per-disk
-       FriendlyName, MediaType, Size (GB), HealthStatus, OperationalStatus
-    2. Queries WMI predictive-failure status via
-       MSStorageDriver_FailurePredictStatus (PredictFailure boolean), handling
-       the common case where the class is unavailable (VMs, some controllers)
-       gracefully by reporting "Not available" rather than failing
-    3. Pulls SMART reliability counters via Get-StorageReliabilityCounter
-       (Wear, Temperature, ReadErrorsTotal, etc.) on a best-effort basis
-    4. Aggregates to a final per-machine verdict: Healthy / Warning / Failing
+ DATA SOURCES & PRIORITY
 
-PREREQUISITES:
-    - Windows 10/11 or Windows Server
-    - PowerShell 5.1 or later
-    - Administrator privileges
-    - Storage subsystem that exposes SMART data (physical hardware)
+   - Get-PhysicalDisk: primary per-disk health (HealthStatus, OperationalStatus)
+   - MSStorageDriver_FailurePredictStatus (root\wmi): SMART predictive-failure flag
+   - Get-StorageReliabilityCounter: best-effort wear / temperature / read-error counters
 
-SECURITY NOTES:
-    - No secrets in logs
-    - Read-only; makes no changes to disks or configuration
-    - Requires elevated privileges to query storage subsystem
+ REQUIRED INPUTS
 
-EXIT CODES:
-    0 = All disks healthy, or SMART status could not be determined on a
-        platform that does not expose it (e.g. a VM)
-    1 = One or more disks report a predicted failure or unhealthy HealthStatus
+   None - the script takes no inputs; all behavior is fixed
 
-EXAMPLE RUN:
-    [INFO] PHYSICAL DISK INVENTORY
-    ==============================================================
-    Disk #0              : Samsung SSD 980 1TB
-    Media Type           : SSD
-    Size (GB)            : 931
-    Health Status        : Healthy
-    Operational Status   : OK
+ SETTINGS
 
-    [INFO] PREDICTIVE FAILURE STATUS
-    ==============================================================
-    PhysicalDrive0       : OK (no predicted failure)
+   No configurable settings. The verdict is derived directly from disk-reported
+   HealthStatus and the SMART PredictFailure flag; there are no tunable thresholds.
 
-    [INFO] RELIABILITY COUNTERS
-    ==============================================================
-    Disk #0 Wear         : 2
-    Disk #0 Temperature  : 34
-    Disk #0 ReadErrors   : 0
+ BEHAVIOR
 
-    [OK] FINAL STATUS
-    ==============================================================
-    Verdict              : Healthy
-    SCRIPT SUCCEEDED
+   The script performs the following actions in order:
+   1. Enumerates physical disks via Get-PhysicalDisk and reports per-disk
+      FriendlyName, MediaType, Size (GB), HealthStatus, OperationalStatus
+   2. Queries WMI predictive-failure status via
+      MSStorageDriver_FailurePredictStatus (PredictFailure boolean), handling
+      the common case where the class is unavailable (VMs, some controllers)
+      gracefully by reporting "Not available" rather than failing
+   3. Pulls SMART reliability counters via Get-StorageReliabilityCounter
+      (Wear, Temperature, ReadErrorsTotal, etc.) on a best-effort basis
+   4. Aggregates to a final per-machine verdict: Healthy / Warning / Failing
 
-    [OK] SCRIPT COMPLETE
-    ==============================================================
+ PREREQUISITES
+
+   - Windows 10/11 or Windows Server
+   - PowerShell 5.1 or later
+   - Administrator privileges
+   - Storage subsystem that exposes SMART data (physical hardware)
+
+ SECURITY NOTES
+
+   - No secrets in logs
+   - Read-only; makes no changes to disks or configuration
+   - Requires elevated privileges to query storage subsystem
+
+ ENDPOINTS
+
+   - Not applicable (all data is queried locally; no network endpoints)
+
+ EXIT CODES
+
+   0 = All disks healthy, or SMART status could not be determined on a
+       platform that does not expose it (e.g. a VM)
+   1 = One or more disks report a predicted failure or unhealthy HealthStatus
+
+ EXAMPLE RUN
+
+   [INFO] PHYSICAL DISK INVENTORY
+   ==============================================================
+   Disk #0              : Samsung SSD 980 1TB
+   Media Type           : SSD
+   Size (GB)            : 931
+   Health Status        : Healthy
+   Operational Status   : OK
+
+   [INFO] PREDICTIVE FAILURE STATUS
+   ==============================================================
+   PhysicalDrive0       : OK (no predicted failure)
+
+   [INFO] RELIABILITY COUNTERS
+   ==============================================================
+   Disk #0 Wear         : 2
+   Disk #0 Temperature  : 34
+   Disk #0 ReadErrors   : 0
+
+   [OK] FINAL STATUS
+   ==============================================================
+   Verdict              : Healthy
+   SCRIPT SUCCEEDED
+
+   [OK] SCRIPT COMPLETE
+   ==============================================================
 
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-18 v1.0.1 Framework compliance: header layout + DATA SOURCES/SETTINGS/ENDPOINTS sections
  2026-06-18 v1.0.0 Initial release
 ================================================================================
 #>
