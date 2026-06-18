@@ -1,0 +1,36 @@
+name: disk_smart_status.ps1
+description: Reports S.M.A.R.T. predictive-failure health of all physical disks
+language: PowerShell
+tags:
+- Disk
+- Monitoring
+- Windows
+runAs: SYSTEM_USER
+timeout: 30
+readme: |
+  Purpose
+  -------
+  Reports the S.M.A.R.T. / predictive-failure health of every physical disk on the machine so the RMM dashboard can flag failing drives. Combines PowerShell storage health, WMI predictive-failure status, and SMART reliability counters into a single per-machine verdict.
+
+  Usage Notes
+  -----------
+  - Enumerates physical disks via Get-PhysicalDisk and reports FriendlyName, MediaType, Size (GB), HealthStatus, and OperationalStatus per disk
+  - Queries WMI predictive-failure status via MSStorageDriver_FailurePredictStatus, reporting "Not available" when the class is missing (VMs, some controllers) instead of failing
+  - Pulls SMART reliability counters via Get-StorageReliabilityCounter (Wear, Temperature, ReadErrorsTotal) on a best-effort basis
+  - Aggregates to a final per-machine verdict: Healthy / Warning / Failing
+  - Exits 0 when all disks are healthy or SMART data is undeterminable (e.g. a VM); exits 1 when a disk reports a predicted failure or unhealthy HealthStatus
+  - No configurable settings; the script takes no inputs
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - PowerShell 5.1 or later
+  - Administrator privileges
+  - Storage subsystem that exposes SMART data (physical hardware)
+
+  Security
+  --------
+  - Read-only; makes no changes to disks or configuration
+  - Requires elevated privileges to query the storage subsystem
+favourite: false
+shared: false
