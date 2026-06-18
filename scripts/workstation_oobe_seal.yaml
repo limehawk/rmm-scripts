@@ -37,3 +37,6 @@ readme: |
   - Change or rotate the OOBE-created admin password after first logon per your provisioning policy.
 favourite: false
 shared: true
+scriptId: '7663598069984354304'
+lastPushedChecksum: sha256:131faea0ea03ff73
+lastPushedMetaChecksum: sha256:c0eee3380211b181
