@@ -7,9 +7,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT Profile Migration Tool                                  v1.1.1
+ SCRIPT   : USMT Profile Migration Tool                                  v1.1.2
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : June 2026
  USAGE    : .\usmt_profile_migrate.ps1
 ================================================================================
  FILE     : usmt_profile_migrate.ps1
@@ -17,6 +17,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.1.2 Fix Install-USMT: SuperGrate zip extracts flat (no amd64 subfolder); extract into arch subfolder, add recursive scanstate.exe fallback + contents listing on failure
  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
  2026-01-08 v1.1.0 Added full USMT options, new account creation on restore
  2026-01-08 v1.0.0 Initial release
@@ -178,14 +179,29 @@ function Install-USMT {
         Invoke-WebRequest -Uri $URL -OutFile $zipPath -UseBasicParsing
 
         Write-Step "Extracting USMT..."
-        Expand-Archive -Path $zipPath -DestinationPath $USMTBasePath -Force
+        # SuperGrate's USMT zips extract FLAT (scanstate.exe, *.xml at the zip root,
+        # no amd64/ subfolder). Extract INTO the arch subfolder so binaries and the
+        # MigUser/MigDocs/MigApp XMLs all land under $script:USMTPath.
+        Expand-Archive -Path $zipPath -DestinationPath $script:USMTPath -Force
         Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
 
+        # Defensive fallback: if scanstate.exe isn't where we expect (e.g. SuperGrate
+        # changes the zip layout), locate it anywhere under the USMT base and point
+        # $script:USMTPath at its parent so the XML paths resolve too.
         if (-not (Test-Path $ScanStateExe)) {
-            throw "scanstate.exe not found after extraction"
+            $found = Get-ChildItem -Path $USMTBasePath -Filter 'scanstate.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($found) {
+                $script:USMTPath = $found.Directory.FullName
+                $ScanStateExe = $found.FullName
+            }
         }
 
-        Write-Success "USMT installed successfully"
+        if (-not (Test-Path $ScanStateExe)) {
+            $extracted = (Get-ChildItem -Path $USMTBasePath -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name) -join ', '
+            throw "scanstate.exe not found after extraction. Extracted contents under ${USMTBasePath}: $extracted"
+        }
+
+        Write-Success "USMT installed at $script:USMTPath"
         return $script:USMTPath
     } catch {
         Write-Failure "Failed to install USMT: $($_.Exception.Message)"
