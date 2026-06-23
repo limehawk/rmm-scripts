@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT Profile Migration Tool                                  v1.1.2
+ SCRIPT   : USMT Profile Migration Tool                                  v1.1.3
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_profile_migrate.ps1
@@ -17,6 +17,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.1.3 Parity-harden (lockstep with usmt_lan_migrate): track + force-kill scanstate/loadstate children on exit/cancel via Start-Tracked + per-wizard try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); pre-flight stale-process kill at startup
  2026-06-23 v1.1.2 Fix Install-USMT: SuperGrate zip extracts flat (no amd64 subfolder); extract into arch subfolder, add recursive scanstate.exe fallback + contents listing on failure
  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
  2026-01-08 v1.1.0 Added full USMT options, new account creation on restore
@@ -33,6 +34,13 @@ $USMTx64URL = 'https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x6
 $USMTx86URL = 'https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x86.zip'
 $USMTBasePath = 'C:\USMT'
 $DefaultStorePath = 'C:\MigrationStore'
+
+# Child processes this run has launched (scanstate/loadstate), so a cancel or
+# exit can force-kill any survivor instead of orphaning it.
+$script:TrackedChildren = @()
+
+# Process names we own (no .exe) for stale detection and pre-flight cleanup.
+$script:MigrationProcNames = @('scanstate', 'loadstate')
 
 # ==============================================================================
 # HELPER FUNCTIONS
@@ -63,6 +71,65 @@ function Write-Failure {
 function Write-Info {
     param([string]$Message)
     Write-Host "    $Message" -ForegroundColor Gray
+}
+
+# ==============================================================================
+# CHILD-PROCESS LIFECYCLE
+#
+# scanstate / loadstate are long-running children. If they orphan on a cancel
+# they hold the remote terminal's console pipe open and keep USMT's single-
+# instance lock (next scanstate then throws code 29). Every child we launch is
+# tracked here; Stop-TrackedChildren force-kills any survivor and is called
+# from each wizard's finally block and from the Ctrl+C / exit handler.
+# ==============================================================================
+
+function Start-Tracked {
+    param(
+        [string]$FilePath,
+        [object]$ArgumentList,   # string or string[]
+        [switch]$Wait
+    )
+    $spParams = @{
+        FilePath    = $FilePath
+        PassThru    = $true
+        NoNewWindow = $true
+    }
+    if ($null -ne $ArgumentList) { $spParams.ArgumentList = $ArgumentList }
+    if ($Wait) { $spParams.Wait = $true }
+
+    $proc = Start-Process @spParams
+    if ($proc) { $script:TrackedChildren += $proc }
+    return $proc
+}
+
+function Stop-TrackedChildren {
+    if (-not $script:TrackedChildren) { return }
+    foreach ($proc in $script:TrackedChildren) {
+        try {
+            if ($proc -and -not $proc.HasExited) {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            }
+        } catch { }
+    }
+    $script:TrackedChildren = @()
+}
+
+function Stop-StaleMigrationProcesses {
+    param([switch]$Force)
+    $stale = Get-Process -Name $script:MigrationProcNames -ErrorAction SilentlyContinue
+    if (-not $stale) { return }
+
+    $names = ($stale | ForEach-Object { "$($_.ProcessName) (PID $($_.Id))" }) -join ', '
+    if ($Force) {
+        Write-Host "[WARN] Killing stale migration process(es) before starting: $names" -ForegroundColor Yellow
+    } else {
+        Write-Host "[WARN] Found stale migration process(es) from a prior/cancelled run: $names" -ForegroundColor Yellow
+        Write-Host "[WARN] Killing them so this run does not hit USMT lock (scanstate code 29)." -ForegroundColor Yellow
+    }
+    foreach ($p in $stale) {
+        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Seconds 1
 }
 
 function Format-FileSize {
@@ -427,7 +494,7 @@ function Start-ProfileBackup {
     Write-Info "This may take several minutes depending on profile size."
     Write-Host ""
 
-    $process = Start-Process -FilePath $ScanStateExe -ArgumentList $argString -Wait -PassThru -NoNewWindow
+    $process = Start-Tracked -FilePath $ScanStateExe -ArgumentList $argString -Wait
     return $process.ExitCode
 }
 
@@ -515,7 +582,7 @@ function Start-ProfileRestore {
     Write-Info "This may take several minutes."
     Write-Host ""
 
-    $process = Start-Process -FilePath $LoadStateExe -ArgumentList $argString -Wait -PassThru -NoNewWindow
+    $process = Start-Tracked -FilePath $LoadStateExe -ArgumentList $argString -Wait
     return $process.ExitCode
 }
 
@@ -543,6 +610,7 @@ function Show-MainMenu {
 }
 
 function Start-BackupWizard {
+    try {
     Write-Header "BACKUP USER PROFILE"
 
     $USMTPath = Install-USMT
@@ -652,11 +720,17 @@ function Start-BackupWizard {
 
     Write-Host ""
     Read-Host "Press Enter to continue"
+    }
+    finally {
+        # Never leave a scanstate child alive when leaving this wizard or on cancel.
+        Stop-TrackedChildren
+    }
 }
 
 function Start-RestoreWizard {
     param([switch]$CreateNewAccount)
 
+    try {
     if ($CreateNewAccount) {
         Write-Header "RESTORE TO NEW ACCOUNT"
     } else {
@@ -869,6 +943,11 @@ function Start-RestoreWizard {
 
     Write-Host ""
     Read-Host "Press Enter to continue"
+    }
+    finally {
+        # Never leave a loadstate child alive when leaving this wizard or on cancel.
+        Stop-TrackedChildren
+    }
 }
 
 function Show-Backups {
@@ -908,6 +987,22 @@ function Show-Backups {
 # ==============================================================================
 
 $script:IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')
+
+# Route Ctrl+C / engine exit through the same child-process cleanup so a cancel
+# (including from inside a wizard's Read-Host) never orphans scanstate/loadstate
+# -- which would hold USMT's lock and the console pipe. Fires on the menu's
+# exit paths and on Ctrl+C alike.
+$null = Register-EngineEvent -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -Action {
+    if ($script:TrackedChildren) {
+        foreach ($proc in $script:TrackedChildren) {
+            try { if ($proc -and -not $proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } } catch { }
+        }
+    }
+}
+
+# Pre-flight: a prior cancelled run can leave scanstate/loadstate alive, which
+# poisons a fresh run with USMT's single-instance lock (scanstate code 29).
+Stop-StaleMigrationProcesses
 
 while ($true) {
     Show-MainMenu
