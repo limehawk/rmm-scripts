@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.1.0
+ SCRIPT   : USMT LAN Migration Tool                                      v1.2.0
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -74,20 +74,26 @@ $ErrorActionPreference = 'Stop'
    Sender (OLD laptop):
    1. Verify admin, install USMT, install LocalSend CLI (if transport=localsend)
    2. Pick the source profile (menu or from CONFIG)
-   3. Fail-fast: wait for the Receiver's recv listener on 53317 (localsend) or
-      verify the destination path is writable (path) BEFORE capturing
-   4. Run scanstate /p first for a space estimate, then scanstate with
+   3. Network pre-flight (localsend): show this machine's own IPs; auto-discover
+      receivers via mDNS scan (pick-list) before manual IP entry; reject the
+      sender's own IP; warn (confirm unless -Force) if the receiver is on a
+      different subnet/WiFi. Path transport instead verifies the destination is
+      writable.
+   4. Fail-fast: wait for the Receiver's recv listener on 53317 BEFORE capturing
+   5. Run scanstate /p first for a space estimate, then scanstate with
       compression to produce USMT.MIG + backup_info.json
-   5. Move the store to the Receiver via LocalSend (--ip) or write to a path
+   6. Move the store to the Receiver via LocalSend (--ip) or write to a path
 
    Receiver (NEW laptop):
    1. Verify admin, install USMT, install LocalSend CLI (if transport=localsend)
-   2. Open a temporary inbound firewall rule, run LocalSend recv into staging
+   2. Print this machine's own LAN IP(s) prominently so the operator can tell
+      the Sender exactly what to target
+   3. Open a temporary inbound firewall rule, run LocalSend recv into staging
       (auto-saves; no interactive accept), then remove the firewall rule -- OR
       read the store from a path
-   3. Optionally create + initialize the target local account
-   4. Confirm (or -Force), run loadstate with /mu source:target mapping
-   5. Tell the user to log out and back in
+   4. Optionally create + initialize the target local account
+   5. Confirm (or -Force), run loadstate with /mu source:target mapping
+   6. Tell the user to log out and back in
 
  PREREQUISITES
 
@@ -169,6 +175,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.2.0 Network pre-flight (from live wrong-IP run): Receiver prints its own LAN IP(s) for the operator to relay; Sender auto-discovers receivers via localsend mDNS scan with a pick-list before manual entry; self-IP rejection; same-subnet check (interface IP + prefix) with a clear cross-WiFi warning and confirm-unless-Force; readiness wait kept as the final gate
  2026-06-23 v1.1.0 Hardening from live run: (1) Sender fail-fast receiver-readiness wait (poll recv listener on 53317, $ReceiverWaitSeconds, or path writability) BEFORE capture; (2) track + force-kill scanstate/loadstate/localsend children on exit/cancel via try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); (3) pre-flight stale-process kill
  2026-06-23 v1.0.0 Initial release (LAN sibling of usmt_profile_migrate.ps1)
 ================================================================================
@@ -652,22 +659,86 @@ function Install-LocalSend {
     }
 }
 
-function Test-SameSubnet {
-    param([string]$TargetIp)
-    # mDNS discovery requires the same subnet. If we can resolve the target to an
-    # IPv4 on one of our local /24-ish interfaces, warn when prefixes differ.
+# Enumerate this machine's usable IPv4 addresses with their prefix lengths,
+# excluding loopback (127.x) and APIPA (169.254.x). Returns objects with
+# IPAddress + PrefixLength so callers can do real subnet math.
+function Get-LocalIPv4 {
+    $list = @()
     try {
-        $localIPs = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
-                    Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' }
-        foreach ($lip in $localIPs) {
-            $localPrefix  = ($lip.IPAddress -split '\.')[0..2] -join '.'
-            $targetPrefix = ($TargetIp -split '\.')[0..2] -join '.'
-            if ($localPrefix -eq $targetPrefix) { return $true }
+        $addrs = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
+                 Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' }
+        foreach ($a in $addrs) {
+            $list += [PSCustomObject]@{
+                IPAddress    = $a.IPAddress
+                PrefixLength = [int]$a.PrefixLength
+            }
         }
-        return $false
-    } catch {
-        return $true  # don't block on detection failure; just proceed
+    } catch { }
+    return $list
+}
+
+# Convert a dotted IPv4 string to a UInt32 for bitmask subnet math.
+# Arithmetic stays in [uint64] until the final cast so the high bit of values
+# like 192.x doesn't overflow a signed [int] (which would throw on the cast).
+function ConvertTo-UInt32Ip {
+    param([string]$IpString)
+    $bytes = $IpString.Split('.')
+    if ($bytes.Count -ne 4) { return $null }
+    [uint64]$val = 0
+    foreach ($b in $bytes) {
+        $n = 0
+        if (-not [int]::TryParse($b, [ref]$n) -or $n -lt 0 -or $n -gt 255) { return $null }
+        $val = ($val * 256) + [uint64]$n
     }
+    return [uint32]$val
+}
+
+# True if TargetIp is in the same subnet as one of this machine's interfaces,
+# computed from the interface IP + its prefix length (not a /24 assumption).
+# Also returns, via -MatchedCidr, the local CIDR it matched (or the first local
+# CIDR, for a helpful "you're on X, receiver is on Y" warning).
+function Test-SameSubnet {
+    param(
+        [string]$TargetIp,
+        [ref]$MatchedCidr
+    )
+    $target = ConvertTo-UInt32Ip -IpString $TargetIp
+    if ($null -eq $target) {
+        if ($MatchedCidr) { $MatchedCidr.Value = '' }
+        return $false
+    }
+
+    [uint64]$target64 = [uint64]$target
+    $firstCidr = ''
+    foreach ($lip in (Get-LocalIPv4)) {
+        $local = ConvertTo-UInt32Ip -IpString $lip.IPAddress
+        if ($null -eq $local) { continue }
+        $prefix = $lip.PrefixLength
+        if ($prefix -lt 0 -or $prefix -gt 32) { continue }
+
+        # Build the /prefix mask in [uint64] (0xFFFFFFFF is a signed int literal,
+        # so keep all of this unsigned to avoid sign-extension on the shift).
+        [uint64]$full = [uint64]4294967295   # 0xFFFFFFFF
+        $mask = if ($prefix -eq 0) { [uint64]0 } else { ($full -shl (32 - $prefix)) -band $full }
+
+        $cidr = "$($lip.IPAddress)/$prefix"
+        if ($firstCidr -eq '') { $firstCidr = $cidr }
+        if ((([uint64]$local) -band $mask) -eq ($target64 -band $mask)) {
+            if ($MatchedCidr) { $MatchedCidr.Value = $cidr }
+            return $true
+        }
+    }
+    if ($MatchedCidr) { $MatchedCidr.Value = $firstCidr }
+    return $false
+}
+
+# True if the candidate IP is one of THIS machine's own IPv4 addresses.
+function Test-IsOwnIp {
+    param([string]$CandidateIp)
+    foreach ($lip in (Get-LocalIPv4)) {
+        if ($lip.IPAddress -eq $CandidateIp) { return $true }
+    }
+    return $false
 }
 
 function Resolve-ReceiverIp {
@@ -681,6 +752,35 @@ function Resolve-ReceiverIp {
         if ($resolved) { return $resolved.IPAddressToString }
     } catch { }
     return $null
+}
+
+# Discover LocalSend receivers on the LAN via the CLI's mDNS scan.
+#
+# Source-verified against 0w0mewo/localsend-cli cmd/scan/scan.go:
+#   subcommand : scan   (flag -t/--timeout int seconds, default 4)
+#   found      : prints "Found Devices:" then one line PER device, exact Go
+#                format string "\tName: %s, Version: %s, Address: %s:%d, Protocol: %s"
+#   none       : prints "No device found" to stderr
+# So each device line looks like:
+#   <TAB>Name: NEWLT-01, Version: 2.1, Address: 192.168.2.50:53317, Protocol: https
+# Returns an array of @{ Name; IP; Port }.
+function Find-Receivers {
+    param([string]$LocalSendExe, [int]$ScanSeconds = 6)
+
+    $devices = @()
+    $scanOut = & $LocalSendExe scan -t $ScanSeconds 2>&1
+    foreach ($line in $scanOut) {
+        $text = "$line"
+        $m = [regex]::Match($text, 'Name:\s*(?<name>.+?),\s*Version:\s*.+?,\s*Address:\s*(?<ip>\d{1,3}(?:\.\d{1,3}){3}):(?<port>\d+)')
+        if ($m.Success) {
+            $devices += [PSCustomObject]@{
+                Name = $m.Groups['name'].Value.Trim()
+                IP   = $m.Groups['ip'].Value
+                Port = [int]$m.Groups['port'].Value
+            }
+        }
+    }
+    return $devices
 }
 
 function Test-TcpPort {
@@ -748,25 +848,11 @@ function Send-Store {
     $exe = Install-LocalSend
     if (-not $exe) { return $false }
 
+    # The Sender role has already run network pre-flight (discovery / self-IP
+    # reject / subnet check / readiness wait) and passes a validated IP here.
+    # Resolve as a safety net in case a literal hostname slips through.
     $ip = Resolve-ReceiverIp -NameOrIp $ReceiverName
-    if (-not $ip) {
-        Write-Step "Could not resolve '$ReceiverName' directly; scanning the LAN..."
-        # localsend scan prints: "Name: <alias>, Version: .., Address: IP:PORT, .."
-        $scanOut = & $exe scan -t 6 2>&1
-        $match = $scanOut | Select-String -Pattern ("Name:\s*{0}.*Address:\s*([0-9.]+):" -f [regex]::Escape($ReceiverName))
-        if ($match -and $match.Matches.Count -gt 0) {
-            $ip = $match.Matches[0].Groups[1].Value
-        }
-    }
-    if (-not $ip) {
-        Write-Failure "Could not find receiver '$ReceiverName' on the LAN."
-        Write-Info "Confirm the receiver is running this script in Receiver role and is on the same subnet."
-        return $false
-    }
-
-    if (-not (Test-SameSubnet -TargetIp $ip)) {
-        Write-Warn "Receiver $ip does not appear to be on this machine's subnet -- LocalSend mDNS may fail."
-    }
+    if (-not $ip) { $ip = $ReceiverName }
 
     $migFile  = Join-Path $StoreDir 'USMT.MIG'
     $infoFile = Join-Path $StoreDir 'backup_info.json'
@@ -903,10 +989,86 @@ function Invoke-SenderRole {
     # --- Resolve receiver target ----------------------------------------------
     $receiver = $ReceiverName
     if ($Transport -eq 'localsend') {
-        if ([string]::IsNullOrWhiteSpace($receiver)) {
-            $receiver = Read-Host "Enter the NEW laptop's hostname or IP"
+        # ---- Network pre-flight (order: own-IPs -> discover/manual ->
+        #      self-IP reject -> subnet warn -> readiness wait) ----------------
+        Write-Header -Type run -Title 'NETWORK PRE-FLIGHT'
+
+        # Show this sender's own IPs so the operator can sanity-check the target.
+        $ownIPs = Get-LocalIPv4
+        if ($ownIPs.Count -gt 0) {
+            Write-Info "This machine (SENDER) IPv4: $(($ownIPs | ForEach-Object { $_.IPAddress }) -join ', ')"
         }
-        if ([string]::IsNullOrWhiteSpace($receiver)) { throw "Receiver hostname/IP is required for LocalSend transport" }
+
+        $exe = Install-LocalSend
+        if (-not $exe) { throw "Cannot proceed without the LocalSend CLI" }
+
+        # 2. Auto-discovery via mDNS scan BEFORE manual entry.
+        $chosenIp = ''
+        if ([string]::IsNullOrWhiteSpace($receiver)) {
+            Write-Step "Discovering LocalSend receivers on the LAN (mDNS scan)..."
+            $found = Find-Receivers -LocalSendExe $exe -ScanSeconds 6
+
+            if ($found.Count -eq 1) {
+                $d = $found[0]
+                Write-Success "Found one receiver: $($d.Name) at $($d.IP)"
+                $confirm = Read-Host "Use $($d.Name) ($($d.IP))? (Y/n)"
+                if ($confirm -eq 'n' -or $confirm -eq 'N') {
+                    $receiver = Read-Host "Enter the NEW laptop's IP or hostname"
+                } else {
+                    $chosenIp = $d.IP
+                }
+            } elseif ($found.Count -gt 1) {
+                Write-Host ""
+                Write-Host "  Discovered receivers:" -ForegroundColor Yellow
+                for ($i = 0; $i -lt $found.Count; $i++) {
+                    Write-Host "  $($i + 1). $($found[$i].Name)  ($($found[$i].IP))" -ForegroundColor White
+                }
+                Write-Host "  $($found.Count + 1). Enter an IP/hostname manually" -ForegroundColor White
+                Write-Host ""
+                $pick = Read-Host "Select the NEW laptop (1-$($found.Count + 1))"
+                $pIdx = [int]$pick - 1
+                if ($pIdx -ge 0 -and $pIdx -lt $found.Count) {
+                    $chosenIp = $found[$pIdx].IP
+                } else {
+                    $receiver = Read-Host "Enter the NEW laptop's IP or hostname"
+                }
+            } else {
+                Write-Warn "No LocalSend receiver was discovered on this network."
+                Write-Info "That usually means the NEW laptop is not in Receiver mode yet, or"
+                Write-Info "the two machines are on different WiFi networks/subnets (e.g. a guest network)."
+                $receiver = Read-Host "Enter the NEW laptop's IP or hostname (or fix the network and re-run)"
+            }
+        }
+
+        # Resolve whatever target we have (manual entry or unused $chosenIp).
+        if ([string]::IsNullOrWhiteSpace($chosenIp)) {
+            if ([string]::IsNullOrWhiteSpace($receiver)) { throw "Receiver IP/hostname is required for LocalSend transport" }
+            $chosenIp = Resolve-ReceiverIp -NameOrIp $receiver
+            if (-not $chosenIp) { throw "Could not resolve '$receiver' to an IPv4 address." }
+        }
+
+        # 3. Self-IP rejection (the exact mistake from the live run).
+        if (Test-IsOwnIp -CandidateIp $chosenIp) {
+            throw "$chosenIp is this machine's own IP -- enter the NEW laptop's address."
+        }
+
+        # 4. Same-subnet check with a clear, actionable warning.
+        $matchedCidr = ''
+        if (-not (Test-SameSubnet -TargetIp $chosenIp -MatchedCidr ([ref]$matchedCidr))) {
+            $here = if ($matchedCidr) { $matchedCidr } else { 'an unknown subnet' }
+            Write-Warn "This machine is on $here; receiver $chosenIp is on a different network/WiFi -- they likely can't reach each other."
+            Write-Warn "Make sure both laptops are on the same WiFi (not a guest network)."
+            if (-not $Force) {
+                $go = Read-Host "Continue anyway? (y/N)"
+                if ($go -ne 'y' -and $go -ne 'Y') { throw "Aborted: receiver is on a different subnet." }
+            } else {
+                Write-Info "-Force set -- continuing despite the subnet mismatch."
+            }
+        } else {
+            Write-Success "Receiver $chosenIp is on the same subnet ($matchedCidr)."
+        }
+
+        $receiver = $chosenIp
     } else {
         if ([string]::IsNullOrWhiteSpace($receiver)) {
             $receiver = Read-Host "Enter destination path for the store (UNC/SMB/USB)"
@@ -917,11 +1079,10 @@ function Invoke-SenderRole {
     # --- Fail-fast receiver readiness (BEFORE the expensive capture) ----------
     Write-Header -Type run -Title 'RECEIVER READINESS'
     if ($Transport -eq 'localsend') {
+        # 5. Final gate: wait for the recv listener on :53317.
         $readyIp = Wait-ForReceiver -ReceiverName $receiver -TimeoutSeconds $ReceiverWaitSeconds
         if (-not $readyIp) {
-            $probeIp = Resolve-ReceiverIp -NameOrIp $receiver
-            if (-not $probeIp) { $probeIp = $receiver }
-            throw "Receiver not reachable on ${probeIp}:$LocalSendPort -- start the NEW laptop in Receiver mode first."
+            throw "Receiver not reachable on ${receiver}:$LocalSendPort -- start the NEW laptop in Receiver mode first."
         }
     } else {
         # Path transport: verify the destination is reachable and writable now,
@@ -1019,6 +1180,26 @@ function Invoke-ReceiverRole {
     # --- Receive --------------------------------------------------------------
     Write-Header -Type run -Title 'STORE RECEIVE'
     Write-Info "Transport : $Transport"
+
+    # Show this receiver's own LAN IP(s) prominently so the operator can tell the
+    # SENDER exactly what to target -- removes the guess-the-IP problem.
+    if ($Transport -eq 'localsend') {
+        $ownIPs = Get-LocalIPv4
+        Write-Host ""
+        if ($ownIPs.Count -gt 0) {
+            Write-Host "[INFO] Tell the SENDER to target this machine at:" -ForegroundColor Cyan
+            foreach ($lip in $ownIPs) {
+                Write-Host "         $($lip.IPAddress)" -ForegroundColor White
+            }
+            if ($ownIPs.Count -gt 1) {
+                Write-Info "(Multiple addresses shown -- use the one on the same WiFi as the OLD laptop.)"
+            }
+        } else {
+            Write-Warn "Could not determine this machine's LAN IP -- check the network connection."
+        }
+        Write-Host ""
+    }
+
     $got = Receive-Store -Transport $Transport -StoreDir $stageDir
     if (-not $got) { throw "Failed to receive the migration store" }
 
