@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.0.0
+ SCRIPT   : USMT LAN Migration Tool                                      v1.1.0
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -51,7 +51,10 @@ $ErrorActionPreference = 'Stop'
      - $NewPassword    : password for the created account (never logged/persisted)
      - $EncryptionKey  : USMT store encryption key (never logged/persisted)
      - $Force          : $true to skip the destructive-loadstate confirm (unattended)
+                          and force-kill stale migration processes at pre-flight
      - $IncludeLocalAppData : $false (advanced; AppData\Local can be very large)
+     - $ReceiverWaitSeconds : 180; Sender+localsend wait for the receiver's recv
+                          listener (TCP 53317) before starting the capture
 
  SETTINGS
 
@@ -63,15 +66,19 @@ $ErrorActionPreference = 'Stop'
    - Default staging / store path : C:\MigrationStore
    - USMT is auto-downloaded if absent (x64/x86 zip from the SuperGrate mirror).
    - LocalSend CLI is auto-downloaded if absent (0w0mewo/localsend-cli release).
+   - Every scanstate/loadstate/localsend child is tracked and force-killed on
+     exit or cancel; a pre-flight pass kills any stale ones from a prior run.
 
  BEHAVIOR
 
    Sender (OLD laptop):
    1. Verify admin, install USMT, install LocalSend CLI (if transport=localsend)
    2. Pick the source profile (menu or from CONFIG)
-   3. Run scanstate /p first for a space estimate, then scanstate with
+   3. Fail-fast: wait for the Receiver's recv listener on 53317 (localsend) or
+      verify the destination path is writable (path) BEFORE capturing
+   4. Run scanstate /p first for a space estimate, then scanstate with
       compression to produce USMT.MIG + backup_info.json
-   4. Move the store to the Receiver via LocalSend (--ip) or write to a path
+   5. Move the store to the Receiver via LocalSend (--ip) or write to a path
 
    Receiver (NEW laptop):
    1. Verify admin, install USMT, install LocalSend CLI (if transport=localsend)
@@ -162,6 +169,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.1.0 Hardening from live run: (1) Sender fail-fast receiver-readiness wait (poll recv listener on 53317, $ReceiverWaitSeconds, or path writability) BEFORE capture; (2) track + force-kill scanstate/loadstate/localsend children on exit/cancel via try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); (3) pre-flight stale-process kill
  2026-06-23 v1.0.0 Initial release (LAN sibling of usmt_profile_migrate.ps1)
 ================================================================================
 #>
@@ -187,6 +195,7 @@ $EncryptionKey = ''            # USMT store encryption key (not logged)
 # --- Behaviour ----------------------------------------------------------------
 $Force             = $false    # skip the destructive-loadstate confirm (unattended)
 $IncludeLocalAppData = $false  # advanced: include AppData\Local (can be huge)
+$ReceiverWaitSeconds = 180     # Sender+localsend: how long to wait for the receiver's recv listener
 
 # --- Fixed endpoints / paths (not user inputs) --------------------------------
 $USMTx64URL       = 'https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x64.zip'
@@ -202,6 +211,10 @@ $FirewallRuleName = 'Limehawk USMT LAN Migrate (LocalSend)'
 # Set-StrictMode AFTER the hardcoded CONFIG block (framework rule)
 # ==============================================================================
 Set-StrictMode -Version Latest
+
+# Child processes this run has launched (scanstate/loadstate/localsend), so a
+# cancel or exit can force-kill any survivor instead of orphaning it.
+$script:TrackedChildren = @()
 
 # ==============================================================================
 # CONSOLE HELPERS
@@ -240,6 +253,68 @@ function Get-FolderSize {
     }
     if ($null -eq $size) { $size = 0 }
     return $size
+}
+
+# ==============================================================================
+# CHILD-PROCESS LIFECYCLE
+#
+# scanstate / loadstate / localsend are long-running children. If they orphan
+# on cancel they hold the remote terminal's console pipe open and keep USMT's
+# single-instance lock (next scanstate then throws code 29). Every child we
+# launch is tracked here; Stop-TrackedChildren force-kills any survivor and is
+# called from each role's finally block and from the Ctrl+C / exit handlers.
+# ==============================================================================
+
+# Process names we own (no .exe) for stale detection and pre-flight cleanup.
+$script:MigrationProcNames = @('scanstate', 'loadstate', 'localsend')
+
+function Start-Tracked {
+    param(
+        [string]$FilePath,
+        [object]$ArgumentList,   # string or string[]
+        [switch]$Wait
+    )
+    $spParams = @{
+        FilePath    = $FilePath
+        PassThru    = $true
+        NoNewWindow = $true
+    }
+    if ($null -ne $ArgumentList) { $spParams.ArgumentList = $ArgumentList }
+    if ($Wait) { $spParams.Wait = $true }
+
+    $proc = Start-Process @spParams
+    if ($proc) { $script:TrackedChildren += $proc }
+    return $proc
+}
+
+function Stop-TrackedChildren {
+    if (-not $script:TrackedChildren) { return }
+    foreach ($proc in $script:TrackedChildren) {
+        try {
+            if ($proc -and -not $proc.HasExited) {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            }
+        } catch { }
+    }
+    $script:TrackedChildren = @()
+}
+
+function Stop-StaleMigrationProcesses {
+    param([switch]$Force)
+    $stale = Get-Process -Name $script:MigrationProcNames -ErrorAction SilentlyContinue
+    if (-not $stale) { return }
+
+    $names = ($stale | ForEach-Object { "$($_.ProcessName) (PID $($_.Id))" }) -join ', '
+    if ($Force) {
+        Write-Warn "Killing stale migration process(es) before starting: $names"
+    } else {
+        Write-Warn "Found stale migration process(es) from a prior/cancelled run: $names"
+        Write-Warn "Killing them so this run does not hit USMT lock (scanstate code 29)."
+    }
+    foreach ($p in $stale) {
+        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Seconds 1
 }
 
 # ==============================================================================
@@ -437,7 +512,7 @@ function Start-ProfileScan {
 
     Write-Step "Running scanstate.exe (compression ON, single USMT.MIG)..."
     Write-Info "This may take several minutes depending on profile size."
-    $process = Start-Process -FilePath $ScanStateExe -ArgumentList $argString -Wait -PassThru -NoNewWindow
+    $process = Start-Tracked -FilePath $ScanStateExe -ArgumentList $argString -Wait
     return $process.ExitCode
 }
 
@@ -455,7 +530,7 @@ function Get-SpaceEstimate {
     $argString = $estArgs -join ' '
 
     Write-Step "Estimating migration size (scanstate /p)..."
-    $process = Start-Process -FilePath $ScanStateExe -ArgumentList $argString -Wait -PassThru -NoNewWindow
+    $process = Start-Tracked -FilePath $ScanStateExe -ArgumentList $argString -Wait
 
     $estimateFile = Join-Path $StorePath 'space_estimate.xml'
     $bytes = 0
@@ -519,7 +594,7 @@ function Start-ProfileRestore {
     $argString = $loadArgs -join ' '
     Write-Step "Running loadstate.exe..."
     Write-Info "This may take several minutes."
-    $process = Start-Process -FilePath $LoadStateExe -ArgumentList $argString -Wait -PassThru -NoNewWindow
+    $process = Start-Tracked -FilePath $LoadStateExe -ArgumentList $argString -Wait
     return $process.ExitCode
 }
 
@@ -605,6 +680,50 @@ function Resolve-ReceiverIp {
                     Select-Object -First 1
         if ($resolved) { return $resolved.IPAddressToString }
     } catch { }
+    return $null
+}
+
+function Test-TcpPort {
+    param([string]$TargetIp, [int]$Port, [int]$TimeoutMs = 2000)
+    $client = New-Object System.Net.Sockets.TcpClient
+    try {
+        $iar = $client.BeginConnect($TargetIp, $Port, $null, $null)
+        if ($iar.AsyncWaitHandle.WaitOne($TimeoutMs, $false) -and $client.Connected) {
+            $client.EndConnect($iar)
+            return $true
+        }
+        return $false
+    } catch {
+        return $false
+    } finally {
+        $client.Close()
+    }
+}
+
+# Fail-fast: wait for the NEW laptop's recv listener (TCP 53317) BEFORE we spend
+# capture time. Returns the resolved receiver IP on success, $null on timeout.
+function Wait-ForReceiver {
+    param([string]$ReceiverName, [int]$TimeoutSeconds)
+
+    $ip = Resolve-ReceiverIp -NameOrIp $ReceiverName
+    if (-not $ip) {
+        # Not resolvable yet (the receiver may not have advertised). Fall back to
+        # the name; the poll below still works once DNS/mDNS catches up.
+        $ip = $ReceiverName
+    }
+
+    Write-Step "Waiting for the NEW laptop to be ready in Receiver mode (${ip}:$LocalSendPort)..."
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        # Re-resolve each loop in case the name only becomes resolvable later.
+        $candidate = Resolve-ReceiverIp -NameOrIp $ReceiverName
+        if ($candidate) { $ip = $candidate }
+        if (Test-TcpPort -TargetIp $ip -Port $LocalSendPort -TimeoutMs 2000) {
+            Write-Success "Receiver is listening on ${ip}:$LocalSendPort"
+            return $ip
+        }
+        Start-Sleep -Seconds 3
+    }
     return $null
 }
 
@@ -708,11 +827,10 @@ function Receive-Store {
         Write-Step "Starting LocalSend receiver (auto-save) into: $StoreDir"
         Write-Info "Waiting for the sender to push the store (up to $([int]($TimeoutSeconds/60)) min)..."
 
-        # recv runs until killed; auto-saves into -d. We run it as a child process
-        # and stop it once USMT.MIG lands (or we time out).
-        $recv = Start-Process -FilePath $exe `
-                              -ArgumentList @('recv', '-d', "`"$StoreDir`"", '-n', $env:COMPUTERNAME) `
-                              -PassThru -NoNewWindow
+        # recv runs until killed; auto-saves into -d. Tracked so a cancel during
+        # the poll loop force-kills it (via the role finally) instead of orphaning.
+        Start-Tracked -FilePath $exe `
+                      -ArgumentList @('recv', '-d', "`"$StoreDir`"", '-n', $env:COMPUTERNAME) | Out-Null
 
         $mig = Join-Path $StoreDir 'USMT.MIG'
         $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
@@ -725,12 +843,7 @@ function Receive-Store {
                 $s2 = (Get-Item $mig).Length
                 if ($s1 -eq $s2 -and $s1 -gt 0) { $received = $true; break }
             }
-            if ($recv.HasExited) { break }
             Start-Sleep -Seconds 2
-        }
-
-        if (-not $recv.HasExited) {
-            Stop-Process -Id $recv.Id -Force -ErrorAction SilentlyContinue
         }
 
         if ($received) {
@@ -743,6 +856,9 @@ function Receive-Store {
         Write-Failure "Receive failed: $($_.Exception.Message)"
         return $false
     } finally {
+        # Always stop the recv daemon (and any other tracked child) and pull the
+        # temporary firewall rule -- on success, timeout, error, or cancel.
+        Stop-TrackedChildren
         if ($ruleAdded) {
             Write-Step "Removing temporary firewall rule(s)..."
             Remove-NetFirewallRule -DisplayName $FirewallRuleName -ErrorAction SilentlyContinue
@@ -758,6 +874,7 @@ function Receive-Store {
 function Invoke-SenderRole {
     param([string]$Transport)
 
+    try {
     Write-Header -Type run -Title 'USMT SETUP'
     $USMTPath = Install-USMT
     if (-not $USMTPath) { throw "Cannot proceed without USMT" }
@@ -795,6 +912,31 @@ function Invoke-SenderRole {
             $receiver = Read-Host "Enter destination path for the store (UNC/SMB/USB)"
         }
         if ([string]::IsNullOrWhiteSpace($receiver)) { throw "Destination path is required for path transport" }
+    }
+
+    # --- Fail-fast receiver readiness (BEFORE the expensive capture) ----------
+    Write-Header -Type run -Title 'RECEIVER READINESS'
+    if ($Transport -eq 'localsend') {
+        $readyIp = Wait-ForReceiver -ReceiverName $receiver -TimeoutSeconds $ReceiverWaitSeconds
+        if (-not $readyIp) {
+            $probeIp = Resolve-ReceiverIp -NameOrIp $receiver
+            if (-not $probeIp) { $probeIp = $receiver }
+            throw "Receiver not reachable on ${probeIp}:$LocalSendPort -- start the NEW laptop in Receiver mode first."
+        }
+    } else {
+        # Path transport: verify the destination is reachable and writable now,
+        # rather than discovering it after the whole capture.
+        try {
+            if (-not (Test-Path $receiver)) {
+                New-Item -Path $receiver -ItemType Directory -Force -ErrorAction Stop | Out-Null
+            }
+            $probe = Join-Path $receiver ('.usmt_write_test_{0}' -f ([guid]::NewGuid().ToString('N')))
+            Set-Content -Path $probe -Value 'ok' -ErrorAction Stop
+            Remove-Item $probe -Force -ErrorAction SilentlyContinue
+            Write-Success "Destination path is reachable and writable: $receiver"
+        } catch {
+            throw "Destination path not reachable/writable: $receiver -- $($_.Exception.Message)"
+        }
     }
 
     # --- Staging dir ----------------------------------------------------------
@@ -848,11 +990,17 @@ function Invoke-SenderRole {
 
     Write-Header -Type ok -Title 'SENDER COMPLETE'
     Write-Info "Profile $source captured and sent. Run this script in Receiver role on the NEW laptop."
+    }
+    finally {
+        # Never leave a scanstate/localsend child alive on exit or cancel.
+        Stop-TrackedChildren
+    }
 }
 
 function Invoke-ReceiverRole {
     param([string]$Transport)
 
+    try {
     Write-Header -Type run -Title 'USMT SETUP'
     $USMTPath = Install-USMT
     if (-not $USMTPath) { throw "Cannot proceed without USMT" }
@@ -961,6 +1109,11 @@ function Invoke-ReceiverRole {
     Write-Header -Type ok -Title 'RECEIVER COMPLETE'
     Write-Info "Profile restored into $target."
     Write-Info "Have the user LOG OUT and LOG BACK IN for all settings to apply."
+    }
+    finally {
+        # Never leave a loadstate/recv child alive on exit or cancel.
+        Stop-TrackedChildren
+    }
 }
 
 # ==============================================================================
@@ -968,6 +1121,18 @@ function Invoke-ReceiverRole {
 # ==============================================================================
 
 $exitCode = 0
+
+# Route Ctrl+C / engine exit through the same child-process cleanup so a cancel
+# never orphans scanstate/loadstate/localsend (which would hold USMT's lock and
+# the console pipe). Best-effort: the engine event covers normal cancel/exit.
+$null = Register-EngineEvent -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -Action {
+    if ($script:TrackedChildren) {
+        foreach ($proc in $script:TrackedChildren) {
+            try { if ($proc -and -not $proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } } catch { }
+        }
+    }
+}
+
 try {
     $script:IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')
 
@@ -1027,6 +1192,13 @@ try {
 
     Write-Success "Inputs valid"
 
+    # --- PRE-FLIGHT: clear stale migration processes --------------------------
+    # A prior cancelled run can leave scanstate/loadstate/localsend alive, which
+    # poisons a fresh run with USMT's single-instance lock (scanstate code 29).
+    Write-Header -Type info -Title 'PRE-FLIGHT CLEANUP'
+    Stop-StaleMigrationProcesses -Force:$Force
+    Write-Success "No conflicting migration processes running"
+
     Write-Header -Type info -Title 'ROLE SELECTION'
     Write-Info "This machine : $($env:COMPUTERNAME)  (Admin: $( if ($script:IsAdmin) { 'Yes' } else { 'No' } ))"
     Write-Info "Role         : $resolvedRole"
@@ -1048,6 +1220,11 @@ catch {
     Write-Header -Type error -Title 'FINAL STATUS'
     Write-Failure "Migration failed"
     $exitCode = 1
+}
+finally {
+    # Final backstop: kill any tracked child still alive and drop the exit handler.
+    Stop-TrackedChildren
+    Unregister-Event -SourceIdentifier ([System.Management.Automation.PsEngineEvent]::Exiting) -ErrorAction SilentlyContinue
 }
 
 exit $exitCode
