@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT Profile Migration Tool                                  v1.1.3
+ SCRIPT   : USMT Profile Migration Tool                                  v1.1.4
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_profile_migrate.ps1
@@ -15,8 +15,103 @@ $ErrorActionPreference = 'Stop'
  FILE     : usmt_profile_migrate.ps1
  DESCRIPTION : Interactive USMT backup/restore for remote terminal sessions
 --------------------------------------------------------------------------------
+ README
+--------------------------------------------------------------------------------
+ PURPOSE
+
+   Menu-driven USMT (User State Migration Tool) utility for backing up a
+   Windows user profile on one machine and restoring it to another over a
+   remote terminal session. Carries documents, settings, and application data
+   (profile state) -- not installed applications. Restore can merge into an
+   existing local account or create a brand-new one. USMT is auto-downloaded
+   on first run. This is the single-machine / store-on-disk sibling of
+   usmt_lan_migrate.ps1 (which moves the store across the LAN).
+
+ DATA SOURCES & PRIORITY
+
+   - User profiles: HKLM ProfileList registry (enumerated for backup/restore).
+   - Migration stores: backup_info.json + USMT.MIG under the store base path.
+   - All operator choices come from the interactive menu (no config inputs).
+
+ REQUIRED INPUTS
+
+   This tool is interactive -- there are no hardcoded operator inputs. The only
+   hardcoded values are fixed endpoints/paths in the CONFIGURATION block:
+     - $USMTx64URL / $USMTx86URL : USMT download mirrors (SuperGrate)
+     - $USMTBasePath             : where USMT is installed (C:\USMT)
+     - $DefaultStorePath         : default migration store base (C:\MigrationStore)
+
+ SETTINGS
+
+   - Backup options (interactive): Documents, Desktop, Downloads, Pictures,
+     Music, Videos, Favorites, AppData (Roaming on by default, Local off),
+     Printers, Wallpaper; compression, Volume Shadow Copy, continue-on-error,
+     EFS handling, and optional password encryption.
+   - Restore options (interactive): merge to existing account, or create a new
+     local account (optionally Administrator); /mu source:target mapping.
+   - USMT is auto-downloaded if absent. The encryption key is never persisted
+     (backup_info.json records it only as the literal "[ENCRYPTED]" marker).
+
+ BEHAVIOR
+
+   1. Detect admin rights; pre-flight kill any stale scanstate/loadstate.
+   2. Show a menu: backup, restore-to-existing, restore-to-new, view backups.
+   3. Backup: install USMT, pick a profile, choose options, run scanstate to
+      produce USMT.MIG + backup_info.json under the store path.
+   4. Restore: install USMT, pick a store, pick/create the target account, run
+      loadstate (with /mu mapping and /decrypt as needed).
+   5. On exit/cancel, force-kill any tracked scanstate/loadstate child.
+
+ PREREQUISITES
+
+   - Windows 10/11 or Windows Server, PowerShell 5.1 or later
+   - Administrator privileges (scanstate, loadstate, account creation)
+   - Internet connectivity on first run (USMT download)
+   - Sufficient disk space for the migration store
+
+ SECURITY NOTES
+
+   - No secrets in logs: the encryption key and any new-account password are
+     never printed and never written to backup_info.json (key stored only as
+     the "[ENCRYPTED]" marker).
+   - Restore into a profile is destructive; the tool prompts before running.
+
+ ENDPOINTS
+
+   - https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x64.zip
+   - https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x86.zip
+
+ EXIT CODES
+
+   0 = Success (or normal menu exit)
+   1 = Failure (error occurred)
+
+ EXAMPLE RUN
+
+   [INFO] LIMEHAWK USMT PROFILE MIGRATION TOOL
+   ==============================================================
+     Computer: OLDLT-01
+     User:     admin
+     Admin:    Yes
+
+   [INFO] MAIN MENU
+   ==============================================================
+     1. Backup a user profile
+     2. Restore profile to EXISTING account (merge)
+     3. Restore profile to NEW account (create user)
+     4. View available backups
+     5. Exit
+
+   [OK] BACKUP COMPLETE
+   ==============================================================
+     Location: C:\MigrationStore\OLDLT-01_jdoe_2026-06-23_101500
+     Size:     6.20 GB
+     Source:   OLDLT-01\jdoe
+
+--------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.1.4 Fix StrictMode regression class (lockstep with usmt_lan_migrate v1.2.1): .Count/indexing on Get-UserProfiles and Get-MigrationStores threw "property 'Count' cannot be found" on WinPS 5.1 with a single profile/store or none; wrap returns and call sites in @()
  2026-06-23 v1.1.3 Parity-harden (lockstep with usmt_lan_migrate): track + force-kill scanstate/loadstate children on exit/cancel via Start-Tracked + per-wizard try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); pre-flight stale-process kill at startup
  2026-06-23 v1.1.2 Fix Install-USMT: SuperGrate zip extracts flat (no amd64 subfolder); extract into arch subfolder, add recursive scanstate.exe fallback + contents listing on failure
  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
@@ -175,21 +270,24 @@ function Get-UserProfiles {
             }
         } catch { }
     }
-    return $profiles
+    # Force array semantics so a single-profile (one item) or zero result still
+    # supports .Count / indexing under Set-StrictMode (WinPS 5.1 throws
+    # "property 'Count' cannot be found" on a bare scalar).
+    return @($profiles)
 }
 
 function Get-MigrationStores {
     param([string]$BasePath)
     $stores = @()
-    if (-not (Test-Path $BasePath)) { return $stores }
+    if (-not (Test-Path $BasePath)) { return @($stores) }
 
     Get-ChildItem -Path $BasePath -Directory -ErrorAction SilentlyContinue | ForEach-Object {
         $storePath = $_.FullName
         $infoFile = Join-Path $storePath 'backup_info.json'
         $usmtFile = Join-Path $storePath 'USMT\USMT.MIG'
 
-        # Check for USMT files
-        $hasMigFiles = (Get-ChildItem -Path $storePath -Filter '*.MIG' -ErrorAction SilentlyContinue).Count -gt 0
+        # Check for USMT files (@() so a single .MIG match still has a .Count)
+        $hasMigFiles = @(Get-ChildItem -Path $storePath -Filter '*.MIG' -ErrorAction SilentlyContinue).Count -gt 0
 
         if ((Test-Path $infoFile) -or (Test-Path $usmtFile) -or $hasMigFiles) {
             $info = $null
@@ -212,7 +310,8 @@ function Get-MigrationStores {
             }
         }
     }
-    return $stores
+    # Force array semantics for the single-store / no-store cases (see above).
+    return @($stores)
 }
 
 function Install-USMT {
@@ -622,7 +721,7 @@ function Start-BackupWizard {
 
     Write-Host ""
     Write-Step "Scanning for user profiles..."
-    $profiles = Get-UserProfiles
+    $profiles = @(Get-UserProfiles)
 
     if ($profiles.Count -eq 0) {
         Write-Failure "No user profiles found"
@@ -760,7 +859,7 @@ function Start-RestoreWizard {
     }
 
     Write-Step "Scanning for backups..."
-    $stores = Get-MigrationStores -BasePath $storePath
+    $stores = @(Get-MigrationStores -BasePath $storePath)
 
     if ($stores.Count -eq 0) {
         Write-Failure "No backups found at: $storePath"
@@ -871,7 +970,7 @@ function Start-RestoreWizard {
         # Existing account flow
         Write-Host ""
         Write-Host "  Select target account:" -ForegroundColor Yellow
-        $profiles = Get-UserProfiles
+        $profiles = @(Get-UserProfiles)
 
         for ($i = 0; $i -lt $profiles.Count; $i++) {
             Write-Host "  $($i + 1). $($profiles[$i].Account)" -ForegroundColor White
@@ -959,7 +1058,7 @@ function Show-Backups {
     }
 
     Write-Step "Scanning..."
-    $stores = Get-MigrationStores -BasePath $storePath
+    $stores = @(Get-MigrationStores -BasePath $storePath)
 
     if ($stores.Count -eq 0) {
         Write-Failure "No backups found at: $storePath"
