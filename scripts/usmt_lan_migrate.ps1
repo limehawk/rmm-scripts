@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.2.2
+ SCRIPT   : USMT LAN Migration Tool                                      v1.2.3
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -55,6 +55,8 @@ $ErrorActionPreference = 'Stop'
      - $IncludeLocalAppData : $false (advanced; AppData\Local can be very large)
      - $ReceiverWaitSeconds : 180; Sender+localsend wait for the receiver's recv
                           listener (TCP 53317) before starting the capture
+     - $SendTimeoutSeconds  : 3600; Sender+localsend max time for the store
+                          transfer before force-kill (WiFi-drop guard)
 
  SETTINGS
 
@@ -175,6 +177,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-24 v1.2.3 PS 5.1 hardening (adversarial audit): TryParse profile + receiver-pick prompts so non-numeric input no longer throws a raw cast error; route localsend send through Start-Tracked with a bounded $SendTimeoutSeconds (default 3600) timeout so a mid-transfer WiFi drop is killed instead of hanging/orphaning
  2026-06-24 v1.2.2 Fix LAN discovery abort + localsend orphan: neutralize $ErrorActionPreference around the localsend scan native call so benign stderr INFO lines no longer throw NativeCommandError on PowerShell 5.1
  2026-06-23 v1.2.1 Fix StrictMode regression: .Count/indexing on Get-LocalIPv4 and Find-Receivers threw "property 'Count' cannot be found" on WinPS 5.1 when the result was a single item or none; wrap returns and call sites in @() (also Get-UserProfiles)
  2026-06-23 v1.2.0 Network pre-flight (from live wrong-IP run): Receiver prints its own LAN IP(s) for the operator to relay; Sender auto-discovers receivers via localsend mDNS scan with a pick-list before manual entry; self-IP rejection; same-subnet check (interface IP + prefix) with a clear cross-WiFi warning and confirm-unless-Force; readiness wait kept as the final gate
@@ -205,6 +208,7 @@ $EncryptionKey = ''            # USMT store encryption key (not logged)
 $Force             = $false    # skip the destructive-loadstate confirm (unattended)
 $IncludeLocalAppData = $false  # advanced: include AppData\Local (can be huge)
 $ReceiverWaitSeconds = 180     # Sender+localsend: how long to wait for the receiver's recv listener
+$SendTimeoutSeconds  = 3600    # Sender+localsend: max time for the store transfer before force-kill (WiFi-drop guard)
 
 # --- Fixed endpoints / paths (not user inputs) --------------------------------
 $USMTx64URL       = 'https://github.com/belowaverage-org/SuperGrate/raw/master/USMT/x64.zip'
@@ -882,9 +886,21 @@ function Send-Store {
     $sendArgs = @('send', '--ip', $ip, '-f', $migFile)
     if (Test-Path $infoFile) { $sendArgs += @('-f', $infoFile) }
 
-    & $exe @sendArgs
-    if ($LASTEXITCODE -ne 0) {
-        Write-Failure "LocalSend send returned exit code $LASTEXITCODE"
+    # Route the send through Start-Tracked so the role finally / Ctrl+C handler can
+    # reap it, and bound it with a deadline: a WiFi drop mid-transfer otherwise blocks
+    # in the write syscall until TCP timeout, hanging the sender and orphaning the child.
+    $sendProc = Start-Tracked -FilePath $exe -ArgumentList $sendArgs
+    if (-not $sendProc) {
+        Write-Failure "Failed to launch LocalSend send"
+        return $false
+    }
+    if (-not $sendProc.WaitForExit($SendTimeoutSeconds * 1000)) {
+        Write-Failure "LocalSend send timed out after $SendTimeoutSeconds s (receiver stalled?). Killing transfer."
+        Stop-Process -Id $sendProc.Id -Force -ErrorAction SilentlyContinue
+        return $false
+    }
+    if ($sendProc.ExitCode -ne 0) {
+        Write-Failure "LocalSend send returned exit code $($sendProc.ExitCode)"
         return $false
     }
     Write-Success "Store sent"
@@ -998,7 +1014,11 @@ function Invoke-SenderRole {
         }
         Write-Host ""
         $selection = Read-Host "Select profile to migrate (1-$($profiles.Count))"
-        $index = [int]$selection - 1
+        # Safe-parse: a non-numeric keystroke would otherwise throw a raw [int] cast
+        # error under EAP=Stop before the range check below can fire.
+        $selNum = 0
+        if (-not [int]::TryParse(($selection -as [string]).Trim(), [ref]$selNum)) { throw "Invalid selection" }
+        $index = $selNum - 1
         if ($index -lt 0 -or $index -ge $profiles.Count) { throw "Invalid selection" }
         $source = $profiles[$index].Account
     }
@@ -1044,7 +1064,10 @@ function Invoke-SenderRole {
                 Write-Host "  $($found.Count + 1). Enter an IP/hostname manually" -ForegroundColor White
                 Write-Host ""
                 $pick = Read-Host "Select the NEW laptop (1-$($found.Count + 1))"
-                $pIdx = [int]$pick - 1
+                # Safe-parse: a non-numeric pick (or the explicit manual-entry option)
+                # must fall through to manual entry, not throw a raw [int] cast error.
+                $pickNum = 0
+                $pIdx = if ([int]::TryParse(($pick -as [string]).Trim(), [ref]$pickNum)) { $pickNum - 1 } else { -1 }
                 if ($pIdx -ge 0 -and $pIdx -lt $found.Count) {
                     $chosenIp = $found[$pIdx].IP
                 } else {
