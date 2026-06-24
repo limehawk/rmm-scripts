@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.2.3
+ SCRIPT   : USMT LAN Migration Tool                                      v1.2.4
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -177,6 +177,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-24 v1.2.4 Fix from live run: cache the child process handle in Start-Tracked so .ExitCode is reliable on PS 5.1 (a $null exit code was silently masking scanstate failures and faking localsend send failures); verify USMT.MIG exists after capture and echo the scan.log tail inline on failure instead of trusting the exit code
  2026-06-24 v1.2.3 PS 5.1 hardening (adversarial audit): TryParse profile + receiver-pick prompts so non-numeric input no longer throws a raw cast error; route localsend send through Start-Tracked with a bounded $SendTimeoutSeconds (default 3600) timeout so a mid-transfer WiFi drop is killed instead of hanging/orphaning
  2026-06-24 v1.2.2 Fix LAN discovery abort + localsend orphan: neutralize $ErrorActionPreference around the localsend scan native call so benign stderr INFO lines no longer throw NativeCommandError on PowerShell 5.1
  2026-06-23 v1.2.1 Fix StrictMode regression: .Count/indexing on Get-LocalIPv4 and Find-Receivers threw "property 'Count' cannot be found" on WinPS 5.1 when the result was a single item or none; wrap returns and call sites in @() (also Get-UserProfiles)
@@ -293,10 +294,20 @@ function Start-Tracked {
         NoNewWindow = $true
     }
     if ($null -ne $ArgumentList) { $spParams.ArgumentList = $ArgumentList }
-    if ($Wait) { $spParams.Wait = $true }
-
+    # Deliberately do NOT pass -Wait to Start-Process. Start-Process -PassThru can
+    # return a process whose .ExitCode reads $null on Windows PowerShell 5.1 once the
+    # process exits, because the underlying Win32 handle is released. A $null exit
+    # code silently masks failures: scanstate's `($exit -gt 1)` guard never fires
+    # ($null -gt 1 is false) so a failed capture looks successful, and the send's
+    # `($exit -ne 0)` check reports a false failure. Touching .Handle while the
+    # process is still alive caches the handle so .ExitCode stays readable after
+    # exit; then we wait on the process directly when -Wait was requested.
     $proc = Start-Process @spParams
-    if ($proc) { $script:TrackedChildren += $proc }
+    if ($proc) {
+        try { $null = $proc.Handle } catch { }
+        $script:TrackedChildren += $proc
+        if ($Wait) { $proc.WaitForExit() }
+    }
     return $proc
 }
 
@@ -1165,10 +1176,22 @@ function Invoke-SenderRole {
     Write-Header -Type run -Title 'PROFILE BACKUP'
     $scanExit = Start-ProfileScan -USMTPath $USMTPath -SourceAccount $source -StorePath $storeDir `
                                   -EncryptionKey $EncryptionKey -IncludeLocalAppData:$IncludeLocalAppData
-    if ($scanExit -gt 1) {
-        throw "scanstate failed (exit code $scanExit). See $storeDir\scan.log"
+    # Verify the store was actually produced, not just trust the exit code: a failed
+    # capture can leave USMT.MIG absent while the run still reaches the send (which
+    # then ships only backup_info.json). When the capture fails OR the store is
+    # missing, surface the scanstate log tail inline so the real reason is visible
+    # in the run output -- no need to RDP in and hunt for scan.log.
+    $migPath = Join-Path $storeDir 'USMT.MIG'
+    if ($scanExit -gt 1 -or -not (Test-Path $migPath)) {
+        $scanLog = Join-Path $storeDir 'scan.log'
+        if (Test-Path $scanLog) {
+            Write-Info "---- scan.log (last 25 lines) ----"
+            Get-Content $scanLog -Tail 25 | ForEach-Object { Write-Info $_ }
+            Write-Info "---- end scan.log ----"
+        }
+        throw "scanstate did not produce a migration store (exit code $scanExit; USMT.MIG missing at $migPath). See $scanLog"
     }
-    Write-Success "scanstate complete"
+    Write-Success "scanstate complete (USMT.MIG present)"
 
     # --- Metadata (never persist the key) -------------------------------------
     $metadata = @{
