@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.2.1
+ SCRIPT   : USMT LAN Migration Tool                                      v1.2.2
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -175,6 +175,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-24 v1.2.2 Fix LAN discovery abort + localsend orphan: neutralize $ErrorActionPreference around the localsend scan native call so benign stderr INFO lines no longer throw NativeCommandError on PowerShell 5.1
  2026-06-23 v1.2.1 Fix StrictMode regression: .Count/indexing on Get-LocalIPv4 and Find-Receivers threw "property 'Count' cannot be found" on WinPS 5.1 when the result was a single item or none; wrap returns and call sites in @() (also Get-UserProfiles)
  2026-06-23 v1.2.0 Network pre-flight (from live wrong-IP run): Receiver prints its own LAN IP(s) for the operator to relay; Sender auto-discovers receivers via localsend mDNS scan with a pick-list before manual entry; self-IP rejection; same-subnet check (interface IP + prefix) with a clear cross-WiFi warning and confirm-unless-Force; readiness wait kept as the final gate
  2026-06-23 v1.1.0 Hardening from live run: (1) Sender fail-fast receiver-readiness wait (poll recv listener on 53317, $ReceiverWaitSeconds, or path writability) BEFORE capture; (2) track + force-kill scanstate/loadstate/localsend children on exit/cancel via try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); (3) pre-flight stale-process kill
@@ -772,7 +773,19 @@ function Find-Receivers {
     param([string]$LocalSendExe, [int]$ScanSeconds = 6)
 
     $devices = @()
-    $scanOut = & $LocalSendExe scan -t $ScanSeconds 2>&1
+    # The LocalSend CLI logs INFO lines to stderr (Go's default logger writes there).
+    # Under Windows PowerShell 5.1 with $ErrorActionPreference='Stop', merging that
+    # stderr via 2>&1 promotes the first log line ("INFO Start Scanning") to a
+    # terminating NativeCommandError -- aborting the scan before any device line is
+    # parsed, and orphaning the still-running localsend child. Neutralize EAP for
+    # just this native call so stderr arrives as plain records the regex ignores.
+    $prevEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $scanOut = & $LocalSendExe scan -t $ScanSeconds 2>&1
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
     foreach ($line in $scanOut) {
         $text = "$line"
         $m = [regex]::Match($text, 'Name:\s*(?<name>.+?),\s*Version:\s*.+?,\s*Address:\s*(?<ip>\d{1,3}(?:\.\d{1,3}){3}):(?<port>\d+)')
