@@ -37,3 +37,6 @@ readme: |
   - LocalSend transfer is HTTPS by default.
 favourite: false
 shared: false
+scriptId: '7370213573888868352'
+lastPushedChecksum: sha256:a15ad7a59bf776e3
+lastPushedMetaChecksum: sha256:3b1de7866eb66bbd
