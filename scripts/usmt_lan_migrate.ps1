@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : USMT LAN Migration Tool                                      v1.2.0
+ SCRIPT   : USMT LAN Migration Tool                                      v1.2.1
  AUTHOR   : Limehawk.io
  DATE     : June 2026
  USAGE    : .\usmt_lan_migrate.ps1
@@ -175,6 +175,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-06-23 v1.2.1 Fix StrictMode regression: .Count/indexing on Get-LocalIPv4 and Find-Receivers threw "property 'Count' cannot be found" on WinPS 5.1 when the result was a single item or none; wrap returns and call sites in @() (also Get-UserProfiles)
  2026-06-23 v1.2.0 Network pre-flight (from live wrong-IP run): Receiver prints its own LAN IP(s) for the operator to relay; Sender auto-discovers receivers via localsend mDNS scan with a pick-list before manual entry; self-IP rejection; same-subnet check (interface IP + prefix) with a clear cross-WiFi warning and confirm-unless-Force; readiness wait kept as the final gate
  2026-06-23 v1.1.0 Hardening from live run: (1) Sender fail-fast receiver-readiness wait (poll recv listener on 53317, $ReceiverWaitSeconds, or path writability) BEFORE capture; (2) track + force-kill scanstate/loadstate/localsend children on exit/cancel via try-finally + Ctrl+C/exit handler (fixes orphan hang and scanstate code 29); (3) pre-flight stale-process kill
  2026-06-23 v1.0.0 Initial release (LAN sibling of usmt_profile_migrate.ps1)
@@ -674,7 +675,10 @@ function Get-LocalIPv4 {
             }
         }
     } catch { }
-    return $list
+    # Force array semantics so a single-NIC (one item) or zero-NIC ($null)
+    # result still supports .Count / indexing under Set-StrictMode (WinPS 5.1
+    # throws "property 'Count' cannot be found" on a bare scalar).
+    return @($list)
 }
 
 # Convert a dotted IPv4 string to a UInt32 for bitmask subnet math.
@@ -780,7 +784,8 @@ function Find-Receivers {
             }
         }
     }
-    return $devices
+    # Force array semantics for the 0/1-device cases (see Get-LocalIPv4).
+    return @($devices)
 }
 
 function Test-TcpPort {
@@ -969,7 +974,7 @@ function Invoke-SenderRole {
     $source = $SourceAccount
     if ([string]::IsNullOrWhiteSpace($source)) {
         Write-Step "Scanning for user profiles..."
-        $profiles = Get-UserProfiles
+        $profiles = @(Get-UserProfiles)
         if ($profiles.Count -eq 0) { throw "No user profiles found" }
 
         Write-Host ""
@@ -994,7 +999,7 @@ function Invoke-SenderRole {
         Write-Header -Type run -Title 'NETWORK PRE-FLIGHT'
 
         # Show this sender's own IPs so the operator can sanity-check the target.
-        $ownIPs = Get-LocalIPv4
+        $ownIPs = @(Get-LocalIPv4)
         if ($ownIPs.Count -gt 0) {
             Write-Info "This machine (SENDER) IPv4: $(($ownIPs | ForEach-Object { $_.IPAddress }) -join ', ')"
         }
@@ -1006,7 +1011,7 @@ function Invoke-SenderRole {
         $chosenIp = ''
         if ([string]::IsNullOrWhiteSpace($receiver)) {
             Write-Step "Discovering LocalSend receivers on the LAN (mDNS scan)..."
-            $found = Find-Receivers -LocalSendExe $exe -ScanSeconds 6
+            $found = @(Find-Receivers -LocalSendExe $exe -ScanSeconds 6)
 
             if ($found.Count -eq 1) {
                 $d = $found[0]
@@ -1184,7 +1189,7 @@ function Invoke-ReceiverRole {
     # Show this receiver's own LAN IP(s) prominently so the operator can tell the
     # SENDER exactly what to target -- removes the guess-the-IP problem.
     if ($Transport -eq 'localsend') {
-        $ownIPs = Get-LocalIPv4
+        $ownIPs = @(Get-LocalIPv4)
         Write-Host ""
         if ($ownIPs.Count -gt 0) {
             Write-Host "[INFO] Tell the SENDER to target this machine at:" -ForegroundColor Cyan
