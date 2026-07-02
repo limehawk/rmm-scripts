@@ -7,9 +7,9 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.1.0
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.2.0
 #  AUTHOR   : Limehawk.io
-#  DATE     : March 2026
+#  DATE     : July 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
 # ================================================================================
 #  FILE     : dokploy_running_apps_deploy.sh
@@ -21,8 +21,9 @@
 #
 #    Automates redeployment of all running Dokploy applications by querying
 #    the Dokploy PostgreSQL database for application status, then triggering
-#    deployments via the local Dokploy API. Uses the API key and hits
-#    localhost to avoid external routing issues.
+#    deployments via the local Dokploy API. The API key is supplied via the
+#    DOKPLOY_API_KEY environment variable; calls hit localhost to avoid
+#    external routing issues.
 #
 #  DATA SOURCES & PRIORITY
 #
@@ -31,17 +32,19 @@
 #
 #  REQUIRED INPUTS
 #
-#    All inputs are hardcoded in the script body:
+#    Inputs are hardcoded in the script body except the API key:
 #      - DOKPLOY_DB_CONTAINER: Name filter for Dokploy postgres container
 #      - DOKPLOY_LOCAL_URL: Local Dokploy API base URL
-#      - API_KEY_NAME: Name of the API key to look up in Dokploy database
+#      - DOKPLOY_API_KEY: Dokploy API key (environment variable, or set
+#        directly in the copy pasted into the Dokploy schedule)
 #
 #  SETTINGS
 #
 #    Configuration defaults:
 #      - DOKPLOY_DB_CONTAINER: "dokploy-postgres" (container name filter)
 #      - DOKPLOY_LOCAL_URL: "http://localhost:3000" (internal API)
-#      - API_KEY_NAME: "claude-key" (looked up in Dokploy apikey table)
+#      - DOKPLOY_API_KEY: unset (must be provided; generate in Dokploy
+#        Settings > API/CLI)
 #
 #  BEHAVIOR
 #
@@ -49,6 +52,7 @@
 #    2. Skips applications with "idle" status
 #    3. Triggers deployment via application.deploy API for non-idle apps in parallel
 #    4. Waits for all deployments and reports results
+#    5. Exits 1 if any deployment failed so the scheduler surfaces the failure
 #
 #  PREREQUISITES
 #
@@ -58,7 +62,8 @@
 #
 #  SECURITY NOTES
 #
-#    - API key read from database at runtime, never hardcoded
+#    - API key supplied via environment/schedule config, never committed
+#      to source control
 #    - No secrets in logs
 #    - All API calls are localhost-only, no external network traffic
 #
@@ -68,8 +73,8 @@
 #
 #  EXIT CODES
 #
-#    0 - Success (all deployments processed)
-#    1 - Failure (error occurred during execution)
+#    0 - Success (all triggered deployments accepted)
+#    1 - Failure (validation error or one or more deployments failed)
 #
 #  EXAMPLE RUN
 #
@@ -105,6 +110,8 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-02 v3.2.0 Source API key from DOKPLOY_API_KEY env var, exit 1 on
+#                    deploy failures, fix doubled zero in final count output
 #  2026-03-23 v3.1.0 Switch to application.deploy API via localhost
 #  2026-03-22 v3.0.0 Rewrite to use database + localhost webhooks
 #  2026-03-22 v2.0.1 Fix field delimiter — use pipe instead of tab for parsing
@@ -119,7 +126,7 @@
 # ============================================================================
 DOKPLOY_DB_CONTAINER="dokploy-postgres"                  # Dokploy postgres container name
 DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal API URL
-API_KEY_NAME="claude-key"                                # Name of API key in Dokploy
+DOKPLOY_API_KEY="${DOKPLOY_API_KEY:-}"                   # API key — from env, or set in the schedule copy (never commit a real key)
 # ============================================================================
 
 set -e
@@ -142,6 +149,11 @@ fi
 if [[ -z "$DOKPLOY_LOCAL_URL" ]]; then
     ERROR_OCCURRED=true
     ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_LOCAL_URL is not configured"
+fi
+
+if [[ -z "$DOKPLOY_API_KEY" ]]; then
+    ERROR_OCCURRED=true
+    ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_API_KEY is not configured (generate one in Dokploy Settings > API/CLI and set it in the schedule)"
 fi
 
 if [[ "$ERROR_OCCURRED" = true ]]; then
@@ -169,21 +181,6 @@ if [[ -z "$DB_CONTAINER" ]]; then
     echo ""
     exit 1
 fi
-
-# Fetch API key from database by name
-API_TOKEN=$(docker exec "$DB_CONTAINER" psql -U dokploy -d dokploy -t -A \
-    -c "SELECT id FROM apikey WHERE name = '$API_KEY_NAME' AND enabled = true LIMIT 1" 2>/dev/null)
-
-if [[ -z "$API_TOKEN" ]]; then
-    echo ""
-    echo "[ERROR] ERROR OCCURRED"
-    echo "=============================================================="
-    echo "API key '$API_KEY_NAME' not found or disabled in Dokploy."
-    echo ""
-    exit 1
-fi
-
-echo "API key loaded."
 
 # Query: app name, project name, status, applicationId (pipe-delimited, no headers)
 APP_DATA=$(docker exec "$DB_CONTAINER" psql -U dokploy -d dokploy -t -A -F '|' \
@@ -251,7 +248,7 @@ RESULTS_FILE=$(mktemp)
 echo "$DEPLOY_LIST" | xargs -P 0 -I {} sh -c '
     APP_NAME=$(echo "{}" | cut -d"|" -f1)
     APP_ID=$(echo "{}" | cut -d"|" -f2)
-    RESPONSE=$(curl -s -w "|%{http_code}" --max-time 30 -X POST "'"$DOKPLOY_LOCAL_URL"'/api/application.deploy" -H "Content-Type: application/json" -H "x-api-key: '"$API_TOKEN"'" -d "{\"applicationId\": \"$APP_ID\"}" 2>&1)
+    RESPONSE=$(curl -s -w "|%{http_code}" --max-time 30 -X POST "'"$DOKPLOY_LOCAL_URL"'/api/application.deploy" -H "Content-Type: application/json" -H "x-api-key: '"$DOKPLOY_API_KEY"'" -d "{\"applicationId\": \"$APP_ID\"}" 2>&1)
     HTTP_CODE=$(echo "$RESPONSE" | tail -c 4 | tr -d "|")
     if [ "$HTTP_CODE" = "200" ]; then
         echo "[OK] $APP_NAME"
@@ -260,8 +257,10 @@ echo "$DEPLOY_LIST" | xargs -P 0 -I {} sh -c '
     fi
 ' | tee "$RESULTS_FILE"
 
-DEPLOYED=$(grep -c "^\[OK\]" "$RESULTS_FILE" 2>/dev/null || echo 0)
-FAILED=$(grep -c "^\[ERROR\]" "$RESULTS_FILE" 2>/dev/null || echo 0)
+# grep -c prints the count (including 0) itself; || true only absorbs the
+# nonzero exit status so set -e doesn't kill the script on a zero count
+DEPLOYED=$(grep -c "^\[OK\]" "$RESULTS_FILE" || true)
+FAILED=$(grep -c "^\[ERROR\]" "$RESULTS_FILE" || true)
 rm -f "$RESULTS_FILE"
 
 # ============================================================================
@@ -275,6 +274,12 @@ echo "Skipped (idle) : $SKIPPED_IDLE"
 echo "Failed : $FAILED"
 
 echo ""
+if [[ "$FAILED" -gt 0 ]]; then
+    echo "[ERROR] SCRIPT COMPLETED WITH FAILURES"
+    echo "=============================================================="
+    exit 1
+fi
+
 echo "[OK] SCRIPT COMPLETED"
 echo "=============================================================="
 
