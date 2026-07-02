@@ -15,7 +15,7 @@ readme: |
   -----------
   - Queries app name, project, status, and applicationId from the Dokploy database
   - Skips applications with "idle" status; deploys all others in parallel
-  - DOKPLOY_API_KEY: supply via environment variable, or set directly in the copy pasted into the Dokploy schedule (generate in Dokploy Settings > API/CLI)
+  - API key is read from /root/.dokploy_api_key (chmod 600) on the host; the DOKPLOY_API_KEY environment variable overrides it (generate a key in Dokploy Settings > API/CLI)
   - Exits 1 if any deployment fails so the scheduler surfaces the failure
 
   Requirements
@@ -26,7 +26,7 @@ readme: |
 
   Security
   --------
-  - API key is never committed to version control; provide it at runtime
+  - API key lives in a root-only file on the host, outside the schedule body, the Dokploy database, and version control
   - No secrets are written to logs
   - All API calls are localhost-only, no external network traffic
 favourite: false
