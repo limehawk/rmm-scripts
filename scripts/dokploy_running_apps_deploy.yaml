@@ -1,5 +1,5 @@
 name: dokploy_running_apps_deploy.sh
-description: Redeploys all running Dokploy apps via local API
+description: Redeploys all running Dokploy apps via per-app deploy webhooks
 language: Bash
 tags:
 - Linux
@@ -9,13 +9,14 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Automates redeployment of all running Dokploy applications. Queries the Dokploy PostgreSQL database for application status, then triggers deployments in parallel via the local Dokploy API (localhost:3000). Idle applications are skipped.
+  Automates redeployment of all running Dokploy applications with no stored secret. Queries the Dokploy PostgreSQL database for each app's status and its built-in deploy webhook token, then triggers that webhook on localhost. Idle applications are skipped.
 
   Usage Notes
   -----------
-  - Queries app name, project, status, and applicationId from the Dokploy database
+  - Queries project, name, status, sourceType, branch, watchPaths, and the deploy webhook token from the Dokploy database
   - Skips applications with "idle" status; deploys all others in parallel
-  - API key is read from /root/.dokploy_api_key (chmod 600) on the host; the DOKPLOY_API_KEY environment variable overrides it (generate a key in Dokploy Settings > API/CLI)
+  - No API key or stored secret: each app's own webhook token is read from the local database at runtime and used only against localhost
+  - docker-source apps redeploy on a bare webhook POST; git-source apps get a GitHub-style push payload carrying the branch plus a file path matching any watchPaths filter
   - Exits 1 if any deployment fails so the scheduler surfaces the failure
 
   Requirements
@@ -23,12 +24,13 @@ readme: |
   - Must run on the Dokploy host server (Dokploy schedule or cron)
   - Dokploy postgres container accessible via docker exec
   - curl installed
+  - Each target app must have "Auto Deploy" enabled — the webhook rejects apps with auto deploy turned off
 
   Security
   --------
-  - API key lives in a root-only file on the host, outside the schedule body, the Dokploy database, and version control
-  - No secrets are written to logs
-  - All API calls are localhost-only, no external network traffic
+  - No API key or stored secret anywhere — the per-app webhook token is read from the local database at runtime
+  - No secrets are written to logs (only app names and HTTP codes are printed)
+  - All calls are localhost-only, no external network traffic
 favourite: false
 shared: false
 scriptId: '259059084121726976'
