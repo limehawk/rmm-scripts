@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.2.0
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.3.0
 #  AUTHOR   : Limehawk.io
 #  DATE     : July 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -21,9 +21,10 @@
 #
 #    Automates redeployment of all running Dokploy applications by querying
 #    the Dokploy PostgreSQL database for application status, then triggering
-#    deployments via the local Dokploy API. The API key is supplied via the
-#    DOKPLOY_API_KEY environment variable; calls hit localhost to avoid
-#    external routing issues.
+#    deployments via the local Dokploy API. The API key is read from a
+#    root-only file on the host (env var override supported), so the
+#    schedule body holds no secret; calls hit localhost to avoid external
+#    routing issues.
 #
 #  DATA SOURCES & PRIORITY
 #
@@ -35,16 +36,17 @@
 #    Inputs are hardcoded in the script body except the API key:
 #      - DOKPLOY_DB_CONTAINER: Name filter for Dokploy postgres container
 #      - DOKPLOY_LOCAL_URL: Local Dokploy API base URL
-#      - DOKPLOY_API_KEY: Dokploy API key (environment variable, or set
-#        directly in the copy pasted into the Dokploy schedule)
+#      - DOKPLOY_API_KEY: Dokploy API key. Resolved in order:
+#        1. DOKPLOY_API_KEY environment variable, if set
+#        2. Contents of DOKPLOY_API_KEY_FILE (root-only file on the host)
 #
 #  SETTINGS
 #
 #    Configuration defaults:
 #      - DOKPLOY_DB_CONTAINER: "dokploy-postgres" (container name filter)
 #      - DOKPLOY_LOCAL_URL: "http://localhost:3000" (internal API)
-#      - DOKPLOY_API_KEY: unset (must be provided; generate in Dokploy
-#        Settings > API/CLI)
+#      - DOKPLOY_API_KEY: unset (generate in Dokploy Settings > API/CLI)
+#      - DOKPLOY_API_KEY_FILE: "/root/.dokploy_api_key" (chmod 600)
 #
 #  BEHAVIOR
 #
@@ -62,8 +64,8 @@
 #
 #  SECURITY NOTES
 #
-#    - API key supplied via environment/schedule config, never committed
-#      to source control
+#    - API key lives in a root-only file on the host (chmod 600) — outside
+#      the schedule body, the Dokploy database, and version control
 #    - No secrets in logs
 #    - All API calls are localhost-only, no external network traffic
 #
@@ -110,6 +112,8 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-02 v3.3.0 Read API key from root-only key file so the schedule
+#                    body holds no secret; env var still overrides
 #  2026-07-02 v3.2.0 Source API key from DOKPLOY_API_KEY env var, exit 1 on
 #                    deploy failures, fix doubled zero in final count output
 #  2026-03-23 v3.1.0 Switch to application.deploy API via localhost
@@ -126,7 +130,8 @@
 # ============================================================================
 DOKPLOY_DB_CONTAINER="dokploy-postgres"                  # Dokploy postgres container name
 DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal API URL
-DOKPLOY_API_KEY="${DOKPLOY_API_KEY:-}"                   # API key — from env, or set in the schedule copy (never commit a real key)
+DOKPLOY_API_KEY="${DOKPLOY_API_KEY:-}"                   # API key — env var override; normally left empty
+DOKPLOY_API_KEY_FILE="/root/.dokploy_api_key"            # Root-only key file on the host (chmod 600)
 # ============================================================================
 
 set -e
@@ -141,6 +146,11 @@ echo "=============================================================="
 ERROR_OCCURRED=false
 ERROR_TEXT=""
 
+# Resolve API key: env var wins, otherwise read the root-only key file
+if [[ -z "$DOKPLOY_API_KEY" && -r "$DOKPLOY_API_KEY_FILE" ]]; then
+    DOKPLOY_API_KEY=$(<"$DOKPLOY_API_KEY_FILE")
+fi
+
 if [[ -z "$DOKPLOY_DB_CONTAINER" ]]; then
     ERROR_OCCURRED=true
     ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_DB_CONTAINER is not configured"
@@ -153,7 +163,7 @@ fi
 
 if [[ -z "$DOKPLOY_API_KEY" ]]; then
     ERROR_OCCURRED=true
-    ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_API_KEY is not configured (generate one in Dokploy Settings > API/CLI and set it in the schedule)"
+    ERROR_TEXT="${ERROR_TEXT}\n- DOKPLOY_API_KEY is not configured (put the key in $DOKPLOY_API_KEY_FILE with chmod 600, or set the env var)"
 fi
 
 if [[ "$ERROR_OCCURRED" = true ]]; then
