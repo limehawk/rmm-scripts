@@ -1,5 +1,5 @@
 name: dokploy_running_apps_deploy.sh
-description: Triggers deployments for all currently running Dokploy apps
+description: Redeploys all running Dokploy apps via local API
 language: Bash
 tags:
 - Linux
@@ -9,29 +9,26 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Automates the deployment process for all running Dokploy applications. Fetches application metadata via the Dokploy API, checks each app's status, and triggers deployments only for apps that are currently running. Idle applications are skipped to prevent unnecessary resource usage and deployment conflicts.
+  Automates redeployment of all running Dokploy applications. Queries the Dokploy PostgreSQL database for application status, then triggers deployments in parallel via the local Dokploy API (localhost:3000). Idle applications are skipped.
 
   Usage Notes
   -----------
-  - Fetches all application IDs from Dokploy via API
-  - Retrieves application info including status, name, and project
-  - Skips applications with "idle" status
-  - Triggers deployment for applications with "running" status
-  - Adds 2-second delay between deployments to avoid API rate limits
-  - DOKPLOY_DOMAIN: set to your Dokploy domain (e.g., "app.dokploy.com")
-  - API_TOKEN: set to your API token from Dokploy profile settings
+  - Queries app name, project, status, and applicationId from the Dokploy database
+  - Skips applications with "idle" status; deploys all others in parallel
+  - DOKPLOY_API_KEY: supply via environment variable, or set directly in the copy pasted into the Dokploy schedule (generate in Dokploy Settings > API/CLI)
+  - Exits 1 if any deployment fails so the scheduler surfaces the failure
 
   Requirements
   ------------
+  - Must run on the Dokploy host server (Dokploy schedule or cron)
+  - Dokploy postgres container accessible via docker exec
   - curl installed
-  - Network connectivity to Dokploy domain
-  - Valid Dokploy API token with deployment permissions
 
   Security
   --------
-  - API token must be kept secure and not committed to version control
-  - Replace API_TOKEN placeholder before running
-  - API calls use HTTPS for encrypted communication
+  - API key is never committed to version control; provide it at runtime
+  - No secrets are written to logs
+  - All API calls are localhost-only, no external network traffic
 favourite: false
 shared: false
 scriptId: '259059084121726976'
