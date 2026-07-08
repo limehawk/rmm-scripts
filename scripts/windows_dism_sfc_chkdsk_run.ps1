@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.0.1
+ SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.0.2
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : July 2026
  USAGE    : .\windows_dism_sfc_chkdsk_run.ps1
 ================================================================================
  FILE     : windows_dism_sfc_chkdsk_run.ps1
@@ -112,6 +112,7 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-08 v2.0.2 Raised sidecar execution timeout to 120 min for long DISM/SFC/chkdsk runs
  2026-01-19 v2.0.1 Updated to two-line ASCII console output style
  2025-12-28 v2.0.0 Smart logic: RestoreHealth only runs if ScanHealth finds corruption; removed ComponentCleanup
  2025-12-28 v1.2.0 Use exit codes instead of string parsing for DISM/SFC result detection

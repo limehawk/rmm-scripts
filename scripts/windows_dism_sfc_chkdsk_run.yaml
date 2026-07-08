@@ -5,7 +5,7 @@ tags:
 - Maintenance
 - Windows
 runAs: SYSTEM_USER
-timeout: 15
+timeout: 120
 readme: |
   Purpose
   -------
