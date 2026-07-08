@@ -2,15 +2,15 @@ name: dokploy_running_apps_deploy.sh
 description: Redeploys running Dokploy apps and verifies each outcome + version
 language: Bash
 tags:
-- Linux
-- Maintenance
+  - Linux
+  - Maintenance
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
   Purpose
   -------
   Automates redeployment of all running Dokploy applications with no stored secret, then verifies what actually happened. Reads each app's status and built-in deploy webhook token from the Dokploy database, triggers the webhook on localhost, waits for the deploy to finish, and reports the real outcome plus whether the running image changed. Idle applications are skipped.
-
+  
   Usage Notes
   -----------
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
@@ -19,14 +19,14 @@ readme: |
   - docker-source apps redeploy on a bare webhook POST; git-source apps get a GitHub-style push payload carrying the branch plus a file path matching any watchPaths filter
   - After triggering, waits for the deployment table to report done/error, then compares the running container image id before and after to classify each app as updated / no change / failed
   - Reports per-app duration and a summary; exits 1 if any app failed or could not be verified
-
+  
   Requirements
   ------------
   - Must run on the Dokploy host server (Dokploy schedule or cron)
   - Dokploy postgres container accessible via docker exec
   - docker and curl installed
   - Each target app must have "Auto Deploy" enabled — the webhook rejects apps with auto deploy turned off
-
+  
   Security
   --------
   - No API key or stored secret anywhere — the per-app webhook token is read from the local database at runtime
@@ -34,6 +34,6 @@ readme: |
   - All calls are localhost-only, no external network traffic
 favourite: false
 shared: false
-scriptId: '259059084121726976'
-lastPushedChecksum: sha256:5834fc94ba215055
-lastPushedMetaChecksum: sha256:5483c08a3ad54c2b
+scriptId: "259059084121726976"
+lastPushedChecksum: "sha256:fe4c759579dc9eeb"
+lastPushedMetaChecksum: "sha256:45d39c1400978d45"

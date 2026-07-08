@@ -2,15 +2,15 @@ name: windows_dism_sfc_chkdsk_run.ps1
 description: Runs DISM, SFC, and chkdsk for Windows system file repair
 language: PowerShell
 tags:
-- Maintenance
-- Windows
+  - Maintenance
+  - Windows
 runAs: SYSTEM_USER
 timeout: 240
 readme: |
   Purpose
   -------
   Runs standard Windows health checks and repair commands including DISM image health scans, disk checks, system file verification, and component cleanup. Designed for unattended execution in RMM environments to perform routine system maintenance and repair operations.
-
+  
   Usage Notes
   -----------
   - Configurable operations via hardcoded flags: RunDismScan, RunDismRestore, RunChkdsk, RunSfc
@@ -20,20 +20,20 @@ readme: |
   - Optional RebootAfterMaintenance with 5-minute warning (default: false)
   - Failed operations are reported but script continues to next operation
   - DISM operates in online mode against the running Windows installation
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
   - Administrator privileges required
   - Windows 8.1/Server 2012 R2 or later for DISM commands
   - Sufficient disk space for repair operations
-
+  
   Security
   --------
   - Operations may cause system modifications and require reboots
   - Requires elevated permissions to modify system components
 favourite: false
 shared: true
-scriptId: '1907390810231676928'
-lastPushedChecksum: sha256:0abbca381fb13363
-lastPushedMetaChecksum: sha256:0a58021292b141ca
+scriptId: "1907390810231676928"
+lastPushedChecksum: "sha256:be481319dad82072"
+lastPushedMetaChecksum: "sha256:e863d3038b50b3df"
