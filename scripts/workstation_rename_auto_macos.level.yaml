@@ -1,8 +1,28 @@
 name: workstation_rename_auto_macos.sh
+description: Auto-renames macOS device using CLIENT-USER-UUID pattern
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Automatically renames a macOS device using a standardized naming pattern: CLIENT3-USER-UUID. Sets HostName, ComputerName, and LocalHostName. Designed for RMM deployment with automatic client/user detection.
+
+  Usage Notes
+  -----------
+  - Client name from RMM placeholder $YourClientNameHere (3-char abbreviation used)
+  - Username detected from current console user
+  - UUID from hardware identifier
+  - Final hostname is exactly 15 characters (NetBIOS compatible)
+  - Flushes DNS cache after rename
+  - Skips rename if hostname already matches
+
+  Requirements
+  ------------
+  - macOS 10.14 or later
+  - Root/sudo access
+  - RMM variable $YourClientNameHere must be set
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNA
-lastPushedChecksum: "sha256:e20d54ceb44212c7"
-lastPushedMetaChecksum: "sha256:61983d88970fe242"
+lastPushedChecksum: sha256:e20d54ceb44212c7
+lastPushedMetaChecksum: sha256:61983d88970fe242

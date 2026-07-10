@@ -1,8 +1,32 @@
 name: printers_remove_all.ps1
+description: Removes all printers, drivers, and ports from Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Removes ALL installed printers, their associated ports, and unused printer drivers from Windows. Use with caution -- this is a destructive operation that cannot be undone.
+
+  Usage Notes
+  -----------
+  - Enumerates and removes all installed printers
+  - Removes orphaned TCP/IP printer ports (optional)
+  - Removes unused printer drivers (optional)
+  - $removeDrivers: Control driver removal (default: true)
+  - $removePorts: Control orphaned port removal (default: true)
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Administrator privileges
+  - Print Spooler service running
+
+  Security
+  --------
+  - Destructive operation -- removes ALL printers
+  - Cannot be undone without reinstalling printers
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyOA
-lastPushedChecksum: "sha256:f5ff959c9835072b"
-lastPushedMetaChecksum: "sha256:ffc18af523c904cd"
+lastPushedChecksum: sha256:f5ff959c9835072b
+lastPushedMetaChecksum: sha256:ffc18af523c904cd

@@ -1,8 +1,31 @@
 name: files_rename_snake_case.ps1
+description: Recursively renames files and folders to snake_case format
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Recursively renames all files and folders in a directory to snake_case format. Converts spaces, hyphens, and other non-alphanumeric characters to underscores and lowercases all characters.
+
+  Usage Notes
+  -----------
+  - Set target directory via SuperOps runtime variable $YourTargetPathHere
+  - Converts to lowercase, replaces non-alphanumeric characters with underscores
+  - Trims leading/trailing underscores from names
+  - Processes child items first (bottom-up) to avoid path issues
+  - Skips items already in snake_case format
+  - Reports each rename operation and final counts
+  - WARNING: Cannot be undone -- backup important directories first
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Write permissions to target directory
+  - PowerShell 5.1+
+variables:
+- name: YourTargetPathHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2OQ
-lastPushedChecksum: "sha256:1667beeb231b76e8"
-lastPushedMetaChecksum: "sha256:a33af910f402d56e"
+lastPushedChecksum: sha256:1667beeb231b76e8
+lastPushedMetaChecksum: sha256:a33af910f402d56e

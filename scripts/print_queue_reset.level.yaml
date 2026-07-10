@@ -1,8 +1,30 @@
 name: print_queue_reset.ps1
+description: Resets Windows print queue by clearing spooler directory
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Resets and clears the Windows print queue by stopping the Print Spooler service, removing all queued print jobs from the spooler directory, and restarting the service. Resolves common printing issues caused by stuck or corrupted print jobs that prevent new documents from printing.
+
+  Usage Notes
+  -----------
+  - Stops the Print Spooler service if running and waits for handles to release
+  - Attempts to remove print job files with retry logic (3 attempts per file)
+  - Reports successfully removed and locked files separately
+  - Locked files are removed when service restarts
+  - Spooler directory: %SystemRoot%\System32\spool\PRINTERS
+  - Service stop/start timeout: 30 seconds each
+
+  Requirements
+  ------------
+  - Windows operating system
+  - Administrator privileges
+  - Print Spooler service must exist
+  - $serviceName: Service name (default: "Spooler")
+  - $stopTimeout / $startTimeout: Timeout in seconds (default: 30)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNA
-lastPushedChecksum: "sha256:96b72c3fc16240ef"
-lastPushedMetaChecksum: "sha256:602b6d64d7c335eb"
+lastPushedChecksum: sha256:96b72c3fc16240ef
+lastPushedMetaChecksum: sha256:602b6d64d7c335eb

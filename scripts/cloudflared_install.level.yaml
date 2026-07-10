@@ -1,8 +1,43 @@
 name: cloudflared_install.ps1
+description: Installs cloudflared via winget and registers the tunnel service
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Onboards a Windows endpoint to a Cloudflare named tunnel by installing the Cloudflare.cloudflared package via winget and registering the Cloudflare Tunnel service with a connector token supplied through SuperOps runtime replacement. The connector token is treated as a secret and is masked on any output path.
+
+  Usage Notes
+  -----------
+  - Validates connector token is present and was replaced by SuperOps
+  - Resolves winget.exe (SYSTEM-aware path resolution)
+  - Installs Cloudflare.cloudflared via winget (treats already-installed exit codes as success)
+  - Resolves the cloudflared.exe binary
+  - Removes any pre-existing Cloudflare Tunnel service registration
+  - Registers the service with the connector token
+  - Polls the service for Running state up to 10 seconds
+  - Reports success or masked failure (token never echoed)
+  - Package Id is Cloudflare.cloudflared
+  - Service name is Cloudflare Tunnel
+  - Winget flags --exact --silent --accept-package-agreements --accept-source-agreements
+
+  Requirements
+  ------------
+  - CloudflaredTunnelToken runtime variable (required, non-empty)
+  - Windows 10 1809+ / Windows Server 2019+
+  - SYSTEM or Administrator privileges
+  - Winget installed (run winget_setup.ps1 first if missing)
+  - Outbound internet connectivity to Cloudflare edge (port 7844)
+
+  Security
+  --------
+  - No secrets in logs
+  - Connector token is never printed; if it appears in an error message it is masked as ****<last4>
+  - Runtime variable validated against unreplaced placeholder
+variables:
+- name: CloudflaredTunnelToken
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOA
-lastPushedChecksum: "sha256:13f478410f8c5064"
-lastPushedMetaChecksum: "sha256:47404ab047e3dae0"
+lastPushedChecksum: sha256:13f478410f8c5064
+lastPushedMetaChecksum: sha256:47404ab047e3dae0

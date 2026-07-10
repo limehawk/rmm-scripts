@@ -1,8 +1,28 @@
 name: dell_command_update.ps1
+description: Installs Dell Command Update and applies driver/firmware updates
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Installs Dell Command Update via winget and runs it to scan and apply driver/firmware updates silently. Designed for automated Dell system maintenance in RMM environments.
+
+  Usage Notes
+  -----------
+  - Verifies winget is available, then installs Dell Command Update if not present
+  - Configures DCU for silent operation: auto-suspend BitLocker, disable user consent prompts
+  - Scans for available updates and outputs log to console
+  - Applies updates without rebooting (reboot=disable)
+  - Logs scan and apply operations to C:\dell\logs
+  - Hardcoded variables: DcuCliPath, DcuLogPath, WingetId
+
+  Requirements
+  ------------
+  - Windows 10 1809+ or Windows 11 with winget
+  - Dell system hardware (script will fail on non-Dell systems)
+  - Administrator privileges
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0Mw
-lastPushedChecksum: "sha256:a83e3d86b27a7bd3"
-lastPushedMetaChecksum: "sha256:3c5296736f6ee2d8"
+lastPushedChecksum: sha256:a83e3d86b27a7bd3
+lastPushedMetaChecksum: sha256:3c5296736f6ee2d8

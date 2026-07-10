@@ -1,8 +1,28 @@
 name: outlook_new_restore.ps1
+description: Reinstalls the New Outlook app and re-enables the Try the new Outlook toggle
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 10
+readme: |
+  Purpose
+  -------
+  Reverses the remove_new_outlook.ps1 script by reinstalling the New Outlook (Microsoft.OutlookForWindows) app and re-enabling the "Try the new Outlook" toggle in Classic Outlook. Used when an organization wants to roll back the removal and allow users to access New Outlook again.
+
+  Usage Notes
+  -----------
+  - Resolves winget path with SYSTEM context awareness for RMM compatibility
+  - Installs Microsoft.OutlookForWindows via winget with silent and accept flags
+  - Falls back to Add-AppxPackage with Microsoft Store URI if winget is unavailable
+  - Recreates the OutlookUpdate registry key under UScheduler so Windows Update can provision the app again
+  - Removes the HideNewOutlookToggle registry value from loaded user hives to re-enable the toggle in Classic Outlook
+  - No configurable inputs required - targets Microsoft.OutlookForWindows specifically
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges
+  - winget recommended (falls back to Store URI if unavailable)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwNQ
-lastPushedChecksum: "sha256:45a3649ff7a97649"
-lastPushedMetaChecksum: "sha256:e070c53a7ac78405"
+lastPushedChecksum: sha256:45a3649ff7a97649
+lastPushedMetaChecksum: sha256:e070c53a7ac78405

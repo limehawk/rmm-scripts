@@ -1,8 +1,30 @@
 name: prinstall_id.ps1
+description: Identifies a single printer by IP via SNMP using prinstall
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 2
+readme: |
+  Purpose
+  -------
+  Wraps the `prinstall id <ip>` subcommand to query a single printer via SNMP and return model, serial number, and device status. Used by techs to verify a printer's identity and reachability before running an add, or to confirm SNMP is answering on an expected IP.
+
+  Usage Notes
+  -----------
+  - Runs `prinstall id <printerIp>` and streams output to the console
+  - $YourIpHere is required — an unreplaced placeholder is treated as an input error
+  - Unlike prinstall_scan, this script does not auto-detect anything; the target IP must be supplied
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - prinstall.exe installed (run prinstall_setup.ps1 first)
+  - Network access to the target printer
+  - UDP 161 (SNMP) open to the printer
+  - $YourIpHere: Target printer IP address (e.g. 192.168.1.10)
+variables:
+- name: YourIpHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNw
-lastPushedChecksum: "sha256:6b982f78a98d4882"
-lastPushedMetaChecksum: "sha256:29e2e50289ee129a"
+lastPushedChecksum: sha256:6b982f78a98d4882
+lastPushedMetaChecksum: sha256:29e2e50289ee129a

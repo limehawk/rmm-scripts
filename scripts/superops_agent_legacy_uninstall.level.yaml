@@ -1,8 +1,26 @@
 name: superops_agent_legacy_uninstall.ps1
+description: Uninstalls legacy SuperOps agent via WMI IdentifyingNumber
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Uninstalls the legacy SuperOps agent on Windows systems using the product's IdentifyingNumber. Intended for environments where the agent cannot be uninstalled via standard methods or newer uninstallers.
+
+  Usage Notes
+  -----------
+  - No inputs required - IdentifyingNumber is hardcoded
+  - Queries WMI Win32_Product class to locate and uninstall
+  - Designed for silent, unattended execution
+  - Use this for older SuperOps agent installations
+
+  Requirements
+  ------------
+  - PowerShell 2.0 or later
+  - Administrative privileges
+  - WMI service must be running
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2MA
-lastPushedChecksum: "sha256:b7ce686565594ba9"
-lastPushedMetaChecksum: "sha256:e3676a66642ef508"
+lastPushedChecksum: sha256:b7ce686565594ba9
+lastPushedMetaChecksum: sha256:e3676a66642ef508

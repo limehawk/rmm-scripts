@@ -1,8 +1,27 @@
 name: onlyoffice_install.ps1
+description: Downloads and silently installs OnlyOffice Desktop Editors
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Downloads and silently installs OnlyOffice Desktop Editors, a free office suite compatible with Microsoft Office formats.
+
+  Usage Notes
+  -----------
+  - Validates input parameters before proceeding
+  - Downloads OnlyOffice MSI installer to temp directory
+  - Installs silently using msiexec
+  - Cleans up installer file after completion
+  - $downloadUrl points to official OnlyOffice website
+
+  Requirements
+  ------------
+  - Windows OS (64-bit)
+  - Administrator privileges
+  - Internet connectivity
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5OQ
-lastPushedChecksum: "sha256:85daf10183a79aef"
-lastPushedMetaChecksum: "sha256:5e0bdd51b39500d8"
+lastPushedChecksum: sha256:85daf10183a79aef
+lastPushedMetaChecksum: sha256:5e0bdd51b39500d8

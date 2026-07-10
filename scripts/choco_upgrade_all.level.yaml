@@ -1,8 +1,25 @@
 name: choco_upgrade_all.ps1
+description: Upgrades all Chocolatey-managed packages to latest versions
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Upgrades all Chocolatey-managed packages to their latest versions using the choco upgrade all command with automatic confirmation.
+
+  Usage Notes
+  -----------
+  - Checks if Chocolatey is installed before proceeding
+  - Runs choco upgrade all with auto-confirmation flag (-y) for unattended operation
+  - Operates on all installed Chocolatey packages; no configuration required
+
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - Chocolatey package manager installed
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNw
-lastPushedChecksum: "sha256:bf35638a77698431"
-lastPushedMetaChecksum: "sha256:65500a7aac11fe33"
+lastPushedChecksum: sha256:bf35638a77698431
+lastPushedMetaChecksum: sha256:65500a7aac11fe33

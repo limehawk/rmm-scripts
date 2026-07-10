@@ -1,8 +1,39 @@
 name: emsisoft_url_install.ps1
+description: Downloads and installs Emsisoft Anti-Malware from a specified URL
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Downloads and installs Emsisoft Anti-Malware from a specified URL. Designed for deployments where the Emsisoft installer is hosted on a web server or cloud storage and needs to be deployed to endpoints via RMM.
+
+  Usage Notes
+  -----------
+  - Validates inputs (URL format, download path exists)
+  - Extracts filename from URL
+  - Downloads installer from specified URL
+  - Verifies download completed successfully
+  - Executes the installer immediately after download
+  - Download location defaults to %TEMP% directory
+  - Downloaded installer is NOT deleted after execution
+  - No installation flags are passed (interactive install)
+  - $installerUrl: full URL to Emsisoft installer executable
+  - $downloadPath: local directory to download installer to (default: $env:TEMP)
+
+  Requirements
+  ------------
+  - Windows PowerShell 5.1 or PowerShell 7+
+  - Internet connectivity to download URL
+  - Administrator privileges recommended (for installation)
+  - Sufficient disk space for installer download
+
+  Security
+  --------
+  - Ensure download URL is from a trusted source only
+  - Downloaded file is executed immediately; validate URL before use
+  - Use HTTPS URLs for secure downloads
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2NA
-lastPushedChecksum: "sha256:192d86d6bb9b656b"
-lastPushedMetaChecksum: "sha256:7c7087decdec3af1"
+lastPushedChecksum: sha256:192d86d6bb9b656b
+lastPushedMetaChecksum: sha256:7c7087decdec3af1

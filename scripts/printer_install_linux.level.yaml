@@ -1,8 +1,35 @@
 name: printer_install_linux.sh
+description: Installs network printer via IPP using lpadmin on Linux
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Installs network printers on Linux using CUPS/lpadmin. Supports PPD files for driver functionality. Automatically installs CUPS and required packages if not present.
+
+  Usage Notes
+  -----------
+  - Detects OS and verifies Linux
+  - Installs CUPS if needed and enabled
+  - Verifies or finds PPD file in standard search paths
+  - Removes existing printers with same name before installing
+  - Installs each configured printer via lpadmin
+  - Enables and accepts jobs for each printer
+  - Default protocol: lpd
+  - PPD search paths: /usr/share/cups/model/, /usr/share/ppd/, /etc/cups/ppd/
+
+  Requirements
+  ------------
+  - Debian/Ubuntu or compatible Linux (apt, yum, or dnf)
+  - Root/sudo privileges
+  - Internet access for package installation
+  - PPD file for the printer model
+  - PRINTERS: Array of "hostname|location|display_name" entries
+  - PROTOCOL: lpd, ipp, or socket
+  - PPD_PATH: Path to the PPD driver file
+  - AUTO_INSTALL_CUPS: Whether to install CUPS if missing
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNg
-lastPushedChecksum: "sha256:d721fe27c531e96a"
-lastPushedMetaChecksum: "sha256:19e0fa6d30856a15"
+lastPushedChecksum: sha256:d721fe27c531e96a
+lastPushedMetaChecksum: sha256:19e0fa6d30856a15

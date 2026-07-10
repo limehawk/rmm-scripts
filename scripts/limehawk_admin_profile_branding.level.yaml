@@ -1,8 +1,29 @@
 name: limehawk_admin_profile_branding.ps1
+description: Creates and manages MSP admin accounts with SuperOps password sync
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Standardized Limehawk MSP automation that renames the built-in Administrator (SID *-500) to "hawkadmin" and disables it, creates or updates the "limehawk" MSP admin account for daily use, generates strong passwords for both accounts and pushes them to SuperOps custom fields, cleans up old MSP accounts (m5sadmin, tlitlocal, clientadmin), and applies account pictures and wallpaper branding.
+
+  Usage Notes
+  -----------
+  - Built-in admin identified by SID *-500, not by name
+  - If limehawk account exists, password is reset (safe for existing clients)
+  - Account picture and wallpaper operations are best-effort (no-throw)
+  - Requires SuperOps module with Send-CustomField cmdlet
+  - Configure account names, custom field mappings, branding asset paths, and password length via hardcoded settings
+  - Password length defaults to 16 characters
+
+  Requirements
+  ------------
+  - PowerShell 5.1+
+  - Run as local Administrator (elevated)
+  - SuperOps module available ($SuperOpsModule)
+  - SuperOps custom fields: "Built-in Admin Password", "MSP Admin Password"
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3Nw
-lastPushedChecksum: "sha256:cc11c5cfa54f13ae"
-lastPushedMetaChecksum: "sha256:2fb7aa965824a1d7"
+lastPushedChecksum: sha256:cc11c5cfa54f13ae
+lastPushedMetaChecksum: sha256:2fb7aa965824a1d7

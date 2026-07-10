@@ -1,8 +1,25 @@
 name: superops_agent_alt_path_uninstall_macos.sh
+description: Uninstalls SuperOps agent from alternate /Library/limehawk path
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Uninstalls the SuperOps agent from macOS systems by executing the agent's built-in uninstall script from an alternate path (/Library/limehawk). Use this for agents installed to the alternate limehawk path instead of the default SuperOps path.
+
+  Usage Notes
+  -----------
+  - Uses uninstall script at /Library/limehawk/uninstall.sh
+  - Executes with sudo privileges
+  - Reports completion status after uninstall
+
+  Requirements
+  ------------
+  - macOS operating system
+  - Sudo privileges
+  - Uninstall script must exist at /Library/limehawk/uninstall.sh
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1Nw
-lastPushedChecksum: "sha256:8863ba4e5a0a2968"
-lastPushedMetaChecksum: "sha256:696e1fcbff6500f0"
+lastPushedChecksum: sha256:8863ba4e5a0a2968
+lastPushedMetaChecksum: sha256:696e1fcbff6500f0

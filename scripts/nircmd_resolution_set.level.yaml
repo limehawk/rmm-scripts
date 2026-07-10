@@ -1,8 +1,28 @@
 name: nircmd_resolution_set.ps1
+description: Changes display resolution using NirSoft NirCmd utility
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Changes the display resolution using NirSoft's NirCmd utility. Downloads NirCmd if not already present, then sets the specified resolution.
+
+  Usage Notes
+  -----------
+  - Creates destination directory if it does not exist
+  - Downloads NirCmd (x86 version for compatibility) from official NirSoft website
+  - Extracts NirCmd from zip archive
+  - Sets display resolution to specified values and cleans up zip file
+  - Edit $resolutionWidth, $resolutionHeight, and $colorDepth variables
+  - $destinationFolder default: C:\limehawk\nircmd
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Internet access for NirCmd download
+  - Display must support the requested resolution
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Mg
-lastPushedChecksum: "sha256:144f3fde5574868a"
-lastPushedMetaChecksum: "sha256:afa4779d28f44bd5"
+lastPushedChecksum: sha256:144f3fde5574868a
+lastPushedMetaChecksum: sha256:afa4779d28f44bd5

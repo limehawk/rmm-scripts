@@ -1,8 +1,25 @@
 name: win11_compatibility_check.ps1
+description: Checks hardware requirements for Windows 11 upgrade
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Checks if the current Windows device meets the hardware requirements for Windows 11 upgrade, including processor (2+ cores, 1GHz+), RAM (4GB+), storage (64GB+), TPM 2.0, Secure Boot capability, and UEFI firmware.
+
+  Usage Notes
+  -----------
+  - Checks processor specifications, RAM capacity, and disk space
+  - Checks TPM version and Secure Boot status
+  - Reports pass/fail for each component independently
+  - Provides overall compatibility verdict with specific issues listed
+
+  Requirements
+  ------------
+  - Windows 10
+  - Administrator privileges (for TPM check)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4MQ
-lastPushedChecksum: "sha256:12be2dab9e24d0d4"
-lastPushedMetaChecksum: "sha256:cb9759f884e01ef0"
+lastPushedChecksum: sha256:12be2dab9e24d0d4
+lastPushedMetaChecksum: sha256:cb9759f884e01ef0

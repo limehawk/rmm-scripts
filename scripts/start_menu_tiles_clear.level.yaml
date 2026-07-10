@@ -1,8 +1,27 @@
 name: start_menu_tiles_clear.ps1
+description: Removes all pinned app tiles from Windows 10 Start menu
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Removes all default pinned app tiles from the Windows 10 Start menu by modifying the registry. Restarts Explorer to apply changes immediately. Creates a clean Start menu without pre-configured tiles.
+
+  Usage Notes
+  -----------
+  - Must run in user context (not SYSTEM) to affect user's Start menu
+  - Modifies tile collection registry data then restarts Explorer
+  - Waits briefly for system to stabilize before restarting Explorer
+  - Opens Start menu after restart to initialize new layout
+  - Only affects current user's Start menu
+  - Registry modification is reversible
+
+  Requirements
+  ------------
+  - Windows 10 (does not apply to Windows 11)
+  - Registry access to HKCU
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1NQ
-lastPushedChecksum: "sha256:e5c2f1f84776bf20"
-lastPushedMetaChecksum: "sha256:8a3c42166a3732e1"
+lastPushedChecksum: sha256:e5c2f1f84776bf20
+lastPushedMetaChecksum: sha256:8a3c42166a3732e1

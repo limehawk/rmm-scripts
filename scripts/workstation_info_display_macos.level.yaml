@@ -1,8 +1,26 @@
 name: workstation_info_display_macos.sh
+description: Displays system info popup dialog for macOS user self-service
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Displays a popup dialog showing system information to the end user on macOS. Designed to be triggered from the RMM tray icon for user self-service. Provides quick access to basic system details without opening System Preferences.
+
+  Usage Notes
+  -----------
+  - Collects OS name/version (sw_vers), computer name (scutil), CPU/RAM (sysctl), IP address (ipconfig)
+  - Builds and displays an AppleScript dialog with system information
+  - Runs dialog in background so popup remains after script exits
+  - Script exits immediately; popup stays open for the user
+
+  Requirements
+  ------------
+  - macOS 10.14 or later
+  - No special privileges required
+  - AppleScript/osascript available (included in macOS)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5OQ
-lastPushedChecksum: "sha256:1308f5b29f92137a"
-lastPushedMetaChecksum: "sha256:b5fe06babde72053"
+lastPushedChecksum: sha256:1308f5b29f92137a
+lastPushedMetaChecksum: sha256:b5fe06babde72053

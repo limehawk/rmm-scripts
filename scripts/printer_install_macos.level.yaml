@@ -1,8 +1,34 @@
 name: printer_install_macos.sh
+description: Installs network printer via IPP using lpadmin on macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Installs network printers on macOS using CUPS/lpadmin. Supports PPD files for full driver functionality. Can install from local PPD or download from a URL.
+
+  Usage Notes
+  -----------
+  - Downloads driver package if URL provided
+  - Sets up PPD file (local or downloaded)
+  - Removes existing printers with same name before installing
+  - Installs each configured printer via lpadmin
+  - Supports lpd, ipp, and ipps protocols
+  - Default: lpd protocol, local PPD source, sharing disabled, abort-job error policy
+
+  Requirements
+  ------------
+  - macOS 10.12 or later
+  - Root/sudo privileges
+  - PPD file for the printer model
+  - Network access to printers and PPD URL (if using URL)
+  - PRINTERS: Array of "hostname|location|display_name" entries
+  - PROTOCOL: lpd, ipp, or ipps
+  - PPD_SOURCE: "local" or "url"
+  - PPD_PATH / PPD_URL: PPD file path or download URL
+  - DRIVER_URL: Optional driver package URL
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNw
-lastPushedChecksum: "sha256:629c0f1457ee7d88"
-lastPushedMetaChecksum: "sha256:19c8ff6bb775e782"
+lastPushedChecksum: sha256:629c0f1457ee7d88
+lastPushedMetaChecksum: sha256:19c8ff6bb775e782

@@ -1,8 +1,32 @@
 name: prinstall_driver_add.ps1
+description: Stages a driver into the Windows driver store using prinstall 0.4.12+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 10
+readme: |
+  Purpose
+  -------
+  Stages a print driver on Windows using prinstall 0.4.12+ without creating a printer queue. Target auto-detects as either a filesystem path (INF or folder) or a model string ("HP LaserJet 1320"). Model-string targets download the manufacturer pack from prinstall's embedded manifest and stage it.
+
+  Usage Notes
+  -----------
+  - Set $YourDriverTargetHere to a path OR a model string
+  - For model strings with multiple matches, set $YourDriverNameHere to pick one explicitly (ignored for path targets)
+  - Leave $noVerify $false unless a vendor pack ships without .cat signatures
+  - Requires prinstall.exe 0.4.12+ installed (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - prinstall.exe 0.4.12 or newer installed
+  - Internet connectivity (model-string targets only)
+  - $YourDriverTargetHere: Path or model string
+  - $YourDriverNameHere: (optional) Explicit driver pick for model targets
+variables:
+- name: YourDriverTargetHere
+- name: YourDriverNameHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMw
-lastPushedChecksum: "sha256:a65408cecc70eaf4"
-lastPushedMetaChecksum: "sha256:11ee28649ed652fe"
+lastPushedChecksum: sha256:a65408cecc70eaf4
+lastPushedMetaChecksum: sha256:11ee28649ed652fe

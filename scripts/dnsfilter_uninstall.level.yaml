@@ -1,8 +1,30 @@
 name: dnsfilter_uninstall.ps1
+description: Completely removes DNSFilter agent and resets DNS to DHCP
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Completely removes DNSFilter agent from a Windows system including uninstalling the MSI package, stopping and removing services, deleting installation folders, cleaning up registry keys, and resetting DNS settings to DHCP.
+
+  Usage Notes
+  -----------
+  - Uninstalls DNS Agent via WMI if installed
+  - Stops and deletes related Windows services
+  - Removes installation folders and registry keys
+  - Resets all NICs to use DHCP for DNS
+  - Flushes DNS cache
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Administrator privileges
+
+  Security
+  --------
+  - Resets DNS to DHCP, which may temporarily affect network connectivity
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Nw
-lastPushedChecksum: "sha256:09f70a00c2649337"
-lastPushedMetaChecksum: "sha256:7afc2e123c4be5bf"
+lastPushedChecksum: sha256:09f70a00c2649337
+lastPushedMetaChecksum: sha256:7afc2e123c4be5bf

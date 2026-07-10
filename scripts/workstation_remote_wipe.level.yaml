@@ -1,8 +1,32 @@
 name: workstation_remote_wipe.ps1
+description: Initiates MDM remote wipe to factory reset Windows device
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Initiates a remote wipe of the Windows device using the MDM RemoteWipe CSP. This completely erases all data on the device and resets it to factory state. WARNING: THIS ACTION IS IRREVERSIBLE. ALL DATA WILL BE PERMANENTLY DELETED.
+
+  Usage Notes
+  -----------
+  - Creates CIM session to local MDM namespace
+  - Retrieves MDM_RemoteWipe instance and invokes doWipeMethod
+  - Device begins factory reset process immediately
+  - No configurable settings; wipe executes upon script run
+
+  Requirements
+  ------------
+  - Windows 10/11 (MDM enrolled or Azure AD joined)
+  - Administrator privileges
+  - Device must have MDM RemoteWipe capability
+
+  Security
+  --------
+  - Use only on lost/stolen devices or for secure decommissioning
+  - Cannot be undone once initiated
+  - Ensure proper authorization before running
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMg
-lastPushedChecksum: "sha256:ee9261e6127e7c42"
-lastPushedMetaChecksum: "sha256:b4f3ccbd95fa3ea6"
+lastPushedChecksum: sha256:ee9261e6127e7c42
+lastPushedMetaChecksum: sha256:b4f3ccbd95fa3ea6

@@ -1,8 +1,27 @@
 name: wifi_adapters_disable.ps1
+description: Disables all physical and virtual Wi-Fi network adapters
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Identifies and disables all physical and virtual Wi-Fi network adapters on a Windows system. Enforces a wired-only network policy by ensuring that wireless connectivity is turned off while leaving Ethernet adapters enabled.
+
+  Usage Notes
+  -----------
+  - Checks for administrative privileges before proceeding
+  - Enumerates all network adapters including hidden ones
+  - Categorizes adapters as Wi-Fi, Wired, or Other
+  - Displays detailed list of all adapters for review
+  - Disables all Wi-Fi adapters; Ethernet/wired adapters are not affected
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Administrator privileges
+  - Get-NetAdapter cmdlet available
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3OA
-lastPushedChecksum: "sha256:16dd67e48b67ceaf"
-lastPushedMetaChecksum: "sha256:e235b3de0a3f16ca"
+lastPushedChecksum: sha256:16dd67e48b67ceaf
+lastPushedMetaChecksum: sha256:e235b3de0a3f16ca

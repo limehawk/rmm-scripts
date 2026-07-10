@@ -1,8 +1,33 @@
 name: prinstall_drivers.ps1
+description: Previews matched and universal drivers for a network printer
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 2
+readme: |
+  Purpose
+  -------
+  Wraps `prinstall drivers <ip>` to identify a printer by IP and show the matched + universal driver candidates the installer would pick from. Lets a technician preview driver selection before committing to a `prinstall add` install. Supports SNMP-based model discovery and an optional manual model override for printers that don't respond to SNMP.
+
+  Usage Notes
+  -----------
+  - Invokes `prinstall drivers <ip>` and streams output to the RMM console
+  - Leave $YourModelHere blank to let prinstall auto-detect the model via SNMP
+  - Set $YourModelHere to a known model string to bypass SNMP for silent printers
+  - Read-only: this command previews drivers only, it does NOT install anything
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+
+  Requirements
+  ------------
+  - Windows OS
+  - prinstall.exe installed (run prinstall_setup.ps1 first)
+  - Network access to the printer's IP
+  - UDP 161 (SNMP) reachable OR a known model string passed via $YourModelHere
+  - $YourIpHere: IPv4 address of the target printer (required)
+  - $YourModelHere: Optional model override — leave blank for SNMP auto-detect
+variables:
+- name: YourIpHere
+- name: YourModelHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNg
-lastPushedChecksum: "sha256:460ee74ac32197ed"
-lastPushedMetaChecksum: "sha256:dcd670c6969ab58c"
+lastPushedChecksum: sha256:460ee74ac32197ed
+lastPushedMetaChecksum: sha256:dcd670c6969ab58c

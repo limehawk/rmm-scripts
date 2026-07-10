@@ -1,8 +1,26 @@
 name: disk_scan_fix.sh
+description: Comprehensive disk and volume health check for macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Performs a comprehensive health check on all mounted disks and volumes on macOS. Verifies partition maps, file systems, and SMART status where supported.
+
+  Usage Notes
+  -----------
+  - Auto-detects all mounted disks
+  - Verifies partition map for each disk
+  - Checks file system health for HFS and APFS volumes
+  - Reports SMART status when available
+  - Read-only operations (verification only, no modifications)
+
+  Requirements
+  ------------
+  - macOS operating system
+  - Root/sudo privileges
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Mw
-lastPushedChecksum: "sha256:9afd6590971bc04f"
-lastPushedMetaChecksum: "sha256:523bcc3dd18ef47d"
+lastPushedChecksum: sha256:9afd6590971bc04f
+lastPushedMetaChecksum: sha256:523bcc3dd18ef47d

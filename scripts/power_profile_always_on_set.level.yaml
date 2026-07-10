@@ -1,8 +1,31 @@
 name: power_profile_always_on_set.ps1
+description: Creates custom always-on power plan for workstations
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Creates a custom "Always On - Limehawk" power plan optimized for workstations that should never sleep while on AC power. If the plan already exists, it will be reused and reconfigured. The plan is based on High Performance settings.
+
+  Usage Notes
+  -----------
+  - Creates or reuses custom power plan based on High Performance
+  - Sets the custom plan as the active power plan
+  - Configures display, disk, standby, and hibernate timeouts for AC and DC power
+  - Disables hibernation on desktops (no battery)
+  - Default settings: Display 30min AC, Sleep never AC, Hibernate never AC
+  - Windows 11: Custom plans work but are hidden in Settings app
+  - To verify: Run control powercfg.cpl or powercfg /getactivescheme
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server 2016+
+  - Administrator privileges
+  - High Performance power plan must exist
+  - $customPlanName: Name of the custom power plan
+  - Timeout variables: $displayTimeoutAC/DC, $diskTimeoutAC/DC, $standbyTimeoutAC/DC, $hibernateTimeoutAC/DC
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMA
-lastPushedChecksum: "sha256:27bd0adef334e036"
-lastPushedMetaChecksum: "sha256:fde306b7b6c6b0be"
+lastPushedChecksum: sha256:27bd0adef334e036
+lastPushedMetaChecksum: sha256:fde306b7b6c6b0be

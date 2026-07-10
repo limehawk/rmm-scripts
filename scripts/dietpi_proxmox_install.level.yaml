@@ -1,8 +1,30 @@
 name: dietpi_proxmox_install.sh
+description: Creates lightweight DietPi Debian 12 VM on Proxmox
 shell: BASH
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Downloads and runs the DietPi Debian 12 Bookworm VM installer for Proxmox. Creates a lightweight Debian-based VM optimized for low resource usage.
+
+  Usage Notes
+  -----------
+  - Downloads the installer script from limehawk/proxmox-scripts repository on GitHub
+  - Executes the installer via bash and returns its exit code
+  - No hardcoded inputs required; installer is fetched from remote source
+
+  Requirements
+  ------------
+  - Proxmox VE host
+  - Run from Proxmox shell (not inside a VM)
+  - Internet access to GitHub
+  - curl installed
+
+  Security
+  --------
+  - Executes remote code fetched over HTTPS - review source before running
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0OQ
-lastPushedChecksum: "sha256:4267f99c659dd43a"
-lastPushedMetaChecksum: "sha256:536ea7fe127cdae8"
+lastPushedChecksum: sha256:4267f99c659dd43a
+lastPushedMetaChecksum: sha256:536ea7fe127cdae8

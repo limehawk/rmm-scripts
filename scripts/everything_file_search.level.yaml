@@ -1,8 +1,27 @@
 name: everything_file_search.ps1
+description: Searches all fixed drives for files matching a pattern via NTFS MFT
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Searches all fixed NTFS drives by reading the Master File Table directly via fsutil. Much faster than Get-ChildItem because it reads the MFT sequentially instead of walking the directory tree. No third-party tools.
+
+  Usage Notes
+  -----------
+  - Reads NTFS MFT via fsutil usn enumdata per drive
+  - Filters filenames inline using wildcard match
+  - Resolves full paths only for matches (low memory)
+  - May show recently deleted files not yet overwritten in MFT
+
+  Requirements
+  ------------
+  - Windows 10/11 with NTFS volumes
+  - Administrator privileges (required for MFT access)
+  - PowerShell 5.1 or later
+  - $searchPattern: wildcard pattern (e.g., *landtrust*, *.pdf)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Ng
-lastPushedChecksum: "sha256:0cd3f77917c59864"
-lastPushedMetaChecksum: "sha256:17fb9475f301125e"
+lastPushedChecksum: sha256:0cd3f77917c59864
+lastPushedMetaChecksum: sha256:17fb9475f301125e

@@ -1,8 +1,30 @@
 name: msi_url_install.ps1
+description: Downloads and silently installs an MSI package from a specified URL
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Downloads and silently installs an MSI package from the URL specified in the MSIURL runtime variable. The file is saved to the temporary directory and cleaned up after installation completes.
+
+  Usage Notes
+  -----------
+  - Uses curl for fast, reliable downloads with redirect support
+  - Extracts filename from URL, falls back to downloaded_package.msi
+  - Runs msiexec with /qn (quiet, no UI) and /norestart flags
+  - Cleans up the temporary MSI file after installation
+  - Exit code 3010 indicates success but reboot required
+
+  Requirements
+  ------------
+  - PowerShell 5.1+
+  - Admin rights
+  - Network connectivity
+  - $MsiScriptUrl set to the full URL of the MSI file (via SuperOps $MSIURL)
+variables:
+- name: MSIURL
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Nw
-lastPushedChecksum: "sha256:11645faa554f4b42"
-lastPushedMetaChecksum: "sha256:197a024abb12f1c5"
+lastPushedChecksum: sha256:11645faa554f4b42
+lastPushedMetaChecksum: sha256:197a024abb12f1c5

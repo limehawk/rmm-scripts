@@ -1,8 +1,35 @@
 name: windows_dism_sfc_chkdsk_run.ps1
+description: Runs DISM, SFC, and chkdsk for Windows system file repair
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 240
+readme: |
+  Purpose
+  -------
+  Runs standard Windows health checks and repair commands including DISM image health scans, disk checks, system file verification, and component cleanup. Designed for unattended execution in RMM environments to perform routine system maintenance and repair operations.
+
+  Usage Notes
+  -----------
+  - Configurable operations via hardcoded flags: RunDismScan, RunDismRestore, RunChkdsk, RunSfc
+  - DISM RestoreHealth only runs if ScanHealth detects corruption (saves time on healthy systems)
+  - chkdsk runs against all fixed local drives (DriveType 3)
+  - ChkdskParameters default to /scan; use /f /r for full check
+  - Optional RebootAfterMaintenance with 5-minute warning (default: false)
+  - Failed operations are reported but script continues to next operation
+  - DISM operates in online mode against the running Windows installation
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges required
+  - Windows 8.1/Server 2012 R2 or later for DISM commands
+  - Sufficient disk space for repair operations
+
+  Security
+  --------
+  - Operations may cause system modifications and require reboots
+  - Requires elevated permissions to modify system components
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4NA
-lastPushedChecksum: "sha256:be481319dad82072"
-lastPushedMetaChecksum: "sha256:c9425b5dcbbd3ead"
+lastPushedChecksum: sha256:be481319dad82072
+lastPushedMetaChecksum: sha256:c9425b5dcbbd3ead

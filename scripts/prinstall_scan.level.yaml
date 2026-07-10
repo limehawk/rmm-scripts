@@ -1,8 +1,33 @@
 name: prinstall_scan.ps1
+description: Scans a subnet for network printers using prinstall
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 5
+readme: |
+  Purpose
+  -------
+  Scans a subnet for network printers using prinstall 0.3.1's full multi-method discovery pipeline: TCP port probe (9100/631/515), IPP Get-Printer-Attributes, SNMPv2c, and mDNS/Bonjour multicast browse. Catches even silent AirPrint printers that ignore SNMP. Returns printer IPs, models, discovery method(s), and status.
+
+  Usage Notes
+  -----------
+  - Uses `prinstall scan [subnet] --verbose` with the default `all` method (port + IPP + SNMP + mDNS merged)
+  - Leave $YourSubnetHere blank to auto-detect the local subnet from the primary NIC
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+  - prinstall_setup.ps1 pre-creates a firewall rule so the mDNS pass works under SYSTEM execution
+
+  Requirements
+  ------------
+  - Windows OS
+  - prinstall.exe installed (run prinstall_setup.ps1 first)
+  - Network access to target subnet
+  - UDP 161 (SNMP), TCP 9100 (raw), TCP 631 (IPP) open to target
+  - UDP 5353 (mDNS) allowed on the NIC — created by prinstall_setup.ps1
+  - $YourSubnetHere: Subnet in CIDR notation (e.g. 192.168.1.0/24) or blank for auto-detect
+  - $ScanModeAllNetworkUsb: 'all' / 'network' / 'usb' — blank defaults to 'all' (full network + USB scan). 'usb' ignores $YourSubnetHere.
+variables:
+- name: YourSubnetHere
+- name: ScanModeAllNetworkUsb
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMA
-lastPushedChecksum: "sha256:97d57bd6f9b1475b"
-lastPushedMetaChecksum: "sha256:b3716797c9a57993"
+lastPushedChecksum: sha256:97d57bd6f9b1475b
+lastPushedMetaChecksum: sha256:b3716797c9a57993

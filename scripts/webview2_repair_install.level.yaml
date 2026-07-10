@@ -1,8 +1,31 @@
 name: webview2_repair_install.ps1
+description: Detects and repairs broken Microsoft Edge WebView2 Runtime installs
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Detects broken installations of the Microsoft Edge WebView2 Runtime where the registry still references a version that no longer exists on disk, and repairs them by removing stale ClientState keys and reinstalling the current Evergreen Runtime via Microsoft's official bootstrapper.
+
+  Usage Notes
+  -----------
+  - Validates input parameters before proceeding
+  - Detects existing WebView2 install across HKLM 64-bit, HKLM 32-bit, HKCU
+  - Verifies the on-disk install folder matches the registry version
+  - Removes stale ClientState registry keys when the install is broken (or when forced)
+  - Downloads the Evergreen bootstrapper to TEMP and runs it silently with /silent /install
+  - Re-verifies the install via registry and filesystem after the bootstrapper completes
+  - Cleans up the installer file on success
+  - Download URL: https://go.microsoft.com/fwlink/p/?LinkId=2124703
+  - Force Reinstall: false
+
+  Requirements
+  ------------
+  - Windows PowerShell 5.1 or later
+  - Administrator privileges (required for HKLM key removal and system-wide install)
+  - Internet connectivity to go.microsoft.com
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Nw
-lastPushedChecksum: "sha256:eb622de3ac3b06f0"
-lastPushedMetaChecksum: "sha256:f2879d8e7e8e9065"
+lastPushedChecksum: sha256:eb622de3ac3b06f0
+lastPushedMetaChecksum: sha256:f2879d8e7e8e9065

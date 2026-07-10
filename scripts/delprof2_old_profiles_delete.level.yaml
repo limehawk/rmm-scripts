@@ -1,8 +1,34 @@
 name: delprof2_old_profiles_delete.ps1
+description: Deletes Windows user profiles older than specified days
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Deletes Windows user profiles older than a specified number of days. Uses DelProf2 utility downloaded directly from helgeklein.com.
+
+  Usage Notes
+  -----------
+  - Downloads and extracts DelProf2 if not already cached
+  - Executes delprof2.exe /u /d:X /ed:gaia /ed:administrator
+  - Always protects gaia and administrator profiles
+  - Cleans up cached files after execution
+  - Set $days_old runtime variable to control threshold (default: 30 days)
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - Internet access for DelProf2 download from helgeklein.com
+  - Runtime variable: $days_old (number of days; default 30)
+
+  Security
+  --------
+  - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
+variables:
+- name: days_old
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0NA
-lastPushedChecksum: "sha256:106abf51d75cdcc5"
-lastPushedMetaChecksum: "sha256:0d7430406cd3b1ef"
+lastPushedChecksum: sha256:106abf51d75cdcc5
+lastPushedMetaChecksum: sha256:0d7430406cd3b1ef

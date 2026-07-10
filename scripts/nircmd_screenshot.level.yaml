@@ -1,8 +1,29 @@
 name: nircmd_screenshot.ps1
+description: Captures screenshot using NirSoft NirCmd utility
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Captures a screenshot of the current display using NirSoft's NirCmd utility. Downloads NirCmd if not already present, then saves a timestamped screenshot.
+
+  Usage Notes
+  -----------
+  - Creates destination directories if they do not exist
+  - Downloads correct NirCmd version (x64 or x86) based on OS architecture
+  - Extracts NirCmd from zip archive
+  - Captures screenshot with timestamped filename
+  - Cleans up temporary zip file after extraction
+  - $destinationFolder default: C:\limehawk\nirsoft
+  - $screenshotFolder default: C:\limehawk\nirsoft\screenshots
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Internet access for NirCmd download (official NirSoft website)
+  - Write permissions to destination folder
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Mw
-lastPushedChecksum: "sha256:1796923bd56b59bc"
-lastPushedMetaChecksum: "sha256:9fb9093589e0bdda"
+lastPushedChecksum: sha256:1796923bd56b59bc
+lastPushedMetaChecksum: sha256:9fb9093589e0bdda

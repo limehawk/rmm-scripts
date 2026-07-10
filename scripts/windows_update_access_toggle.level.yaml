@@ -1,8 +1,25 @@
 name: windows_update_access_toggle.ps1
+description: Toggles user access to Windows Update in Settings app
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Toggles user access to Windows Update settings in the Settings app. If access is currently blocked, it will be enabled. If access is currently allowed, it will be blocked.
+
+  Usage Notes
+  -----------
+  - Checks current state of SetDisableUXWUAccess registry key under HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+  - Toggles the state by adding or removing the key
+  - Reports new state after toggle
+  - Use windows_update_access_restore to always enable access
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4OA
-lastPushedChecksum: "sha256:f3e6ce36a0c0a34e"
-lastPushedMetaChecksum: "sha256:ee787b5d2983ec6c"
+lastPushedChecksum: sha256:f3e6ce36a0c0a34e
+lastPushedMetaChecksum: sha256:ee787b5d2983ec6c

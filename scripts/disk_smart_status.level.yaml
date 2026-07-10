@@ -1,8 +1,41 @@
 name: disk_smart_status.ps1
+description: Reports S.M.A.R.T. predictive-failure health of all physical disks
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 30
+readme: |
+  Purpose
+  -------
+  Reports the S.M.A.R.T. / predictive-failure health of every physical disk on the machine so the RMM dashboard can flag failing drives. Combines PowerShell storage health, WMI predictive-failure status, and SMART reliability counters into a single per-machine verdict.
+
+  Data Sources
+  ------------
+  - Get-PhysicalDisk: primary per-disk health (HealthStatus, OperationalStatus)
+  - MSStorageDriver_FailurePredictStatus (root\wmi): SMART predictive-failure flag
+  - Get-StorageReliabilityCounter: best-effort wear / temperature / read-error counters
+
+  Usage Notes
+  -----------
+  - Enumerates physical disks via Get-PhysicalDisk and reports FriendlyName, MediaType, Size (GB), HealthStatus, and OperationalStatus per disk
+  - Queries WMI predictive-failure status via MSStorageDriver_FailurePredictStatus, reporting "Not available" when the class is missing (VMs, some controllers) instead of failing
+  - Pulls SMART reliability counters via Get-StorageReliabilityCounter (Wear, Temperature, ReadErrorsTotal) on a best-effort basis
+  - Aggregates to a final per-machine verdict: Healthy / Warning / Failing
+  - Exits 0 when all disks are healthy or SMART data is undeterminable (e.g. a VM); exits 1 when a disk reports a predicted failure or unhealthy HealthStatus
+  - No configurable settings and no inputs; the verdict comes directly from disk-reported HealthStatus and the SMART PredictFailure flag, with no tunable thresholds
+  - All data is queried locally; no network endpoints are contacted
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - PowerShell 5.1 or later
+  - Administrator privileges
+  - Storage subsystem that exposes SMART data (physical hardware)
+
+  Security
+  --------
+  - Read-only; makes no changes to disks or configuration
+  - Requires elevated privileges to query the storage subsystem
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1NA
-lastPushedChecksum: "sha256:cf1b77bc78f75a11"
-lastPushedMetaChecksum: "sha256:6011b3b05389e096"
+lastPushedChecksum: sha256:cf1b77bc78f75a11
+lastPushedMetaChecksum: sha256:6011b3b05389e096

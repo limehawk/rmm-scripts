@@ -1,8 +1,28 @@
 name: power_plans_default_add.ps1
+description: Restores missing default Windows power plans
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Adds the four standard Windows power plans (High Performance, Ultimate Performance, Power Saver, and Balanced) by duplicating them from their default GUIDs. Useful for restoring missing power plans on systems where they have been removed or are unavailable.
+
+  Usage Notes
+  -----------
+  - Duplicates High Performance power plan
+  - Duplicates Ultimate Performance power plan (Win10 1803+)
+  - Duplicates Power Saver power plan
+  - Duplicates Balanced power plan
+  - Reports success/failure for each plan
+  - Skips plans that already exist
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server 2016+
+  - Administrator privileges
+  - powercfg.exe available (standard Windows component)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwOQ
-lastPushedChecksum: "sha256:3bb8c3a5422e2db1"
-lastPushedMetaChecksum: "sha256:e1ae7ff1a07d1198"
+lastPushedChecksum: sha256:3bb8c3a5422e2db1
+lastPushedMetaChecksum: sha256:e1ae7ff1a07d1198
