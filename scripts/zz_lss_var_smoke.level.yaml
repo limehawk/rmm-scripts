@@ -6,4 +6,3 @@ timeout: 30
 variables:
 - name: SmokeToken
   description: CHANGED description
-
