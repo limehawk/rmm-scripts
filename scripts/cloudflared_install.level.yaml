@@ -35,8 +35,6 @@ readme: |
   - No secrets in logs
   - Connector token is never printed; if it appears in an error message it is masked as ****<last4>
   - Runtime variable validated against unreplaced placeholder
-variables:
-  - name: CloudflaredTunnelToken
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOA
 lastPushedChecksum: "sha256:13f478410f8c5064"

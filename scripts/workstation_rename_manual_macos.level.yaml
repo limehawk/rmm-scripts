@@ -23,8 +23,6 @@ readme: |
   - macOS 10.14 or later
   - Root/sudo access
   - RMM variable $YourCustomClientHere or $YourClientNameHere must be set
-variables:
-  - name: YourCustomClientHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNg
 lastPushedChecksum: "sha256:cf6852c71596e859"

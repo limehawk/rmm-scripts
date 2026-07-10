@@ -34,10 +34,6 @@ readme: |
   --------
   - Account key is masked in logs (shows first/last 4 chars only)
   - Installer downloaded over HTTPS
-variables:
-  - name: ACCOUNT_KEY
-  - name: ORG_KEY
-  - name: INSTALL_SYSTEM_EXTENSION
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3NQ
 lastPushedChecksum: "sha256:910ea6231cde662c"

@@ -24,8 +24,6 @@ readme: |
   - Administrator privileges
   - PowerShell 5.1+
   - Target RMM agent installed (matching services must exist)
-variables:
-  - name: YourServiceFilterHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2Ng
 lastPushedChecksum: "sha256:21071e206631d4f0"

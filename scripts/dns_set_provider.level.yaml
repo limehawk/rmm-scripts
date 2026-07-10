@@ -39,8 +39,6 @@ readme: |
   - Windows 10 1809+ / Windows Server 2019+
   - SYSTEM or Administrator privileges
   - At least one active Ethernet or Wi-Fi adapter
-variables:
-  - name: DnsProviderSelection
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Ng
 lastPushedChecksum: "sha256:c5ae635e195d07c1"

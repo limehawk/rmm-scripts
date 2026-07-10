@@ -22,8 +22,6 @@ readme: |
   - Network access to the target printer
   - UDP 161 (SNMP) open to the printer
   - $YourIpHere: Target printer IP address (e.g. 192.168.1.10)
-variables:
-  - name: YourIpHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNw
 lastPushedChecksum: "sha256:6b982f78a98d4882"

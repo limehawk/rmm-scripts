@@ -23,9 +23,6 @@ readme: |
   - Internet connectivity (model-string targets only)
   - $YourDriverTargetHere: Path or model string
   - $YourDriverNameHere: (optional) Explicit driver pick for model targets
-variables:
-  - name: YourDriverTargetHere
-  - name: YourDriverNameHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMw
 lastPushedChecksum: "sha256:a65408cecc70eaf4"

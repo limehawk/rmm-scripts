@@ -27,9 +27,6 @@ readme: |
   - Administrator privileges
   - SuperOps agent installed
   - Internet access for SuperOps API
-variables:
-  - name: YourApiKeyHere
-  - name: YourCustomClientHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNQ
 lastPushedChecksum: "sha256:2140a719a807fc81"

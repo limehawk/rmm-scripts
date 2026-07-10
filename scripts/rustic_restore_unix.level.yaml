@@ -30,10 +30,6 @@ readme: |
   --------
   - No credentials are passed on the command line
   - rustic reads backend credentials exclusively from the TOML config file
-variables:
-  - name: YourSnapshotId
-  - name: YourRestorePath
-  - name: YourDestination
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNw
 lastPushedChecksum: "sha256:83c3c35a5f0ba9bc"

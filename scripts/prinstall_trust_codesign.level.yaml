@@ -28,8 +28,6 @@ readme: |
   - Windows OS
   - Administrator / SYSTEM privileges (LocalMachine stores require elevation)
   - prinstall-codesign.cer accessible (co-located with script, or via CertPath)
-variables:
-  - name: CertPath
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMg
 lastPushedChecksum: "sha256:cb3d19fc839edbb8"

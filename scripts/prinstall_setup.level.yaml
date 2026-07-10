@@ -21,8 +21,6 @@ readme: |
   - Windows OS
   - Administrator privileges (required to modify machine PATH and firewall rules)
   - Internet connectivity to github.com (install only)
-variables:
-  - name: InstallOrUninstall
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMQ
 lastPushedChecksum: "sha256:91001c70808f9cc5"

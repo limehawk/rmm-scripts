@@ -24,8 +24,6 @@ readme: |
   - Internet access to reach github.com for initial download
   - Write permissions to the cache directory
   - Runtime variable: $YourTargetDirectoryHere (target directory to scan)
-variables:
-  - name: YourTargetDirectoryHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MQ
 lastPushedChecksum: "sha256:341a3b130cb083e0"

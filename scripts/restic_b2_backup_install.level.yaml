@@ -34,12 +34,6 @@ readme: |
   - B2 credentials are embedded in the generated backup script
   - Install directory is ACL-locked to SYSTEM + Administrators
   - Repo password encrypts all backup data at rest
-variables:
-  - name: B2KeyId
-  - name: B2AppKey
-  - name: B2BucketName
-  - name: RepoPassword
-  - name: ClientName
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMQ
 lastPushedChecksum: "sha256:c09fd6b042b511b6"

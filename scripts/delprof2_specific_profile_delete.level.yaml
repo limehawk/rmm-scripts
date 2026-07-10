@@ -27,8 +27,6 @@ readme: |
   --------
   - DESTRUCTIVE OPERATION - deleted profile cannot be recovered
   - Refuses to delete protected profiles (gaia, administrator)
-variables:
-  - name: profile_to_delete
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0Nw
 lastPushedChecksum: "sha256:15ac32c141b8896a"

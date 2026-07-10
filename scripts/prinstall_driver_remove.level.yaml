@@ -21,8 +21,6 @@ readme: |
   - Administrator privileges
   - prinstall.exe 0.4.13 or newer installed
   - $YourDriverTargetHere: Exact driver name OR fuzzy/model string
-variables:
-  - name: YourDriverTargetHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNQ
 lastPushedChecksum: "sha256:2807dd15e3ce2e70"

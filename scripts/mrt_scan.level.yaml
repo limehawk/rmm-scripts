@@ -24,8 +24,6 @@ readme: |
   - PowerShell 5.1+
   - SuperOps module available via $SuperOpsModule variable
   - $ScanMode set to Quick or Full (case-insensitive)
-variables:
-  - name: QuickOrFull
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Ng
 lastPushedChecksum: "sha256:869633f2768cf87a"

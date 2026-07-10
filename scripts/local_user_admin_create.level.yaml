@@ -27,8 +27,6 @@ readme: |
   --------
   - Password generated using RNGCryptoServiceProvider
   - Consider storing password securely in RMM custom fields
-variables:
-  - name: NewAdminUsername
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3OA
 lastPushedChecksum: "sha256:b00a562a4847602e"

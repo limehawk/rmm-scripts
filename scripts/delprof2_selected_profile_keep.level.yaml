@@ -25,8 +25,6 @@ readme: |
   Security
   --------
   - DESTRUCTIVE OPERATION - deleted profiles cannot be recovered
-variables:
-  - name: profile_to_keep
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0Ng
 lastPushedChecksum: "sha256:e42a9370705203ab"

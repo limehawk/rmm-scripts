@@ -19,9 +19,6 @@ readme: |
   - Windows OS
   - Runtime variable: $runtime_folderPath (path to the folder to clean up)
   - Runtime variable: $runtime_days (number of days old a file must be to be deleted)
-variables:
-  - name: runtime_folderPath
-  - name: runtime_days
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MA
 lastPushedChecksum: "sha256:c4b0a0caf6528904"

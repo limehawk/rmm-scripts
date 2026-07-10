@@ -29,8 +29,6 @@ readme: |
   --------
   - Site token is embedded in script -- protect accordingly
   - Default CDN URL uses HTTPS
-variables:
-  - name: SiteToken
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0MA
 lastPushedChecksum: "sha256:aab2ea4bf232ddc9"

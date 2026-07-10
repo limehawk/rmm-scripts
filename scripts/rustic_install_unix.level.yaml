@@ -42,17 +42,6 @@ readme: |
   - Config directory is chmod 700, config file is chmod 600
   - Repo password encrypts all backup data at rest
   - No secrets printed to console output
-variables:
-  - name: YourBackendType
-  - name: YourBackendPath
-  - name: YourRepoPassword
-  - name: YourClientName
-  - name: YourBackendKeyId
-  - name: YourBackendAppKey
-  - name: YourBackendRegion
-  - name: YourBackupPaths
-  - name: YourExcludePatterns
-  - name: YourBackupHour
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNQ
 lastPushedChecksum: "sha256:6f06c1d9e9f5d54b"
