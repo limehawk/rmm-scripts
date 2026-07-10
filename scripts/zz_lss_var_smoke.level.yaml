@@ -1,0 +1,10 @@
+name: zz_lss_var_smoke.ps1
+description: temporary variable smoke test
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 30
+variables:
+- name: SmokeToken
+  description: first var
+- name: DropMe
+  description: will be removed
