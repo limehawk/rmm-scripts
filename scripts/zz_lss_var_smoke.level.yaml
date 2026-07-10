@@ -4,7 +4,11 @@ shell: POWERSHELL
 runAs: SYSTEM
 timeout: 30
 variables:
-- name: SmokeToken
-  description: first var
-- name: DropMe
-  description: will be removed
+  - name: SmokeToken
+    description: first var
+  - name: DropMe
+    description: will be removed
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQxMQ
+lastPushedChecksum: "sha256:be98ae85f54b8f05"
+lastPushedMetaChecksum: "sha256:5fbf88105e3c56cc"
