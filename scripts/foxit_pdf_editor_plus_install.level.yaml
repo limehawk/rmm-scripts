@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Installs Foxit PDF Editor from Microsoft Store source via winget. The MS Store version validates licenses server-side, supporting all Foxit subscription types including PDF Editor+, Suite Pro Teams, and other subscription SKUs.
-
+  
   Usage Notes
   -----------
   - Verifies winget is available
@@ -16,7 +16,7 @@ readme: |
   - Uses msstore source for proper subscription license validation
   - User must sign into Foxit account post-install to activate license
   - No inputs required; package ID is hardcoded
-
+  
   Requirements
   ------------
   - Windows 10/11 with winget installed
@@ -24,5 +24,5 @@ readme: |
   - Internet connectivity to Microsoft Store
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3MA
-lastPushedChecksum: sha256:46dc5587c5f2c2bf
-lastPushedMetaChecksum: sha256:3efe9782e758d831
+lastPushedChecksum: "sha256:46dc5587c5f2c2bf"
+lastPushedMetaChecksum: "sha256:160c15923aa5a8ea"

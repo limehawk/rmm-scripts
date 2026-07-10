@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Securely deletes files using Microsoft SDelete with DoD 5220.22-M compliant overwriting, generating comprehensive documentation suitable for legal proceedings. Creates a detailed certificate of destruction with file hashes, metadata, system information, and timestamped audit trail.
-
+  
   Usage Notes
   -----------
   - Configure $targetPath, $outputDirectory, and $operatorName before running
@@ -21,19 +21,19 @@ readme: |
   - Optional HTML certificate generation via $generateHtml
   - Configurable overwrite passes via $overwritePasses (default: 3)
   - Optional $caseReference, $witnessName, and $notes fields for legal documentation
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server
   - PowerShell 5.1 or later
   - Administrator privileges recommended for complete metadata access
   - Microsoft SDelete (auto-installed via winget if $autoInstallSDelete is enabled)
-
+  
   Security
   --------
   - Certificate contains file paths and hashes which may be sensitive
   - Store certificates securely according to legal requirements
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2OA
-lastPushedChecksum: sha256:a041287d0a535364
-lastPushedMetaChecksum: sha256:d41e1e527ada9c40
+lastPushedChecksum: "sha256:a041287d0a535364"
+lastPushedMetaChecksum: "sha256:af3c6b286fb45f01"

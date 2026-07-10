@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Targeted file and directory restore from a rustic backup snapshot on Linux and macOS. Reads the existing rustic TOML configuration to connect to the configured backend, lists available snapshots for reference, then restores the specified path from a chosen snapshot (or "latest") to a given destination directory. Designed for deployment via SuperOps RMM.
-
+  
   Usage Notes
   -----------
   - Defaults SNAPSHOT_ID to "latest" if left empty or unreplaced
@@ -16,7 +16,7 @@ readme: |
   - Creates the destination directory automatically if it does not exist
   - Runs: rustic restore "<snapshot>:<restore-path>" "<destination>"
   - Restored files inherit the permissions stored in the snapshot
-
+  
   Requirements
   ------------
   - rustic installed at /usr/local/bin/rustic (deploy rustic_install_unix.sh first)
@@ -25,16 +25,16 @@ readme: |
   - Network access to the configured backend
   - SuperOps runtime variables: YourRestorePath, YourDestination
   - Optional: YourSnapshotId (defaults to "latest")
-
+  
   Security
   --------
   - No credentials are passed on the command line
   - rustic reads backend credentials exclusively from the TOML config file
 variables:
-- name: YourSnapshotId
-- name: YourRestorePath
-- name: YourDestination
+  - name: YourSnapshotId
+  - name: YourRestorePath
+  - name: YourDestination
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNw
-lastPushedChecksum: sha256:83c3c35a5f0ba9bc
-lastPushedMetaChecksum: sha256:bbf34301de281b52
+lastPushedChecksum: "sha256:83c3c35a5f0ba9bc"
+lastPushedMetaChecksum: "sha256:8863a1063681715e"

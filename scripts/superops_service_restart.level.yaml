@@ -9,7 +9,7 @@ readme: |
   Restarts RMM agent services on Windows systems. Automatically detects if the
   script is being executed by the RMM agent itself and uses a safe background
   restart approach to avoid terminating mid-execution.
-
+  
   Usage Notes
   -----------
   - Set service filter via $YourServiceFilterHere (e.g., "limehawk")
@@ -17,7 +17,7 @@ readme: |
   - When running from RMM agent: spawns background process with 30-second delay
   - When running manually: restarts services directly and waits for completion
   - Reports status of each service after restart
-
+  
   Requirements
   ------------
   - Windows 10/11
@@ -25,8 +25,8 @@ readme: |
   - PowerShell 5.1+
   - Target RMM agent installed (matching services must exist)
 variables:
-- name: YourServiceFilterHere
+  - name: YourServiceFilterHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2Ng
-lastPushedChecksum: sha256:21071e206631d4f0
-lastPushedMetaChecksum: sha256:ff0d081422ef10ed
+lastPushedChecksum: "sha256:21071e206631d4f0"
+lastPushedMetaChecksum: "sha256:12bb1154b50650ea"

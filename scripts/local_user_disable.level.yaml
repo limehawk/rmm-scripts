@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Disables a local user account so it cannot be used to log in. The user profile and all data are preserved on disk. Use this for offboarding when data retention is required.
-
+  
   Usage Notes
   -----------
   - Validates username input
@@ -16,7 +16,7 @@ readme: |
   - Logs off any active sessions for that user
   - Preserves user profile and all files
   - Account can be re-enabled with Enable-LocalUser
-
+  
   Requirements
   ------------
   - Windows 10/11
@@ -24,8 +24,8 @@ readme: |
   - PowerShell 5.1+
   - $UsernameToDisable: local username to disable (SuperOps runtime variable)
 variables:
-- name: UsernameToDisable
+  - name: UsernameToDisable
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Mw
-lastPushedChecksum: sha256:0f2f743bc9b235f6
-lastPushedMetaChecksum: sha256:6490af4ace127f5d
+lastPushedChecksum: "sha256:0f2f743bc9b235f6"
+lastPushedMetaChecksum: "sha256:eba8d0314e5c6723"

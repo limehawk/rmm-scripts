@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Performs a complete reinstallation of the SuperOps RMM agent on macOS by uninstalling the current agent and installing a new version from a provided URL. Useful for agent upgrades or fixing corrupted installations.
-
+  
   Usage Notes
   -----------
   - PKGURL environment variable must be set by RMM platform
@@ -16,7 +16,7 @@ readme: |
   - 5-second polling interval for uninstall completion
   - Uses official SuperOps uninstall script at /Library/superops/uninstall.sh
   - Monitors agent processes to ensure clean uninstall before installing
-
+  
   Requirements
   ------------
   - macOS
@@ -27,5 +27,5 @@ readme: |
   - curl command (standard on macOS)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2MQ
-lastPushedChecksum: sha256:174ea4eea6e05f07
-lastPushedMetaChecksum: sha256:1da9dc67deeb1fb5
+lastPushedChecksum: "sha256:174ea4eea6e05f07"
+lastPushedMetaChecksum: "sha256:f94198327e45540f"

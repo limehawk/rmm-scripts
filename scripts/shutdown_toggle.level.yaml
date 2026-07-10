@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Schedules a system shutdown with a warning message, or cancels an existing scheduled shutdown if one is already pending. Acts as a toggle -- run once to schedule, run again to cancel.
-
+  
   Usage Notes
   -----------
   - Default shutdown delay: 60 seconds (configurable via $shutdownTime variable)
@@ -15,7 +15,7 @@ readme: |
   - If scheduled: cancels the pending shutdown
   - If not scheduled: schedules a new shutdown with on-screen warning countdown
   - Shutdown can always be canceled by running the script again
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server
@@ -24,5 +24,5 @@ readme: |
   - $shutdownTime: time in seconds before shutdown (default: 60)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Mw
-lastPushedChecksum: sha256:469ca706feb53740
-lastPushedMetaChecksum: sha256:8e7bce880a8dabfd
+lastPushedChecksum: "sha256:469ca706feb53740"
+lastPushedMetaChecksum: "sha256:63e65b100e9702ef"

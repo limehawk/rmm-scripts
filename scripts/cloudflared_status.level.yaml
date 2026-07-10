@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Field-triage view of a Windows endpoint's Cloudflare Tunnel connector. Reports the cloudflared binary version and install path, the Cloudflare Tunnel service Status and StartType, and a best-effort tunnel connectivity verdict pulled from the Windows Event Log with an outbound-socket fallback signal. Always exits 0 - absence of target is itself a valid status, not an error.
-
+  
   Usage Notes
   -----------
   - Resolves cloudflared.exe; if absent reports Not installed and exits 0
@@ -20,7 +20,7 @@ readme: |
   - Event log window is last 15 minutes
   - Event log source is cloudflared (verify on a registered host with Get-WinEvent -ListProvider *cloud*)
   - Connector port is 7844 (TCP and UDP)
-
+  
   Requirements
   ------------
   - Windows 10 1809+ / Windows Server 2019+
@@ -28,5 +28,5 @@ readme: |
   - PowerShell 5.1 or later
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOQ
-lastPushedChecksum: sha256:e7d61d1e9ee15f74
-lastPushedMetaChecksum: sha256:5c8b6271ad7eea70
+lastPushedChecksum: "sha256:e7d61d1e9ee15f74"
+lastPushedMetaChecksum: "sha256:206aba65dfe46ef5"

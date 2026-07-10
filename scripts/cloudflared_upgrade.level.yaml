@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Patches the Cloudflare.cloudflared package on a Windows endpoint via winget and confirms the Cloudflare Tunnel service remains healthy after the upgrade. Idempotent: machines without cloudflared installed exit 0 with a no-op.
-
+  
   Usage Notes
   -----------
   - Pre-checks for an existing cloudflared install (no-op exit 0 if absent)
@@ -20,7 +20,7 @@ readme: |
   - Reports old to new version transition
   - Package Id is Cloudflare.cloudflared
   - Service name is Cloudflare Tunnel
-
+  
   Requirements
   ------------
   - Windows 10 1809+ / Windows Server 2019+
@@ -29,5 +29,5 @@ readme: |
   - Outbound internet connectivity to Cloudflare edge (port 7844)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0MQ
-lastPushedChecksum: sha256:df3c507b8b3e95a9
-lastPushedMetaChecksum: sha256:0aa53c9c3e2e7781
+lastPushedChecksum: "sha256:df3c507b8b3e95a9"
+lastPushedMetaChecksum: "sha256:3373f7312efde2c3"

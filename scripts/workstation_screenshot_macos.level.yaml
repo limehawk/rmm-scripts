@@ -7,24 +7,24 @@ readme: |
   Purpose
   -------
   Captures a screenshot on macOS and saves it with a timestamped filename. Uses the native screencapture utility for silent capture. Designed for RMM deployment to capture system state for troubleshooting.
-
+  
   Usage Notes
   -----------
   - Creates screenshot directory at /tmp/screenshots/ if it does not exist
   - Filename format: screenshot_YYYYMMDD_HHMMSS.png
   - Silent capture enabled (-x flag, no shutter sound)
   - Screenshots saved to /tmp (auto-cleaned on reboot)
-
+  
   Requirements
   ------------
   - macOS 10.12 or later
   - screencapture utility (standard macOS component)
   - Screen Recording permission may be required (System Preferences > Security)
-
+  
   Security
   --------
   - May capture sensitive on-screen content
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNw
-lastPushedChecksum: sha256:68e461f9f17d2d4c
-lastPushedMetaChecksum: sha256:a2bf54db73b133ee
+lastPushedChecksum: "sha256:68e461f9f17d2d4c"
+lastPushedMetaChecksum: "sha256:fd34fd5689266dca"

@@ -7,14 +7,14 @@ readme: |
   Purpose
   -------
   Downloads deskview.exe utility to the Windows Startup folder so it runs automatically at user login. DeskView displays desktop icons in a compact window.
-
+  
   Usage Notes
   -----------
   - Validates input parameters before proceeding
   - Downloads deskview.exe to the common Startup folder for all users
   - Runs automatically at user login after installation
   - Configurable variable: $downloadUrl
-
+  
   Requirements
   ------------
   - Windows OS
@@ -22,5 +22,5 @@ readme: |
   - Internet connectivity
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0OA
-lastPushedChecksum: sha256:dca5111c6a4c7b0b
-lastPushedMetaChecksum: sha256:a07891418b832461
+lastPushedChecksum: "sha256:dca5111c6a4c7b0b"
+lastPushedMetaChecksum: "sha256:7ef724d49a76be6b"

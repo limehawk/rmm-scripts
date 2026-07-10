@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Migrates a Windows local-account user profile from an OLD laptop to a NEW laptop across the same local network using USMT. The same script is dropped on both machines; a role selector decides whether the machine is the Sender (old) or the Receiver (new). The compressed USMT migration store (USMT.MIG) is moved between machines by LocalSend (primary) or a plain file path (UNC/SMB/USB) fallback. Carries profile data and settings only, not installed applications. Targets are local accounts in a workgroup; Entra/Azure AD accounts are out of scope.
-
+  
   Usage Notes
   -----------
   - Interactive by default (menu asks role first: OLD/Sender vs NEW/Receiver), or unattended via the hardcoded CONFIG block at the top of the script.
@@ -17,7 +17,7 @@ readme: |
   - For very large profiles (>20 GB) over WiFi, the path transport (wired/USB/UNC) is recommended; the Sender warns when the estimate is large.
   - LocalSend CLI used: 0w0mewo/localsend-cli (Go), release v0.0.7, port 53317. send --ip <IP> -f <file>; recv -d <dir>; scan -t <sec>. Verified against the CLI command source, not the stub official README.
   - Default staging/store path: C:\MigrationStore
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server, PowerShell 5.1+
@@ -25,7 +25,7 @@ readme: |
   - Both machines on the same subnet (LocalSend discovery uses mDNS)
   - Internet connectivity on first run (USMT + LocalSend CLI download)
   - Sufficient disk for the migration store on both ends
-
+  
   Security
   --------
   - No secrets in logs: the encryption key and new-account password are never printed and never written to backup_info.json (the key is recorded only as the literal "[ENCRYPTED]" marker).
@@ -33,5 +33,5 @@ readme: |
   - LocalSend transfer is HTTPS by default.
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3NQ
-lastPushedChecksum: sha256:fc591c1e7cec5da2
-lastPushedMetaChecksum: sha256:d30705f7f91d628a
+lastPushedChecksum: "sha256:fc591c1e7cec5da2"
+lastPushedMetaChecksum: "sha256:5556293b4acf14b9"

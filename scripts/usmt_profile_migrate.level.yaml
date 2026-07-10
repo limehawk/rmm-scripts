@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Interactive USMT (User State Migration Tool) backup and restore utility for remote terminal sessions. Enables backing up user profiles from one machine and restoring them to another, including documents, settings, and application data.
-
+  
   Usage Notes
   -----------
   - Run interactively via menu-driven interface
@@ -16,7 +16,7 @@ readme: |
   - Restore options: merge to existing account or create new local account
   - USMT tools are auto-downloaded if not present
   - Default store path: C:\MigrationStore
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server
@@ -25,5 +25,5 @@ readme: |
   - Sufficient disk space for migration store
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Ng
-lastPushedChecksum: sha256:d397fd188deca05c
-lastPushedMetaChecksum: sha256:c77f52ec9315ef91
+lastPushedChecksum: "sha256:d397fd188deca05c"
+lastPushedMetaChecksum: "sha256:36014b5afd5cbb4b"

@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Tests network connectivity to configured printers by pinging their hostnames/IPs. Reports success/failure for each printer and optionally sends an email alert if any tests fail.
-
+  
   Usage Notes
   -----------
   - Pings each configured printer and records pass/fail status
@@ -15,7 +15,7 @@ readme: |
   - Optional email alerts via sendmail when failures occur
   - Ping count: 2 packets, timeout: 5 seconds
   - Email alerts disabled by default
-
+  
   Requirements
   ------------
   - macOS or Linux
@@ -25,5 +25,5 @@ readme: |
   - (Optional) sendmail for email alerts
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNQ
-lastPushedChecksum: sha256:80e00c348b5ea77c
-lastPushedMetaChecksum: sha256:7b965730669e73ed
+lastPushedChecksum: "sha256:80e00c348b5ea77c"
+lastPushedMetaChecksum: "sha256:de688f9dec1da77a"

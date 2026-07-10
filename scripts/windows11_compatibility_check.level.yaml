@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Evaluates system compatibility for Windows 11 upgrade by checking hardware requirements including TPM 2.0, Secure Boot, CPU compatibility, RAM, storage, and UEFI firmware. Identifies blockers preventing upgrade and attempts to enable required features where possible. Designed for RMM deployment to assess upgrade readiness across a fleet of devices.
-
+  
   Usage Notes
   -----------
   - Configurable minimum requirements: MinimumRamGB (default 4), MinimumStorageGB (default 64)
@@ -15,19 +15,19 @@ readme: |
   - Optional AttemptAutoFix to enable TPM or Secure Boot if hardware supports it (default: false)
   - Checks TPM version/status, Secure Boot, CPU against known compatible list, RAM, storage, and UEFI firmware
   - Reports all blockers with specific remediation steps
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
   - Administrator privileges required
   - Windows 10 or Windows 11 operating system
   - TPM and Secure Boot cmdlets available (built into Windows)
-
+  
   Security
   --------
   - Changing BIOS settings (TPM, Secure Boot) requires system reboot
   - Auto-fix operations are potentially disruptive to the system
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Mg
-lastPushedChecksum: sha256:c2db40bcd9a3a6cf
-lastPushedMetaChecksum: sha256:de95f2fc4499a8ad
+lastPushedChecksum: "sha256:c2db40bcd9a3a6cf"
+lastPushedMetaChecksum: "sha256:9c787947e9859a0b"

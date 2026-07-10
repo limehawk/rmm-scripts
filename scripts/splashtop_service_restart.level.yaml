@@ -7,14 +7,14 @@ readme: |
   Purpose
   -------
   Restarts the Splashtop Remote Service to resolve connectivity or performance issues with Splashtop remote access.
-
+  
   Usage Notes
   -----------
   - Validates service name input and checks service exists
   - Default service: SplashtopRemoteService
   - Restarts the service and waits 3 seconds
   - Reports final service status (Running or warning)
-
+  
   Requirements
   ------------
   - Windows OS
@@ -23,5 +23,5 @@ readme: |
   - $serviceName: name of the Splashtop service to restart
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Nw
-lastPushedChecksum: sha256:af58133e2ca89fc7
-lastPushedMetaChecksum: sha256:b53bacdec4b0fead
+lastPushedChecksum: "sha256:af58133e2ca89fc7"
+lastPushedMetaChecksum: "sha256:0379b5f3dec11c2e"

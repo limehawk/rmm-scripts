@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Removes all components installed by rustic_install_unix.sh. Detects OS (Linux/macOS), stops and disables the backup schedule (systemd timer on Linux, launchd plist on macOS), removes the Rustic binary and backup runner script, and deletes the configuration directory and log directory. The remote backup repository is NOT touched.
-
+  
   Usage Notes
   -----------
   - No runtime variables required
@@ -20,12 +20,12 @@ readme: |
   - Partial removal is acceptable; script always exits 0
   - Remote backup repository and its data are NOT deleted
   - Config files (which contain backend credentials) are deleted
-
+  
   Requirements
   ------------
   - Linux or macOS
   - Root privileges (runs as root via RMM)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzOQ
-lastPushedChecksum: sha256:6361db8bf61c78a0
-lastPushedMetaChecksum: sha256:dfca3f5572afe860
+lastPushedChecksum: "sha256:6361db8bf61c78a0"
+lastPushedMetaChecksum: "sha256:365c81af0d669e74"

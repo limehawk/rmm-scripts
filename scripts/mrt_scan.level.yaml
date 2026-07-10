@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Executes the built-in Windows Malicious Software Removal Tool (MRT.exe) with configurable scan mode. Designed for RMM deployment via SuperOps, allowing administrators to trigger Quick or Full silent scans on target endpoints. Displays scan status and log preview upon completion.
-
+  
   Usage Notes
   -----------
   - Validates administrative privileges before scanning
@@ -16,7 +16,7 @@ readme: |
   - Waits for scan completion (minutes to hours depending on mode)
   - Displays last 50 lines of MRT log file for review
   - RMM variable injection configures $ScanMode at runtime
-
+  
   Requirements
   ------------
   - Windows OS with MRT.exe (included by default)
@@ -25,8 +25,8 @@ readme: |
   - SuperOps module available via $SuperOpsModule variable
   - $ScanMode set to Quick or Full (case-insensitive)
 variables:
-- name: QuickOrFull
+  - name: QuickOrFull
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Ng
-lastPushedChecksum: sha256:869633f2768cf87a
-lastPushedMetaChecksum: sha256:f63fe826aa0235d2
+lastPushedChecksum: "sha256:869633f2768cf87a"
+lastPushedMetaChecksum: "sha256:298ebcaea2f0aeee"

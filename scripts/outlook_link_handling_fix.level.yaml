@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Fixes an issue where clicking shared file links (OneDrive, SharePoint) in Outlook incorrectly launches Outlook Classic instead of opening in the default web browser. Sets the documented Office link handling registry values to use the system default browser.
-
+  
   Usage Notes
   -----------
   - Checks if the Office Links registry path exists and creates it if missing
@@ -15,7 +15,7 @@ readme: |
   - Sets DecisionComplete to 1 (locks in the preference)
   - Restart Outlook after running for changes to take effect
   - $registryPath: HKCU:\Software\Microsoft\Office\16.0\Common\Links
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -23,5 +23,5 @@ readme: |
   - Microsoft Office 2016 or later (Office 16.0)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwMg
-lastPushedChecksum: sha256:bfcb50c6b844cef4
-lastPushedMetaChecksum: sha256:79061dc158cf2c00
+lastPushedChecksum: "sha256:bfcb50c6b844cef4"
+lastPushedMetaChecksum: "sha256:b88dd093aabe460a"

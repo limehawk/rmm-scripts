@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Installs the OpenSSH Server Windows capability, configures the sshd service for automatic startup, enables public key authentication, and opens the Windows Firewall for SSH traffic on port 22.
-
+  
   Usage Notes
   -----------
   - Checks if OpenSSH Server is already installed before proceeding
@@ -22,13 +22,13 @@ readme: |
   - $AllowedUsersGroup default: Administrators
   - Password authentication: enabled
   - Public key authentication: enabled
-
+  
   Requirements
   ------------
   - Windows Server 2019+ or Windows 10 1809+
   - Administrator privileges
   - Internet access if OpenSSH capability not already present
-
+  
   Security
   --------
   - Access restricted to Administrators group by default
@@ -36,5 +36,5 @@ readme: |
   - Password authentication left enabled for initial setup convenience
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwMQ
-lastPushedChecksum: sha256:c182f7aae76eb7a9
-lastPushedMetaChecksum: sha256:17819875107cbdfb
+lastPushedChecksum: "sha256:c182f7aae76eb7a9"
+lastPushedMetaChecksum: "sha256:0e96d2f5fd84a2a2"

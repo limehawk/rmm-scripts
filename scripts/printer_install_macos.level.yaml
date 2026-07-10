@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Installs network printers on macOS using CUPS/lpadmin. Supports PPD files for full driver functionality. Can install from local PPD or download from a URL.
-
+  
   Usage Notes
   -----------
   - Downloads driver package if URL provided
@@ -16,7 +16,7 @@ readme: |
   - Installs each configured printer via lpadmin
   - Supports lpd, ipp, and ipps protocols
   - Default: lpd protocol, local PPD source, sharing disabled, abort-job error policy
-
+  
   Requirements
   ------------
   - macOS 10.12 or later
@@ -30,5 +30,5 @@ readme: |
   - DRIVER_URL: Optional driver package URL
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNw
-lastPushedChecksum: sha256:629c0f1457ee7d88
-lastPushedMetaChecksum: sha256:19c8ff6bb775e782
+lastPushedChecksum: "sha256:629c0f1457ee7d88"
+lastPushedMetaChecksum: "sha256:23d54f6695356c10"

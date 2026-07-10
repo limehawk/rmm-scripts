@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Runs a command-line disk usage analysis on a specified directory using gdu (Go Disk Usage analyzer). Downloads gdu from GitHub releases if not already present, extracts it to a local cache directory, and executes it against the target path in non-interactive mode.
-
+  
   Usage Notes
   -----------
   - Set $YourTargetDirectoryHere runtime variable to the path to scan (e.g., C:\Users)
@@ -17,7 +17,7 @@ readme: |
   - Includes timeout protection for long-running scans (ScanTimeout setting)
   - Optional cleanup of downloaded files after completion (CleanupAfterRun setting)
   - Configurable scan depth controls top N items shown
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -25,8 +25,8 @@ readme: |
   - Write permissions to the cache directory
   - Runtime variable: $YourTargetDirectoryHere (target directory to scan)
 variables:
-- name: YourTargetDirectoryHere
+  - name: YourTargetDirectoryHere
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MQ
-lastPushedChecksum: sha256:341a3b130cb083e0
-lastPushedMetaChecksum: sha256:aa7d02021e1079aa
+lastPushedChecksum: "sha256:341a3b130cb083e0"
+lastPushedMetaChecksum: "sha256:146b1ba375ba3718"

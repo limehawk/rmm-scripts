@@ -7,23 +7,23 @@ readme: |
   Purpose
   -------
   Toggles Windows Firewall state for all profiles (Domain, Private, Public). If firewall is ON, turns it OFF. If firewall is OFF, turns it ON.
-
+  
   Usage Notes
   -----------
   - No inputs required; automatically detects current state and toggles
   - Affects all firewall profiles: Domain, Private, Public
   - Verifies new state after toggle
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges required
-
+  
   Security
   --------
   - Disabling firewall reduces system security
   - Use with caution in production environments
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4NQ
-lastPushedChecksum: sha256:3ababf5f681c4117
-lastPushedMetaChecksum: sha256:244e9f3a61d8f1db
+lastPushedChecksum: "sha256:3ababf5f681c4117"
+lastPushedMetaChecksum: "sha256:46c11db43ba3b37a"

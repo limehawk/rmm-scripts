@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Sets Google Chrome as the default browser for the current user. Uses SetUserFTA to properly set file associations with the correct UserChoice hash that Windows 10/11 requires. Must run as the logged-in user (not SYSTEM) because default browser settings are per-user and stored in HKCU with hash validation.
-
+  
   Usage Notes
   -----------
   - Verifies Chrome is installed
@@ -17,7 +17,7 @@ readme: |
   - All options default to $true; set individual booleans to $false to skip specific associations
   - $cleanUserStartup: remove Edge from user's startup programs
   - SetUserFTA is hosted in the limehawk rmm-scripts repo; change URL if hosted elsewhere
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -26,5 +26,5 @@ readme: |
   - Internet access (to download SetUserFTA if needed)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Mg
-lastPushedChecksum: sha256:b213f84130bd8aa5
-lastPushedMetaChecksum: sha256:fe6a65d630f22435
+lastPushedChecksum: "sha256:b213f84130bd8aa5"
+lastPushedMetaChecksum: "sha256:6a06dcfc14b57ff9"

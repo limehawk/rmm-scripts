@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Installs or uninstalls prinstall. Install mode downloads the latest release from GitHub, extracts the binary to C:\ProgramData\prinstall\, pre-creates a Windows Firewall rule for mDNS discovery (UDP 5353), and adds the install directory to the machine PATH so techs can run `prinstall scan` (etc.) without the full path. Uninstall mode reverses all three — removes the directory, the firewall rule, and the PATH entry. Prinstall is a CLI/TUI tool for discovering network printers, matching drivers, and installing them on Windows.
-
+  
   Usage Notes
   -----------
   - Set InstallOrUninstall to 'install' or 'uninstall'
@@ -15,15 +15,15 @@ readme: |
   - Uninstall: removes install directory, firewall rule, and PATH entry
   - Verifies binary by running prinstall --version after install
   - PATH changes apply immediately to new shells; the current session is patched in-memory too so follow-up commands in the same RMM run work without a reboot
-
+  
   Requirements
   ------------
   - Windows OS
   - Administrator privileges (required to modify machine PATH and firewall rules)
   - Internet connectivity to github.com (install only)
 variables:
-- name: InstallOrUninstall
+  - name: InstallOrUninstall
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMQ
-lastPushedChecksum: sha256:91001c70808f9cc5
-lastPushedMetaChecksum: sha256:3cfeae82845db7f4
+lastPushedChecksum: "sha256:91001c70808f9cc5"
+lastPushedMetaChecksum: "sha256:47d407fa0a966e32"

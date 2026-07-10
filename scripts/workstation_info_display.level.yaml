@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Collects and displays comprehensive workstation information including operating system details, computer name, current user, CPU specifications, memory capacity, network adapter configuration, and hardware serial number. Designed for quick troubleshooting access via tray icon menu or RMM execution with dual output modes.
-
+  
   Usage Notes
   -----------
   - DisplayMode: "popup" (Windows Forms message box) or "console" (text output for RMM capture)
@@ -17,7 +17,7 @@ readme: |
   - Network adapter information limited to enabled adapters only
   - Memory sizes reported in GB with 2 decimal precision
   - Missing or unavailable information reported as N/A
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -26,5 +26,5 @@ readme: |
   - No special permissions required (runs in user context)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5OA
-lastPushedChecksum: sha256:330cc5d8ea5101af
-lastPushedMetaChecksum: sha256:5e67e31cb9cfabba
+lastPushedChecksum: "sha256:330cc5d8ea5101af"
+lastPushedMetaChecksum: "sha256:c29bfa0912d3d52e"

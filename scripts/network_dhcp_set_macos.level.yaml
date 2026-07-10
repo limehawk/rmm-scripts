@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Configures a macOS network interface to use DHCP for automatic IP addressing. Toggles the network service off and on to ensure the new DHCP settings take effect immediately.
-
+  
   Usage Notes
   -----------
   - Detects primary network interface automatically, falls back to en0
@@ -16,7 +16,7 @@ readme: |
   - Verifies DHCP configuration after applying
   - TOGGLE_DELAY controls wait time between off/on (default: 2 seconds)
   - Temporarily disrupts network connectivity during toggle
-
+  
   Requirements
   ------------
   - Root/sudo access required
@@ -24,5 +24,5 @@ readme: |
   - networksetup command available
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4OA
-lastPushedChecksum: sha256:0aedf22695283c5f
-lastPushedMetaChecksum: sha256:0d4f2a9d71945341
+lastPushedChecksum: "sha256:0aedf22695283c5f"
+lastPushedMetaChecksum: "sha256:c3477f1b63965c80"

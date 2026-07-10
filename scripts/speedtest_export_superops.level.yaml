@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Downloads and runs Ookla Speedtest CLI, captures network performance metrics, and synchronizes the results to SuperOps custom fields for monitoring and reporting. Designed for RMM automation to track internet connectivity quality.
-
+  
   Usage Notes
   -----------
   - Automatically downloads and extracts Speedtest CLI ZIP if not already present
@@ -17,7 +17,7 @@ readme: |
   - Reports detailed metrics to console including ping, jitter, packet loss, and server info
   - Downloads from https://install.speedtest.net/app/cli/
   - Extraction path: $env:TEMP\SpeedtestCLI
-
+  
   Requirements
   ------------
   - SuperOps PowerShell module must be available and authenticated
@@ -27,5 +27,5 @@ readme: |
   - SuperOps custom fields must exist: Download Speed (Decimal), Upload Speed (Decimal), ISP (Short Text), Speedtest URL (Short Text)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0NA
-lastPushedChecksum: sha256:f0b07e25413d5fec
-lastPushedMetaChecksum: sha256:fc860d2d07b27672
+lastPushedChecksum: "sha256:f0b07e25413d5fec"
+lastPushedMetaChecksum: "sha256:fe6125a40e76fcc4"

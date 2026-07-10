@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Creates a new local administrator account intended for employee onboarding. The account is created with a blank password and configured to force a password change at first interactive logon. The account is visible on the Windows login screen so the new employee can select it and set their own password immediately.
-
+  
   Usage Notes
   -----------
   - Account is created with a blank password by design
@@ -16,14 +16,14 @@ readme: |
   - Account is added to the local Administrators group
   - $NewAdminUsername: account username (SuperOps runtime variable)
   - $NewAdminFullName: display name shown on login screen (SuperOps runtime variable)
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Admin privileges required (runs as SYSTEM via RMM)
   - PowerShell 5.1+
   - LocalAccounts module (built-in on Windows 10/11)
-
+  
   Security
   --------
   - Blank password is intentional for onboarding workflow
@@ -31,9 +31,9 @@ readme: |
   - Network logon with blank password is blocked by default
   - Employee must set a password at first interactive logon
 variables:
-- name: NewAdminUsername
-- name: NewAdminFullName
+  - name: NewAdminUsername
+  - name: NewAdminFullName
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3OQ
-lastPushedChecksum: sha256:5b01541855959832
-lastPushedMetaChecksum: sha256:710d963e302a88e4
+lastPushedChecksum: "sha256:5b01541855959832"
+lastPushedMetaChecksum: "sha256:86171da53af2f9b2"

@@ -7,14 +7,14 @@ readme: |
   Purpose
   -------
   Creates a new local user account with specified username and password. Optionally adds the user to the Administrators group.
-
+  
   Usage Notes
   -----------
   - Validates inputs before creating the account
   - Creates a standard local user account
   - Optionally adds the user to the Administrators group
   - Reports final status with user details
-
+  
   Requirements
   ------------
   - Windows 10/11
@@ -23,14 +23,14 @@ readme: |
   - Username provided via SuperOps $NewUsername variable
   - Password provided via SuperOps $NewPassword variable
   - AddToAdmin set to "Yes" or "No" (default: "No")
-
+  
   Security
   --------
   - Password visible in script -- use RMM variables for production
 variables:
-- name: NewUsername
-- name: NewPassword
+  - name: NewUsername
+  - name: NewPassword
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4MQ
-lastPushedChecksum: sha256:67aa5c484662ae59
-lastPushedMetaChecksum: sha256:4b3b9d350d20211a
+lastPushedChecksum: "sha256:67aa5c484662ae59"
+lastPushedMetaChecksum: "sha256:94771c55fb5c84e7"

@@ -7,18 +7,18 @@ readme: |
   Purpose
   -------
   Removes the SetDisableUXWUAccess registry key to restore user access to Windows Update settings in the Settings app.
-
+  
   Usage Notes
   -----------
   - Checks for SetDisableUXWUAccess registry key under HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
   - Removes the key if present; reports success if key did not exist
   - Counterpart to windows_update_access_toggle script
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Nw
-lastPushedChecksum: sha256:b8d790b668a1b512
-lastPushedMetaChecksum: sha256:818449501b5320ac
+lastPushedChecksum: "sha256:b8d790b668a1b512"
+lastPushedMetaChecksum: "sha256:6cbf5fc275418651"

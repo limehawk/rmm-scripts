@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Tears down a Cloudflare Tunnel connector on a Windows endpoint by uninstalling the Cloudflare Tunnel service and removing the Cloudflare.cloudflared package via winget. Idempotent: a clean machine results in a no-op success.
-
+  
   Usage Notes
   -----------
   - Detects current state (service present, binary present)
@@ -18,7 +18,7 @@ readme: |
   - Reports a clean-state result (idempotent on already-clean machines)
   - Package Id is Cloudflare.cloudflared
   - Service name is Cloudflare Tunnel
-
+  
   Requirements
   ------------
   - Windows 10 1809+ / Windows Server 2019+
@@ -26,5 +26,5 @@ readme: |
   - Winget installed (used only if the package is registered)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0MA
-lastPushedChecksum: sha256:f9aa02bdaa9c4cda
-lastPushedMetaChecksum: sha256:9a784a9efc33d424
+lastPushedChecksum: "sha256:f9aa02bdaa9c4cda"
+lastPushedMetaChecksum: "sha256:96af2573cd164559"

@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Interactive wizard for secure file deletion using Microsoft SDelete with DoD 5220.22-M compliant overwriting. Guides users through configuration options step-by-step before performing deletion. Creates comprehensive documentation suitable for legal proceedings.
-
+  
   Usage Notes
   -----------
   - Step-by-step prompts for target path, operator name, case reference, and settings
@@ -19,19 +19,19 @@ readme: |
   - Shows summary of all selections for confirmation before proceeding
   - Supports recursive deletion of directories
   - Configurable number of overwrite passes (default: 3)
-
+  
   Requirements
   ------------
   - Interactive terminal (not suitable for RMM/headless execution)
   - Microsoft SDelete (auto-installed via winget if enabled)
   - PowerShell 5.1 or later
   - Administrator rights recommended for complete metadata access
-
+  
   Security
   --------
   - Certificate contains file paths and hashes which may be sensitive
   - Store certificates securely according to legal requirements
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Nw
-lastPushedChecksum: sha256:99d45673e39aa403
-lastPushedMetaChecksum: sha256:0123bccdfee36c60
+lastPushedChecksum: "sha256:99d45673e39aa403"
+lastPushedMetaChecksum: "sha256:847473a95ebefd70"

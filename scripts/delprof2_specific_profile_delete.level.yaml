@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Deletes ONLY the specified Windows user profile. All other profiles are left untouched. Uses DelProf2 utility downloaded directly from helgeklein.com.
-
+  
   Usage Notes
   -----------
   - Validates that the target profile is not a protected profile
@@ -15,21 +15,21 @@ readme: |
   - Executes delprof2.exe /u /id:PROFILENAME
   - Refuses to delete gaia or administrator profiles
   - Cleans up cached files after execution
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
   - Internet access for DelProf2 download from helgeklein.com
   - Runtime variable: $profile_to_delete (username of profile to delete)
-
+  
   Security
   --------
   - DESTRUCTIVE OPERATION - deleted profile cannot be recovered
   - Refuses to delete protected profiles (gaia, administrator)
 variables:
-- name: profile_to_delete
+  - name: profile_to_delete
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0Nw
-lastPushedChecksum: sha256:15ac32c141b8896a
-lastPushedMetaChecksum: sha256:40e645d4cff3be38
+lastPushedChecksum: "sha256:15ac32c141b8896a"
+lastPushedMetaChecksum: "sha256:9c5478b2c6449217"

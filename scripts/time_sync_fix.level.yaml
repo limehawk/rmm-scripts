@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Fixes Windows time synchronization by setting the timezone, resetting the Windows Time service, configuring NTP servers, and forcing a time sync. Resolves common time drift and synchronization issues.
-
+  
   Usage Notes
   -----------
   - Sets timezone (configurable via $TimeZone variable)
@@ -16,7 +16,7 @@ readme: |
   - Sets service triggers for network connectivity
   - Uses pool.ntp.org servers by default
   - Forces immediate time resync
-
+  
   Requirements
   ------------
   - Windows 10/11
@@ -25,5 +25,5 @@ readme: |
   - $TimeZone and $NtpServers variables defined in script
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3MQ
-lastPushedChecksum: sha256:2a5b7085817c1386
-lastPushedMetaChecksum: sha256:c57355ea4541976f
+lastPushedChecksum: "sha256:2a5b7085817c1386"
+lastPushedMetaChecksum: "sha256:083897b5ae0e72fe"

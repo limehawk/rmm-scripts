@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Deletes the C:\$WinREAgent folder which contains temporary Windows Recovery Environment update files. This folder can consume significant disk space and is safe to delete after WinRE updates are complete.
-
+  
   Usage Notes
   -----------
   - FolderPath defaults to C:\$WinREAgent
@@ -15,12 +15,12 @@ readme: |
   - Deletes folder and all contents recursively
   - Handles hidden/system folder attributes
   - Exits successfully if folder does not exist
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges recommended
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5NQ
-lastPushedChecksum: sha256:142834ca4118604e
-lastPushedMetaChecksum: sha256:d9413c4ac3cde586
+lastPushedChecksum: "sha256:142834ca4118604e"
+lastPushedMetaChecksum: "sha256:98dd75233e437d6d"

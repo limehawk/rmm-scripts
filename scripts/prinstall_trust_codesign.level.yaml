@@ -12,7 +12,7 @@ readme: |
   signed prinstall.exe release binaries (v0.4.10+) pass Smart App Control
   without requiring a publicly-trusted commercial code signing cert.
   Idempotent — checks thumbprint before importing, safe to re-run.
-
+  
   Usage Notes
   -----------
   - Deploy once per endpoint, typically as part of agent provisioning
@@ -22,15 +22,15 @@ readme: |
   - Pair with docs/selfsign-setup.md in the prinstall repo for the full
     signing flow (cert generation + GitHub Actions secret upload)
   - Cert is valid 10 years; renew by regenerating and re-running this script
-
+  
   Requirements
   ------------
   - Windows OS
   - Administrator / SYSTEM privileges (LocalMachine stores require elevation)
   - prinstall-codesign.cer accessible (co-located with script, or via CertPath)
 variables:
-- name: CertPath
+  - name: CertPath
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMg
-lastPushedChecksum: sha256:cb3d19fc839edbb8
-lastPushedMetaChecksum: sha256:a5a5411f237f401c
+lastPushedChecksum: "sha256:cb3d19fc839edbb8"
+lastPushedMetaChecksum: "sha256:3cdec3d18899e001"

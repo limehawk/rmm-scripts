@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Schedules an NVRAM reset on the next reboot and immediately reboots the Mac. NVRAM (Non-Volatile Random-Access Memory) stores system settings that macOS accesses quickly, including startup disk selection, display resolution, speaker volume, time zone information, and recent kernel panic information. Useful for troubleshooting boot issues, display problems, audio issues, startup disk not found errors, and time/date problems.
-
+  
   Usage Notes
   -----------
   - Detects Mac architecture (Intel vs Apple Silicon)
@@ -15,18 +15,18 @@ readme: |
   - Sets NVRAM variable to trigger reset on next boot
   - Immediately reboots the system after setting reset flag
   - User data is not affected (only system settings reset)
-
+  
   Requirements
   ------------
   - Root/sudo access required
   - macOS 10.14 or later
   - Intel-based Mac (Apple Silicon uses different reset method)
-
+  
   Security
   --------
   - Runs with elevated privileges (sudo required)
   - Will immediately reboot the system
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5NQ
-lastPushedChecksum: sha256:706557f66e04e540
-lastPushedMetaChecksum: sha256:735f6934a01f0c1e
+lastPushedChecksum: "sha256:706557f66e04e540"
+lastPushedMetaChecksum: "sha256:1a4aba2b935e1ace"

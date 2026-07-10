@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Monitors Duplicati backup jobs via the local API. Authenticates to the Duplicati web service, queries configured backups, and reports their status including metrics like backup size, file count, and next scheduled run.
-
+  
   Usage Notes
   -----------
   - Validates input parameters
@@ -18,7 +18,7 @@ readme: |
   - Exits with code 1 if any job has failed
   - $duplicatiPassword: set to your Duplicati Web UI password (leave empty if no password)
   - $duplicatiPort: port where Duplicati runs (default 8200)
-
+  
   Requirements
   ------------
   - Windows OS
@@ -26,5 +26,5 @@ readme: |
   - Web UI password set (or empty for no password)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2MQ
-lastPushedChecksum: sha256:360e0d7aeefcb55f
-lastPushedMetaChecksum: sha256:bb4d478828725f54
+lastPushedChecksum: "sha256:360e0d7aeefcb55f"
+lastPushedMetaChecksum: "sha256:99b08cfd11cb087a"

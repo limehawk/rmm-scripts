@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Restores Windows Recovery Environment (WinRE) by downloading Winre.wim and ReAgent.xml files from a specified URL and placing them in the Recovery folder. Fixes systems where WinRE has been corrupted or deleted.
-
+  
   Usage Notes
   -----------
   - Configure WinreWimUrl and ReAgentXmlUrl in script before deployment
@@ -15,19 +15,19 @@ readme: |
   - Downloads files to TEMP then moves to C:\Windows\System32\Recovery
   - Re-enables WinRE via reagentc /enable after restore
   - Uses curl with retry and timeout for downloads
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
   - Network connectivity to download URLs
   - Valid WinRE files hosted at specified URLs
-
+  
   Security
   --------
   - Downloads from specified URLs; ensure URLs are trusted
   - Modifies system recovery configuration
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5NA
-lastPushedChecksum: sha256:2ee202fdbbaf51a9
-lastPushedMetaChecksum: sha256:cc7d3576134909a6
+lastPushedChecksum: "sha256:2ee202fdbbaf51a9"
+lastPushedMetaChecksum: "sha256:feec4a4defb663e2"

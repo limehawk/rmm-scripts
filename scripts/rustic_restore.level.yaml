@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Targeted file restore from a rustic backup snapshot. Operator provides a snapshot ID (or "latest"), a source path within the snapshot, and a local destination path via SuperOps runtime variables. Uses the existing rustic binary and TOML configuration deployed by rustic_install.ps1.
-
+  
   Usage Notes
   -----------
   - Snapshot ID defaults to "latest" if left empty or unreplaced
@@ -16,7 +16,7 @@ readme: |
   - Creates the destination directory if it does not exist
   - Runs: rustic restore "<snapshotId>:<restorePath>" <destination>
   - Sets RUSTIC_CONFIG_FILE environment variable and clears it after execution
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server 2016+
@@ -25,10 +25,10 @@ readme: |
   - SuperOps runtime variables: YourRestorePath, YourDestination
   - Optional: YourSnapshotId (defaults to "latest")
 variables:
-- name: YourSnapshotId
-- name: YourRestorePath
-- name: YourDestination
+  - name: YourSnapshotId
+  - name: YourRestorePath
+  - name: YourDestination
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNg
-lastPushedChecksum: sha256:59f81da920ec0a94
-lastPushedMetaChecksum: sha256:da46f375d20bd6f7
+lastPushedChecksum: "sha256:59f81da920ec0a94"
+lastPushedMetaChecksum: "sha256:ffc3dd92fc7b2b31"

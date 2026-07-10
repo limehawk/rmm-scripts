@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Enables Wake-on-LAN (WOL) in both BIOS/UEFI and Windows NIC settings. Supports Dell, HP, and Lenovo systems with manufacturer-specific BIOS modules. Also enables WOL on all capable network adapters in Windows.
-
+  
   Usage Notes
   -----------
   - Auto-detects system manufacturer via CIM
@@ -17,19 +17,19 @@ readme: |
   - HP: Uses HPCMSL, sets Wake On Lan to Boot to Hard Drive
   - Lenovo: Uses WMI, sets WakeOnLAN to Primary
   - Enables MSPower_DeviceWakeEnable on all capable Windows NICs
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
   - Internet connectivity for module installation
   - Supported manufacturer: Dell, HP, or Lenovo
-
+  
   Security
   --------
   - Modifies BIOS settings (requires admin)
   - Installs PowerShell modules from PSGallery
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5Ng
-lastPushedChecksum: sha256:2af7e13609778071
-lastPushedMetaChecksum: sha256:88cffcd9b1053cd2
+lastPushedChecksum: "sha256:2af7e13609778071"
+lastPushedMetaChecksum: "sha256:4b798181ed103da2"

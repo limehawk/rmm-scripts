@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Extends the Windows Recovery Environment (WinRE) partition by 250MB to resolve issues with Windows updates requiring more recovery partition space. This is commonly needed for KB5034441 and similar updates.
-
+  
   Usage Notes
   -----------
   - Examines current disk layout and WinRE status
@@ -17,19 +17,19 @@ readme: |
   - Extends or recreates WinRE partition, then re-enables WinRE
   - Verifies new configuration after completion
   - Reboot recommended before running
-
+  
   Requirements
   ------------
   - Windows 10/11
   - Administrator privileges
   - Sufficient free space on OS partition
   - WinRE must be enabled before running
-
+  
   Security
   --------
   - Modifies disk partitions; use with caution
   - Creates backup of WinRE content before modification
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5Mw
-lastPushedChecksum: sha256:193e2e8a68f2a4ce
-lastPushedMetaChecksum: sha256:1355845eb3b6f5ff
+lastPushedChecksum: "sha256:193e2e8a68f2a4ce"
+lastPushedMetaChecksum: "sha256:345abe185a3c6e4a"

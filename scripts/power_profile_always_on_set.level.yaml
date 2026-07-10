@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Creates a custom "Always On - Limehawk" power plan optimized for workstations that should never sleep while on AC power. If the plan already exists, it will be reused and reconfigured. The plan is based on High Performance settings.
-
+  
   Usage Notes
   -----------
   - Creates or reuses custom power plan based on High Performance
@@ -17,7 +17,7 @@ readme: |
   - Default settings: Display 30min AC, Sleep never AC, Hibernate never AC
   - Windows 11: Custom plans work but are hidden in Settings app
   - To verify: Run control powercfg.cpl or powercfg /getactivescheme
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server 2016+
@@ -27,5 +27,5 @@ readme: |
   - Timeout variables: $displayTimeoutAC/DC, $diskTimeoutAC/DC, $standbyTimeoutAC/DC, $hibernateTimeoutAC/DC
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMA
-lastPushedChecksum: sha256:27bd0adef334e036
-lastPushedMetaChecksum: sha256:fde306b7b6c6b0be
+lastPushedChecksum: "sha256:27bd0adef334e036"
+lastPushedMetaChecksum: "sha256:23ec334680a78a54"

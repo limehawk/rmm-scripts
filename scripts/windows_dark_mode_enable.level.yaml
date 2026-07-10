@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Bypasses the locked personalization settings on non-activated Windows 11 by applying wallpaper and dark mode settings directly via registry. Also optionally configures UTC hardware clock for dual-boot Linux compatibility.
-
+  
   Usage Notes
   -----------
   - Downloads wallpaper from configured URL to Public Pictures
@@ -16,7 +16,7 @@ readme: |
   - Restarts Explorer to apply theme changes immediately
   - Optional UTC clock fix for dual-boot systems (fixUtcClock)
   - Configurable inputs: wallpaperUrl, wallpaperPath, enableDarkMode, fixUtcClock
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -24,5 +24,5 @@ readme: |
   - Internet access for wallpaper download
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Mw
-lastPushedChecksum: sha256:9d07ef367a12f5b9
-lastPushedMetaChecksum: sha256:46ab70a35e52ef06
+lastPushedChecksum: "sha256:9d07ef367a12f5b9"
+lastPushedMetaChecksum: "sha256:5ea3e567ac0f2109"

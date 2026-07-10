@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Queries wtfismyip.com/json to retrieve public IP address, ISP, geolocation, and hostname information. Formats the results into readable stdout output. Note: macOS/Linux SuperOps agents do not support Send-CustomField, so results are output only.
-
+  
   Usage Notes
   -----------
   - Queries wtfismyip.com/json for public IP details
@@ -15,7 +15,7 @@ readme: |
   - Formats IP, Location, Hostname, ISP, Country, and Tor Exit status
   - Outputs to stdout (no custom field sync on macOS/Linux)
   - Curl timeout: 30 seconds
-
+  
   Requirements
   ------------
   - curl and python3 installed (both pre-installed on macOS)
@@ -23,5 +23,5 @@ readme: |
   - API_URL: wtfismyip.com JSON endpoint (hardcoded)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMA
-lastPushedChecksum: sha256:c115a7ff0b97c23b
-lastPushedMetaChecksum: sha256:ab7c3493ceb64f95
+lastPushedChecksum: "sha256:c115a7ff0b97c23b"
+lastPushedMetaChecksum: "sha256:8b2b8e3452284be9"

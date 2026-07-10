@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Installs network printers on Linux using CUPS/lpadmin. Supports PPD files for driver functionality. Automatically installs CUPS and required packages if not present.
-
+  
   Usage Notes
   -----------
   - Detects OS and verifies Linux
@@ -18,7 +18,7 @@ readme: |
   - Enables and accepts jobs for each printer
   - Default protocol: lpd
   - PPD search paths: /usr/share/cups/model/, /usr/share/ppd/, /etc/cups/ppd/
-
+  
   Requirements
   ------------
   - Debian/Ubuntu or compatible Linux (apt, yum, or dnf)
@@ -31,5 +31,5 @@ readme: |
   - AUTO_INSTALL_CUPS: Whether to install CUPS if missing
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNg
-lastPushedChecksum: sha256:d721fe27c531e96a
-lastPushedMetaChecksum: sha256:19e0fa6d30856a15
+lastPushedChecksum: "sha256:d721fe27c531e96a"
+lastPushedMetaChecksum: "sha256:84153bfeffa1e5f1"

@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Removes all local Rustic components from the machine: the Windows Scheduled Task and the entire install directory (binary, config, backup script, and logs). Does NOT delete the remote backup repository. Safe to run even if components are already absent — partial removal is acceptable.
-
+  
   Usage Notes
   -----------
   - No runtime variables required
@@ -19,12 +19,12 @@ readme: |
   - Always exits 0 — cleanup is idempotent
   - Remote backup repository and its data are not affected
   - Config files (which contain backend credentials) are deleted locally
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server 2016+
   - Administrator privileges (runs as SYSTEM via RMM)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzOA
-lastPushedChecksum: sha256:3e899b4f1ae514a7
-lastPushedMetaChecksum: sha256:582ed418050fee55
+lastPushedChecksum: "sha256:3e899b4f1ae514a7"
+lastPushedMetaChecksum: "sha256:615f9321b711d1e9"

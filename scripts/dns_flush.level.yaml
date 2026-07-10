@@ -7,19 +7,19 @@ readme: |
   Purpose
   -------
   Flushes the DNS cache on macOS to resolve DNS-related connectivity issues. Automatically detects macOS version and uses the appropriate flush method.
-
+  
   Usage Notes
   -----------
   - Detects macOS version automatically
   - Selects appropriate DNS flush method for the detected version
   - Executes flush command and reports success or failure
   - Version-specific flush commands used for compatibility
-
+  
   Requirements
   ------------
   - macOS 10.6 or later
   - Root/sudo privileges
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1NQ
-lastPushedChecksum: sha256:5124eb497016d01a
-lastPushedMetaChecksum: sha256:e33ad4e260063f77
+lastPushedChecksum: "sha256:5124eb497016d01a"
+lastPushedMetaChecksum: "sha256:b30b775f27b8f160"

@@ -7,18 +7,18 @@ readme: |
   Purpose
   -------
   Lists all locally installed printers (USB, network, virtual) using prinstall's list command. Useful for auditing printer installations via RMM or verifying a printer was added successfully.
-
+  
   Usage Notes
   -----------
   - Enumerates all printers Windows knows about via Get-Printer
   - No runtime variables required
   - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
-
+  
   Requirements
   ------------
   - Windows OS
   - prinstall.exe installed
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxOA
-lastPushedChecksum: sha256:d8c62d94975b0077
-lastPushedMetaChecksum: sha256:d4e45f28a7e235d4
+lastPushedChecksum: "sha256:d8c62d94975b0077"
+lastPushedMetaChecksum: "sha256:36e56d6b28500324"
