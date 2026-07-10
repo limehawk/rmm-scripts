@@ -1,0 +1,8 @@
+name: directory_size_analyze.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MQ
+lastPushedChecksum: "sha256:341a3b130cb083e0"
+lastPushedMetaChecksum: "sha256:aa7d02021e1079aa"

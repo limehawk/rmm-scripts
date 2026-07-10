@@ -1,0 +1,8 @@
+name: edge_chrome_default_user_set.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Mg
+lastPushedChecksum: "sha256:b213f84130bd8aa5"
+lastPushedMetaChecksum: "sha256:fe6a65d630f22435"

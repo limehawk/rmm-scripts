@@ -1,0 +1,8 @@
+name: nvram_reset_reboot_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5NQ
+lastPushedChecksum: "sha256:706557f66e04e540"
+lastPushedMetaChecksum: "sha256:735f6934a01f0c1e"

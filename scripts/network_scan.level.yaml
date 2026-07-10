@@ -1,0 +1,8 @@
+name: network_scan.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4OQ
+lastPushedChecksum: "sha256:a9fb4a959015c576"
+lastPushedMetaChecksum: "sha256:9627aa094342241a"

@@ -1,0 +1,8 @@
+name: antivirus_uninstall.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMw
+lastPushedChecksum: "sha256:20975b8efcf885c8"
+lastPushedMetaChecksum: "sha256:2c0a2e10efba6916"

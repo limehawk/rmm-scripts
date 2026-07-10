@@ -1,0 +1,8 @@
+name: canon_mf455dw_driver_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNg
+lastPushedChecksum: "sha256:9422dc3b1c79a3bf"
+lastPushedMetaChecksum: "sha256:1762be2079eff365"

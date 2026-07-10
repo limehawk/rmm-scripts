@@ -1,0 +1,8 @@
+name: nircmd_screenshot.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Mw
+lastPushedChecksum: "sha256:1796923bd56b59bc"
+lastPushedMetaChecksum: "sha256:9fb9093589e0bdda"

@@ -1,0 +1,8 @@
+name: file_secure_delete.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Nw
+lastPushedChecksum: "sha256:99d45673e39aa403"
+lastPushedMetaChecksum: "sha256:0123bccdfee36c60"

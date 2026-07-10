@@ -1,0 +1,8 @@
+name: windows11_compatibility_check.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Mg
+lastPushedChecksum: "sha256:c2db40bcd9a3a6cf"
+lastPushedMetaChecksum: "sha256:de95f2fc4499a8ad"

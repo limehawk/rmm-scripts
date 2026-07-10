@@ -1,0 +1,8 @@
+name: onedrive_remove_complete.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Nw
+lastPushedChecksum: "sha256:e1f4ee52cb2ad974"
+lastPushedMetaChecksum: "sha256:58a800e021ecdbb5"

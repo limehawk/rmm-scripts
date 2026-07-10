@@ -1,0 +1,8 @@
+name: arch_update_verbose.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNA
+lastPushedChecksum: "sha256:132e3b80eb80e9b3"
+lastPushedMetaChecksum: "sha256:e86e5fb919dea6e6"

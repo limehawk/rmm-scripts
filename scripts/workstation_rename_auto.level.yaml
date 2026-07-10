@@ -1,0 +1,8 @@
+name: workstation_rename_auto.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMw
+lastPushedChecksum: "sha256:d5996dd1d435f7a6"
+lastPushedMetaChecksum: "sha256:2030f4b2237f4528"

@@ -1,0 +1,8 @@
+name: printer_install_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNw
+lastPushedChecksum: "sha256:629c0f1457ee7d88"
+lastPushedMetaChecksum: "sha256:19c8ff6bb775e782"

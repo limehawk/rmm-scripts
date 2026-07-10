@@ -1,0 +1,8 @@
+name: local_user_disable.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Mw
+lastPushedChecksum: "sha256:0f2f743bc9b235f6"
+lastPushedMetaChecksum: "sha256:6490af4ace127f5d"

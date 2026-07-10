@@ -1,0 +1,8 @@
+name: restic_b2_backup_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMQ
+lastPushedChecksum: "sha256:c09fd6b042b511b6"
+lastPushedMetaChecksum: "sha256:e0c9372e694ca5da"

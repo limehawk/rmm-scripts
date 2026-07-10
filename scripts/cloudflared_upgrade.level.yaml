@@ -1,0 +1,8 @@
+name: cloudflared_upgrade.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0MQ
+lastPushedChecksum: "sha256:df3c507b8b3e95a9"
+lastPushedMetaChecksum: "sha256:0aa53c9c3e2e7781"

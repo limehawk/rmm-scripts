@@ -1,0 +1,8 @@
+name: usmt_lan_migrate.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3NQ
+lastPushedChecksum: "sha256:fc591c1e7cec5da2"
+lastPushedMetaChecksum: "sha256:d30705f7f91d628a"

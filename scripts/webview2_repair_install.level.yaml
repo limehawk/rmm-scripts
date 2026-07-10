@@ -1,0 +1,8 @@
+name: webview2_repair_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Nw
+lastPushedChecksum: "sha256:eb622de3ac3b06f0"
+lastPushedMetaChecksum: "sha256:f2879d8e7e8e9065"

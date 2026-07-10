@@ -1,0 +1,8 @@
+name: delprof2_old_profiles_delete.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0NA
+lastPushedChecksum: "sha256:106abf51d75cdcc5"
+lastPushedMetaChecksum: "sha256:0d7430406cd3b1ef"

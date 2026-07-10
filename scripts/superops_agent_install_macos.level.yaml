@@ -1,0 +1,8 @@
+name: superops_agent_install_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1OQ
+lastPushedChecksum: "sha256:6fc3490acf5c28f8"
+lastPushedMetaChecksum: "sha256:918d6fe1dde8ee8c"

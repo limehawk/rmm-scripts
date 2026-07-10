@@ -1,0 +1,8 @@
+name: winre_restore.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5NA
+lastPushedChecksum: "sha256:2ee202fdbbaf51a9"
+lastPushedMetaChecksum: "sha256:cc7d3576134909a6"

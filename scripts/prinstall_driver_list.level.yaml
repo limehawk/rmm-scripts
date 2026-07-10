@@ -1,0 +1,8 @@
+name: prinstall_driver_list.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNA
+lastPushedChecksum: "sha256:feaf37e6d0aa7773"
+lastPushedMetaChecksum: "sha256:b24b8e54eda74952"

@@ -1,0 +1,8 @@
+name: windows_dark_mode_enable.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Mw
+lastPushedChecksum: "sha256:9d07ef367a12f5b9"
+lastPushedMetaChecksum: "sha256:46ab70a35e52ef06"

@@ -1,0 +1,8 @@
+name: public_ip_export_superops.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyOQ
+lastPushedChecksum: "sha256:e613d96669eff586"
+lastPushedMetaChecksum: "sha256:8c33af23a6d2d9fa"

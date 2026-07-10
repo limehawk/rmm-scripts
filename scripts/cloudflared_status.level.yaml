@@ -1,0 +1,8 @@
+name: cloudflared_status.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOQ
+lastPushedChecksum: "sha256:e7d61d1e9ee15f74"
+lastPushedMetaChecksum: "sha256:5c8b6271ad7eea70"

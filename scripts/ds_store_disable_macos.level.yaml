@@ -1,0 +1,8 @@
+name: ds_store_disable_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2MA
+lastPushedChecksum: "sha256:6a32e8ee9e2fd422"
+lastPushedMetaChecksum: "sha256:920cbbac4768c8df"

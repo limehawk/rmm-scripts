@@ -1,0 +1,8 @@
+name: speedtest_export_superops.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0NA
+lastPushedChecksum: "sha256:f0b07e25413d5fec"
+lastPushedMetaChecksum: "sha256:fc860d2d07b27672"

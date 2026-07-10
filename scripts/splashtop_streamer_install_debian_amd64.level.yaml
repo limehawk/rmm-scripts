@@ -1,0 +1,8 @@
+name: splashtop_streamer_install_debian_amd64.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1MA
+lastPushedChecksum: "sha256:0d1eb15b627f4539"
+lastPushedMetaChecksum: "sha256:b2c0a676e13609f0"

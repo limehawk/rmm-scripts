@@ -1,0 +1,8 @@
+name: prinstall_setup.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMQ
+lastPushedChecksum: "sha256:91001c70808f9cc5"
+lastPushedMetaChecksum: "sha256:3cfeae82845db7f4"

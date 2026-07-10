@@ -1,0 +1,8 @@
+name: workstation_screenshot_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNw
+lastPushedChecksum: "sha256:68e461f9f17d2d4c"
+lastPushedMetaChecksum: "sha256:a2bf54db73b133ee"

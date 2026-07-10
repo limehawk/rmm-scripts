@@ -1,0 +1,8 @@
+name: wifi_adapters_disable.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3OA
+lastPushedChecksum: "sha256:16dd67e48b67ceaf"
+lastPushedMetaChecksum: "sha256:e235b3de0a3f16ca"

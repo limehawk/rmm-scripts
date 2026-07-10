@@ -1,0 +1,8 @@
+name: splashtop_streamer_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0OQ
+lastPushedChecksum: "sha256:ba206f1ad3a5419d"
+lastPushedMetaChecksum: "sha256:65dcfecd8199e9b2"

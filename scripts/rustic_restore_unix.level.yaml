@@ -1,0 +1,8 @@
+name: rustic_restore_unix.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNw
+lastPushedChecksum: "sha256:83c3c35a5f0ba9bc"
+lastPushedMetaChecksum: "sha256:bbf34301de281b52"

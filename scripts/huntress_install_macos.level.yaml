@@ -1,0 +1,8 @@
+name: huntress_install_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3NQ
+lastPushedChecksum: "sha256:910ea6231cde662c"
+lastPushedMetaChecksum: "sha256:340818797dfe9216"

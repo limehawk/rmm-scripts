@@ -1,0 +1,8 @@
+name: splashtop_uninstall_macos.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1NA
+lastPushedChecksum: "sha256:b9213924115309e4"
+lastPushedMetaChecksum: "sha256:ffa17928a86e1115"

@@ -1,0 +1,8 @@
+name: onedrive_reenable.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Ng
+lastPushedChecksum: "sha256:640ca7ab752253cc"
+lastPushedMetaChecksum: "sha256:3ac0b751a37c0e4a"

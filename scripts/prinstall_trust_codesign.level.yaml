@@ -1,0 +1,8 @@
+name: prinstall_trust_codesign.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMg
+lastPushedChecksum: "sha256:cb3d19fc839edbb8"
+lastPushedMetaChecksum: "sha256:a5a5411f237f401c"

@@ -1,0 +1,8 @@
+name: windows_firewall_toggle.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4NQ
+lastPushedChecksum: "sha256:3ababf5f681c4117"
+lastPushedMetaChecksum: "sha256:244e9f3a61d8f1db"

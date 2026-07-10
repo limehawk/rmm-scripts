@@ -1,0 +1,8 @@
+name: winget_setup.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5MQ
+lastPushedChecksum: "sha256:9c39b0b8e934af79"
+lastPushedMetaChecksum: "sha256:f64105a38bf30b2c"

@@ -1,0 +1,8 @@
+name: outlook_new_force_migrate.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwMw
+lastPushedChecksum: "sha256:e983e27a747703ea"
+lastPushedMetaChecksum: "sha256:91cb9d28d4f70525"

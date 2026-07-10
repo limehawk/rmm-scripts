@@ -1,0 +1,8 @@
+name: windows_update_access_toggle.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4OA
+lastPushedChecksum: "sha256:f3e6ce36a0c0a34e"
+lastPushedMetaChecksum: "sha256:ee787b5d2983ec6c"

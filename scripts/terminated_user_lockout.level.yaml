@@ -1,0 +1,8 @@
+name: terminated_user_lockout.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3MA
+lastPushedChecksum: "sha256:a2fc53f08fbbf738"
+lastPushedMetaChecksum: "sha256:51f8598b49425efa"

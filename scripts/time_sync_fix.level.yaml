@@ -1,0 +1,8 @@
+name: time_sync_fix.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3MQ
+lastPushedChecksum: "sha256:2a5b7085817c1386"
+lastPushedMetaChecksum: "sha256:c57355ea4541976f"

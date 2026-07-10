@@ -1,0 +1,8 @@
+name: splashtop_uninstall.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1Mw
+lastPushedChecksum: "sha256:0800aca199e5aa18"
+lastPushedMetaChecksum: "sha256:26c9052ba7560ecc"

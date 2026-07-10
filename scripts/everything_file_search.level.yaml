@@ -1,0 +1,8 @@
+name: everything_file_search.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Ng
+lastPushedChecksum: "sha256:0cd3f77917c59864"
+lastPushedMetaChecksum: "sha256:17fb9475f301125e"

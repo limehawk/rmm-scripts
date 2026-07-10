@@ -1,0 +1,8 @@
+name: dns_flush.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1NQ
+lastPushedChecksum: "sha256:5124eb497016d01a"
+lastPushedMetaChecksum: "sha256:e33ad4e260063f77"

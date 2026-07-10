@@ -1,0 +1,8 @@
+name: splashtop_service_restart.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Nw
+lastPushedChecksum: "sha256:af58133e2ca89fc7"
+lastPushedMetaChecksum: "sha256:b53bacdec4b0fead"

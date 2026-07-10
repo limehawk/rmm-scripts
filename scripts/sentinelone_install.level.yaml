@@ -1,0 +1,8 @@
+name: sentinelone_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0MA
+lastPushedChecksum: "sha256:aab2ea4bf232ddc9"
+lastPushedMetaChecksum: "sha256:33134c89efab5bf4"

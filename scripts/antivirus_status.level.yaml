@@ -1,0 +1,8 @@
+name: antivirus_status.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMg
+lastPushedChecksum: "sha256:1a20a2caeb5024b5"
+lastPushedMetaChecksum: "sha256:9921764b52986cbc"

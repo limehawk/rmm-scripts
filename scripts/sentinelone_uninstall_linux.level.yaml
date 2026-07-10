@@ -1,0 +1,8 @@
+name: sentinelone_uninstall_linux.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Mg
+lastPushedChecksum: "sha256:14d539a27befd82d"
+lastPushedMetaChecksum: "sha256:9b737727ffa2bc88"

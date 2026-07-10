@@ -1,0 +1,8 @@
+name: workstation_reboot_force.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMQ
+lastPushedChecksum: "sha256:396ded2032104a45"
+lastPushedMetaChecksum: "sha256:593dcf9bfb3334f9"

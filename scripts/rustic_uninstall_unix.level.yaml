@@ -1,0 +1,8 @@
+name: rustic_uninstall_unix.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzOQ
+lastPushedChecksum: "sha256:6361db8bf61c78a0"
+lastPushedMetaChecksum: "sha256:dfca3f5572afe860"

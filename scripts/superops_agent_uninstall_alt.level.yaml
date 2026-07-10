@@ -1,0 +1,8 @@
+name: superops_agent_uninstall_alt.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2Mw
+lastPushedChecksum: "sha256:d389b242c9fa2afc"
+lastPushedMetaChecksum: "sha256:ff331e65813e62a6"

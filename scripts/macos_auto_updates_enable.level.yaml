@@ -1,0 +1,8 @@
+name: macos_auto_updates_enable.sh
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4NA
+lastPushedChecksum: "sha256:25ead792bd41f224"
+lastPushedMetaChecksum: "sha256:035e124b9744fe83"

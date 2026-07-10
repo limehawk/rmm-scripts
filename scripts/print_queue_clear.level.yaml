@@ -1,0 +1,8 @@
+name: print_queue_clear.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMw
+lastPushedChecksum: "sha256:a2439d52ec6601ab"
+lastPushedMetaChecksum: "sha256:9dc71ff892be23cc"

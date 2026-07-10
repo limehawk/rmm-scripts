@@ -1,0 +1,8 @@
+name: superops_tray_icon_show_always.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2Nw
+lastPushedChecksum: "sha256:60705b6f854e0ad7"
+lastPushedMetaChecksum: "sha256:a71ed8eb386efb00"

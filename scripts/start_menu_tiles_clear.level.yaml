@@ -1,0 +1,8 @@
+name: start_menu_tiles_clear.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1NQ
+lastPushedChecksum: "sha256:e5c2f1f84776bf20"
+lastPushedMetaChecksum: "sha256:8a3c42166a3732e1"
