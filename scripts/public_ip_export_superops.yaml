@@ -24,7 +24,7 @@ readme: |
   - SuperOps PowerShell module must be available and authenticated
   - Internet connectivity to reach wtfismyip.com
   - Windows with PowerShell 5.1+ or PowerShell 7+
-  - SuperOps custom field "Public IP" (Multiline Text) must exist in tenant
+  - SuperOps custom field "Public IP" (Paragraph / rich-text) must exist in tenant
   - $apiUrl: wtfismyip.com JSON endpoint
   - $customFieldName: SuperOps custom field name
 favourite: false

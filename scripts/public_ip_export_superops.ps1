@@ -9,9 +9,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Public IP to SuperOps                                         v1.0.1
+ SCRIPT   : Public IP to SuperOps                                         v1.0.2
  AUTHOR   : Limehawk.io
- DATE     : March 2026
+ DATE     : July 2026
  USAGE    : .\public_ip_export_superops.ps1
 ================================================================================
  FILE     : public_ip_export_superops.ps1
@@ -28,7 +28,7 @@ and sends it to a SuperOps custom field for network visibility and auditing.
 DATA SOURCES & PRIORITY
 
 1. wtfismyip.com/json (primary) - public IP lookup API
-2. SuperOps custom field (output) - multiline text field for formatted results
+2. SuperOps custom field (output) - Paragraph (rich-text) field for formatted results
 
 REQUIRED INPUTS
 
@@ -37,13 +37,13 @@ All inputs are hardcoded in the script body:
   - $customFieldName    : SuperOps custom field name (must exist in tenant)
 
 SuperOps Custom Fields (must exist in tenant):
-  - "Public IP"         : Multiline Text field for formatted IP info
+  - "Public IP"         : Paragraph (rich-text) field for formatted IP info
 
 SETTINGS
 
   - API URL         : https://wtfismyip.com/json
   - Field Name      : Public IP
-  - Output Format   : Formatted multiline text (IP, Location, ISP, etc.)
+  - Output Format   : Rich text with <br> line breaks (IP, Location, ISP, etc.)
   - Timeout         : PowerShell defaults (Invoke-RestMethod)
 
 BEHAVIOR
@@ -112,6 +112,7 @@ EXAMPLE RUN
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-14 v1.0.2 Fix 400 on sync: use <br> line breaks for PARAGRAPH custom field instead of raw newlines
  2026-03-13 v1.0.1 Fix multiline value format for Send-CustomField API
  2026-03-13 v1.0.0 Initial release
 ================================================================================
@@ -222,8 +223,10 @@ Write-Host "ISP      : $isp"
 Write-Host "Country  : $country ($countryCode)"
 Write-Host "Tor Exit : $torExit"
 
-# Format multiline text for custom field
-$fieldValue = "IP: $ipAddress`nLocation: $location`nHostname: $hostname`nISP: $isp`nCountry: $country ($countryCode)`nTor Exit: $torExit"
+# Format value for the SuperOps "Public IP" custom field (PARAGRAPH / rich-text type).
+# Use <br> line breaks rather than raw newlines: Send-CustomField rejects embedded
+# newline characters in the value with a 400 Bad Request, and PARAGRAPH fields render HTML.
+$fieldValue = "IP: $ipAddress<br>Location: $location<br>Hostname: $hostname<br>ISP: $isp<br>Country: $country ($countryCode)<br>Tor Exit: $torExit"
 
 # ============================================================================
 # SUPEROPS SYNC
@@ -247,7 +250,7 @@ try {
     Write-Host "Troubleshooting:"
     Write-Host "- Verify custom field 'Public IP' exists in SuperOps tenant"
     Write-Host "- Check field name matches exactly (case-sensitive)"
-    Write-Host "- Ensure field type is Multiline Text"
+    Write-Host "- Ensure field type is Paragraph (rich-text)"
     Write-Host "- Verify SuperOps authentication is still valid"
     exit 1
 }
