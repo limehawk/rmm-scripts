@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.7.1
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.7.2
 #  AUTHOR   : Limehawk.io
 #  DATE     : July 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -45,9 +45,10 @@
 #      - DEPLOY_TIMEOUT: Max seconds to wait per app for a deploy to settle
 #      - POLL_INTERVAL: Seconds between deployment-status checks
 #      - DEPLOY_COOLDOWN: Seconds to rest after each app before the next
-#      - MAX_LOAD: 1-min load ceiling before starting next app
-#        (empty = 2*nproc; Docker hosts idle near nproc, so 1*nproc never
-#        clears. Set 0 to disable the load gate.)
+#      - MAX_LOAD: 1-min load ceiling before starting next app (0 = off;
+#        empty = 2*nproc). Off by default: Docker hosts idle near nproc so a
+#        load gate stalls the run while free RAM is still fine. Sequential
+#        deploys + cooldown + free-RAM gate are the real protection.
 #      - MIN_FREE_MB: Min MemAvailable MB before starting next app (0=off)
 #      - RESOURCE_WAIT_MAX: Max seconds to wait for headroom before proceeding
 #
@@ -59,7 +60,7 @@
 #      - DEPLOY_TIMEOUT: 600 (seconds per app — git builds on small hosts)
 #      - POLL_INTERVAL: 15 (seconds; fewer docker exec / psql polls)
 #      - DEPLOY_COOLDOWN: 30 (seconds between apps)
-#      - MAX_LOAD: empty (auto = 2*nproc; set 0 to disable)
+#      - MAX_LOAD: 0 (disabled; set e.g. 4 or empty for 2*nproc if needed)
 #      - MIN_FREE_MB: 48 (set 0 to disable)
 #      - RESOURCE_WAIT_MAX: 600 (seconds)
 #
@@ -128,6 +129,10 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-20 v3.7.2 Default MAX_LOAD=0 (load gate off). Live host idles at
+#                    load 2–4 on 2 cores with 1.5GB+ free; load waits wasted
+#                    minutes while deploys themselves finish in ~15s. Rely on
+#                    sequential + cooldown + free-RAM gate instead.
 #  2026-07-20 v3.7.1 Auto MAX_LOAD is 2*nproc (was nproc). Docker hosts sit near
 #                    nproc at "idle", so load < nproc blocked forever; only wait
 #                    when load is thrashing. Log headroom waits at most every 30s.
@@ -164,7 +169,7 @@ DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal bas
 DEPLOY_TIMEOUT=600                                       # Max seconds to wait per app
 POLL_INTERVAL=15                                         # Seconds between status checks
 DEPLOY_COOLDOWN=30                                       # Seconds rest after each app
-MAX_LOAD=""                                              # 1-min load ceiling; empty=2*nproc; 0=off
+MAX_LOAD=0                                               # 1-min load ceiling; 0=off; empty=2*nproc
 MIN_FREE_MB=48                                           # Min MemAvailable MB; 0=off
 RESOURCE_WAIT_MAX=600                                    # Max seconds waiting for headroom
 # ============================================================================
@@ -189,9 +194,8 @@ renice +10 $$ >/dev/null 2>&1 || true
 ionice -c3 -p $$ >/dev/null 2>&1 || true
 
 # Resolve load ceiling once.
-# Empty -> 2*nproc. Docker hosts with many containers often idle near nproc,
-# so a ceiling of nproc never clears and the run stalls before app 1.
-# "0" disables the load gate entirely.
+# "0" (default) disables the load gate — busy Docker hosts idle near nproc.
+# Empty -> 2*nproc for hosts that still want a thrash ceiling.
 if [[ -z "$MAX_LOAD" ]]; then
     MAX_LOAD=$(awk -v n="$(nproc 2>/dev/null || echo 1)" 'BEGIN {
         if (n + 0 < 1) n = 1
@@ -412,7 +416,11 @@ DEPLOY_LIST=$(echo "$DEPLOY_LIST" | sed '/^$/d')
 
 DEPLOY_COUNT=$(echo "$DEPLOY_LIST" | wc -l)
 echo "Queue order : docker-source first, then git-source ($DEPLOY_COUNT apps)"
-echo "Resource gates : load < ${MAX_LOAD} | free >= ${MIN_FREE_MB}MB | cooldown ${DEPLOY_COOLDOWN}s"
+if [[ "$MAX_LOAD" == "0" ]]; then
+    echo "Resource gates : load off | free >= ${MIN_FREE_MB}MB | cooldown ${DEPLOY_COOLDOWN}s"
+else
+    echo "Resource gates : load < ${MAX_LOAD} | free >= ${MIN_FREE_MB}MB | cooldown ${DEPLOY_COOLDOWN}s"
+fi
 
 # ============================================================================
 # DEPLOY + VERIFY (per app, sequential — one at a time)
