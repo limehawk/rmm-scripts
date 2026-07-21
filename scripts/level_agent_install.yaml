@@ -2,16 +2,16 @@ name: level_agent_install.ps1
 description: Silently installs Level RMM agent with install key and group id
 language: PowerShell
 tags:
-- Software
-- Windows
-- RMM
+  - Software
+  - Windows
+  - RMM
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
   Purpose
   -------
   Downloads the Level Windows MSI and silently installs the agent, registering it to a specific Level device group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script.
-
+  
   Usage Notes
   -----------
   - Skips if Level is already installed (optional, default on)
@@ -20,7 +20,7 @@ readme: |
   - Verifies install via Program Files path or Level service
   - Cleans up temporary MSI after completion
   - Hard-fails if group id is empty or unreplaced
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server
@@ -29,7 +29,7 @@ readme: |
   - Network access to downloads.level.io
   - $YourLevelInstallKeyHere: Level UI install key from Add device (not REST API key)
   - $YourLevelGroupIdHere: numeric Level group id (required, e.g. 55904)
-
+  
   Security
   --------
   - No secrets in the public repo — keys only via SuperOps runtime vars
@@ -37,5 +37,8 @@ readme: |
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourLevelInstallKeyHere
-- name: YourLevelGroupIdHere
+  - name: YourLevelInstallKeyHere
+  - name: YourLevelGroupIdHere
+scriptId: "5383865455712243712"
+lastPushedChecksum: "sha256:a9b2f3b9656090a7"
+lastPushedMetaChecksum: "sha256:6d6cd36ae0a3386d"
