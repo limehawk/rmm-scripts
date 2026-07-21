@@ -15,7 +15,7 @@ readme: |
   -----------
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
   - Skips applications with "idle" status; deploys remaining apps one at a time (docker-source first, then git-source)
-  - Before each app, waits until 1-min load and MemAvailable are under thresholds (or RESOURCE_WAIT_MAX elapses)
+  - Before each app, waits until 1-min load is under 2*nproc (auto) and MemAvailable is under threshold (or RESOURCE_WAIT_MAX elapses). Set MAX_LOAD=0 to disable the load gate.
   - Rests DEPLOY_COOLDOWN seconds between apps; single-instance flock prevents stacked schedule runs
   - No API key or stored secret: each app's own webhook token is read from the local database at runtime and used only against localhost
   - docker-source apps redeploy on a bare webhook POST; git-source apps get a GitHub-style push payload carrying the branch plus a file path matching any watchPaths filter

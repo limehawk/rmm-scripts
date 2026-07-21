@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.7.0
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.7.1
 #  AUTHOR   : Limehawk.io
 #  DATE     : July 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -45,7 +45,9 @@
 #      - DEPLOY_TIMEOUT: Max seconds to wait per app for a deploy to settle
 #      - POLL_INTERVAL: Seconds between deployment-status checks
 #      - DEPLOY_COOLDOWN: Seconds to rest after each app before the next
-#      - MAX_LOAD: 1-min load ceiling before starting next app (empty=nproc)
+#      - MAX_LOAD: 1-min load ceiling before starting next app
+#        (empty = 2*nproc; Docker hosts idle near nproc, so 1*nproc never
+#        clears. Set 0 to disable the load gate.)
 #      - MIN_FREE_MB: Min MemAvailable MB before starting next app (0=off)
 #      - RESOURCE_WAIT_MAX: Max seconds to wait for headroom before proceeding
 #
@@ -57,7 +59,7 @@
 #      - DEPLOY_TIMEOUT: 600 (seconds per app — git builds on small hosts)
 #      - POLL_INTERVAL: 15 (seconds; fewer docker exec / psql polls)
 #      - DEPLOY_COOLDOWN: 30 (seconds between apps)
-#      - MAX_LOAD: empty (auto = nproc; set 0 to disable)
+#      - MAX_LOAD: empty (auto = 2*nproc; set 0 to disable)
 #      - MIN_FREE_MB: 48 (set 0 to disable)
 #      - RESOURCE_WAIT_MAX: 600 (seconds)
 #
@@ -126,6 +128,9 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-20 v3.7.1 Auto MAX_LOAD is 2*nproc (was nproc). Docker hosts sit near
+#                    nproc at "idle", so load < nproc blocked forever; only wait
+#                    when load is thrashing. Log headroom waits at most every 30s.
 #  2026-07-20 v3.7.0 Low-resource host profile: load/memory gates between apps,
 #                    post-deploy cooldown, slower status polls, longer per-app
 #                    timeout, docker-before-git queue order, single-instance flock,
@@ -159,7 +164,7 @@ DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal bas
 DEPLOY_TIMEOUT=600                                       # Max seconds to wait per app
 POLL_INTERVAL=15                                         # Seconds between status checks
 DEPLOY_COOLDOWN=30                                       # Seconds rest after each app
-MAX_LOAD=""                                              # 1-min load ceiling; empty=nproc; 0=off
+MAX_LOAD=""                                              # 1-min load ceiling; empty=2*nproc; 0=off
 MIN_FREE_MB=48                                           # Min MemAvailable MB; 0=off
 RESOURCE_WAIT_MAX=600                                    # Max seconds waiting for headroom
 # ============================================================================
@@ -183,9 +188,15 @@ fi
 renice +10 $$ >/dev/null 2>&1 || true
 ionice -c3 -p $$ >/dev/null 2>&1 || true
 
-# Resolve load ceiling once (empty MAX_LOAD -> nproc; "0" disables the gate).
+# Resolve load ceiling once.
+# Empty -> 2*nproc. Docker hosts with many containers often idle near nproc,
+# so a ceiling of nproc never clears and the run stalls before app 1.
+# "0" disables the load gate entirely.
 if [[ -z "$MAX_LOAD" ]]; then
-    MAX_LOAD=$(nproc 2>/dev/null || echo 1)
+    MAX_LOAD=$(awk -v n="$(nproc 2>/dev/null || echo 1)" 'BEGIN {
+        if (n + 0 < 1) n = 1
+        printf "%.1f", n * 2
+    }')
 fi
 
 # ============================================================================
@@ -281,9 +292,9 @@ resources_ok() {
 # after the max so a stuck high-load host cannot hang the whole run forever.
 wait_for_resources() {
     local label="$1"
-    local start now load free waited announced
+    local start now load free waited last_log
     start=$(date +%s)
-    announced=0
+    last_log=-999
 
     if resources_ok; then
         return 0
@@ -299,16 +310,17 @@ wait_for_resources() {
             return 0
         fi
         if resources_ok; then
-            if (( announced )); then
+            if (( last_log >= 0 )); then
                 echo "Headroom ok for $label after ${waited}s"
             fi
             return 0
         fi
-        if (( ! announced || waited % 30 == 0 )); then
+        # Log at most once every 30s (not on every poll).
+        if (( waited - last_log >= 30 )); then
             load=$(load_1m)
             free=$(free_mb)
-            echo "Waiting for headroom before $label (load=${load:-?} free=${free:-?}MB; max ${RESOURCE_WAIT_MAX}s)"
-            announced=1
+            echo "Waiting for headroom before $label (load=${load:-?} free=${free:-?}MB / need load<${MAX_LOAD} free>=${MIN_FREE_MB}MB; max ${RESOURCE_WAIT_MAX}s)"
+            last_log=$waited
         fi
         sleep 5
     done
