@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.5.0
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.7.0
 #  AUTHOR   : Limehawk.io
 #  DATE     : July 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -25,7 +25,8 @@
 #    webhook on localhost, waits for the deploy to finish, and reports the real
 #    outcome (from the deployment table) plus whether the running image changed.
 #    Because every app already carries its own webhook token in the database,
-#    the script needs no API key.
+#    the script needs no API key. Tuned for low-resource hosts (e.g. Pi Zero):
+#    sequential deploys, load/memory gates, cooldowns, and a single-instance lock.
 #
 #  DATA SOURCES & PRIORITY
 #
@@ -34,6 +35,7 @@
 #      deployment table: status, errorMessage)
 #    - Docker (swarm service -> running container image id, before/after)
 #    - Local Dokploy deploy webhook (localhost:3000/api/deploy/<token>)
+#    - Host /proc/loadavg and /proc/meminfo (resource gates between apps)
 #
 #  REQUIRED INPUTS
 #
@@ -42,27 +44,39 @@
 #      - DOKPLOY_LOCAL_URL: Local Dokploy base URL
 #      - DEPLOY_TIMEOUT: Max seconds to wait per app for a deploy to settle
 #      - POLL_INTERVAL: Seconds between deployment-status checks
+#      - DEPLOY_COOLDOWN: Seconds to rest after each app before the next
+#      - MAX_LOAD: 1-min load ceiling before starting next app (empty=nproc)
+#      - MIN_FREE_MB: Min MemAvailable MB before starting next app (0=off)
+#      - RESOURCE_WAIT_MAX: Max seconds to wait for headroom before proceeding
 #
 #  SETTINGS
 #
-#    Configuration defaults:
+#    Configuration defaults (low-resource profile):
 #      - DOKPLOY_DB_CONTAINER: "dokploy-postgres" (container name filter)
 #      - DOKPLOY_LOCAL_URL: "http://localhost:3000" (internal base URL)
-#      - DEPLOY_TIMEOUT: 300 (seconds per app)
-#      - POLL_INTERVAL: 4 (seconds)
+#      - DEPLOY_TIMEOUT: 600 (seconds per app — git builds on small hosts)
+#      - POLL_INTERVAL: 15 (seconds; fewer docker exec / psql polls)
+#      - DEPLOY_COOLDOWN: 30 (seconds between apps)
+#      - MAX_LOAD: empty (auto = nproc; set 0 to disable)
+#      - MIN_FREE_MB: 48 (set 0 to disable)
+#      - RESOURCE_WAIT_MAX: 600 (seconds)
 #
 #  BEHAVIOR
 #
-#    1. Queries the Dokploy database for all applications
-#    2. Skips applications with "idle" status
-#    3. For each non-idle app, in parallel:
-#         a. Records the running image id (before)
-#         b. Triggers the app's deploy webhook (docker: bare POST; git: a
+#    1. Takes a non-blocking flock so overlapping schedule runs exit cleanly
+#    2. Lowers own scheduling priority (nice/ionice best-effort)
+#    3. Queries the Dokploy database for all applications
+#    4. Skips applications with "idle" status
+#    5. Orders queue: docker-source apps first (cheap), then git-source (builds)
+#    6. For each non-idle app, one at a time:
+#         a. Waits until load and free memory are under thresholds (or timeout)
+#         b. Records the running image id (before)
+#         c. Triggers the app's deploy webhook (docker: bare POST; git: a
 #            GitHub-style push payload with branch + watchPaths-matched file)
-#         c. Waits for the new deployment row to reach done/error (or timeout)
-#         d. Records the running image id (after) and classifies the result
-#    4. Reports per app: updated (before->after), no change, failed, or timeout
-#    5. Prints a summary and exits 1 if any app failed or could not be verified
+#         d. Waits for the new deployment row to reach done/error (or timeout)
+#         e. Records the running image id (after) and classifies the result
+#         f. Prints that app's result, then cools down before the next app
+#    7. Prints a summary and exits 1 if any app failed or could not be verified
 #
 #  PREREQUISITES
 #
@@ -85,12 +99,13 @@
 #
 #  EXIT CODES
 #
-#    0 - Success (all triggered deployments verified done)
+#    0 - Success (all triggered deployments verified done), or another run
+#        already holds the lock
 #    1 - Failure (validation error, a deploy failed, or could not be verified)
 #
 #  EXAMPLE RUN
 #
-#    [RUN] DEPLOYING 11 APPLICATIONS (PARALLEL)
+#    [RUN] DEPLOYING 11 APPLICATIONS (SEQUENTIAL, LOW-RESOURCE)
 #    ==============================================================
 #    [OK]   hudu/hudu-app        updated  9f3c1a->b47e02  (4s)
 #    [OK]   n8n/n8n              no change  a1d0f7  (1s)
@@ -111,6 +126,12 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-20 v3.7.0 Low-resource host profile: load/memory gates between apps,
+#                    post-deploy cooldown, slower status polls, longer per-app
+#                    timeout, docker-before-git queue order, single-instance flock,
+#                    best-effort nice/ionice
+#  2026-07-20 v3.6.0 Deploy apps sequentially (one at a time) instead of in
+#                    parallel so builds do not contend for host CPU/disk/network
 #  2026-07-02 v3.5.0 Verify each deploy: wait for the deployment outcome, report
 #                    real done/error + failure reason, per-app duration, and the
 #                    before->after image id (updated vs unchanged)
@@ -135,12 +156,37 @@
 # ============================================================================
 DOKPLOY_DB_CONTAINER="dokploy-postgres"                  # Dokploy postgres container name
 DOKPLOY_LOCAL_URL="http://localhost:3000"                 # Dokploy internal base URL
-DEPLOY_TIMEOUT=300                                       # Max seconds to wait per app
-POLL_INTERVAL=4                                          # Seconds between status checks
+DEPLOY_TIMEOUT=600                                       # Max seconds to wait per app
+POLL_INTERVAL=15                                         # Seconds between status checks
+DEPLOY_COOLDOWN=30                                       # Seconds rest after each app
+MAX_LOAD=""                                              # 1-min load ceiling; empty=nproc; 0=off
+MIN_FREE_MB=48                                           # Min MemAvailable MB; 0=off
+RESOURCE_WAIT_MAX=600                                    # Max seconds waiting for headroom
 # ============================================================================
 
 set -e
 RUN_START=$(date +%s)
+
+# Single-instance lock: overlapping schedule ticks exit 0 instead of stacking.
+LOCK_FILE="/tmp/dokploy_running_apps_deploy.lock"
+exec 9>"$LOCK_FILE"
+if command -v flock >/dev/null 2>&1; then
+    if ! flock -n 9; then
+        echo ""
+        echo "[WARN] Another deploy run is already active; exiting."
+        echo "=============================================================="
+        exit 0
+    fi
+fi
+
+# Prefer not to fight production workloads for scheduler / disk IO.
+renice +10 $$ >/dev/null 2>&1 || true
+ionice -c3 -p $$ >/dev/null 2>&1 || true
+
+# Resolve load ceiling once (empty MAX_LOAD -> nproc; "0" disables the gate).
+if [[ -z "$MAX_LOAD" ]]; then
+    MAX_LOAD=$(nproc 2>/dev/null || echo 1)
+fi
 
 # ============================================================================
 # INPUT VALIDATION
@@ -196,6 +242,76 @@ image_id() {
     local svc="$1" cid
     cid=$(docker ps -q --filter "label=com.docker.swarm.service.name=$svc" | head -1)
     [[ -n "$cid" ]] && docker inspect -f '{{.Image}}' "$cid" 2>/dev/null | sed 's/^sha256://'
+}
+
+# Current 1-min load average (empty if unreadable)
+load_1m() {
+    awk '{print $1}' /proc/loadavg 2>/dev/null
+}
+
+# MemAvailable in whole MiB (empty if unreadable)
+free_mb() {
+    awk '/MemAvailable:/ {print int($2/1024); exit}' /proc/meminfo 2>/dev/null
+}
+
+# True when load and free memory are within configured gates.
+resources_ok() {
+    local load free
+    load=$(load_1m)
+    free=$(free_mb)
+
+    # Load gate (skip when MAX_LOAD is 0 or load unreadable)
+    if [[ -n "$MAX_LOAD" && "$MAX_LOAD" != "0" && -n "$load" ]]; then
+        if ! awk -v l="$load" -v max="$MAX_LOAD" 'BEGIN { exit !(l + 0 < max + 0) }'; then
+            return 1
+        fi
+    fi
+
+    # Memory gate (skip when MIN_FREE_MB is 0 or free unreadable)
+    if [[ -n "$MIN_FREE_MB" && "$MIN_FREE_MB" -gt 0 && -n "$free" ]]; then
+        if (( free < MIN_FREE_MB )); then
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+# Block until host has headroom (or RESOURCE_WAIT_MAX elapses). Proceeds anyway
+# after the max so a stuck high-load host cannot hang the whole run forever.
+wait_for_resources() {
+    local label="$1"
+    local start now load free waited announced
+    start=$(date +%s)
+    announced=0
+
+    if resources_ok; then
+        return 0
+    fi
+
+    while true; do
+        now=$(date +%s)
+        waited=$((now - start))
+        if (( waited >= RESOURCE_WAIT_MAX )); then
+            load=$(load_1m)
+            free=$(free_mb)
+            echo "Proceeding without headroom for $label (waited ${waited}s; load=${load:-?} free=${free:-?}MB)"
+            return 0
+        fi
+        if resources_ok; then
+            if (( announced )); then
+                echo "Headroom ok for $label after ${waited}s"
+            fi
+            return 0
+        fi
+        if (( ! announced || waited % 30 == 0 )); then
+            load=$(load_1m)
+            free=$(free_mb)
+            echo "Waiting for headroom before $label (load=${load:-?} free=${free:-?}MB; max ${RESOURCE_WAIT_MAX}s)"
+            announced=1
+        fi
+        sleep 5
+    done
 }
 
 # Query per app: project, name, status, sourceType, branch, watchPaths, token,
@@ -274,10 +390,20 @@ if [[ -z "$DEPLOY_LIST" ]]; then
     exit 0
 fi
 
+# Docker-source redeploys are usually image pulls; git-source often builds.
+# Run the cheap ones first so heavy builds do not delay the light queue.
+DEPLOY_LIST=$(
+    printf '%s\n' "$DEPLOY_LIST" | awk -F'|' '$2 == "docker"'
+    printf '%s\n' "$DEPLOY_LIST" | awk -F'|' '$2 != "docker" && NF'
+)
+DEPLOY_LIST=$(echo "$DEPLOY_LIST" | sed '/^$/d')
+
 DEPLOY_COUNT=$(echo "$DEPLOY_LIST" | wc -l)
+echo "Queue order : docker-source first, then git-source ($DEPLOY_COUNT apps)"
+echo "Resource gates : load < ${MAX_LOAD} | free >= ${MIN_FREE_MB}MB | cooldown ${DEPLOY_COOLDOWN}s"
 
 # ============================================================================
-# DEPLOY + VERIFY (per app, in parallel)
+# DEPLOY + VERIFY (per app, sequential — one at a time)
 # ============================================================================
 # Triggers the webhook, waits for the deployment to settle, and classifies the
 # result by comparing the running image id before and after. Writes one result
@@ -345,25 +471,33 @@ deploy_one() {
     else
         printf '[OK]   %-28s redeployed  (%ss)\n' "$DISPLAY" "$elapsed" > "$outfile"
     fi
+    set -e
 }
 
 echo ""
-echo "[RUN] DEPLOYING $DEPLOY_COUNT APPLICATIONS (PARALLEL)"
+echo "[RUN] DEPLOYING $DEPLOY_COUNT APPLICATIONS (SEQUENTIAL, LOW-RESOURCE)"
 echo "=============================================================="
 
-RESULTS_DIR=$(mktemp -d)
+RESULTS_FILE=$(mktemp)
 IDX=0
 while IFS= read -r REC; do
     IDX=$((IDX + 1))
-    deploy_one "$REC" "$RESULTS_DIR/$(printf '%03d' "$IDX").out" &
-done <<< "$DEPLOY_LIST"
-wait
+    DISPLAY_PREVIEW="${REC%%|*}"
 
-# Print results in the original (queued) order
-RESULTS_FILE=$(mktemp)
-cat "$RESULTS_DIR"/*.out > "$RESULTS_FILE" 2>/dev/null
-cat "$RESULTS_FILE"
-rm -rf "$RESULTS_DIR"
+    wait_for_resources "$DISPLAY_PREVIEW"
+
+    OUTFILE=$(mktemp)
+    deploy_one "$REC" "$OUTFILE"
+    cat "$OUTFILE"
+    cat "$OUTFILE" >> "$RESULTS_FILE"
+    rm -f "$OUTFILE"
+
+    # Rest between apps so RAM/IO can settle (skip after the last one).
+    if (( IDX < DEPLOY_COUNT && DEPLOY_COOLDOWN > 0 )); then
+        echo "Cooldown ${DEPLOY_COOLDOWN}s before next app..."
+        sleep "$DEPLOY_COOLDOWN"
+    fi
+done <<< "$DEPLOY_LIST"
 
 UPDATED=$(grep -c 'updated ' "$RESULTS_FILE" || true)
 NOCHANGE=$(grep -cE 'no change|redeployed' "$RESULTS_FILE" || true)
