@@ -2,23 +2,23 @@ name: level_agent_install_macos.sh
 description: Installs Level RMM agent on macOS with install key and group id
 language: Bash
 tags:
-- Software
-- Mac
-- RMM
+  - Software
+  - Mac
+  - RMM
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
   Purpose
   -------
   Downloads and runs the Level macOS installer, registering the device to a specific Level group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script.
-
+  
   Usage Notes
   -----------
   - Skips if Level is already installed (optional, default on)
   - Runs official installer: LEVEL_API_KEY=<key>:<groupId> bash -c "$(curl -L https://downloads.level.io/install_mac_os.sh)"
   - Verifies install via Application path, Library path, or launchctl
   - Hard-fails if group id is empty or unreplaced
-
+  
   Requirements
   ------------
   - macOS operating system
@@ -26,7 +26,7 @@ readme: |
   - curl and network access to downloads.level.io
   - $YourLevelInstallKeyHere: Level UI install key from Add device (not REST API key)
   - $YourLevelGroupIdHere: numeric Level group id (required, e.g. 55896)
-
+  
   Security
   --------
   - No secrets in the public repo — keys only via SuperOps runtime vars
@@ -35,5 +35,8 @@ readme: |
 favourite: false
 shared: false
 runtimeVariables:
-- name: YourLevelInstallKeyHere
-- name: YourLevelGroupIdHere
+  - name: YourLevelInstallKeyHere
+  - name: YourLevelGroupIdHere
+scriptId: "7330712502440001536"
+lastPushedChecksum: "sha256:b99bbfa346ec46c5"
+lastPushedMetaChecksum: "sha256:a5231bff84a382dc"
