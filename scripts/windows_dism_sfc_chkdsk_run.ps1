@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.0.3
+ SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.0.4
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows_dism_sfc_chkdsk_run.ps1
@@ -112,6 +112,9 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v2.0.4 Fix ScanHealth false positive: healthy "No component store
+                   corruption detected." matched corruption.*detected and
+                   wrongly ran RestoreHealth
  2026-07-08 v2.0.3 Raised sidecar execution timeout to 240 min for worst-case DISM/SFC/chkdsk runs
  2026-07-08 v2.0.2 Raised sidecar execution timeout to 120 min for long DISM/SFC/chkdsk runs
  2026-01-19 v2.0.1 Updated to two-line ASCII console output style
@@ -229,8 +232,10 @@ if ($RunDismScan) {
 
         # Check exit code as primary indicator (DISM: 0 = success)
         if ($dismScanExitCode -eq 0) {
-            # Check if corruption was detected (scan succeeded but found issues)
-            if ($dismScanOutput -match "component store is repairable|corruption.*detected") {
+            # Healthy: "No component store corruption detected."
+            # Corrupt: "The component store is repairable."
+            # Do NOT match "corruption.*detected" — that false-positives on the healthy line.
+            if ($dismScanOutput -match "component store is repairable") {
                 Write-Host "Result : Corruption detected - repair needed"
                 $corruptionDetected = $true
             } else {
