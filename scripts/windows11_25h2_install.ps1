@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows 11 25H2 Install                                      v1.0.0
+ SCRIPT   : Windows 11 25H2 Install                                      v1.0.1
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows11_25h2_install.ps1
@@ -58,7 +58,7 @@ $ErrorActionPreference = 'Stop'
      - Installer Path      : %TEMP%\windows11.0-kb5054156.msu
      - Install method      : wusa.exe <msu> /quiet /norestart
      - Level run context   : System (SYSTEM_USER)
-     - Level timeout       : 60 minutes recommended (download + wusa)
+     - Level timeout       : 7200 seconds (2 hours) — Level unit is seconds
 
  BEHAVIOR
 
@@ -156,6 +156,8 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v1.0.1 Level timeout set to 7200s (2h). Level timeout is seconds,
+                   not minutes — previous sidecar value of 60 was only 60s.
  2026-07-22 v1.0.0 Initial release - silent Windows 11 25H2 enablement package
                    (KB5054156) for Level RMM; x64 + ARM64 catalog MSU URLs
 ================================================================================

@@ -2,15 +2,15 @@ name: windows11_25h2_install.ps1
 description: Silently install Windows 11 25H2 (KB5054156) for Level RMM
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 7200
 readme: |
   Purpose
   -------
   Silently installs Windows 11, version 25H2 by applying Microsoft enablement package KB5054156. Built for Level RMM (run as System). On Windows 11 24H2 (build 26100) with the required cumulative update, this is a small master-switch package that activates already-present 25H2 features after one restart. Not a full ISO feature upgrade.
-  
+
   Usage Notes
   -----------
-  - Level: run as System; set script timeout to 60 minutes
+  - Level: run as System; timeout 7200 seconds (2 hours) — Level timeout is seconds, not minutes
   - Validates hardcoded inputs, then reads DisplayVersion / build / UBR from registry
   - Already on 25H2 exits success (idempotent)
   - Requires Windows 11 24H2 build 26100 with UBR 5074+ (KB5064081 or later)
@@ -20,7 +20,7 @@ readme: |
   - Reboot After Install defaults to false (safe Level default); reboot still required to activate 25H2
   - Console sections are captured in the Level script run / activity log
   - Min UBR: 5074 | Required Build: 26100 | Source: 24H2 | Target: 25H2
-  
+
   Requirements
   ------------
   - Level agent online; script executed as System
@@ -28,7 +28,7 @@ readme: |
   - Windows 11 version 24H2 only (OS build 26100)
   - August 29, 2025 cumulative update KB5064081 (OS Build 26100.5074) or later
   - Internet connectivity to catalog.sf.dl.delivery.mp.microsoft.com
-  
+
   Security
   --------
   - No secrets in logs
