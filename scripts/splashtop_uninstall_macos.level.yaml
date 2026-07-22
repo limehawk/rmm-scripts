@@ -2,7 +2,7 @@ name: splashtop_uninstall_macos.sh
 description: Completely removes Splashtop Streamer and all components from macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

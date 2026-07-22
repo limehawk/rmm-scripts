@@ -2,7 +2,7 @@ name: maintenance_reboot.ps1
 description: System reboot with graceful or force mode for maintenance
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

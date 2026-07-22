@@ -2,7 +2,7 @@ name: wifi_adapters_disable.ps1
 description: Disables all physical and virtual Wi-Fi network adapters
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

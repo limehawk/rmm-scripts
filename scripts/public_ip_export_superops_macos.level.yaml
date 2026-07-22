@@ -2,7 +2,7 @@ name: public_ip_export_superops_macos.sh
 description: Fetches public IP info from wtfismyip.com and outputs formatted results
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

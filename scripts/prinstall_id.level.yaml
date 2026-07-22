@@ -2,7 +2,7 @@ name: prinstall_id.ps1
 description: Identifies a single printer by IP via SNMP using prinstall
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 2
+timeout: 120
 readme: |
   Purpose
   -------

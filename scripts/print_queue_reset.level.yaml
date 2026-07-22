@@ -2,7 +2,7 @@ name: print_queue_reset.ps1
 description: Resets Windows print queue by clearing spooler directory
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

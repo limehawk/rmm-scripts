@@ -2,7 +2,7 @@ name: wol_status_check.ps1
 description: Checks Wake-on-LAN status at BIOS and OS levels
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

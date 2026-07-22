@@ -2,7 +2,7 @@ name: time_utc_set.ps1
 description: Fixes time drift on Windows/Linux dual-boot systems
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

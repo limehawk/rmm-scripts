@@ -2,7 +2,7 @@ name: network_dhcp_set_macos.sh
 description: Configures macOS network interface to use DHCP for automatic IP
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: sentinelone_uninstall_linux.sh
 description: Uninstalls SentinelOne agent from Linux using passphrase
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

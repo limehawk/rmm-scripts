@@ -2,7 +2,7 @@ name: onedrive_reenable.ps1
 description: Removes OneDrive blocking policies and reinstalls OneDrive
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

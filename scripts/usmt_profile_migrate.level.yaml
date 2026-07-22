@@ -2,7 +2,7 @@ name: usmt_profile_migrate.ps1
 description: Interactive USMT backup/restore for remote terminal sessions
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

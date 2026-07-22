@@ -2,7 +2,7 @@ name: winget_setup.ps1
 description: Installs winget (Windows Package Manager) for RMM environments
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

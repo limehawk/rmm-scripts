@@ -2,7 +2,7 @@ name: delprof2_old_profiles_delete.ps1
 description: Deletes Windows user profiles older than specified days
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

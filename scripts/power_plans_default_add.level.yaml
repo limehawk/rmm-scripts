@@ -2,7 +2,7 @@ name: power_plans_default_add.ps1
 description: Restores missing default Windows power plans
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

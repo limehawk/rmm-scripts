@@ -2,7 +2,7 @@ name: onestart_remove_complete.ps1
 description: Completely removes OneStart.ai PUP from Windows systems
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: winre_partition_resize.ps1
 description: Extends WinRE partition by 250MB for Windows updates
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: disk_cleanup.ps1
 description: Runs Windows Disk Cleanup plus SoftwareDistribution/WinSxS cleanup
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 180
+timeout: 10800
 readme: |
   Purpose
   -------

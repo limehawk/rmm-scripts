@@ -2,7 +2,7 @@ name: outlook_link_handling_fix.ps1
 description: Configures Outlook to open hyperlinks in the default browser
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: shutdown_toggle.ps1
 description: Toggles scheduled shutdown with warning message
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

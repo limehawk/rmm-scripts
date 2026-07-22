@@ -2,7 +2,7 @@ name: nirsoft_uninstall_view.ps1
 description: Uses NirSoft UninstallView to uninstall software matching patterns
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

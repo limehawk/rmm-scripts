@@ -2,7 +2,7 @@ name: time_sync_fix.ps1
 description: Fixes Windows time synchronization by resetting NTP configuration
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

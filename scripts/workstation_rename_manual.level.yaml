@@ -2,7 +2,7 @@ name: workstation_rename_manual.ps1
 description: Renames Windows device with custom client segment override
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

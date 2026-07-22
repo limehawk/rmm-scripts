@@ -2,7 +2,7 @@ name: printer_install_linux.sh
 description: Installs network printer via IPP using lpadmin on Linux
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

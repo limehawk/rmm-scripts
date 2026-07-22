@@ -2,7 +2,7 @@ name: superops_agent_uninstall.ps1
 description: Uninstalls SuperOps RMM agent using official or registry method
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

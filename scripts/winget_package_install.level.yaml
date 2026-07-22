@@ -2,7 +2,7 @@ name: winget_package_install.ps1
 description: Installs software package using winget with SuperOps integration
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: prinstall_drivers.ps1
 description: Previews matched and universal drivers for a network printer
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 2
+timeout: 120
 readme: |
   Purpose
   -------

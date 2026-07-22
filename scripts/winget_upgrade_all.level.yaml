@@ -2,7 +2,7 @@ name: winget_upgrade_all.ps1
 description: Upgrades all winget-managed packages to latest versions
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

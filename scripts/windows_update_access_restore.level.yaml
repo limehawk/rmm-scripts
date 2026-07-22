@@ -2,7 +2,7 @@ name: windows_update_access_restore.ps1
 description: Restores user access to Windows Update settings
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

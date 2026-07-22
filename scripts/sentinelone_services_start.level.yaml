@@ -2,7 +2,7 @@ name: sentinelone_services_start.ps1
 description: Ensures all SentinelOne services are running on Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

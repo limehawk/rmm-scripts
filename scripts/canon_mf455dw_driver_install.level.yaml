@@ -2,7 +2,7 @@ name: canon_mf455dw_driver_install.ps1
 description: Downloads and installs Canon imageCLASS MF455dw printer drivers
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

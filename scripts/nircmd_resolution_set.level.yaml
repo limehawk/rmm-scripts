@@ -2,7 +2,7 @@ name: nircmd_resolution_set.ps1
 description: Changes display resolution using NirSoft NirCmd utility
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

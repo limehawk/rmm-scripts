@@ -2,7 +2,7 @@ name: splashtop_business_install.ps1
 description: Installs Splashtop Business client via winget
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

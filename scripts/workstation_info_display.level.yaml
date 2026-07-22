@@ -2,7 +2,7 @@ name: workstation_info_display.ps1
 description: Displays system info popup for user self-service from tray icon
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

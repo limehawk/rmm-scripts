@@ -2,7 +2,7 @@ name: start_menu_tiles_clear.ps1
 description: Removes all pinned app tiles from Windows 10 Start menu
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: superops_agent_install_macos.sh
 description: Downloads and installs SuperOps RMM agent on macOS via PKG
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

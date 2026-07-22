@@ -2,7 +2,7 @@ name: windows_product_key_export_superops.ps1
 description: Retrieves Windows product key and syncs to SuperOps custom field
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

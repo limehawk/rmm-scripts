@@ -2,7 +2,7 @@ name: prinstall_driver_add.ps1
 description: Stages a driver into the Windows driver store using prinstall 0.4.12+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

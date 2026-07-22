@@ -2,7 +2,7 @@ name: dokploy_orphaned_volumes_cleanup.sh
 description: Identifies and removes orphaned Docker volumes to free space
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

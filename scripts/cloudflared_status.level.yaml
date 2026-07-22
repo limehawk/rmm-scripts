@@ -2,7 +2,7 @@ name: cloudflared_status.ps1
 description: Reports cloudflared binary, service, and tunnel connectivity state
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

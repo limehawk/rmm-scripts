@@ -2,7 +2,7 @@ name: rustic_backup_unix.sh
 description: Runs rustic backup, prune, and integrity check (Linux/macOS)
 shell: BASH
 runAs: SYSTEM
-timeout: 120
+timeout: 7200
 readme: |
   Purpose
   -------

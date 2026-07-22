@@ -2,7 +2,7 @@ name: splashtop_streamer_install_macos.sh
 description: Downloads and installs Splashtop Streamer agent on macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

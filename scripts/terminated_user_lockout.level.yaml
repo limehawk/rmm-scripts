@@ -2,7 +2,7 @@ name: terminated_user_lockout.ps1
 description: Immediately locks out a terminated user — resets password, disables account, locks workstation, forces logoff
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

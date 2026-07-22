@@ -2,7 +2,7 @@ name: file_secure_delete_certificate.ps1
 description: Securely deletes files with DoD-compliant overwriting and audit trail
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

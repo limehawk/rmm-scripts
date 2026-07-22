@@ -2,7 +2,7 @@ name: prinstall_add.ps1
 description: Installs a network or USB printer using prinstall 0.3.0+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

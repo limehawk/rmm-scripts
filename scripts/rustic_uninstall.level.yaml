@@ -2,7 +2,7 @@ name: rustic_uninstall.ps1
 description: Removes rustic binary, config, scheduled task, and logs
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

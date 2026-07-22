@@ -2,7 +2,7 @@ name: local_user_disable.ps1
 description: Disables a local user account without deleting profile data
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

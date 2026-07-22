@@ -2,7 +2,7 @@ name: potplayer_install.ps1
 description: Downloads and silently installs PotPlayer media player
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

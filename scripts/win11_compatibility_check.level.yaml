@@ -2,7 +2,7 @@ name: win11_compatibility_check.ps1
 description: Checks hardware requirements for Windows 11 upgrade
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

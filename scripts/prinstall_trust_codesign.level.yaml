@@ -2,7 +2,7 @@ name: prinstall_trust_codesign.ps1
 description: Imports the Prinstall self-signed code signing cert into LocalMachine trust stores
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

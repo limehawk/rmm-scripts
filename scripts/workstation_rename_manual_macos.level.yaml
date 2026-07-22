@@ -2,7 +2,7 @@ name: workstation_rename_manual_macos.sh
 description: Renames macOS device with custom name via RMM variable
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

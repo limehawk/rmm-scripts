@@ -2,7 +2,7 @@ name: hardware_report.ps1
 description: Generates comprehensive hardware inventory report via CIM queries
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

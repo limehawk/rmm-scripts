@@ -2,7 +2,7 @@ name: splashtop_service_restart.ps1
 description: Restarts Splashtop Remote Service to resolve connectivity issues
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

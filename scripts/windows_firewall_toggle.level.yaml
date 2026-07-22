@@ -2,7 +2,7 @@ name: windows_firewall_toggle.ps1
 description: Enables or disables Windows Firewall for all profiles
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

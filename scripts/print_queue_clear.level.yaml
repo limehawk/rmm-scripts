@@ -2,7 +2,7 @@ name: print_queue_clear.ps1
 description: Clears stuck print jobs by resetting Print Spooler service
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: ipconfig_release_renew.ps1
 description: Releases and renews IP addresses on DHCP-enabled adapters
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

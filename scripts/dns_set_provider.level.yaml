@@ -2,7 +2,7 @@ name: dns_set_provider.ps1
 description: Sets IPv4 DNS servers on active adapters to a chosen provider
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

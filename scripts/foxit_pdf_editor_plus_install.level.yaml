@@ -2,7 +2,7 @@ name: foxit_pdf_editor_plus_install.ps1
 description: Installs Foxit PDF Editor from Microsoft Store via winget
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

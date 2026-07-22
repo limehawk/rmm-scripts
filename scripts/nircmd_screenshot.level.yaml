@@ -2,7 +2,7 @@ name: nircmd_screenshot.ps1
 description: Captures screenshot using NirSoft NirCmd utility
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

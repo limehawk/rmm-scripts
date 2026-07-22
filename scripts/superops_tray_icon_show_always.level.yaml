@@ -2,7 +2,7 @@ name: superops_tray_icon_show_always.ps1
 description: Configures Windows to always show SuperOps tray icon
 shell: POWERSHELL
 runAs: CURRENT_USER
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: gcpw_cleanup.ps1
 description: Removes GCPW registry keys and folders for clean reinstallation
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

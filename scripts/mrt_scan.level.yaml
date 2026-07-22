@@ -2,7 +2,7 @@ name: mrt_scan.ps1
 description: Executes Windows Malicious Software Removal Tool with configurable scan mode
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 3600
 readme: |
   Purpose
   -------

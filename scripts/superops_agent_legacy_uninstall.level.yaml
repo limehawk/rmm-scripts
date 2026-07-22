@@ -2,7 +2,7 @@ name: superops_agent_legacy_uninstall.ps1
 description: Uninstalls legacy SuperOps agent via WMI IdentifyingNumber
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: ninjaone_uninstall.ps1
 description: Completely removes NinjaOne RMM agent and Ninja Remote from Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

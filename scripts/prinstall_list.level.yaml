@@ -2,7 +2,7 @@ name: prinstall_list.ps1
 description: Lists installed printers on the system using prinstall
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

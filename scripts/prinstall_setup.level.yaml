@@ -2,7 +2,7 @@ name: prinstall_setup.ps1
 description: Installs or uninstalls prinstall from GitHub releases
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

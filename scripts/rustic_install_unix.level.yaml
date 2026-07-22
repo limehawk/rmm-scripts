@@ -2,7 +2,7 @@ name: rustic_install_unix.sh
 description: Installs Rustic, configures backend repository, schedules daily backups
 shell: BASH
 runAs: SYSTEM
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

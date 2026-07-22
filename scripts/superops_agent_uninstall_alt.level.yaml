@@ -2,7 +2,7 @@ name: superops_agent_uninstall_alt.ps1
 description: Uninstalls SuperOps agent via WMI/CIM with diagnostic reporting
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

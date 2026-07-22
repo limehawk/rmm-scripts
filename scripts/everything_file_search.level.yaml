@@ -2,7 +2,7 @@ name: everything_file_search.ps1
 description: Searches all fixed drives for files matching a pattern via NTFS MFT
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: local_user_admin_setup.ps1
 description: Creates a new local administrator account for employee onboarding
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

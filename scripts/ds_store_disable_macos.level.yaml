@@ -2,7 +2,7 @@ name: ds_store_disable_macos.sh
 description: Prevents macOS from creating .DS_Store files on network shares
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: rustic_install.ps1
 description: Installs Rustic, configures backend repository, schedules daily backups
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

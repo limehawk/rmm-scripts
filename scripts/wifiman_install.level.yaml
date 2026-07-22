@@ -2,7 +2,7 @@ name: wifiman_install.ps1
 description: Installs Ubiquiti WiFiman Desktop via winget
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

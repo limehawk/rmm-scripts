@@ -2,7 +2,7 @@ name: splashtop_streamer_install.ps1
 description: Silently installs Splashtop Streamer agent for remote access
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

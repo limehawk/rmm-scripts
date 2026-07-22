@@ -2,7 +2,7 @@ name: network_service_refresh_macos.sh
 description: Refreshes all macOS network services by toggling them off and on
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

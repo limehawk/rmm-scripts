@@ -2,7 +2,7 @@ name: ubuntu_debian_update_verbose.sh
 description: Updates all packages on Ubuntu/Debian with verbose output
 shell: BASH
 runAs: SYSTEM
-timeout: 180
+timeout: 10800
 readme: |
   Purpose
   -------

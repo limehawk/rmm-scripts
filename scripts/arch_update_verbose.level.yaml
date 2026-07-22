@@ -2,7 +2,7 @@ name: arch_update_verbose.sh
 description: Updates all packages on Arch Linux/Omarchy with verbose output
 shell: BASH
 runAs: SYSTEM
-timeout: 90
+timeout: 5400
 readme: |
   Purpose
   -------

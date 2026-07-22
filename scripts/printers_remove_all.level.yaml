@@ -2,7 +2,7 @@ name: printers_remove_all.ps1
 description: Removes all printers, drivers, and ports from Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

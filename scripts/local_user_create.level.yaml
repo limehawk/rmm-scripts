@@ -2,7 +2,7 @@ name: local_user_create.ps1
 description: Creates local user account with optional administrator privileges
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

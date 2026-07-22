@@ -2,7 +2,7 @@ name: stdrename_install_toggle.ps1
 description: Toggles installation of stdrename file renaming utility
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

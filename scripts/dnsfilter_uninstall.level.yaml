@@ -2,7 +2,7 @@ name: dnsfilter_uninstall.ps1
 description: Completely removes DNSFilter agent and resets DNS to DHCP
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

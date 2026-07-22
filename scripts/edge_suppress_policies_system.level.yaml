@@ -2,7 +2,7 @@ name: edge_suppress_policies_system.ps1
 description: Applies machine-wide policies to suppress Edge nagging behaviors
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

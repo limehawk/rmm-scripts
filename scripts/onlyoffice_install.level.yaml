@@ -2,7 +2,7 @@ name: onlyoffice_install.ps1
 description: Downloads and silently installs OnlyOffice Desktop Editors
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

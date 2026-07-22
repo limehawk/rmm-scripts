@@ -2,7 +2,7 @@ name: workstation_reboot_force.ps1
 description: Forces an immediate system reboot without user prompts
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

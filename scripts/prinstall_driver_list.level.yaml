@@ -2,7 +2,7 @@ name: prinstall_driver_list.ps1
 description: Lists drivers in the Windows driver store using prinstall 0.4.13+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

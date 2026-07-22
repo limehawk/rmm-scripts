@@ -2,7 +2,7 @@ name: file_secure_delete.ps1
 description: Interactive version of secure delete - prompts user for all inputs
 shell: POWERSHELL
 runAs: CURRENT_USER
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

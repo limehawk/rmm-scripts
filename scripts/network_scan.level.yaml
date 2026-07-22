@@ -2,7 +2,7 @@ name: network_scan.ps1
 description: Scans IP address range using multi-threaded ping to discover active hosts
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

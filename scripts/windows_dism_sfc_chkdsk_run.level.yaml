@@ -2,7 +2,7 @@ name: windows_dism_sfc_chkdsk_run.ps1
 description: Runs DISM, SFC, and chkdsk for Windows system file repair
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 240
+timeout: 14400
 readme: |
   Purpose
   -------

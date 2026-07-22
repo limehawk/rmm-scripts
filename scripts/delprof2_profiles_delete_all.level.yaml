@@ -2,7 +2,7 @@ name: delprof2_profiles_delete_all.ps1
 description: Deletes ALL Windows user profiles except protected ones
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

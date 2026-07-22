@@ -2,7 +2,7 @@ name: directory_size_analyze.ps1
 description: Analyzes disk usage with gdu utility for directory size reports
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

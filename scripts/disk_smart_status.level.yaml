@@ -2,7 +2,7 @@ name: disk_smart_status.ps1
 description: Reports S.M.A.R.T. predictive-failure health of all physical disks
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

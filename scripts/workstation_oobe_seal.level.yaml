@@ -2,7 +2,7 @@ name: workstation_oobe_seal.ps1
 description: Seals a configured Win11 image to a silent OOBE via sysprep
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

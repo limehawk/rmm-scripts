@@ -2,7 +2,7 @@ name: google_update_trigger.ps1
 description: Triggers Google Update scheduled task to check for Chrome updates
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

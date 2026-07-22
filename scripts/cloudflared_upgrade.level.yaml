@@ -2,7 +2,7 @@ name: cloudflared_upgrade.ps1
 description: Upgrades cloudflared via winget and verifies tunnel service health
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

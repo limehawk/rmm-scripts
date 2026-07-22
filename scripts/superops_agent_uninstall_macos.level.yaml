@@ -2,7 +2,7 @@ name: superops_agent_uninstall_macos.sh
 description: Uninstalls SuperOps RMM agent from macOS using vendor script
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

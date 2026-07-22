@@ -2,7 +2,7 @@ name: emsisoft_url_install.ps1
 description: Downloads and installs Emsisoft Anti-Malware from a specified URL
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: superops_service_restart.ps1
 description: Restarts RMM agent services with automatic RMM execution detection
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

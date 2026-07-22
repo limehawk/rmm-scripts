@@ -2,7 +2,7 @@ name: antivirus_status.ps1
 description: Reports third-party antivirus status to SuperOps custom fields
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

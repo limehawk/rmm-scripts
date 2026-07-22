@@ -2,7 +2,7 @@ name: rustic_restore.ps1
 description: Restores files from a rustic backup snapshot to a local destination
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 120
+timeout: 7200
 readme: |
   Purpose
   -------

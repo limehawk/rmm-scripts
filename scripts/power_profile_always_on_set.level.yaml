@@ -2,7 +2,7 @@ name: power_profile_always_on_set.ps1
 description: Creates custom always-on power plan for workstations
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

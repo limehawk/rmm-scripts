@@ -2,7 +2,7 @@ name: agent_startup_fix.ps1
 description: Fixes RMM agent service startup with recovery options and delayed start
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

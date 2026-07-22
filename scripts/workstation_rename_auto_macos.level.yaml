@@ -2,7 +2,7 @@ name: workstation_rename_auto_macos.sh
 description: Auto-renames macOS device using CLIENT-USER-UUID pattern
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: rustic_uninstall_unix.sh
 description: Removes rustic binary, config, schedule, and logs (Linux/macOS)
 shell: BASH
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

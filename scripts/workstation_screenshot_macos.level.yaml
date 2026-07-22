@@ -2,7 +2,7 @@ name: workstation_screenshot_macos.sh
 description: Captures screenshot of all displays on macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

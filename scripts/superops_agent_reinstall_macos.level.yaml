@@ -2,7 +2,7 @@ name: superops_agent_reinstall_macos.sh
 description: Uninstalls and reinstalls SuperOps RMM agent on macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

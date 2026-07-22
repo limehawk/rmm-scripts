@@ -2,7 +2,7 @@ name: files_rename_snake_case.ps1
 description: Recursively renames files and folders to snake_case format
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: disk_scan_fix.sh
 description: Comprehensive disk and volume health check for macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: workstation_rename_auto.ps1
 description: Auto-renames Windows device using CLIENT3-USER-UUID pattern
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

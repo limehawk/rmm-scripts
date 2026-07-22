@@ -2,7 +2,7 @@ name: user_accounts_report.ps1
 description: Generates report of local user accounts and group memberships
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

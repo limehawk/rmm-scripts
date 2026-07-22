@@ -2,7 +2,7 @@ name: huntress_install_macos.sh
 description: Installs Huntress Agent on macOS endpoints
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

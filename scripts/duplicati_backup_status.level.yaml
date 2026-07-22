@@ -2,7 +2,7 @@ name: duplicati_backup_status.ps1
 description: Monitors Duplicati backup jobs via local API and reports status
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

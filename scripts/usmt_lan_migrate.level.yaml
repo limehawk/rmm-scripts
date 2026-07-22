@@ -2,7 +2,7 @@ name: usmt_lan_migrate.ps1
 description: LAN profile migration over USMT, store moved via LocalSend or path
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 3600
 readme: |
   Purpose
   -------

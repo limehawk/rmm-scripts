@@ -2,7 +2,7 @@ name: cloudflared_install.ps1
 description: Installs cloudflared via winget and registers the tunnel service
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: splashtop_streamer_install_debian_arm64.sh
 description: Installs Splashtop Streamer on Debian/Ubuntu ARM64 systems
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

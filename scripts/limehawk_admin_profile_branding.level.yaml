@@ -2,7 +2,7 @@ name: limehawk_admin_profile_branding.ps1
 description: Creates and manages MSP admin accounts with SuperOps password sync
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

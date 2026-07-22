@@ -2,7 +2,7 @@ name: outlook_new_restore.ps1
 description: Reinstalls the New Outlook app and re-enables the Try the new Outlook toggle
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

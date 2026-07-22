@@ -2,7 +2,7 @@ name: windows_dark_mode_enable.ps1
 description: Sets wallpaper and dark mode on non-activated Windows 11
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: msi_url_install.ps1
 description: Downloads and silently installs an MSI package from a specified URL
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

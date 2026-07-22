@@ -2,7 +2,7 @@ name: gcpw_install.ps1
 description: Downloads, installs, and configures Google Credential Provider for Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

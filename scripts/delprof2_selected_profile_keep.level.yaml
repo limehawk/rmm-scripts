@@ -2,7 +2,7 @@ name: delprof2_selected_profile_keep.ps1
 description: Deletes all profiles EXCEPT the specified one and protected ones
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

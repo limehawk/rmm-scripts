@@ -2,7 +2,7 @@ name: onedrive_remove_complete.ps1
 description: Completely removes Microsoft OneDrive with startup suppression
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

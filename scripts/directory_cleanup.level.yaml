@@ -2,7 +2,7 @@ name: directory_cleanup.ps1
 description: Deletes files and directories older than specified days
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

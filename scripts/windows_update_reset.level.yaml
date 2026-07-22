@@ -2,7 +2,7 @@ name: windows_update_reset.ps1
 description: Resets Windows Update components and clears cache
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

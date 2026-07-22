@@ -2,7 +2,7 @@ name: prinstall_remove.ps1
 description: Removes a printer and its orphaned driver/port using prinstall 0.3.0+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

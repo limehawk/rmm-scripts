@@ -2,7 +2,7 @@ name: printer_connection_test.sh
 description: Tests network printer connectivity via ping and IPP port check
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

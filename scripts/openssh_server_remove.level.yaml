@@ -2,7 +2,7 @@ name: openssh_server_remove.ps1
 description: Removes OpenSSH Server, firewall rule, and cleans up config
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

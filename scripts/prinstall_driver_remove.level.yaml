@@ -2,7 +2,7 @@ name: prinstall_driver_remove.ps1
 description: Removes a driver from the Windows driver store using prinstall 0.4.13+
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 10
+timeout: 600
 readme: |
   Purpose
   -------

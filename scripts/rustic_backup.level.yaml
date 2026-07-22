@@ -2,7 +2,7 @@ name: rustic_backup.ps1
 description: Runs rustic backup, prune, and integrity check using existing profile
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 120
+timeout: 7200
 readme: |
   Purpose
   -------

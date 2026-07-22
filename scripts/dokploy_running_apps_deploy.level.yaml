@@ -2,7 +2,7 @@ name: dokploy_running_apps_deploy.sh
 description: Redeploys running Dokploy apps and verifies each outcome + version
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: webview2_repair_install.ps1
 description: Detects and repairs broken Microsoft Edge WebView2 Runtime installs
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

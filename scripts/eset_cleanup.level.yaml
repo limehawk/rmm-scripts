@@ -2,7 +2,7 @@ name: eset_cleanup.ps1
 description: Completely removes ESET antivirus remnants from Windows systems
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

@@ -2,7 +2,7 @@ name: superops_agent_install.ps1
 description: Downloads and installs SuperOps RMM agent on Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

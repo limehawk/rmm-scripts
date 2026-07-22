@@ -2,7 +2,7 @@ name: restic_b2_backup_install.ps1
 description: Installs Restic, configures B2 repository, schedules daily backups
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 30
+timeout: 1800
 readme: |
   Purpose
   -------

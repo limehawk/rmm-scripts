@@ -2,7 +2,7 @@ name: sentinelone_install.ps1
 description: Silently installs SentinelOne endpoint agent with site token
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

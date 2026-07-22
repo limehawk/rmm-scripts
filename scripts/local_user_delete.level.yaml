@@ -2,7 +2,7 @@ name: local_user_delete.ps1
 description: Deletes local user account and associated profile directory
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

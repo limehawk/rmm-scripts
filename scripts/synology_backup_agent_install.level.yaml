@@ -2,7 +2,7 @@ name: synology_backup_agent_install.ps1
 description: Installs Synology Active Backup for Business Agent via winget
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

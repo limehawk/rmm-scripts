@@ -2,7 +2,7 @@ name: edge_chrome_default_user_set.ps1
 description: Sets Google Chrome as default browser for current user via SetUserFTA
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

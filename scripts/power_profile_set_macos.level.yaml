@@ -2,7 +2,7 @@ name: power_profile_set_macos.sh
 description: Configures always-on power settings for macOS systems
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

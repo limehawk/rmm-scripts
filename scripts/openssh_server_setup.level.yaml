@@ -2,7 +2,7 @@ name: openssh_server_setup.ps1
 description: Installs and configures OpenSSH Server on Windows
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 5
+timeout: 300
 readme: |
   Purpose
   -------

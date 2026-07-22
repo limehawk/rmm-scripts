@@ -2,7 +2,7 @@ name: outlook_new_force_migrate.ps1
 description: Forces migration to New Outlook and hides toggle to prevent revert to Classic
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 60
+timeout: 3600
 readme: |
   Purpose
   -------

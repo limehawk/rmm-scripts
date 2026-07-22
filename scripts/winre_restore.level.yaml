@@ -2,7 +2,7 @@ name: winre_restore.ps1
 description: Restores Windows Recovery Environment from system image
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

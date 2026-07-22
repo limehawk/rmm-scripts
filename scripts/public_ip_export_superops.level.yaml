@@ -2,7 +2,7 @@ name: public_ip_export_superops.ps1
 description: Fetches public IP info from wtfismyip.com and syncs to SuperOps
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

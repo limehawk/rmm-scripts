@@ -2,7 +2,7 @@ name: printer_install_macos.sh
 description: Installs network printer via IPP using lpadmin on macOS
 shell: BASH
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

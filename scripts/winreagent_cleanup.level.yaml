@@ -2,7 +2,7 @@ name: winreagent_cleanup.ps1
 description: Cleans up WinREAgent folder to free disk space
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

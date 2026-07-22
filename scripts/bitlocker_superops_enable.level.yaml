@@ -2,7 +2,7 @@ name: bitlocker_superops_enable.ps1
 description: Enables BitLocker with TPM and syncs recovery key to SuperOps
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

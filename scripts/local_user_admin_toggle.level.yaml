@@ -2,7 +2,7 @@ name: local_user_admin_toggle.ps1
 description: Adds or removes a local user from the Administrators group
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------

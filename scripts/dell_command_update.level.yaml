@@ -2,7 +2,7 @@ name: dell_command_update.ps1
 description: Installs Dell Command Update and applies driver/firmware updates
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 15
+timeout: 900
 readme: |
   Purpose
   -------
