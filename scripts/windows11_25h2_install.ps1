@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows 11 25H2 Install                                      v1.1.0
+ SCRIPT   : Windows 11 25H2 Install                                      v1.1.1
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows11_25h2_install.ps1
@@ -52,13 +52,15 @@ $ErrorActionPreference = 'Stop'
      - $sourceDisplayVersion               : 24H2 (eKB source)
      - $installationAssistantUrl           : IA download fwlink
      - $preferWindowsUpdate                : try WU feature update before IA
-     - $rebootAfterInstall                 : schedule reboot after eKB success
+     - $rebootAfterInstall                 : schedule reboot after successful apply
+                                           (default $true — upgrade incomplete without restart)
 
  SETTINGS
 
-   - eKB method            : wusa.exe /quiet /norestart
+   - eKB method            : wusa.exe /quiet /norestart (then optional scheduled reboot)
    - Full upgrade fallback : Windows11InstallationAssistant.exe
                              /QuietInstall /SkipEULA /NoRestartUI
+   - Reboot After Install  : true (default) — 60s delay via shutdown.exe after eKB
    - Level timeout         : 14400 seconds (4 hours) recommended
    - Level run context     : System
 
@@ -68,7 +70,8 @@ $ErrorActionPreference = 'Stop'
    2. Detect OS family, DisplayVersion, build, UBR, architecture
    3. Select upgrade path from source → target
    4. Execute path (eKB MSU, or WU feature update, or Installation Assistant)
-   5. Report final status and reboot-pending note
+   5. If $rebootAfterInstall, schedule reboot (eKB path); WU/IA may reboot themselves
+   6. Report final status and reboot-pending note
 
  PREREQUISITES
 
@@ -77,13 +80,14 @@ $ErrorActionPreference = 'Stop'
    - Admin / SYSTEM privileges
    - eKB path: Windows 11 24H2 build 26100 with UBR 5074+ (KB5064081 or later)
    - Full upgrade path: device must meet Windows 11 hardware requirements
-   - Restart required to finish most upgrades
+   - Restart required to finish most upgrades (default schedules one after eKB)
 
  SECURITY NOTES
 
    - No secrets in logs
    - Downloads only from Microsoft delivery endpoints
-   - Full upgrade may reboot the device (Installation Assistant / WU)
+   - Default reboots after success (set $rebootAfterInstall = $false for maintenance windows)
+   - Full upgrade may reboot via Installation Assistant / WU even if flag is false
 
  ENDPOINTS
 
@@ -116,6 +120,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v1.1.1 Default $rebootAfterInstall = $true (upgrade incomplete without restart).
  2026-07-22 v1.1.0 Path-aware upgrades: eKB for 24H2; full feature upgrade
                    (WU then Installation Assistant) for Win10 / pre-24H2 Win11.
                    Level timeout guidance 14400s (4h).
@@ -135,7 +140,7 @@ $targetDisplayVersion = '25H2'
 $sourceDisplayVersion = '24H2'
 $installationAssistantUrl = 'https://go.microsoft.com/fwlink/?linkid=2171764'
 $preferWindowsUpdate = $true
-$rebootAfterInstall = $false
+$rebootAfterInstall = $true
 
 Set-StrictMode -Version Latest
 
@@ -388,24 +393,7 @@ function Install-EnablementPackage {
         Write-Host "  Cleanup completed"
     }
 
-    if ($rebootAfterInstall) {
-        Write-Section -Tag 'RUN' -Title 'REBOOT'
-        try {
-            $rebootDelaySeconds = 60
-            $msg = "Windows 11 $targetDisplayVersion enablement package (KB5054156) installed. Restarting to activate."
-            Write-Host "  Scheduling restart in $rebootDelaySeconds seconds..."
-            $shutdownProc = Start-Process -FilePath 'shutdown.exe' -ArgumentList "/r /t $rebootDelaySeconds /c `"$msg`" /d p:2:4" -Wait -PassThru -NoNewWindow
-            if ($null -ne $shutdownProc -and $shutdownProc.ExitCode -ne 0) {
-                throw "shutdown.exe returned exit code $($shutdownProc.ExitCode)"
-            }
-            $rebootRequired = $true
-            Write-Host "  Restart scheduled successfully"
-        } catch {
-            Write-Host "  [WARN] Reboot scheduling failed: $($_.Exception.Message)"
-            $rebootRequired = $true
-        }
-    }
-
+    # Reboot is applied once in the main flow via $rebootAfterInstall
     return @{
         InstallExitCode = $installExitCode
         RebootRequired  = $rebootRequired
@@ -578,7 +566,7 @@ function Install-FullFeatureUpgrade {
         if ($wuOk) {
             return @{
                 InstallExitCode = 0
-                RebootRequired  = (Test-RebootPending)
+                RebootRequired  = $true
                 Method          = 'windows_update_feature'
                 SelectedArch    = ''
             }
@@ -587,6 +575,31 @@ function Install-FullFeatureUpgrade {
     }
 
     return Install-ViaInstallationAssistant
+}
+
+function Invoke-ScheduledReboot {
+    param(
+        [string]$Message,
+        [int]$DelaySeconds = 60
+    )
+
+    Write-Section -Tag 'RUN' -Title 'REBOOT'
+    try {
+        Write-Host "  Scheduling restart in $DelaySeconds seconds..."
+        Write-Host "  Message : $Message"
+        $shutdownProc = Start-Process -FilePath 'shutdown.exe' `
+            -ArgumentList "/r /t $DelaySeconds /c `"$Message`" /d p:2:4" `
+            -Wait -PassThru -NoNewWindow
+        if ($null -ne $shutdownProc -and $shutdownProc.ExitCode -ne 0) {
+            throw "shutdown.exe returned exit code $($shutdownProc.ExitCode)"
+        }
+        Write-Host "  Restart scheduled successfully"
+        return $true
+    } catch {
+        Write-Host "  [WARN] Reboot scheduling failed: $($_.Exception.Message)"
+        Write-Host "  Restart the device manually to finish the upgrade"
+        return $false
+    }
 }
 
 # ==============================================================================
@@ -741,6 +754,16 @@ if ($null -ne $result -and $result.ContainsKey('RebootRequired') -and $result.Re
 }
 if (-not $rebootRequired) {
     $rebootRequired = Test-RebootPending
+}
+
+# Default true: upgrade does not finish until restart (eKB activation; WU feature install)
+if ($rebootAfterInstall -and $null -ne $result) {
+    $rebootMsg = "Windows 11 $targetDisplayVersion upgrade applied (path: $($path.Name)). Restarting to complete."
+    if (Invoke-ScheduledReboot -Message $rebootMsg -DelaySeconds 60) {
+        $rebootRequired = $true
+    } else {
+        $rebootRequired = $true
+    }
 }
 
 Write-Section -Tag 'OK' -Title 'FINAL STATUS'
