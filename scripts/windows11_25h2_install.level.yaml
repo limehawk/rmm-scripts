@@ -7,14 +7,14 @@ readme: |
   Purpose
   -------
   Detects the current Windows version and chooses a clean upgrade path to Windows 11 version 25H2 for Level RMM (run as System).
-
+  
   Paths
   -----
   - Already 25H2: no-op success
   - Windows 11 24H2 (build 26100) with UBR 5074+: enablement package KB5054156 (wusa silent)
   - Windows 11 24H2 with low UBR: fail and require KB5064081+ cumulative update first
   - Windows 10 or Windows 11 older than 24H2: full feature upgrade via Windows Update (if offered), else Windows 11 Installation Assistant
-
+  
   Usage Notes
   -----------
   - Level: run as System; timeout 14400 seconds (4 hours)
@@ -22,19 +22,19 @@ readme: |
   - Prefer Windows Update is true by default; falls back to Installation Assistant
   - Installation Assistant: https://go.microsoft.com/fwlink/?linkid=2171764
   - eKB MSU URLs: Microsoft catalog KB5054156 x64 and ARM64
-
+  
   Requirements
   ------------
   - Level agent online; script executed as System
   - Internet connectivity
   - eKB path: Windows 11 24H2 build 26100 UBR 5074+
   - Full upgrade path: Windows 11 hardware requirements must be met
-
+  
   Security
   --------
   - No secrets in logs
   - Downloads only from Microsoft endpoints
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzQzMg
-lastPushedChecksum: "sha256:3d1f988df6c52a9f"
-lastPushedMetaChecksum: "sha256:492c09c5ef07fc38"
+lastPushedChecksum: "sha256:f288e2caf201766f"
+lastPushedMetaChecksum: "sha256:956c7b96d8299d58"
