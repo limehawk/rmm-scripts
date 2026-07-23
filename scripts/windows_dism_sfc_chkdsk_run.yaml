@@ -10,28 +10,38 @@ readme: |
   Purpose
   -------
   Runs standard Windows health checks and repair commands including DISM image health scans, disk checks, system file verification, and component cleanup. Designed for unattended execution in RMM environments to perform routine system maintenance and repair operations.
-  
+
   Usage Notes
   -----------
-  - Configurable operations via hardcoded flags: RunDismScan, RunDismRestore, RunChkdsk, RunSfc
+  - All maintenance operations are optional via hardcoded input flags
+  - DISM operations use online mode against the running Windows installation
+  - chkdsk runs against all fixed local drives (DriveType = 3)
+  - Commands run synchronously with full output captured for logging
+  - Script runs each enabled maintenance operation in sequence
   - DISM RestoreHealth only runs if ScanHealth detects corruption (saves time on healthy systems)
-  - chkdsk runs against all fixed local drives (DriveType 3)
-  - ChkdskParameters default to /scan; use /f /r for full check
-  - Optional RebootAfterMaintenance with 5-minute warning (default: false)
+  - Each operation's success or failure is tracked individually
+  - chkdsk requires admin rights and may schedule operations on next reboot
   - Failed operations are reported but script continues to next operation
-  - DISM operates in online mode against the running Windows installation
-  
+  - If corruption is found AND RestoreHealth succeeds and RebootWhenCorruptionFound is true, schedules a 5-minute reboot so the user can save work
+  - No reboot when healthy, or when corruption was found but repair failed
+
   Requirements
   ------------
   - PowerShell 5.1 or later
   - Administrator privileges required
   - Windows 8.1/Server 2012 R2 or later for DISM commands
   - Sufficient disk space for repair operations
-  
+  - $RunDismScan: whether to run DISM ScanHealth (default: true)
+  - $RunDismRestore: whether to run DISM RestoreHealth only if ScanHealth finds corruption (default: true)
+  - $RunChkdsk: whether to run chkdsk on local drives; requires reboot to complete (default: false)
+  - $RunSfc: whether to run System File Checker (default: true)
+  - $ChkdskParameters: chkdsk parameters; use /scan for quick scan or /f /r for full check (default: /scan)
+  - $RebootWhenCorruptionFound: warn and reboot only when ScanHealth found corruption AND RestoreHealth fixed it (default: true)
+
   Security
   --------
-  - Operations may cause system modifications and require reboots
   - Requires elevated permissions to modify system components
+  - Operations may cause system modifications and require reboots
 favourite: false
 shared: true
 scriptId: "1907390810231676928"
