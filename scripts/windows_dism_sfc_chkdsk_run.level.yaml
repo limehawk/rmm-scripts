@@ -14,7 +14,8 @@ readme: |
   - DISM RestoreHealth only runs if ScanHealth detects corruption (saves time on healthy systems)
   - chkdsk runs against all fixed local drives (DriveType 3)
   - ChkdskParameters default to /scan; use /f /r for full check
-  - Optional RebootAfterMaintenance with 5-minute warning (default: false)
+  - RebootWhenCorruptionFound (default: true): 5-minute reboot with user warning only when ScanHealth found corruption AND RestoreHealth succeeded
+  - Healthy systems and failed repairs never reboot
   - Failed operations are reported but script continues to next operation
   - DISM operates in online mode against the running Windows installation
   

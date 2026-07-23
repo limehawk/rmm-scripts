@@ -8,13 +8,13 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.0.4
+ SCRIPT   : Windows DISM SFC Chkdsk Maintenance                          v2.1.1
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows_dism_sfc_chkdsk_run.ps1
 ================================================================================
  FILE     : windows_dism_sfc_chkdsk_run.ps1
-DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
+ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
@@ -40,8 +40,10 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
    (Whether to run System File Checker to verify and repair system files.)
  - ChkdskParameters  : '/scan'
    (Parameters for chkdsk. Use '/scan' for quick scan or '/f /r' for full check.)
- - RebootAfterMaintenance : $false
-   (Whether to reboot the system after maintenance with a 5-minute warning.)
+ - RebootWhenCorruptionFound : $true
+   (Warn the user and reboot only when ScanHealth found corruption AND
+    RestoreHealth fixed it. Pending replacements need a reboot. No reboot
+    if healthy, or if corruption was found but repair failed.)
 
  SETTINGS
  - All maintenance operations are optional via hardcoded input flags.
@@ -55,6 +57,9 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
  - Each operation's success or failure is tracked individually.
  - chkdsk requires admin rights and may schedule operations on next reboot.
  - Failed operations are reported but script continues to next operation.
+ - If corruption is found AND RestoreHealth succeeds and RebootWhenCorruptionFound
+   is true, schedules a 5-minute reboot so the user can save work. No reboot when
+   healthy, or when corruption was found but repair failed.
 
  PREREQUISITES
  - PowerShell 5.1 or later.
@@ -78,11 +83,12 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 
  [INFO] INPUT VALIDATION
  ==============================================================
- RunDismScan      : True
- RunDismRestore   : True
- RunChkdsk        : False
- RunSfc           : True
- ChkdskParameters : /scan
+ RunDismScan                 : True
+ RunDismRestore              : True
+ RunChkdsk                   : False
+ RunSfc                      : True
+ ChkdskParameters            : /scan
+ RebootWhenCorruptionFound   : True
 
  [RUN] DISM SCAN HEALTH
  ==============================================================
@@ -112,6 +118,11 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v2.1.1 Reboot only when corruption was found AND RestoreHealth
+                   succeeded (not merely detected). Failed repair = no reboot.
+ 2026-07-22 v2.1.0 Reboot with 5-min user warning when ScanHealth finds
+                   corruption (repairs usually need reboot to finish). Healthy
+                   systems do not reboot. Replaces RebootAfterMaintenance.
  2026-07-22 v2.0.4 Fix ScanHealth false positive: healthy "No component store
                    corruption detected." matched corruption.*detected and
                    wrongly ran RestoreHealth
@@ -128,16 +139,6 @@ DESCRIPTION : Runs DISM, SFC, and chkdsk for Windows system file repair
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
-# ==== STATE (NO ARRAYS/LISTS) ====
-$errorOccurred = $false
-$errorText     = ""
-$operationsRun = 0
-$operationsPassed = 0
-$operationsFailed = 0
-$corruptionDetected = $false
-
 # ==== HARDCODED INPUTS (MANDATORY) ====
 # --- Operation Run Flags ---
 $RunDismScan      = $true  # Whether to run DISM ScanHealth to check for image corruption.
@@ -149,7 +150,20 @@ $RunSfc           = $true  # Whether to run System File Checker to verify and re
 $ChkdskParameters = '/scan'  # Parameters for chkdsk. Use '/scan' for quick scan or '/f /r' for full check.
 
 # --- Post-Operation Actions ---
-$RebootAfterMaintenance = $false # Set to $true to reboot the system after maintenance with a 5-minute warning.
+# Warn + reboot only when corruption was found AND RestoreHealth fixed it.
+# Pending file replacements from a successful repair typically need a reboot.
+$RebootWhenCorruptionFound = $true
+
+Set-StrictMode -Version Latest
+
+# ==== STATE (NO ARRAYS/LISTS) ====
+$errorOccurred = $false
+$errorText     = ""
+$operationsRun = 0
+$operationsPassed = 0
+$operationsFailed = 0
+$corruptionDetected = $false
+$corruptionFixed    = $false
 
 # ==== VALIDATION ====
 if ($RunDismScan -isnot [bool]) {
@@ -177,10 +191,10 @@ if ([string]::IsNullOrWhiteSpace($ChkdskParameters)) {
     if ($errorText.Length -gt 0) { $errorText += "`n" }
     $errorText += "- ChkdskParameters cannot be empty."
 }
-if ($RebootAfterMaintenance -isnot [bool]) {
+if ($RebootWhenCorruptionFound -isnot [bool]) {
     $errorOccurred = $true
     if ($errorText.Length -gt 0) { $errorText += "`n" }
-    $errorText += "- RebootAfterMaintenance must be a boolean value."
+    $errorText += "- RebootWhenCorruptionFound must be a boolean value."
 }
 
 if ($errorOccurred) {
@@ -204,11 +218,12 @@ if ($errorOccurred) {
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="
-Write-Host "RunDismScan      : $RunDismScan"
-Write-Host "RunDismRestore   : $RunDismRestore"
-Write-Host "RunChkdsk        : $RunChkdsk"
-Write-Host "RunSfc           : $RunSfc"
-Write-Host "ChkdskParameters : $ChkdskParameters"
+Write-Host "RunDismScan                 : $RunDismScan"
+Write-Host "RunDismRestore              : $RunDismRestore"
+Write-Host "RunChkdsk                   : $RunChkdsk"
+Write-Host "RunSfc                      : $RunSfc"
+Write-Host "ChkdskParameters            : $ChkdskParameters"
+Write-Host "RebootWhenCorruptionFound   : $RebootWhenCorruptionFound"
 
 # ==== DISM SCAN HEALTH ====
 if ($RunDismScan) {
@@ -289,6 +304,10 @@ if ($shouldRunRestore) {
             Write-Host "Result : Success"
             $operationsPassed++
             $opSuccess = $true
+            # Only count as fixed when we were repairing known corruption
+            if ($corruptionDetected) {
+                $corruptionFixed = $true
+            }
         }
         elseif ($dismRestoreOutput -match "Error: 5|Access is denied") {
             Write-Host "Result : Failed - Access Denied"
@@ -435,20 +454,27 @@ if ($operationsFailed -eq 0) {
     Write-Host "=============================================================="
 }
 
+# Reboot only when corruption was found AND fixed. Successful RestoreHealth
+# leaves pending replacements that need a reboot. Healthy / failed-repair = no reboot.
+if ($corruptionDetected -and $corruptionFixed -and $RebootWhenCorruptionFound) {
+    Write-Host ""
+    Write-Host "[RUN] REBOOT SCHEDULE"
+    Write-Host "=============================================================="
+    Write-Host "Component store corruption was found and successfully repaired."
+    Write-Host "Scheduling system reboot in 5 minutes so repairs can finish."
+    Write-Host "Please save any open work."
+    & shutdown.exe /r /t 300 /c "Windows found and repaired system file corruption. Your computer will reboot in 5 minutes to finish the repair. Please save your work."
+    Write-Host "Reboot command issued."
+}
+elseif ($corruptionDetected -and -not $corruptionFixed) {
+    Write-Host ""
+    Write-Host "[INFO] REBOOT SCHEDULE"
+    Write-Host "=============================================================="
+    Write-Host "Corruption was found but repair did not succeed - reboot not scheduled."
+}
+
 if ($operationsFailed -gt 0) {
     exit 1
 } else {
-    # Schedule reboot if enabled
-    if ($RebootAfterMaintenance) {
-        Write-Host ""
-        Write-Host "[RUN] REBOOT SCHEDULE"
-        Write-Host "=============================================================="
-        Write-Host "Scheduling system reboot in 5 minutes..."
-        Write-Host "Please save any open work."
-        & shutdown.exe /r /t 300 /c "Windows system maintenance is complete. Your computer will reboot in 5 minutes. Please save your work."
-        Write-Host "Reboot command issued."
-        exit 0 # Exit immediately after scheduling reboot
-    } else {
-        exit 0
-    }
+    exit 0
 }

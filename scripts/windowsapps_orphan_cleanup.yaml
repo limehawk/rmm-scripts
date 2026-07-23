@@ -1,0 +1,45 @@
+name: windowsapps_orphan_cleanup.ps1
+description: Cleans orphaned/deleted Windows Store (AppX) packages under WindowsApps
+language: PowerShell
+tags:
+  - Cleanup
+  - Windows
+  - Maintenance
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Cleans residual Microsoft Store / UWP packages left under C:\Program Files\WindowsApps\Deleted after uninstall. Runs the native AppxCleanupOrphanPackages routine, optionally removes still-registered packages matching a name filter (e.g. DuckDuckGo), and reports leftover paths. Use after AV/EDR kills leftovers in WindowsApps\Deleted.
+  
+  Usage Notes
+  -----------
+  - Reports size/count of WindowsApps\Deleted before and after cleanup
+  - Optional package filter removes matching registered and provisioned AppX packages
+  - Invokes rundll32 AppxDeploymentClient.dll,AppxCleanupOrphanPackages
+  - Does not take ownership of WindowsApps or force-delete protected folders
+  - Optional reboot (yes/no) finishes emptying many Deleted folder entries
+  - Package filter empty = system-wide orphan cleanup only
+  - $YourPackageFilterHere: optional AppX name substring (example: DuckDuckGo)
+  - $YourRebootAfterHere: optional yes/no, default no
+  
+  Requirements
+  ------------
+  - Windows 10/11
+  - PowerShell 5.1 or later
+  - Administrator / SYSTEM privileges
+  - AppxDeploymentClient.dll present (standard on Windows)
+  
+  Security
+  --------
+  - Does not take ownership of WindowsApps (avoids breaking Store installs)
+  - Package filter limits removal scope when provided
+  - Reboot is opt-in only
+favourite: false
+shared: false
+runtimeVariables:
+  - name: YourPackageFilterHere
+  - name: YourRebootAfterHere
+scriptId: "2326869418601291776"
+lastPushedChecksum: "sha256:20b9dc388889f488"
+lastPushedMetaChecksum: "sha256:9e4c88d31ea08ddb"

@@ -5,16 +5,18 @@ tags:
   - Linux
   - Maintenance
 runAs: SYSTEM_USER
-timeout: 15
+timeout: 180
 readme: |
   Purpose
   -------
-  Automates redeployment of all running Dokploy applications with no stored secret, then verifies what actually happened. Reads each app's status and built-in deploy webhook token from the Dokploy database, triggers the webhook on localhost, waits for the deploy to finish, and reports the real outcome plus whether the running image changed. Idle applications are skipped.
+  Automates redeployment of all running Dokploy applications with no stored secret, then verifies what actually happened. Reads each app's status and built-in deploy webhook token from the Dokploy database, triggers the webhook on localhost, waits for the deploy to finish, and reports the real outcome plus whether the running image changed. Idle applications are skipped. Tuned for low-resource hosts (sequential deploys, load/memory gates, cooldowns, single-instance lock).
   
   Usage Notes
   -----------
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
-  - Skips applications with "idle" status; deploys all others in parallel
+  - Skips applications with "idle" status; deploys remaining apps one at a time (docker-source first, then git-source)
+  - Before each app, waits until MemAvailable is under threshold (load gate off by default; set MAX_LOAD empty for 2*nproc or a number to enable)
+  - Rests DEPLOY_COOLDOWN seconds between apps; single-instance flock prevents stacked schedule runs
   - No API key or stored secret: each app's own webhook token is read from the local database at runtime and used only against localhost
   - docker-source apps redeploy on a bare webhook POST; git-source apps get a GitHub-style push payload carrying the branch plus a file path matching any watchPaths filter
   - After triggering, waits for the deployment table to report done/error, then compares the running container image id before and after to classify each app as updated / no change / failed
@@ -35,5 +37,5 @@ readme: |
 favourite: false
 shared: false
 scriptId: "259059084121726976"
-lastPushedChecksum: "sha256:fe4c759579dc9eeb"
-lastPushedMetaChecksum: "sha256:45d39c1400978d45"
+lastPushedChecksum: "sha256:ecf5e9ab795bafee"
+lastPushedMetaChecksum: "sha256:b2f0c512a3c882de"
