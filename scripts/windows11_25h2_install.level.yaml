@@ -18,6 +18,9 @@ readme: |
   Usage Notes
   -----------
   - Level: run as System; timeout 14400 seconds (4 hours)
+  - DISM health preflight before upgrade (ScanHealth; RestoreHealth if repairable)
+  - Corruption found and fixed: 5-min user warning reboot, then auto-resume upgrade via SYSTEM startup task
+  - Corruption found but not fixed (or ScanHealth fails): abort upgrade
   - Reboot After Install defaults to true (60s scheduled reboot after eKB success)
   - Full upgrade via WU/IA may reboot on its own even when the flag is false
   - Prefer Windows Update is true by default; falls back to Installation Assistant
@@ -35,6 +38,7 @@ readme: |
   --------
   - No secrets in logs
   - Downloads only from Microsoft endpoints
+  - Resume artifacts under ProgramData\Limehawk\windows11_25h2_install cleaned after success
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzQzMg
 lastPushedChecksum: "sha256:e4d0ade6f1a0228e"

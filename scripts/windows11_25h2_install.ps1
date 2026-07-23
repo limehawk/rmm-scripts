@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows 11 25H2 Install                                      v1.1.1
+ SCRIPT   : Windows 11 25H2 Install                                      v1.2.0
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows11_25h2_install.ps1
@@ -42,6 +42,7 @@ $ErrorActionPreference = 'Stop'
    - Microsoft Update COM (feature update search)
    - Microsoft catalog MSU URLs for KB5054156 (x64 + ARM64)
    - Windows 11 Installation Assistant (go.microsoft.com fwlink)
+   - DISM online component store (ScanHealth / RestoreHealth preflight)
 
  REQUIRED INPUTS
 
@@ -54,6 +55,9 @@ $ErrorActionPreference = 'Stop'
      - $preferWindowsUpdate                : try WU feature update before IA
      - $rebootAfterInstall                 : schedule reboot after successful apply
                                            (default $true — upgrade incomplete without restart)
+     - $RunHealthPreflight                 : DISM ScanHealth before upgrade (default $true)
+     - $RunHealthRestore                   : DISM RestoreHealth if corruption found
+     - $healthRebootDelaySeconds           : user-warn reboot delay after health repair
 
  SETTINGS
 
@@ -61,6 +65,8 @@ $ErrorActionPreference = 'Stop'
    - Full upgrade fallback : Windows11InstallationAssistant.exe
                              /QuietInstall /SkipEULA /NoRestartUI
    - Reboot After Install  : true (default) — 60s delay via shutdown.exe after eKB
+   - Health preflight      : ScanHealth; RestoreHealth only if store is repairable
+   - Post-repair resume    : persist script + one-shot SYSTEM startup task, then reboot
    - Level timeout         : 14400 seconds (4 hours) recommended
    - Level run context     : System
 
@@ -69,9 +75,17 @@ $ErrorActionPreference = 'Stop'
    1. Validate inputs
    2. Detect OS family, DisplayVersion, build, UBR, architecture
    3. Select upgrade path from source → target
-   4. Execute path (eKB MSU, or WU feature update, or Installation Assistant)
-   5. If $rebootAfterInstall, schedule reboot (eKB path); WU/IA may reboot themselves
-   6. Report final status and reboot-pending note
+   4. If already target → success exit (clears any leftover resume artifacts)
+   5. Before eKB / full upgrade: DISM ScanHealth
+      - Healthy → continue upgrade
+      - Corruption found + RestoreHealth succeeds → warn user, reboot (5 min default),
+        auto-resume this script once at next startup via scheduled task
+      - Corruption found but not fixed, or ScanHealth fails → abort (no blind upgrade)
+      - On resume after health reboot: clear the one-shot task, re-check health,
+        then continue upgrade (no second health-repair reboot loop)
+   6. Execute path (eKB MSU, or WU feature update, or Installation Assistant)
+   7. If $rebootAfterInstall, schedule reboot (eKB path); WU/IA may reboot themselves
+   8. Report final status and reboot-pending note; clear resume artifacts on success
 
  PREREQUISITES
 
@@ -88,6 +102,8 @@ $ErrorActionPreference = 'Stop'
    - Downloads only from Microsoft delivery endpoints
    - Default reboots after success (set $rebootAfterInstall = $false for maintenance windows)
    - Full upgrade may reboot via Installation Assistant / WU even if flag is false
+   - Post-repair resume copies this script under ProgramData and registers a SYSTEM
+     startup task; artifacts are removed after a successful resume/upgrade start
 
  ENDPOINTS
 
@@ -97,8 +113,9 @@ $ErrorActionPreference = 'Stop'
 
  EXIT CODES
 
-   0 = Success (already target, package applied, or upgrade started/completed)
-   1 = Failure (unsupported OS, missing prereq, download/install error)
+   0 = Success (already target, package applied, upgrade started, or health repair
+       reboot scheduled with auto-resume)
+   1 = Failure (unsupported OS, missing prereq, health repair failed, download/install)
 
  EXAMPLE RUN (Win10 → full upgrade path)
 
@@ -108,6 +125,10 @@ $ErrorActionPreference = 'Stop'
      Display Version : 22H2
      Build           : 19045
      Path            : full_feature_upgrade
+
+   [RUN] COMPONENT STORE HEALTH
+   ==============================================================
+     Result : Success (no corruption)
 
    [RUN] WINDOWS UPDATE SEARCH
    ==============================================================
@@ -120,6 +141,9 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v1.2.0 DISM health preflight before upgrade; on found+fixed corruption,
+                   reboot with user warning and auto-resume via startup task.
+                   Abort upgrade if corruption cannot be repaired.
  2026-07-22 v1.1.1 Default $rebootAfterInstall = $true (upgrade incomplete without restart).
  2026-07-22 v1.1.0 Path-aware upgrades: eKB for 24H2; full feature upgrade
                    (WU then Installation Assistant) for Win10 / pre-24H2 Win11.
@@ -141,6 +165,11 @@ $sourceDisplayVersion = '24H2'
 $installationAssistantUrl = 'https://go.microsoft.com/fwlink/?linkid=2171764'
 $preferWindowsUpdate = $true
 $rebootAfterInstall = $true
+# DISM ScanHealth before upgrade; RestoreHealth only if component store is repairable
+$RunHealthPreflight = $true
+$RunHealthRestore = $true
+# After successful health repair: warn user and reboot so upgrade can resume automatically
+$healthRebootDelaySeconds = 300
 
 Set-StrictMode -Version Latest
 
@@ -152,6 +181,11 @@ $iaPath = Join-Path $env:TEMP 'Windows11InstallationAssistant.exe'
 $ntCurrentVersionPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
 # wusa: 0 success, 3010 reboot required, 2359302 already installed
 $wusaSuccessExitCodes = @(0, 3010, 2359302)
+# Post-health-repair resume (SYSTEM startup one-shot)
+$limehawkStateDir = 'C:\ProgramData\Limehawk\windows11_25h2_install'
+$resumeScriptPath = Join-Path $limehawkStateDir 'windows11_25h2_install.ps1'
+$resumeMarkerPath = Join-Path $limehawkStateDir 'pending_after_health_repair'
+$resumeTaskName = 'Limehawk-Windows11-25H2-Install-Resume'
 
 # ==============================================================================
 # HELPERS
@@ -602,6 +636,177 @@ function Invoke-ScheduledReboot {
     }
 }
 
+function Test-IsResumeAfterHealthRepair {
+    return (Test-Path -LiteralPath $resumeMarkerPath -PathType Leaf)
+}
+
+function Clear-PostRebootResume {
+    param([switch]$RemovePersistedScript)
+
+    Write-Section -Tag 'INFO' -Title 'RESUME ARTIFACT CLEANUP'
+    try {
+        $existing = Get-ScheduledTask -TaskName $resumeTaskName -ErrorAction SilentlyContinue
+        if ($null -ne $existing) {
+            Unregister-ScheduledTask -TaskName $resumeTaskName -Confirm:$false -ErrorAction Stop
+            Write-Host "  Scheduled task removed : $resumeTaskName"
+        } else {
+            Write-Host "  Scheduled task         : not present"
+        }
+    } catch {
+        Write-Host "  [WARN] Could not remove scheduled task: $($_.Exception.Message)"
+    }
+
+    try {
+        if (Test-Path -LiteralPath $resumeMarkerPath) {
+            Remove-Item -LiteralPath $resumeMarkerPath -Force -ErrorAction Stop
+            Write-Host "  Marker removed         : $resumeMarkerPath"
+        } else {
+            Write-Host "  Marker                 : not present"
+        }
+    } catch {
+        Write-Host "  [WARN] Could not remove marker: $($_.Exception.Message)"
+    }
+
+    if ($RemovePersistedScript) {
+        try {
+            if (Test-Path -LiteralPath $resumeScriptPath) {
+                Remove-Item -LiteralPath $resumeScriptPath -Force -ErrorAction Stop
+                Write-Host "  Persisted script removed"
+            }
+        } catch {
+            Write-Host "  [WARN] Could not remove persisted script: $($_.Exception.Message)"
+        }
+    }
+}
+
+function Register-PostRebootResume {
+    Write-Section -Tag 'RUN' -Title 'SCHEDULE UPGRADE RESUME'
+
+    $source = $PSCommandPath
+    if ([string]::IsNullOrWhiteSpace($source)) {
+        $source = $MyInvocation.MyCommand.Path
+    }
+    if ([string]::IsNullOrWhiteSpace($source) -or -not (Test-Path -LiteralPath $source -PathType Leaf)) {
+        throw 'Cannot resolve running script path for post-reboot resume'
+    }
+
+    New-Item -ItemType Directory -Force -Path $limehawkStateDir | Out-Null
+    Copy-Item -LiteralPath $source -Destination $resumeScriptPath -Force
+    $markerBody = @(
+        'phase=post_health_repair'
+        "created=$(Get-Date -Format o)"
+        "source=$source"
+    ) -join "`n"
+    Set-Content -LiteralPath $resumeMarkerPath -Value $markerBody -Encoding ASCII
+
+    $arg = "-NoProfile -ExecutionPolicy Bypass -File `"$resumeScriptPath`""
+    $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arg
+    $trigger = New-ScheduledTaskTrigger -AtStartup
+    $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
+    $settings = New-ScheduledTaskSettingsSet `
+        -AllowStartIfOnBatteries `
+        -DontStopIfGoingOnBatteries `
+        -StartWhenAvailable `
+        -ExecutionTimeLimit (New-TimeSpan -Hours 4)
+
+    Register-ScheduledTask `
+        -TaskName $resumeTaskName `
+        -Action $action `
+        -Trigger $trigger `
+        -Principal $principal `
+        -Settings $settings `
+        -Force | Out-Null
+
+    Write-Host "  Persisted script : $resumeScriptPath"
+    Write-Host "  Marker           : $resumeMarkerPath"
+    Write-Host "  Startup task     : $resumeTaskName (SYSTEM, once at next boot)"
+}
+
+function Invoke-ComponentStoreHealthPreflight {
+    param([bool]$IsResume = $false)
+
+    Write-Section -Tag 'RUN' -Title 'COMPONENT STORE HEALTH'
+
+    if (-not $RunHealthPreflight) {
+        Write-Host "  Skipped : RunHealthPreflight is false"
+        return @{
+            Status              = 'Skipped'
+            CorruptionDetected  = $false
+            CorruptionFixed     = $false
+        }
+    }
+
+    Write-Host "  Running DISM /Online /Cleanup-Image /ScanHealth..."
+    Write-Host ""
+    $scanResult = & DISM.exe /Online /Cleanup-Image /ScanHealth 2>&1
+    $scanExit = $LASTEXITCODE
+    $scanOut = $scanResult -join "`n"
+    Write-Host $scanOut
+    Write-Host ""
+
+    $corruptionDetected = $false
+    if ($scanExit -eq 0) {
+        # Healthy: "No component store corruption detected."
+        # Corrupt: "The component store is repairable."
+        # Do NOT match "corruption.*detected" — false-positives on the healthy line.
+        if ($scanOut -match 'component store is repairable') {
+            $corruptionDetected = $true
+            Write-Host "  Result : Corruption detected - repair needed"
+        } else {
+            Write-Host "  Result : Success (no corruption)"
+            return @{
+                Status             = 'Healthy'
+                CorruptionDetected = $false
+                CorruptionFixed    = $false
+            }
+        }
+    } else {
+        Write-Host "  Result : ScanHealth failed (exit code: $scanExit)"
+        return @{
+            Status             = 'ScanFailed'
+            CorruptionDetected = $false
+            CorruptionFixed    = $false
+            ExitCode           = $scanExit
+        }
+    }
+
+    if (-not $RunHealthRestore) {
+        Write-Host "  RestoreHealth skipped (RunHealthRestore is false)"
+        return @{
+            Status             = 'CorruptionUnfixed'
+            CorruptionDetected = $true
+            CorruptionFixed    = $false
+        }
+    }
+
+    Write-Section -Tag 'RUN' -Title 'COMPONENT STORE REPAIR'
+    Write-Host "  Running DISM /Online /Cleanup-Image /RestoreHealth..."
+    Write-Host ""
+    $restoreResult = & DISM.exe /Online /Cleanup-Image /RestoreHealth 2>&1
+    $restoreExit = $LASTEXITCODE
+    $restoreOut = $restoreResult -join "`n"
+    Write-Host $restoreOut
+    Write-Host ""
+
+    if ($restoreExit -eq 0) {
+        Write-Host "  Result : Success (corruption repaired)"
+        return @{
+            Status             = 'Fixed'
+            CorruptionDetected = $true
+            CorruptionFixed    = $true
+            IsResume           = $IsResume
+        }
+    }
+
+    Write-Host "  Result : RestoreHealth failed (exit code: $restoreExit)"
+    return @{
+        Status             = 'CorruptionUnfixed'
+        CorruptionDetected = $true
+        CorruptionFixed    = $false
+        ExitCode           = $restoreExit
+    }
+}
+
 # ==============================================================================
 # INPUT VALIDATION
 # ==============================================================================
@@ -646,6 +851,21 @@ if ($rebootAfterInstall -isnot [bool]) {
     $errorOccurred = $true
     $errorText += "- Reboot After Install must be a boolean`n"
 }
+if ($RunHealthPreflight -isnot [bool]) {
+    $errorOccurred = $true
+    $errorText += "- RunHealthPreflight must be a boolean`n"
+}
+if ($RunHealthRestore -isnot [bool]) {
+    $errorOccurred = $true
+    $errorText += "- RunHealthRestore must be a boolean`n"
+}
+if ($healthRebootDelaySeconds -isnot [int] -and $healthRebootDelaySeconds -isnot [long]) {
+    $errorOccurred = $true
+    $errorText += "- healthRebootDelaySeconds must be an integer`n"
+} elseif ([int]$healthRebootDelaySeconds -lt 0) {
+    $errorOccurred = $true
+    $errorText += "- healthRebootDelaySeconds must be >= 0`n"
+}
 
 if ($errorOccurred) {
     Write-FailAndExit -Lines @($errorText.TrimEnd().Split("`n"))
@@ -658,9 +878,12 @@ Write-Host "  Min UBR              : $minUbr"
 Write-Host "  Required Build       : $requiredBuild"
 Write-Host "  eKB Source Version   : $sourceDisplayVersion"
 Write-Host "  Target Version       : $targetDisplayVersion"
-Write-Host "  Prefer Windows Update: $preferWindowsUpdate"
-Write-Host "  Installation Assistant: $installationAssistantUrl"
+Write-Host "  Prefer Windows Update : $preferWindowsUpdate"
+Write-Host "  Installation Assistant : $installationAssistantUrl"
 Write-Host "  Reboot After Install : $rebootAfterInstall"
+Write-Host "  Health Preflight     : $RunHealthPreflight"
+Write-Host "  Health Restore       : $RunHealthRestore"
+Write-Host "  Health Reboot Delay  : $healthRebootDelaySeconds sec"
 Write-Host "  Inputs validated successfully"
 
 # ==============================================================================
@@ -700,9 +923,27 @@ Write-Host "  Reason          : $($path.Reason)"
 Write-Host "  Source → Target : $($osInfo.Family) $($osInfo.DisplayVersion) (build $($osInfo.Build).$($osInfo.Ubr)) → Windows 11 $targetDisplayVersion"
 
 $result = $null
+$isResumeAfterHealth = Test-IsResumeAfterHealthRepair
+
+if ($isResumeAfterHealth) {
+    Write-Section -Tag 'INFO' -Title 'RESUME AFTER HEALTH REPAIR'
+    Write-Host "  Marker found — this run is the post-reboot resume of the upgrade"
+    Write-Host "  Marker path : $resumeMarkerPath"
+    # Drop the one-shot startup task immediately so a failed upgrade mid-run does not loop forever
+    try {
+        $existingResumeTask = Get-ScheduledTask -TaskName $resumeTaskName -ErrorAction SilentlyContinue
+        if ($null -ne $existingResumeTask) {
+            Unregister-ScheduledTask -TaskName $resumeTaskName -Confirm:$false -ErrorAction Stop
+            Write-Host "  Startup task unregistered (will not re-fire on next boot)"
+        }
+    } catch {
+        Write-Host "  [WARN] Could not unregister resume task: $($_.Exception.Message)"
+    }
+}
 
 switch ($path.Name) {
     'already_target' {
+        Clear-PostRebootResume -RemovePersistedScript
         Write-Section -Tag 'OK' -Title 'FINAL STATUS'
         Write-Host "  Result           : SUCCESS"
         Write-Host "  Display Version  : $($osInfo.DisplayVersion)"
@@ -727,14 +968,82 @@ switch ($path.Name) {
         )
     }
     'enablement_ekb' {
-        $result = Install-EnablementPackage -OsInfo $osInfo
+        # fall through to health + install below
     }
     'full_feature_upgrade' {
-        $result = Install-FullFeatureUpgrade
+        # fall through to health + install below
     }
     default {
         Write-FailAndExit -Lines @("Unknown upgrade path: $($path.Name)")
     }
+}
+
+# Health preflight only when we are about to install (eKB or full upgrade)
+if ($path.Name -eq 'enablement_ekb' -or $path.Name -eq 'full_feature_upgrade') {
+    $health = Invoke-ComponentStoreHealthPreflight -IsResume:$isResumeAfterHealth
+
+    if ($health.Status -eq 'ScanFailed') {
+        Write-FailAndExit -Lines @(
+            'DISM ScanHealth failed — upgrade aborted'
+            "Exit code : $($health.ExitCode)"
+            'Fix component store health (or re-run as System), then re-run this script'
+        )
+    }
+
+    if ($health.Status -eq 'CorruptionUnfixed') {
+        Write-FailAndExit -Lines @(
+            'Component store corruption was found but could not be repaired'
+            'Upgrade aborted — do not proceed with a feature upgrade on a corrupt image'
+            'Run windows_dism_sfc_chkdsk_run.ps1 / manual DISM RestoreHealth, then re-run'
+        )
+    }
+
+    if ($health.Status -eq 'Fixed') {
+        if ($isResumeAfterHealth) {
+            # Already rebooted once for health; avoid infinite repair/reboot loops
+            Write-Host "  Note : Corruption repaired again on resume — continuing upgrade (no second health reboot)"
+            try {
+                if (Test-Path -LiteralPath $resumeMarkerPath) {
+                    Remove-Item -LiteralPath $resumeMarkerPath -Force -ErrorAction SilentlyContinue
+                }
+            } catch { }
+        } else {
+            try {
+                Register-PostRebootResume
+            } catch {
+                Write-FailAndExit -Lines @(
+                    'Component store corruption was repaired, but post-reboot resume could not be scheduled'
+                    "Error : $($_.Exception.Message)"
+                    'Reboot manually, then re-run this script from Level to continue the upgrade'
+                )
+            }
+
+            $healthMsg = "Windows component store corruption was repaired. Restarting so the Windows 11 $targetDisplayVersion upgrade can continue automatically. Please save your work."
+            $rebooted = Invoke-ScheduledReboot -Message $healthMsg -DelaySeconds ([int]$healthRebootDelaySeconds)
+
+            Write-Section -Tag 'OK' -Title 'FINAL STATUS'
+            Write-Host "  Result           : SUCCESS (health repair)"
+            Write-Host "  Path             : $($path.Name)"
+            Write-Host "  Corruption       : found and fixed"
+            Write-Host "  Next             : reboot, then auto-resume upgrade via startup task"
+            Write-Host "  Resume task      : $resumeTaskName"
+            if (-not $rebooted) {
+                Write-Host "  Note             : reboot scheduling failed — restart manually; resume task is registered"
+            }
+            Write-Section -Tag 'OK' -Title 'SCRIPT COMPLETED'
+            exit 0
+        }
+    }
+
+    # Healthy / Skipped / Fixed-on-resume → install
+    if ($path.Name -eq 'enablement_ekb') {
+        $result = Install-EnablementPackage -OsInfo $osInfo
+    } else {
+        $result = Install-FullFeatureUpgrade
+    }
+
+    # Upgrade kicked off — drop resume artifacts so we do not re-run upgrade after install reboot
+    Clear-PostRebootResume -RemovePersistedScript
 }
 
 # ==============================================================================

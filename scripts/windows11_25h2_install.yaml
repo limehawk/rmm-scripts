@@ -1,0 +1,54 @@
+name: windows11_25h2_install.ps1
+description: Path-aware silent upgrade to Windows 11 25H2 for Level RMM
+language: PowerShell
+tags:
+  - Windows
+  - Maintenance
+runAs: SYSTEM_USER
+timeout: 14400
+readme: |
+  Purpose
+  -------
+  Detects the current Windows version and chooses a clean upgrade path to Windows 11, version 25H2 for Level RMM (run as System). Already 25H2 is a no-op success. Windows 11 24H2 (build 26100) with CU UBR 5074+ uses enablement package KB5054156 (shared 24H2/25H2 core; eKB is a small master switch plus one restart). Windows 11 24H2 with UBR below 5074 fails with a clear CU prerequisite. Windows 10 or Windows 11 older than 24H2 takes a full feature upgrade via Windows Update (if offered) then Windows 11 Installation Assistant.
+
+  Usage Notes
+  -----------
+  - eKB method: wusa.exe /quiet /norestart (then optional scheduled reboot)
+  - Full upgrade fallback: Windows11InstallationAssistant.exe /QuietInstall /SkipEULA /NoRestartUI
+  - Reboot After Install defaults to true (60s delay via shutdown.exe after eKB)
+  - DISM health preflight: ScanHealth; RestoreHealth only if component store is repairable
+  - Corruption found and fixed: user-warn reboot (default 5 min), auto-resume via SYSTEM startup task
+  - Corruption found but not fixed (or ScanHealth fails): abort upgrade
+  - On resume after health reboot: clear one-shot task, re-check health, continue upgrade (no second health-repair reboot loop)
+  - Prefer Windows Update is true by default; falls back to Installation Assistant
+  - Level timeout: 14400 seconds (4 hours) recommended; run as System
+  - Validate inputs, detect OS path, run health preflight, execute eKB/WU/IA, report status
+
+  Requirements
+  ------------
+  - Level agent; run as System
+  - Internet access (MSU catalog and/or WU / Installation Assistant)
+  - Admin / SYSTEM privileges
+  - eKB path: Windows 11 24H2 build 26100 with UBR 5074+ (KB5064081 or later)
+  - Full upgrade path: device must meet Windows 11 hardware requirements
+  - Restart required to finish most upgrades
+  - $downloadUrlX64 / $downloadUrlArm64: KB5054156 MSU URLs
+  - $minUbr / $requiredBuild: eKB prereq (26100 / 5074)
+  - $targetDisplayVersion: 25H2
+  - $sourceDisplayVersion: 24H2 (eKB source)
+  - $installationAssistantUrl: IA download fwlink
+  - $preferWindowsUpdate: try WU feature update before IA
+  - $rebootAfterInstall: schedule reboot after successful apply (default true)
+  - $RunHealthPreflight: DISM ScanHealth before upgrade (default true)
+  - $RunHealthRestore: DISM RestoreHealth if corruption found
+  - $healthRebootDelaySeconds: user-warn reboot delay after health repair
+
+  Security
+  --------
+  - No secrets in logs
+  - Downloads only from Microsoft delivery endpoints
+  - Default reboots after success (set $rebootAfterInstall = false for maintenance windows)
+  - Full upgrade may reboot via Installation Assistant / WU even if flag is false
+  - Post-repair resume copies this script under ProgramData and registers a SYSTEM startup task; artifacts are removed after a successful resume/upgrade start
+favourite: false
+shared: false
