@@ -1,28 +1,28 @@
 name: workstation_rename_manual_macos.sh
-description: Renames macOS device with custom name via RMM variable
+description: Renames macOS device with optional custom client segment (Level)
 shell: BASH
 runAs: SYSTEM
-timeout: 900
+timeout: 60
 readme: |
   Purpose
   -------
-  Renames a macOS device using a custom client segment with standardized naming pattern: CLIENT-USER-UUID. Allows variable length client segment override. Sets HostName, ComputerName, and LocalHostName. Designed for RMM deployment with custom client naming.
-  
+  Renames a macOS device to CLIENT-USERUUID. Optional CUSTOM_CLIENT_OVERRIDE in
+  script body; otherwise Level group name (variable length).
+
   Usage Notes
   -----------
-  - Custom client from $YourCustomClientHere (variable length, primary)
-  - Fallback to $YourClientNameHere if custom not set
-  - Username detected from current console user
-  - UUID from hardware identifier
-  - Final hostname is exactly 15 characters (NetBIOS compatible)
-  - Flushes DNS cache after rename
-  - Skips rename if hostname already matches
-  
+  - Edit CUSTOM_CLIENT_OVERRIDE for a fixed client code
+  - Output slots: DesiredHostname, RenameStatus
+
   Requirements
   ------------
-  - macOS 10.14 or later
-  - Root/sudo access
-  - RMM variable $YourCustomClientHere or $YourClientNameHere must be set
+  - macOS 10.14+
+  - Level agent; run as System (root)
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT-USERUUID)
+- name: RenameStatus
+  description: already_matches | applied | error
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNg
 lastPushedChecksum: "sha256:cf6852c71596e859"

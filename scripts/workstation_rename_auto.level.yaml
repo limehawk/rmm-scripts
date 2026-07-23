@@ -1,31 +1,33 @@
 name: workstation_rename_auto.ps1
-description: Auto-renames Windows device using CLIENT3-USER-UUID pattern
+description: Auto-renames Windows device using CLIENT3-USERUUID from Level group
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 900
+timeout: 60
 readme: |
   Purpose
   -------
-  Renames a Windows device using the pattern CLIENT3-USERUUID (max 15 chars) and syncs the same name to SuperOps. CLIENT3 is a 3-char abbreviation of the client name, USER is the sanitized username (maximized, truncated if needed), and UUID is the SMBIOS UUID tail (at least 3 chars).
-  
+  Renames a Windows device to CLIENT3-USERUUID (exactly 15 chars). CLIENT3 is a
+  3-char abbreviation of the Level device group name ({{level_group_name}}).
+  USER is the sanitized logged-in username; UUID is the SMBIOS UUID tail.
+
   Usage Notes
   -----------
-  - Requires SuperOps runtime variables:
-    - $YourApiKeyHere: SuperOps API key
-    - $YourAssetIdHere: Asset ID (placeholder)
-    - $YourAssetNameHere: Current asset name (placeholder)
-    - $YourClientNameHere: Client name (placeholder)
-  - Only A-Z, 0-9, and hyphen used in hostname
-  - Always exactly 15 characters
-  - SuperOps asset name updated via GraphQL API
+  - Device must be in a named Level group (client group)
+  - Level interpolates {{level_group_name}} before run
   - Reboot required for hostname change to take effect
-  
+  - No SuperOps/API — Level inventory follows OS hostname after reboot
+  - Output slots: DesiredHostname, RenameStatus
+
   Requirements
   ------------
   - Windows 10/11
-  - Administrator privileges
-  - SuperOps agent installed
-  - Internet access for SuperOps API
+  - Level agent; run as System
+  - Device assigned to a client group
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT3-USERUUID)
+- name: RenameStatus
+  description: already_matches | scheduled | warning | error
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMw
 lastPushedChecksum: "sha256:d5996dd1d435f7a6"
