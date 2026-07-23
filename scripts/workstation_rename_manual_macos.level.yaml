@@ -8,22 +8,22 @@ readme: |
   -------
   Renames a macOS device to CLIENT-USERUUID. Optional CUSTOM_CLIENT_OVERRIDE in
   script body; otherwise Level group name (variable length).
-
+  
   Usage Notes
   -----------
   - Edit CUSTOM_CLIENT_OVERRIDE for a fixed client code
   - Output slots: DesiredHostname, RenameStatus
-
+  
   Requirements
   ------------
   - macOS 10.14+
   - Level agent; run as System (root)
 variables:
-- name: DesiredHostname
-  description: Built 15-char hostname (CLIENT-USERUUID)
-- name: RenameStatus
-  description: already_matches | applied | error
+  - name: DesiredHostname
+    description: Built 15-char hostname (CLIENT-USERUUID)
+  - name: RenameStatus
+    description: already_matches | applied | error
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNg
-lastPushedChecksum: "sha256:cf6852c71596e859"
-lastPushedMetaChecksum: "sha256:a01d977c6f07856b"
+lastPushedChecksum: "sha256:2267731c78db702b"
+lastPushedMetaChecksum: "sha256:1529610aea912529"
