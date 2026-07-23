@@ -31,5 +31,5 @@ readme: |
   - All calls are localhost-only, no external network traffic
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1OQ
-lastPushedChecksum: "sha256:fe4c759579dc9eeb"
+lastPushedChecksum: "sha256:ecf5e9ab795bafee"
 lastPushedMetaChecksum: "sha256:1064c600d43f830d"
