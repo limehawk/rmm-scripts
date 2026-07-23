@@ -1,0 +1,25 @@
+name: workstation_rename_manual_macos.sh
+description: Renames macOS device with optional custom client segment (Level)
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+readme: |
+  Purpose
+  -------
+  Renames a macOS device to CLIENT-USERUUID. Optional CUSTOM_CLIENT_OVERRIDE in
+  script body; otherwise Level group name (variable length).
+
+  Usage Notes
+  -----------
+  - Edit CUSTOM_CLIENT_OVERRIDE for a fixed client code
+  - Output slots: DesiredHostname, RenameStatus
+
+  Requirements
+  ------------
+  - macOS 10.14+
+  - Level agent; run as System (root)
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT-USERUUID)
+- name: RenameStatus
+  description: already_matches | applied | error

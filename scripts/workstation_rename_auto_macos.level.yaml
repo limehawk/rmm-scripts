@@ -1,0 +1,25 @@
+name: workstation_rename_auto_macos.sh
+description: Auto-renames macOS device using CLIENT3-USERUUID from Level group
+shell: BASH
+runAs: SYSTEM
+timeout: 60
+readme: |
+  Purpose
+  -------
+  Renames a macOS device to CLIENT3-USERUUID (exactly 15 chars). CLIENT3 from
+  Level group name; sets HostName, ComputerName, LocalHostName.
+
+  Usage Notes
+  -----------
+  - Device must be in a named Level group
+  - Output slots: DesiredHostname, RenameStatus
+
+  Requirements
+  ------------
+  - macOS 10.14+
+  - Level agent; run as System (root)
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT3-USERUUID)
+- name: RenameStatus
+  description: already_matches | applied | error

@@ -1,0 +1,30 @@
+name: workstation_rename_auto.ps1
+description: Auto-renames Windows device using CLIENT3-USERUUID from Level group
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+readme: |
+  Purpose
+  -------
+  Renames a Windows device to CLIENT3-USERUUID (exactly 15 chars). CLIENT3 is a
+  3-char abbreviation of the Level device group name ({{level_group_name}}).
+  USER is the sanitized logged-in username; UUID is the SMBIOS UUID tail.
+
+  Usage Notes
+  -----------
+  - Device must be in a named Level group (client group)
+  - Level interpolates {{level_group_name}} before run
+  - Reboot required for hostname change to take effect
+  - No SuperOps/API — Level inventory follows OS hostname after reboot
+  - Output slots: DesiredHostname, RenameStatus
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Level agent; run as System
+  - Device assigned to a client group
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT3-USERUUID)
+- name: RenameStatus
+  description: already_matches | scheduled | warning | error

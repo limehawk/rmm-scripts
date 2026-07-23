@@ -1,0 +1,28 @@
+name: workstation_rename_manual.ps1
+description: Renames Windows device with optional custom client segment (Level)
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+readme: |
+  Purpose
+  -------
+  Renames a Windows device to CLIENT-USERUUID (exactly 15 chars). Optional
+  hardcoded $CUSTOM_CLIENT_OVERRIDE in the script body; otherwise uses the Level
+  group name as a variable-length client segment.
+
+  Usage Notes
+  -----------
+  - Edit CUSTOM_CLIENT_OVERRIDE (e.g. BELL) for a fixed client code
+  - Leave empty to use {{level_group_name}}
+  - Reboot required for hostname change to take effect
+  - Output slots: DesiredHostname, RenameStatus
+
+  Requirements
+  ------------
+  - Windows 10/11
+  - Level agent; run as System
+variables:
+- name: DesiredHostname
+  description: Built 15-char hostname (CLIENT-USERUUID)
+- name: RenameStatus
+  description: already_matches | scheduled | warning | error

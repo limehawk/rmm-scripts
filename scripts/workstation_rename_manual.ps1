@@ -1,4 +1,3 @@
-Import-Module $SuperOpsModule
 $ErrorActionPreference = 'Stop'
 
 <#
@@ -9,23 +8,26 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Rename Workstation Manual                                   v8.2.4
+ SCRIPT   : Rename Workstation Manual                                   v9.0.0
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : July 2026
  USAGE    : .\workstation_rename_manual.ps1
 ================================================================================
  FILE     : workstation_rename_manual.ps1
- DESCRIPTION : Renames Windows device with custom client segment override
+ DESCRIPTION : Renames Windows device with custom client segment (Level)
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
  PURPOSE
 
-   Rename a Windows device and sync the same name to SuperOps.
+   Rename a Windows device using CLIENT-USERUUID (exactly 15 chars).
+   Optional hardcoded client override; otherwise Level group name is used
+   (variable-length sanitized segment, not forced to 3 chars).
+   No external RMM API call — Level inventory follows the OS hostname after reboot.
 
    Naming (Windows-legal; max 15 chars; no trailing hyphen):
      CLIENT-USERUUID
-       CLIENT : Custom override $YourCustomClientHere, else from $YourClientNameHere
+       CLIENT : $CUSTOM_CLIENT_OVERRIDE if set, else {{level_group_name}}
                 Variable length; sanitized A-Z0-9; trimmed if needed to ensure fit.
        USER   : Sanitized username; maximized; truncated if needed to ensure fit.
        UUID   : SMBIOS UUID tail; at least 3 chars; trimmed to fill exactly 15.
@@ -34,56 +36,50 @@ $ErrorActionPreference = 'Stop'
      - Only A-Z, 0-9, and hyphen used.
      - Name never starts or ends with '-'.
      - Always exactly 15 chars.
-     - SuperOps asset name is updated to match.
+     - Emits Level output slots DesiredHostname / RenameStatus for automations.
 
  DATA SOURCES & PRIORITY
 
-   1. SuperOps runtime placeholders ($YourApiKeyHere, $YourCustomClientHere, etc.)
-   2. System information (UUID, username, hostname)
-   3. Hardcoded settings (subdomain, segment lengths)
+   1. Hardcoded $CUSTOM_CLIENT_OVERRIDE (set non-empty to force client segment)
+   2. Level system variable {{level_group_name}}
+   3. System information (UUID, username, hostname)
 
  REQUIRED INPUTS
 
-   All inputs are SuperOps runtime placeholders:
-     - $YourApiKeyHere          : SuperOps API key
-     - $YourCustomClientHere    : Custom client segment (overrides auto 3-char)
-     - $YourAssetIdHere         : SuperOps asset ID
-     - $YourAssetNameHere       : Current asset name (for logging)
-     - $YourClientNameHere      : Client name (fallback if no custom segment)
+   - $CUSTOM_CLIENT_OVERRIDE : optional; edit in script body before run
+                               (e.g. "BELL", "DDI"). Empty → use group name.
+   - {{level_group_name}}    : Level group name (fallback client segment)
 
  SETTINGS
 
    - MaxUserSegmentLen: 8 characters
    - MinUuidSuffixLen: 3 characters
    - MaxHostLen: 15 characters (Windows limit)
-   - GraphQL endpoint: https://api.superops.ai/msp
 
  BEHAVIOR
 
-   1. Validates SuperOps API key and asset ID
-   2. Uses custom client segment if provided, else 3-char from client name
-   3. Retrieves system UUID and logged-in username
-   4. Builds hostname: CLIENT-USERUUID (exactly 15 chars)
-   5. Renames computer if name differs from current
-   6. Updates SuperOps asset name via GraphQL API
-   7. Reports final status
+   1. Uses custom client override if set, else Level group name
+   2. Retrieves system UUID and logged-in username
+   3. Builds hostname: CLIENT-USERUUID (exactly 15 chars)
+   4. Renames computer if name differs from current
+   5. Emits Level output slots and reports status
+   6. Reboot required for hostname change to take effect
 
  PREREQUISITES
 
    - Windows 10/11
-   - Admin privileges required
-   - SuperOps agent installed
-   - Internet access for SuperOps API
+   - Admin privileges (Level runAs: SYSTEM)
+   - Level agent installed
+   - Either $CUSTOM_CLIENT_OVERRIDE set, or device in a named Level group
 
  SECURITY NOTES
 
-   - API key passed via SuperOps runtime variable
+   - No API keys or secrets
    - No secrets written to permanent logs
-   - GraphQL mutation updates asset name only
 
  ENDPOINTS
 
-   - https://api.superops.ai/msp (SuperOps GraphQL API)
+   Not applicable — local rename only
 
  EXIT CODES
 
@@ -92,44 +88,37 @@ $ErrorActionPreference = 'Stop'
 
  EXAMPLE RUN
 
-   [INFO] SUPEROPS VARIABLES
+   [INFO] LEVEL VARIABLES
    ==============================================================
-   AssetId (placeholder)    : 12345
-   AssetName (placeholder)  : DESKTOP-ABC123
-   ClientName (placeholder) : Acme Corp
-   CustomClient (runtime)   : ACMECORP
-   Subdomain (hardcoded)    : limehawk
+   Custom Client Override   : BELL
+   Group Name (level)       : Bell Companies
+   Device Hostname (level)  : DESKTOP-ABC123
    MaxUserSegmentLen        : 8
 
    [INFO] RAW SYSTEM VALUES
    ==============================================================
    ENV USERNAME             : jsmith
-   CIM UserName             : ACME\jsmith
+   CIM UserName             : BELL\jsmith
    Current HostName (CIM)   : DESKTOP-ABC123
    SMBIOS UUID              : 12345678-1234-1234-1234-123456789ABC
 
    [INFO] DERIVED SEGMENTS
    ==============================================================
-   CLIENT SEGMENT           : ACMECORP
-   USER SEGMENT             : JSM
-   DESIRED/OS NAME          : ACMECORP-JSM9ABC
+   CLIENT SEGMENT           : BELL
+   USER SEGMENT             : JSMITH
+   DESIRED/OS NAME          : BELL-JSMITH89AB
    Name Length              : 15
 
    [RUN] RENAME ACTION
    ==============================================================
    CURRENT NAME(S)          : DESKTOP-ABC123
-   STATUS                   : RENAMING TO ACMECORP-JSM9ABC
+   STATUS                   : RENAMING TO BELL-JSMITH89AB
    NOTE                     : CHANGE TAKES EFFECT AFTER REBOOT
    RESULT                   : RENAME COMMAND ISSUED
-
-   [RUN] SUPEROPS SYNC
-   ==============================================================
-   RESULT                   : SUPEROPS ASSET NAME UPDATED
 
    [OK] FINAL STATUS
    ==============================================================
    RENAME SCHEDULED IF NEEDED. REBOOT TO APPLY NEW HOSTNAME
-   SUPEROPS ASSET NAME SYNCED
 
    [OK] SCRIPT COMPLETED
    ==============================================================
@@ -137,6 +126,9 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-22 v9.0.0 Ported to Level.io: drop SuperOps module/API/placeholders;
+                   custom override hardcoded; fallback {{level_group_name}};
+                   emit Level output slots
  2026-01-19 v8.2.4 Updated to two-line ASCII console output style
  2026-01-14 v8.2.3 Added complete README sections for framework compliance
  2025-12-23 v8.2.2 Updated to Limehawk Script Framework
@@ -158,34 +150,26 @@ $ErrorActionPreference = 'Stop'
 #>
 
 # ============================== SETTINGS =====================================
-$SUPEROPS_API_KEY        = "$YourApiKeyHere"
-$CUSTOM_CLIENT_SEG_INPUT = "$YourCustomClientHere"
-$SUPEROPS_SUBDOMAIN      = "limehawk"
-$ASSET_ID                = $YourAssetIdHere
-$ASSET_NAME_PLACEHOLDER  = $YourAssetNameHere
-$CLIENT_NAME_INPUT       = $YourClientNameHere
+# Optional override: set a non-empty value (e.g. "BELL") to force the client
+# segment. Leave empty to use the Level group name (variable-length sanitized).
+$CUSTOM_CLIENT_OVERRIDE  = ""
+$CLIENT_NAME_INPUT       = "{{level_group_name}}"
+$LEVEL_DEVICE_HOSTNAME   = "{{level_device_hostname}}"
 
 $MaxUserSegmentLen       = 8
 $MinUuidSuffixLen        = 3
 $MaxHostLen              = 15
-$GraphQlEndpoint         = "https://api.superops.ai/msp"
 # ============================================================================
 
 # ============================== HELPERS ======================================
 
 Set-StrictMode -Version Latest
 
-function Get-Abbr3 {
-    param([string]$s)
-    if ([string]::IsNullOrWhiteSpace($s)) { return "" }
-    $t = ($s.ToUpper() -replace '[^A-Z0-9]', '')
-    if ($t.Length -lt 3) { return $t } else { return $t.Substring(0,3) }
-}
 function SanitizeSegment {
-    param([string]$s,[int]$maxLen=0)
+    param([string]$s, [int]$maxLen = 0)
     if ([string]::IsNullOrWhiteSpace($s)) { return "" }
     $t = ($s.ToUpper() -replace '[^A-Z0-9]', '')
-    if ($maxLen -gt 0 -and $t.Length -gt $maxLen) { return $t.Substring(0,$maxLen) }
+    if ($maxLen -gt 0 -and $t.Length -gt $maxLen) { return $t.Substring(0, $maxLen) }
     return $t
 }
 function Get-CanonicalHostNames {
@@ -208,10 +192,10 @@ function Build-ClientUserUuidHyphenName {
     if ([string]::IsNullOrWhiteSpace($UuidClean)) { throw "UUID EMPTY" }
     $client = SanitizeSegment $Client
     $user   = SanitizeSegment -s $User -maxLen $MaxUserSegmentLen
-    $uuid   = $UuidClean.Replace('-','').ToUpper()
+    $uuid   = $UuidClean.Replace('-', '').ToUpper()
 
     $maxClientLen = $MaxLen - 1 - $MinUuid
-    if ($client.Length -gt $maxClientLen) { $client = $client.Substring(0,$maxClientLen) }
+    if ($client.Length -gt $maxClientLen) { $client = $client.Substring(0, $maxClientLen) }
 
     $prefix = $client + '-'
     $rem = $MaxLen - $prefix.Length
@@ -246,102 +230,115 @@ function Is-BenignRenameError {
     return ($m -like "*THE NEW NAME IS THE SAME AS THE CURRENT NAME*") -or
            ($m -like "*SKIP COMPUTER*" -and $m -like "*SAME AS THE CURRENT NAME*")
 }
-function Write-Section { param([string]$title, [string]$status = "INFO"); Write-Host ""; Write-Host ("[$status] $title"); Write-Host ("=" * 62) }
-function PrintKV([string]$label, [string]$value) { $lbl = $label.PadRight(24); Write-Host (" {0} : {1}" -f $lbl, $value) }
+function Test-LevelInterpolated {
+    param([string]$Value, [string]$TokenName)
+    if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
+    if ($Value -match '\{\{') {
+        throw "LEVEL DID NOT INTERPOLATE $TokenName — RUN THIS SCRIPT VIA LEVEL"
+    }
+    return $true
+}
+function Write-LevelSlot {
+    param([string]$Name, [string]$Value)
+    $open = [string][char]123 + [string][char]123
+    $close = [string][char]125 + [string][char]125
+    Write-Host ($open + $Name + '=' + $Value + $close)
+}
+function Write-Section {
+    param([string]$title, [string]$status = "INFO")
+    Write-Host ""
+    Write-Host ("[$status] $title")
+    Write-Host ("=" * 62)
+}
+function PrintKV {
+    param([string]$label, [string]$value)
+    $lbl = $label.PadRight(24)
+    Write-Host (" {0} : {1}" -f $lbl, $value)
+}
 # ============================================================================
 
 # =============================================================================
 # MAIN
 # =============================================================================
-Write-Section "SUPEROPS VARIABLES"
-PrintKV "AssetId (placeholder)"      $ASSET_ID
-PrintKV "AssetName (placeholder)"    $ASSET_NAME_PLACEHOLDER
-PrintKV "ClientName (placeholder)"   $CLIENT_NAME_INPUT
-PrintKV "CustomClient (runtime)"     $CUSTOM_CLIENT_SEG_INPUT
-PrintKV "Subdomain (hardcoded)"      $SUPEROPS_SUBDOMAIN
-PrintKV "MaxUserSegmentLen"          $MaxUserSegmentLen
+Write-Section "LEVEL VARIABLES"
+PrintKV "Custom Client Override" ($(if ($CUSTOM_CLIENT_OVERRIDE) { $CUSTOM_CLIENT_OVERRIDE } else { "<none>" }))
+PrintKV "Group Name (level)" $CLIENT_NAME_INPUT
+PrintKV "Device Hostname (level)" $LEVEL_DEVICE_HOSTNAME
+PrintKV "MaxUserSegmentLen" $MaxUserSegmentLen
 
-$ENV_USERNAME  = $env:USERNAME
-$CIM_CS        = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
-$CIM_USER      = $CIM_CS.UserName
-$CIM_HOST      = $CIM_CS.Name
-$UUID_RAW      = Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue | Select-Object -ExpandProperty UUID
+$ENV_USERNAME = $env:USERNAME
+$CIM_CS = Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue
+$CIM_USER = if ($CIM_CS) { $CIM_CS.UserName } else { $null }
+$CIM_HOST = if ($CIM_CS) { $CIM_CS.Name } else { $null }
+$UUID_RAW = Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue |
+    Select-Object -ExpandProperty UUID
 
 Write-Section "RAW SYSTEM VALUES"
-PrintKV "ENV USERNAME"               $ENV_USERNAME
-PrintKV "CIM UserName"               $CIM_USER
-PrintKV "Current HostName (CIM)"     $CIM_HOST
-PrintKV "SMBIOS UUID"                $UUID_RAW
+PrintKV "ENV USERNAME" $ENV_USERNAME
+PrintKV "CIM UserName" $CIM_USER
+PrintKV "Current HostName (CIM)" $CIM_HOST
+PrintKV "SMBIOS UUID" $UUID_RAW
 
 try {
-    if ([string]::IsNullOrWhiteSpace($SUPEROPS_API_KEY))   { throw "MISSING API KEY" }
-    if ([string]::IsNullOrWhiteSpace($ASSET_ID))           { throw "MISSING ASSET ID" }
-    if ([string]::IsNullOrWhiteSpace($UUID_RAW))           { throw "UUID NOT FOUND" }
+    if ([string]::IsNullOrWhiteSpace($UUID_RAW)) { throw "UUID NOT FOUND" }
 
-    $CLIENT_SEG = SanitizeSegment -s $CUSTOM_CLIENT_SEG_INPUT
+    $CLIENT_SEG = SanitizeSegment -s $CUSTOM_CLIENT_OVERRIDE
     if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) {
-        if ([string]::IsNullOrWhiteSpace($CLIENT_NAME_INPUT)) { throw "CLIENT NAME NOT FOUND" }
-        $CLIENT_SEG = Get-Abbr3 -s $CLIENT_NAME_INPUT
+        [void](Test-LevelInterpolated -Value $CLIENT_NAME_INPUT -TokenName 'level_group_name')
+        if ([string]::IsNullOrWhiteSpace($CLIENT_NAME_INPUT)) {
+            throw "CLIENT SEGMENT EMPTY — SET CUSTOM_CLIENT_OVERRIDE OR ASSIGN DEVICE TO A LEVEL GROUP"
+        }
+        $CLIENT_SEG = SanitizeSegment -s $CLIENT_NAME_INPUT
     }
+    if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) { throw "CLIENT SEGMENT EMPTY AFTER SANITIZE" }
 
     $LOGGEDINUSER = $ENV_USERNAME
-    if ([string]::IsNullOrWhiteSpace($LOGGEDINUSER) -and $CIM_USER) { $LOGGEDINUSER = ($CIM_USER -split '\\')[-1] }
+    if ([string]::IsNullOrWhiteSpace($LOGGEDINUSER) -and $CIM_USER) {
+        $LOGGEDINUSER = ($CIM_USER -split '\\')[-1]
+    }
     $USER_SEG = SanitizeSegment -s $LOGGEDINUSER -maxLen $MaxUserSegmentLen
 
-    $uuidClean = $UUID_RAW.Replace('-','').ToUpper()
+    $uuidClean = $UUID_RAW.Replace('-', '').ToUpper()
     $DESIRED_NAME = Build-ClientUserUuidHyphenName -Client $CLIENT_SEG -User $USER_SEG -UuidClean $uuidClean -MaxLen $MaxHostLen -MinUuid $MinUuidSuffixLen
 
     Write-Section "DERIVED SEGMENTS" "INFO"
-    PrintKV "CLIENT SEGMENT"          $CLIENT_SEG
-    PrintKV "USER SEGMENT"            ($(if ($USER_SEG) { $USER_SEG } else { "<none>" }))
-    PrintKV "DESIRED/OS NAME"         $DESIRED_NAME
-    PrintKV "Name Length"             ($DESIRED_NAME.Length.ToString())
+    PrintKV "CLIENT SEGMENT" $CLIENT_SEG
+    PrintKV "USER SEGMENT" ($(if ($USER_SEG) { $USER_SEG } else { "<none>" }))
+    PrintKV "DESIRED/OS NAME" $DESIRED_NAME
+    PrintKV "Name Length" ($DESIRED_NAME.Length.ToString())
 
     $CanonicalNow = Get-CanonicalHostNames
     Write-Section "RENAME ACTION" "RUN"
-    PrintKV "CURRENT NAME(S)"         ($CanonicalNow -join ", ")
+    PrintKV "CURRENT NAME(S)" ($CanonicalNow -join ", ")
 
+    $renameStatus = "already_matches"
     if ($CanonicalNow -contains $DESIRED_NAME) {
-        PrintKV "STATUS"              "CURRENT HOSTNAME ALREADY MATCHES"
+        PrintKV "STATUS" "CURRENT HOSTNAME ALREADY MATCHES"
     } else {
-        PrintKV "STATUS"              ("RENAMING TO " + $DESIRED_NAME)
-        PrintKV "NOTE"                "CHANGE TAKES EFFECT AFTER REBOOT"
+        PrintKV "STATUS" ("RENAMING TO " + $DESIRED_NAME)
+        PrintKV "NOTE" "CHANGE TAKES EFFECT AFTER REBOOT"
         try {
             Rename-Computer -NewName $DESIRED_NAME -Force -PassThru | Out-Null
-            PrintKV "RESULT"          "RENAME COMMAND ISSUED"
+            PrintKV "RESULT" "RENAME COMMAND ISSUED"
+            $renameStatus = "scheduled"
         } catch {
             $em = $_.Exception.Message
             if (Is-BenignRenameError $em) {
-                PrintKV "RESULT"      "RENAME SKIPPED: ALREADY SET"
+                PrintKV "RESULT" "RENAME SKIPPED: ALREADY SET"
+                $renameStatus = "already_matches"
             } else {
-                PrintKV "RESULT"      ("RENAME WARNING: " + $em)
+                PrintKV "RESULT" ("RENAME WARNING: " + $em)
+                $renameStatus = "warning"
             }
         }
     }
 
-    Write-Section "SUPEROPS SYNC" "RUN"
-    $headers = @{
-        "Content-Type"      = "application/json"
-        "CustomerSubDomain" = $SUPEROPS_SUBDOMAIN
-        "Authorization"     = "Bearer $SUPEROPS_API_KEY"
-    }
-    $mutation = @'
-mutation updateAsset($input: UpdateAssetInput!) {
-  updateAsset(input: $input) {
-    assetId
-    name
-  }
-}
-'@
-    $variables = @{ input = @{ assetId = $ASSET_ID; name = $DESIRED_NAME } }
-    $body = @{ query = $mutation; variables = $variables } | ConvertTo-Json -Depth 6 -Compress
-    $resp = Invoke-RestMethod -Uri $GraphQlEndpoint -Method POST -Headers $headers -Body $body
-    if ($resp.PSObject.Properties['errors'] -and $resp.errors) { throw ("SUPEROPS ERROR: " + ($resp.errors | ConvertTo-Json -Compress)) }
-    PrintKV "RESULT"                  "SUPEROPS ASSET NAME UPDATED"
+    Write-LevelSlot -Name "DesiredHostname" -Value $DESIRED_NAME
+    Write-LevelSlot -Name "RenameStatus" -Value $renameStatus
 
     Write-Section "FINAL STATUS" "OK"
     Write-Host " RENAME SCHEDULED IF NEEDED. REBOOT TO APPLY NEW HOSTNAME"
-    Write-Host " SUPEROPS ASSET NAME SYNCED"
+    Write-Host " LEVEL FOLLOWS OS HOSTNAME AFTER REBOOT (NO RMM ASSET API)"
     Write-Section "SCRIPT COMPLETED" "OK"
     exit 0
 }
@@ -349,5 +346,6 @@ catch {
     Write-Host ""
     Write-Section "ERROR OCCURRED" "ERROR"
     PrintKV "ERROR MESSAGE" ($_.Exception.Message.ToUpper())
+    Write-LevelSlot -Name "RenameStatus" -Value "error"
     exit 1
 }
