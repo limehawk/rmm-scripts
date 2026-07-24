@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : SentinelOne Install                                           v1.0.1
+ SCRIPT   : SentinelOne Install                                           v1.0.2
  AUTHOR   : Limehawk.io
  DATE     : January 2026
  USAGE    : .\sentinelone_install.ps1
@@ -35,6 +35,8 @@ DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
  REQUIRED INPUTS
 
    - $SiteToken : SentinelOne site token for agent registration (REQUIRED)
+                  Injected at runtime from the Level custom field
+                  cf_s1_site_token ({{cf_s1_site_token}} placeholder)
 
  SETTINGS
 
@@ -106,6 +108,8 @@ DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-24 v1.0.2 SiteToken from Level custom field {{cf_s1_site_token}} (adopts
+                   edit made in Level UI); fail if placeholder is unsubstituted
  2026-01-19 v1.0.1 Updated to two-line ASCII console output style
  2025-12-28 v1.0.0 Initial release
 ================================================================================
@@ -120,7 +124,7 @@ $errorText     = ""
 # ==== HARDCODED INPUTS (MANDATORY) ====
 
 # --- REQUIRED: Your SentinelOne Site Token ---
-$SiteToken = ""  # Get from S1 Console > Sentinels > Site Info
+$SiteToken = "{{cf_s1_site_token}}"  # Get from S1 Console > Sentinels > Site Info
 
 # --- Installer Options ---
 $UseExe          = $false  # $true = EXE installer, $false = MSI installer (recommended)
@@ -139,6 +143,10 @@ $VerifyDelaySeconds = 3
 if ([string]::IsNullOrWhiteSpace($SiteToken)) {
     $errorOccurred = $true
     $errorText = "SiteToken is required. Get from S1 Console > Sentinels > Site Info"
+} elseif ($SiteToken -match '^\{\{.*\}\}$') {
+    # Level custom-field placeholder was not substituted (cf_s1_site_token unset)
+    $errorOccurred = $true
+    $errorText = "SiteToken custom field was not substituted - set cf_s1_site_token in Level"
 }
 
 if ($errorOccurred) {

@@ -27,7 +27,7 @@ readme: |
   - Administrator privileges
   - PowerShell 5.1 or later
   - Network access to download URL (ConnectWise CDN or custom)
-  - $SiteToken: SentinelOne site token (get from S1 Console > Sentinels > Site Info)
+  - $SiteToken: SentinelOne site token for agent registration, injected at runtime from the Level custom field cf_s1_site_token ({{cf_s1_site_token}} placeholder). Get the token from S1 Console > Sentinels > Site Info
 
   Security
   --------
