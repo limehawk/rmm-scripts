@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   Configures the built-in Windows LAPS client to rotate the local administrator password and escrow it to Microsoft Entra ID. Applies the LAPS policy via the registry, forces an immediate policy processing pass, and reports the result from the LAPS operational event log so the tech can see whether the Entra escrow succeeded or is pending. Works on Entra ID Free (Microsoft 365 Business Standard) - no Intune subscription required.
-
+  
   Usage Notes
   -----------
   - All inputs are hardcoded: BackupDirectory (1 = Entra ID), PasswordAgeDays (30), PasswordLength (20), PasswordComplexity (4 = upper+lower+numbers+specials), AdministratorAccountName (empty = built-in Administrator), PasswordEncryptionEnabled (1)
@@ -17,16 +17,20 @@ readme: |
   - Forces an immediate LAPS policy processing pass
   - Reads Microsoft-Windows-LAPS/Operational and surfaces the latest status line
   - IMPORTANT: The tenant setting "Enable Microsoft Entra Local Administrator Password Solution (LAPS)" must be set to Yes (Entra admin center -> Devices -> Device settings) for the password to actually escrow to Entra ID
-
+  
   Requirements
   ------------
   - Windows 11, or Windows 10 patched with the April 2023 (or later) cumulative update that ships the Windows LAPS client
   - Administrator privileges (RMM runs as SYSTEM)
   - Device joined to Microsoft Entra ID
   - Tenant setting "Enable Microsoft Entra Local Administrator Password Solution (LAPS)" = Yes
-
+  
   Security
   --------
   - The managed password is never read or printed
   - Escrowed passwords are stored encrypted in Entra ID
   - Disabling or weakening the policy reduces local-account security
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzk3MA
+lastPushedChecksum: "sha256:70cdd1f031aea21d"
+lastPushedMetaChecksum: "sha256:2f3697defacd5999"

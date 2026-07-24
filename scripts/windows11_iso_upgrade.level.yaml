@@ -7,7 +7,7 @@ readme: |
   Purpose
   -------
   ISO-based silent in-place upgrade to Windows 11, version 25H2, for Level RMM (run as System). This is the fallback path when the enablement package / Windows Update / Installation Assistant routes are unsuitable: it fetches a fresh consumer (Home/Pro/Edu) ISO via Fido, gates on hardware eligibility before any download, then drives setup.exe for an authoritative compat scan and the upgrade itself. Already-25H2 devices are a no-op success. The fleet is Home/Pro only, so the consumer multi-edition ISO is sufficient (the business editions ISO is not obtainable unauthenticated).
-
+  
   Usage Notes
   -----------
   - No-op success if the registry DisplayVersion already reports 25H2
@@ -22,7 +22,7 @@ readme: |
   - Consumer editions only (Home / Pro / Edu) - no Enterprise
   - Microsoft ISO URLs expire ~24h; fetched and consumed in one run
   - Level timeout: 14400 seconds (4 hours); run as System
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -37,7 +37,7 @@ readme: |
   - $workDir: working directory for Fido + ISO (C:\ProgramData\Limehawk\windows11_iso_upgrade)
   - $requiredFreeGB: minimum free space on the system drive (35)
   - $rebootAfterInstall: schedule reboot after a successful upgrade (true)
-
+  
   Security
   --------
   - No secrets in logs
@@ -46,3 +46,7 @@ readme: |
   - Microsoft ISO URLs expire ~24h; fetched and consumed in a single run
   - Default reboots after success (set $rebootAfterInstall = false for maintenance windows)
   - ISO + Fido.ps1 are deleted from the work dir after a successful upgrade
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzk2OQ
+lastPushedChecksum: "sha256:3ee65803b1c9d69f"
+lastPushedMetaChecksum: "sha256:2b67127477d6ce86"
