@@ -1,0 +1,48 @@
+name: windows11_iso_upgrade.ps1
+description: ISO-based silent upgrade to Windows 11 25H2 for Level RMM
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 14400
+readme: |
+  Purpose
+  -------
+  ISO-based silent in-place upgrade to Windows 11, version 25H2, for Level RMM (run as System). This is the fallback path when the enablement package / Windows Update / Installation Assistant routes are unsuitable: it fetches a fresh consumer (Home/Pro/Edu) ISO via Fido, gates on hardware eligibility before any download, then drives setup.exe for an authoritative compat scan and the upgrade itself. Already-25H2 devices are a no-op success. The fleet is Home/Pro only, so the consumer multi-edition ISO is sufficient (the business editions ISO is not obtainable unauthenticated).
+
+  Usage Notes
+  -----------
+  - No-op success if the registry DisplayVersion already reports 25H2
+  - Hardware compat gate runs before any download and collects ALL blockers: AMD64, CPU >=2 cores >=1GHz, RAM >=4GB, system disk >=64GB, free space >=35GB, TPM 2.0, UEFI + Secure Boot capable
+  - Fido pinned to release tag v1.70 (no floating branch fetched as SYSTEM)
+  - Fido command: -Win 11 -Rel 25H2 -Ed Pro -Lang "English (United States)" -Arch x64 -GetUrl; last https:// stdout line is the ISO URL
+  - ISO download: curl.exe --location --silent --show-error --fail (curl stderr otherwise kills PowerShell); size sanity-checked >= 3GB
+  - An ISO retained by a previous failed upgrade attempt is reused instead of re-downloaded
+  - Compat scan: setup.exe /auto upgrade /quiet /noreboot /compat scanonly /eula accept; only 0xC1900210 proceeds
+  - Upgrade: setup.exe /auto upgrade /quiet /eula accept /dynamicupdate enable /noreboot; success = exit 0 or 0xC1900210
+  - On success: dismount ISO, delete ISO + Fido.ps1, then (default) schedule shutdown.exe /r /t 60 with a user message
+  - Consumer editions only (Home / Pro / Edu) - no Enterprise
+  - Microsoft ISO URLs expire ~24h; fetched and consumed in one run
+  - Level timeout: 14400 seconds (4 hours); run as System
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Level agent; run as System (SYSTEM privileges)
+  - Internet access (raw.githubusercontent.com + Microsoft download endpoints)
+  - Device must meet Windows 11 hardware requirements (gated inline)
+  - Consumer edition only (Home / Pro / Edu) - no Enterprise
+  - Restart required to complete the upgrade (default schedules one)
+  - $targetDisplayVersion: 25H2 (registry DisplayVersion that means done)
+  - $fidoUrl: Fido.ps1 raw URL, pinned to release tag v1.70
+  - $fidoWin / $fidoRel / $fidoEd / $fidoLang / $fidoArch: Fido selection (11 / 25H2 / Pro / English (United States) / x64)
+  - $workDir: working directory for Fido + ISO (C:\ProgramData\Limehawk\windows11_iso_upgrade)
+  - $requiredFreeGB: minimum free space on the system drive (35)
+  - $rebootAfterInstall: schedule reboot after a successful upgrade (true)
+
+  Security
+  --------
+  - No secrets in logs
+  - Fido pinned to release tag v1.70 (no floating branch fetched as SYSTEM)
+  - Downloads only from raw.githubusercontent.com and Microsoft endpoints (software-download.microsoft.com / *.microsoft.com)
+  - Microsoft ISO URLs expire ~24h; fetched and consumed in a single run
+  - Default reboots after success (set $rebootAfterInstall = false for maintenance windows)
+  - ISO + Fido.ps1 are deleted from the work dir after a successful upgrade
