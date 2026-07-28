@@ -48,5 +48,5 @@ readme: |
   - ISO + Fido.ps1 are deleted from the work dir after a successful upgrade
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzk2OQ
-lastPushedChecksum: "sha256:3ee65803b1c9d69f"
+lastPushedChecksum: "sha256:826e21fcf7732cae"
 lastPushedMetaChecksum: "sha256:2b67127477d6ce86"
