@@ -16,7 +16,7 @@ readme: |
   - No-op success if the registry DisplayVersion already reports 25H2
   - Hardware compat gate runs before any download and collects ALL blockers: AMD64, CPU >=2 cores >=1GHz, RAM >=4GB, system disk >=64GB, free space >=35GB, TPM 2.0, UEFI + Secure Boot capable
   - Fido pinned to release tag v1.70 (no floating branch fetched as SYSTEM)
-  - Fido command: -Win 11 -Rel 25H2 -Ed Pro -Lang "English (United States)" -Arch x64 -GetUrl; last https:// stdout line is the ISO URL
+  - Fido command: -Win 11 -Rel 25H2 -Ed Pro -Lang "^English$" -Arch x64 -GetUrl; last https:// stdout line is the ISO URL
   - ISO download: curl.exe --location --silent --show-error --fail (curl stderr otherwise kills PowerShell); size sanity-checked >= 3GB
   - An ISO retained by a previous failed upgrade attempt is reused instead of re-downloaded
   - Compat scan: setup.exe /auto upgrade /quiet /noreboot /compat scanonly /eula accept; only 0xC1900210 proceeds
@@ -36,7 +36,7 @@ readme: |
   - Restart required to complete the upgrade (default schedules one)
   - $targetDisplayVersion: 25H2 (registry DisplayVersion that means done)
   - $fidoUrl: Fido.ps1 raw URL, pinned to release tag v1.70
-  - $fidoWin / $fidoRel / $fidoEd / $fidoLang / $fidoArch: Fido selection (11 / 25H2 / Pro / English (United States) / x64)
+  - $fidoWin / $fidoRel / $fidoEd / $fidoLang / $fidoArch: Fido selection (11 / 25H2 / Pro / English / x64)
   - $workDir: working directory for Fido + ISO (C:\ProgramData\Limehawk\windows11_iso_upgrade)
   - $requiredFreeGB: minimum free space on the system drive (35)
   - $rebootAfterInstall: schedule reboot after a successful upgrade (true)
