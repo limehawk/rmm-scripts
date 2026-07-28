@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Windows 11 25H2 ISO Upgrade                                  v1.0.0
+ SCRIPT   : Windows 11 25H2 ISO Upgrade                                  v1.0.1
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\windows11_iso_upgrade.ps1
@@ -46,7 +46,9 @@ $ErrorActionPreference = 'Stop'
      - $fidoWin              : Fido -Win value (11)
      - $fidoRel              : Fido -Rel value (25H2)
      - $fidoEd               : Fido -Ed value (Pro)
-     - $fidoLang             : Fido -Lang value (English (United States))
+     - $fidoLang             : Fido -Lang value (English) - must be a Microsoft
+                               language name as Fido reports it ("English",
+                               "English International", ...), not a locale name
      - $fidoArch             : Fido -Arch value (x64)
      - $workDir              : working directory for Fido + ISO
      - $requiredFreeGB       : minimum free space on the system drive (35)
@@ -56,7 +58,10 @@ $ErrorActionPreference = 'Stop'
 
    - Fido pin            : v1.70 (SYSTEM fleet-wide, so no floating tag)
    - Fido command        : -Win 11 -Rel 25H2 -Ed Pro
-                           -Lang "English (United States)" -Arch x64 -GetUrl
+                           -Lang "^English$" -Arch x64 -GetUrl
+                           (Fido matches -Lang as a regex and takes the first
+                           hit, so the name is anchored to avoid selecting
+                           "English International")
    - ISO download        : curl.exe --location --silent --show-error --fail
    - Compat scan         : setup.exe /auto upgrade /quiet /noreboot
                            /compat scanonly /eula accept
@@ -165,6 +170,11 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-28 v1.0.1 Fix Fido -Lang value: Microsoft names the language "English",
+                   not "English (United States)", so Fido rejected the input and
+                   exited 1. The name is now passed anchored ("^English$") so it
+                   cannot match "English International", and a failed URL fetch
+                   caused by a bad language now prints Fido's accepted list.
  2026-07-24 v1.0.0 Initial release - ISO-based silent upgrade to Windows 11 25H2
                    (Fido v1.70 URL fetch, inline hardware gate, setup.exe compat
                    scan + upgrade, cleanup and optional reboot).
@@ -179,7 +189,7 @@ $fidoUrl = 'https://raw.githubusercontent.com/pbatard/Fido/v1.70/Fido.ps1'
 $fidoWin = '11'
 $fidoRel = '25H2'
 $fidoEd = 'Pro'
-$fidoLang = 'English (United States)'
+$fidoLang = 'English'
 $fidoArch = 'x64'
 $workDir = 'C:\ProgramData\Limehawk\windows11_iso_upgrade'
 $requiredFreeGB = 35
@@ -192,6 +202,9 @@ Set-StrictMode -Version Latest
 # ==============================================================================
 $ntCurrentVersionPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
 $fidoScriptPath = Join-Path $workDir 'Fido.ps1'
+# Fido matches -Lang as a regex and takes the first hit, so anchor the name:
+# bare "English" would also match "English International".
+$fidoLangPattern = '^' + $fidoLang + '$'
 $isoPath = Join-Path $workDir 'Windows11_25H2.iso'
 # Minimum hardware thresholds (Windows 11 requirements)
 $minCpuCores = 2
@@ -319,7 +332,7 @@ if ($errorOccurred) {
 
 Write-Host "  Target Version       : $targetDisplayVersion"
 Write-Host "  Fido URL             : $fidoUrl"
-Write-Host "  Fido Selection       : -Win $fidoWin -Rel $fidoRel -Ed $fidoEd -Lang `"$fidoLang`" -Arch $fidoArch"
+Write-Host "  Fido Selection       : -Win $fidoWin -Rel $fidoRel -Ed $fidoEd -Lang `"$fidoLangPattern`" -Arch $fidoArch"
 Write-Host "  Work Directory       : $workDir"
 Write-Host "  Required Free Space  : $requiredFreeGB GB"
 Write-Host "  Reboot After Install : $rebootAfterInstall"
@@ -562,7 +575,7 @@ Write-Host "  Running Fido to resolve the ISO URL..."
 $prevEap = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
 $fidoOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $fidoScriptPath `
-    -Win $fidoWin -Rel $fidoRel -Ed $fidoEd -Lang $fidoLang -Arch $fidoArch -GetUrl 2>&1
+    -Win $fidoWin -Rel $fidoRel -Ed $fidoEd -Lang $fidoLangPattern -Arch $fidoArch -GetUrl 2>&1
 $fidoExit = $LASTEXITCODE
 $ErrorActionPreference = $prevEap
 
@@ -573,12 +586,24 @@ $fidoText = $fidoLines -join "`n"
 $isoUrl = ($fidoLines | Where-Object { $_ -match '^https://' } | Select-Object -Last 1)
 
 if ($fidoExit -ne 0 -or [string]::IsNullOrWhiteSpace($isoUrl)) {
-    Remove-Item -LiteralPath $fidoScriptPath -Force -ErrorAction SilentlyContinue
-    Write-FailAndExit -Lines (@(
+    $failLines = @(
         'Fido did not return a Windows 11 25H2 ISO URL'
         "Fido exit code : $fidoExit"
         'Fido output    :'
-    ) + $fidoLines)
+    ) + $fidoLines
+
+    # A rejected -Lang is opaque without the list Fido will actually accept
+    if ($fidoText -match 'Invalid Windows language') {
+        $ErrorActionPreference = 'Continue'
+        $langOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $fidoScriptPath `
+            -Win $fidoWin -Rel $fidoRel -Ed $fidoEd -Lang List -Arch $fidoArch 2>&1
+        $ErrorActionPreference = $prevEap
+        $failLines += 'Languages Fido accepts for this selection:'
+        foreach ($item in $langOutput) { $failLines += [string]$item }
+    }
+
+    Remove-Item -LiteralPath $fidoScriptPath -Force -ErrorAction SilentlyContinue
+    Write-FailAndExit -Lines $failLines
 }
 
 Write-Host "  Fido exit code : $fidoExit"
