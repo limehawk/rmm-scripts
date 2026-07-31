@@ -9,7 +9,7 @@ readme: |
   Renames a macOS device to CLIENT-USERUUID. The client segment comes from the
   cf_client_prefix custom field, set once per client group and inherited by every
   device in it. Mirrors workstation_rename_manual.ps1 on Windows.
-
+  
   Usage Notes
   -----------
   - Set the prefix per client group:
@@ -31,5 +31,5 @@ variables:
     description: already_matches | applied | no_user | error
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNg
-lastPushedChecksum: "sha256:2267731c78db702b"
-lastPushedMetaChecksum: "sha256:1529610aea912529"
+lastPushedChecksum: "sha256:47f553bc5a202559"
+lastPushedMetaChecksum: "sha256:5609b8c535c88f44"
