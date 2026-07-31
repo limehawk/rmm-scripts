@@ -1,19 +1,27 @@
 name: workstation_rename_manual.ps1
-description: Renames Windows device with optional custom client segment (Level)
+description: Renames Windows device to CLIENT-USERUUID using the cf_client_prefix field (Level)
 shell: POWERSHELL
 runAs: SYSTEM
 timeout: 60
 readme: |
   Purpose
   -------
-  Renames a Windows device to CLIENT-USERUUID (exactly 15 chars). Optional
-  hardcoded $CUSTOM_CLIENT_OVERRIDE in the script body; otherwise uses the Level
-  group name as a variable-length client segment.
-  
+  Renames a Windows device to CLIENT-USERUUID (exactly 15 chars). The client
+  segment comes from the cf_client_prefix custom field, set once per client
+  group and inherited by every device in it (e.g. BELL -> BELL-MICHELL004).
+
   Usage Notes
   -----------
-  - Edit CUSTOM_CLIENT_OVERRIDE (e.g. BELL) for a fixed client code
-  - Leave empty to use {{level_group_name}}
+  - Set the prefix per client group, not per device:
+      levelcli custom-fields set --field <client_prefix-id> \
+        --assigned-to <group-id> BELL
+  - Falls back to {{level_group_name}} if the field is unset, which yields the
+    full sanitized group name (Bell Companies -> BELLCOMPANI-004) - set the
+    field to avoid that
+  - $CUSTOM_CLIENT_OVERRIDE in the script body still wins if set, but the repo
+    syncs one copy to Level, so leave it empty
+  - User segment is the console user (Win32_ComputerSystem.UserName); the run
+    is skipped with status no_user when nobody is logged in
   - Reboot required for hostname change to take effect
   - Output slots: DesiredHostname, RenameStatus
   
@@ -21,6 +29,7 @@ readme: |
   ------------
   - Windows 10/11
   - Level agent; run as System
+  - cf_client_prefix set on the client group, or device in a named group
 variables:
   - name: DesiredHostname
     description: Built 15-char hostname (CLIENT-USERUUID)
