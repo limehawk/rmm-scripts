@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Rename Workstation Auto                                     v9.0.1
+ SCRIPT   : Rename Workstation Auto                                     v9.0.2
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\workstation_rename_auto.ps1
@@ -112,6 +112,13 @@ $ErrorActionPreference = 'Stop'
    NOTE                     : CHANGE TAKES EFFECT AFTER REBOOT
    RESULT                   : RENAME COMMAND ISSUED
 
+   [INFO] LEVEL OUTPUT SLOTS
+   ==============================================================
+    For automations - map these in the Run Script action to branch on
+    them. Printing as raw text below means this was an ad-hoc run.
+    {{DesiredHostname=BEL-JSMITH89ABC}}
+    {{RenameStatus=scheduled}}
+
    [OK] FINAL STATUS
    ==============================================================
    RENAME SCHEDULED IF NEEDED. REBOOT TO APPLY NEW HOSTNAME
@@ -122,6 +129,10 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-31 v9.0.2 Print the Level output slots under their own labelled
+                   section so the raw {{name=value}} tokens read as intentional
+                   on an ad-hoc run (they are only mapped by an automation's
+                   Run Script action).
  2026-07-31 v9.0.1 Resolve the user segment from the console user, not
                    $env:USERNAME - Level runs as SYSTEM, so the old order built
                    names like BEL-SYSTEM... Skip the rename (status no_user)
@@ -248,12 +259,23 @@ function Test-LevelInterpolated {
     }
     return $true
 }
+$script:SlotHeaderShown = $false
 function Write-LevelSlot {
-    # Emit a Level script-variable output slot: {{name=value}}
+    # Emit a Level script-variable output slot: {{name=value}}. An automation's
+    # Run Script action maps the slot to an automation variable so later steps
+    # can branch on it. Run ad-hoc there is no mapping, so the token just prints.
     param([string]$Name, [string]$Value)
+    if (-not $script:SlotHeaderShown) {
+        Write-Host ""
+        Write-Host "[INFO] LEVEL OUTPUT SLOTS"
+        Write-Host ("=" * 62)
+        Write-Host " For automations - map these in the Run Script action to branch on"
+        Write-Host " them. Printing as raw text below means this was an ad-hoc run."
+        $script:SlotHeaderShown = $true
+    }
     $open = [string][char]123 + [string][char]123
     $close = [string][char]125 + [string][char]125
-    Write-Host ($open + $Name + '=' + $Value + $close)
+    Write-Host (" " + $open + $Name + '=' + $Value + $close)
 }
 function Write-Section {
     param([string]$title, [string]$status = "INFO")
