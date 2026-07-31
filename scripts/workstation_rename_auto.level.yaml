@@ -27,4 +27,4 @@ variables:
 - name: DesiredHostname
   description: Built 15-char hostname (CLIENT3-USERUUID)
 - name: RenameStatus
-  description: already_matches | scheduled | warning | error
+  description: already_matches | scheduled | no_user | warning | error
