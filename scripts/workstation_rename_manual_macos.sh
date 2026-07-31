@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Workstation Manual-Rename (macOS)                            v2.0.0
+#  SCRIPT   : Workstation Manual-Rename (macOS)                            v2.1.0
 #  AUTHOR   : Limehawk.io
 #  DATE     : July 2026
 #  USAGE    : sudo ./workstation_rename_manual_macos.sh
@@ -26,6 +26,7 @@
 #  DATA SOURCES & PRIORITY
 #
 #    - Hardcoded CUSTOM_CLIENT_OVERRIDE (primary if non-empty)
+#    - Level custom field: {{cf_client_prefix}} (set per client group)
 #    - Level system variable: {{level_group_name}} (fallback)
 #    - Console User: Current logged-in user
 #    - Hardware UUID: System's unique identifier
@@ -33,6 +34,7 @@
 #  REQUIRED INPUTS
 #
 #    - CUSTOM_CLIENT: optional override in script body (e.g. BELL)
+#    - CLIENT_PREFIX: Level {{cf_client_prefix}} custom field (e.g. BELL)
 #    - CLIENT_NAME: Level {{level_group_name}} fallback
 #
 #  SETTINGS
@@ -62,7 +64,7 @@
 #
 #    - Root/sudo access (Level runAs: SYSTEM)
 #    - macOS 10.14 or later
-#    - CUSTOM_CLIENT_OVERRIDE set, or device in a named Level group
+#    - cf_client_prefix set on the client group, or device in a named group
 #
 #  SECURITY NOTES
 #
@@ -108,6 +110,10 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-07-31 v2.1.0 Client segment from the {{cf_client_prefix}} Level custom
+#                    field (set per client group), matching the Windows script;
+#                    skip the rename with status no_user when nobody is at the
+#                    console rather than building a userless name.
 #  2026-07-22 v2.0.0 Ported to Level.io: hardcoded custom override;
 #                    fallback {{level_group_name}}; emit Level output slots
 #  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
@@ -120,8 +126,12 @@ set -e
 # ============================================================================
 # HARDCODED INPUTS
 # ============================================================================
-# Optional override: set non-empty (e.g. "BELL") to force client segment.
+# Client segment, in priority order:
+#   1. CUSTOM_CLIENT_OVERRIDE - emergency hardcode; leave empty in the repo
+#   2. {{cf_client_prefix}}   - Level custom field, set per client group
+#   3. {{level_group_name}}   - fallback; the group's full name, sanitized
 CUSTOM_CLIENT_OVERRIDE=""
+CLIENT_PREFIX="{{cf_client_prefix}}"
 CLIENT_NAME="{{level_group_name}}"
 LEVEL_DEVICE_HOSTNAME="{{level_device_hostname}}"
 MAX_HOST_LEN=15
@@ -165,6 +175,10 @@ if [ -n "$CUSTOM_CLIENT_OVERRIDE" ]; then
     CLIENT_SEG=$(sanitize "$CUSTOM_CLIENT_OVERRIDE")
     print_kv "Custom Client" "$CUSTOM_CLIENT_OVERRIDE"
     print_kv "Client Segment (custom)" "$CLIENT_SEG"
+elif [ -n "$CLIENT_PREFIX" ] && [[ "$CLIENT_PREFIX" != *"{{"* ]]; then
+    CLIENT_SEG=$(sanitize "$CLIENT_PREFIX")
+    print_kv "Client Prefix (cf)" "$CLIENT_PREFIX"
+    print_kv "Client Segment (cf_client_prefix)" "$CLIENT_SEG"
 elif [ -n "$CLIENT_NAME" ] && [[ "$CLIENT_NAME" != *"{{"* ]]; then
     CLIENT_SEG=$(sanitize "$CLIENT_NAME")
     print_kv "Client Name (group)" "$CLIENT_NAME"
@@ -173,7 +187,7 @@ else
     echo ""
     echo "[ERROR] ERROR OCCURRED"
     echo "=============================================================="
-    echo "SET CUSTOM_CLIENT_OVERRIDE OR RUN VIA LEVEL WITH A GROUP NAME"
+    echo "SET cf_client_prefix ON THE GROUP OR RUN VIA LEVEL WITH A GROUP NAME"
     echo ""
     emit_level_slot "RenameStatus" "error"
     exit 1
@@ -196,6 +210,16 @@ print_section "INFO" "SYSTEM VALUES"
 CURRENT_USER=$(stat -f "%Su" /dev/console 2>/dev/null || echo "")
 if [ -z "$CURRENT_USER" ] || [ "$CURRENT_USER" = "root" ]; then
     CURRENT_USER=$(who | grep console | awk '{print $1}' | head -1)
+fi
+if [ -z "$CURRENT_USER" ] || [ "$CURRENT_USER" = "root" ]; then
+    print_kv "Console User" "<none>"
+    echo ""
+    echo "[INFO] RENAME ACTION"
+    echo "=============================================================="
+    echo " NO INTERACTIVE USER - SKIPPING RENAME"
+    echo " RENAMING NOW WOULD CHURN THE NAME ONCE A USER LOGS IN"
+    emit_level_slot "RenameStatus" "no_user"
+    exit 0
 fi
 USER_SEG=$(sanitize "$CURRENT_USER")
 USER_SEG="${USER_SEG:0:$MAX_USER_LEN}"

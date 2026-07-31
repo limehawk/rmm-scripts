@@ -1,17 +1,23 @@
 name: workstation_rename_manual_macos.sh
-description: Renames macOS device with optional custom client segment (Level)
+description: Renames macOS device to CLIENT-USERUUID using the cf_client_prefix field (Level)
 shell: BASH
 runAs: SYSTEM
 timeout: 60
 readme: |
   Purpose
   -------
-  Renames a macOS device to CLIENT-USERUUID. Optional CUSTOM_CLIENT_OVERRIDE in
-  script body; otherwise Level group name (variable length).
+  Renames a macOS device to CLIENT-USERUUID. The client segment comes from the
+  cf_client_prefix custom field, set once per client group and inherited by every
+  device in it. Mirrors workstation_rename_manual.ps1 on Windows.
 
   Usage Notes
   -----------
-  - Edit CUSTOM_CLIENT_OVERRIDE for a fixed client code
+  - Set the prefix per client group:
+      levelcli custom-fields set --field <client_prefix-id> \
+        --assigned-to <group-id> BELL
+  - Falls back to {{level_group_name}} if the field is unset
+  - User segment is the console user; the run is skipped with status no_user
+    when nobody is logged in
   - Output slots: DesiredHostname, RenameStatus
 
   Requirements
@@ -22,4 +28,4 @@ variables:
 - name: DesiredHostname
   description: Built 15-char hostname (CLIENT-USERUUID)
 - name: RenameStatus
-  description: already_matches | applied | error
+  description: already_matches | applied | no_user | error
