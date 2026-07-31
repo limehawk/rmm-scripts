@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Rename Workstation Manual                                   v9.0.1
+ SCRIPT   : Rename Workstation Manual                                   v9.1.0
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\workstation_rename_manual.ps1
@@ -21,13 +21,14 @@ $ErrorActionPreference = 'Stop'
  PURPOSE
 
    Rename a Windows device using CLIENT-USERUUID (exactly 15 chars).
-   Optional hardcoded client override; otherwise Level group name is used
-   (variable-length sanitized segment, not forced to 3 chars).
+   The client segment comes from the {{cf_client_prefix}} Level custom field,
+   set once per client group (variable-length, not forced to 3 chars).
    No external RMM API call — Level inventory follows the OS hostname after reboot.
 
    Naming (Windows-legal; max 15 chars; no trailing hyphen):
      CLIENT-USERUUID
-       CLIENT : $CUSTOM_CLIENT_OVERRIDE if set, else {{level_group_name}}
+       CLIENT : {{cf_client_prefix}} (Level custom field, per client group),
+                else {{level_group_name}}. $CUSTOM_CLIENT_OVERRIDE wins if set.
                 Variable length; sanitized A-Z0-9; trimmed if needed to ensure fit.
        USER   : Sanitized username; maximized; truncated if needed to ensure fit.
        UUID   : SMBIOS UUID tail; at least 3 chars; trimmed to fill exactly 15.
@@ -40,15 +41,21 @@ $ErrorActionPreference = 'Stop'
 
  DATA SOURCES & PRIORITY
 
-   1. Hardcoded $CUSTOM_CLIENT_OVERRIDE (set non-empty to force client segment)
-   2. Level system variable {{level_group_name}}
-   3. System information (UUID, username, hostname)
+   1. Hardcoded $CUSTOM_CLIENT_OVERRIDE (emergency override; empty in repo)
+   2. Level custom field {{cf_client_prefix}} (set per client group)
+   3. Level system variable {{level_group_name}}
+   4. System information (UUID, username, hostname)
 
  REQUIRED INPUTS
 
-   - $CUSTOM_CLIENT_OVERRIDE : optional; edit in script body before run
-                               (e.g. "BELL", "DDI"). Empty → use group name.
-   - {{level_group_name}}    : Level group name (fallback client segment)
+   - {{cf_client_prefix}}    : Level custom field holding the client code
+                               (e.g. "BELL"). Set once per client group; every
+                               device in the group inherits it:
+                                 levelcli custom-fields set --field <field-id> \
+                                   --assigned-to <group-id> BELL
+   - $CUSTOM_CLIENT_OVERRIDE : optional emergency override in the script body;
+                               leave empty in the repo (one copy syncs to Level)
+   - {{level_group_name}}    : Level group name (last-resort client segment)
 
  SETTINGS
 
@@ -58,7 +65,7 @@ $ErrorActionPreference = 'Stop'
 
  BEHAVIOR
 
-   1. Uses custom client override if set, else Level group name
+   1. Resolves the client segment: override, else cf_client_prefix, else group name
    2. Retrieves system UUID and logged-in username
    3. Builds hostname: CLIENT-USERUUID (exactly 15 chars)
    4. Renames computer if name differs from current
@@ -70,7 +77,7 @@ $ErrorActionPreference = 'Stop'
    - Windows 10/11
    - Admin privileges (Level runAs: SYSTEM)
    - Level agent installed
-   - Either $CUSTOM_CLIENT_OVERRIDE set, or device in a named Level group
+   - cf_client_prefix set on the client group, or device in a named group
 
  SECURITY NOTES
 
@@ -90,7 +97,8 @@ $ErrorActionPreference = 'Stop'
 
    [INFO] LEVEL VARIABLES
    ==============================================================
-   Custom Client Override   : BELL
+   Custom Client Override   : <none>
+   Client Prefix (cf)       : BELL
    Group Name (level)       : Bell Companies
    Device Hostname (level)  : DESKTOP-ABC123
    MaxUserSegmentLen        : 8
@@ -104,7 +112,7 @@ $ErrorActionPreference = 'Stop'
 
    [INFO] DERIVED SEGMENTS
    ==============================================================
-   CLIENT SEGMENT           : BELL
+   CLIENT SEGMENT           : BELL (from cf_client_prefix)
    USER SEGMENT             : JSMITH
    DESIRED/OS NAME          : BELL-JSMITH89AB
    Name Length              : 15
@@ -126,6 +134,12 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-31 v9.1.0 Client segment from the {{cf_client_prefix}} Level custom
+                   field (set per client group, inherited by its devices) so the
+                   full client code survives - "BELL" instead of the group name.
+                   $CUSTOM_CLIENT_OVERRIDE still wins; group name is the
+                   fallback. An unset field arriving as a literal token is
+                   treated as unset.
  2026-07-31 v9.0.1 Resolve the user segment from the console user, not
                    $env:USERNAME - Level runs as SYSTEM, so the old order built
                    names like BELL-SYSTEM... Skip the rename (status no_user)
@@ -154,9 +168,15 @@ $ErrorActionPreference = 'Stop'
 #>
 
 # ============================== SETTINGS =====================================
-# Optional override: set a non-empty value (e.g. "BELL") to force the client
-# segment. Leave empty to use the Level group name (variable-length sanitized).
+# Client segment, in priority order:
+#   1. $CUSTOM_CLIENT_OVERRIDE - emergency hardcode; leave empty in the repo
+#   2. {{cf_client_prefix}}    - Level custom field, set per client group
+#                                (levelcli custom-fields set --field <id>
+#                                 --assigned-to <group-id> BELL); devices in
+#                                the group inherit it
+#   3. {{level_group_name}}    - fallback; the group's full name, sanitized
 $CUSTOM_CLIENT_OVERRIDE  = ""
+$CLIENT_PREFIX_INPUT     = "{{cf_client_prefix}}"
 $CLIENT_NAME_INPUT       = "{{level_group_name}}"
 $LEVEL_DEVICE_HOSTNAME   = "{{level_device_hostname}}"
 
@@ -234,6 +254,14 @@ function Is-BenignRenameError {
     return ($m -like "*THE NEW NAME IS THE SAME AS THE CURRENT NAME*") -or
            ($m -like "*SKIP COMPUTER*" -and $m -like "*SAME AS THE CURRENT NAME*")
 }
+function Get-LevelValue {
+    # An unset custom field can come back as the literal {{cf_...}} token rather
+    # than an empty string - treat both as "not set" so the next source wins.
+    param([string]$Value)
+    if ([string]::IsNullOrWhiteSpace($Value)) { return "" }
+    if ($Value -match '\{\{') { return "" }
+    return $Value
+}
 function Resolve-InteractiveUser {
     # Level runs this as SYSTEM, so $env:USERNAME is "SYSTEM" (or the machine
     # account) rather than the person at the keyboard. Win32_ComputerSystem's
@@ -276,6 +304,7 @@ function PrintKV {
 # =============================================================================
 Write-Section "LEVEL VARIABLES"
 PrintKV "Custom Client Override" ($(if ($CUSTOM_CLIENT_OVERRIDE) { $CUSTOM_CLIENT_OVERRIDE } else { "<none>" }))
+PrintKV "Client Prefix (cf)" ($(if (Get-LevelValue -Value $CLIENT_PREFIX_INPUT) { $CLIENT_PREFIX_INPUT } else { "<unset>" }))
 PrintKV "Group Name (level)" $CLIENT_NAME_INPUT
 PrintKV "Device Hostname (level)" $LEVEL_DEVICE_HOSTNAME
 PrintKV "MaxUserSegmentLen" $MaxUserSegmentLen
@@ -297,12 +326,18 @@ try {
     if ([string]::IsNullOrWhiteSpace($UUID_RAW)) { throw "UUID NOT FOUND" }
 
     $CLIENT_SEG = SanitizeSegment -s $CUSTOM_CLIENT_OVERRIDE
+    $CLIENT_SOURCE = 'CUSTOM_CLIENT_OVERRIDE'
+    if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) {
+        $CLIENT_SEG = SanitizeSegment -s (Get-LevelValue -Value $CLIENT_PREFIX_INPUT)
+        $CLIENT_SOURCE = 'cf_client_prefix'
+    }
     if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) {
         [void](Test-LevelInterpolated -Value $CLIENT_NAME_INPUT -TokenName 'level_group_name')
         if ([string]::IsNullOrWhiteSpace($CLIENT_NAME_INPUT)) {
-            throw "CLIENT SEGMENT EMPTY — SET CUSTOM_CLIENT_OVERRIDE OR ASSIGN DEVICE TO A LEVEL GROUP"
+            throw "CLIENT SEGMENT EMPTY — SET cf_client_prefix ON THE GROUP OR ASSIGN DEVICE TO A LEVEL GROUP"
         }
         $CLIENT_SEG = SanitizeSegment -s $CLIENT_NAME_INPUT
+        $CLIENT_SOURCE = 'level_group_name'
     }
     if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) { throw "CLIENT SEGMENT EMPTY AFTER SANITIZE" }
 
@@ -321,7 +356,7 @@ try {
     $DESIRED_NAME = Build-ClientUserUuidHyphenName -Client $CLIENT_SEG -User $USER_SEG -UuidClean $uuidClean -MaxLen $MaxHostLen -MinUuid $MinUuidSuffixLen
 
     Write-Section "DERIVED SEGMENTS" "INFO"
-    PrintKV "CLIENT SEGMENT" $CLIENT_SEG
+    PrintKV "CLIENT SEGMENT" ("{0} (from {1})" -f $CLIENT_SEG, $CLIENT_SOURCE)
     PrintKV "USER SEGMENT" ($(if ($USER_SEG) { $USER_SEG } else { "<none>" }))
     PrintKV "DESIRED/OS NAME" $DESIRED_NAME
     PrintKV "Name Length" ($DESIRED_NAME.Length.ToString())
