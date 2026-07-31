@@ -25,7 +25,7 @@ variables:
   - name: DesiredHostname
     description: Built 15-char hostname (CLIENT-USERUUID)
   - name: RenameStatus
-    description: already_matches | scheduled | warning | error
+    description: already_matches | scheduled | no_user | warning | error
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNQ
 lastPushedChecksum: "sha256:48a2572e8227da8f"

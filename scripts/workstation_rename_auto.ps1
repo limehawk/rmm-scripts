@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Rename Workstation Auto                                     v9.0.0
+ SCRIPT   : Rename Workstation Auto                                     v9.0.1
  AUTHOR   : Limehawk.io
  DATE     : July 2026
  USAGE    : .\workstation_rename_auto.ps1
@@ -122,6 +122,10 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-07-31 v9.0.1 Resolve the user segment from the console user, not
+                   $env:USERNAME - Level runs as SYSTEM, so the old order built
+                   names like BEL-SYSTEM... Skip the rename (status no_user)
+                   when nobody is logged in rather than churn the name later.
  2026-07-22 v9.0.0 Ported to Level.io: drop SuperOps module/API/placeholders;
                    client from {{level_group_name}}; emit Level output slots
  2026-01-19 v8.2.4 Updated to two-line ASCII console output style
@@ -226,6 +230,16 @@ function Is-BenignRenameError {
     return ($m -like "*THE NEW NAME IS THE SAME AS THE CURRENT NAME*") -or
            ($m -like "*SKIP COMPUTER*" -and $m -like "*SAME AS THE CURRENT NAME*")
 }
+function Resolve-InteractiveUser {
+    # Level runs this as SYSTEM, so $env:USERNAME is "SYSTEM" (or the machine
+    # account) rather than the person at the keyboard. Win32_ComputerSystem's
+    # UserName is the console user and is the only trustworthy source here.
+    param([string]$ConsoleUser, [string]$EnvUser)
+    if (-not [string]::IsNullOrWhiteSpace($ConsoleUser)) { return ($ConsoleUser -split '\\')[-1] }
+    if ([string]::IsNullOrWhiteSpace($EnvUser)) { return "" }
+    if ($EnvUser -eq 'SYSTEM' -or $EnvUser.EndsWith('$')) { return "" }
+    return $EnvUser
+}
 function Test-LevelInterpolated {
     param([string]$Value, [string]$TokenName)
     if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
@@ -281,9 +295,14 @@ try {
     $CLIENT_SEG = Get-Abbr3 -s $CLIENT_NAME_INPUT
     if ([string]::IsNullOrWhiteSpace($CLIENT_SEG)) { throw "CLIENT SEGMENT EMPTY AFTER SANITIZE" }
 
-    $LOGGEDINUSER = $ENV_USERNAME
-    if ([string]::IsNullOrWhiteSpace($LOGGEDINUSER) -and $CIM_USER) {
-        $LOGGEDINUSER = ($CIM_USER -split '\\')[-1]
+    $LOGGEDINUSER = Resolve-InteractiveUser -ConsoleUser $CIM_USER -EnvUser $ENV_USERNAME
+    if ([string]::IsNullOrWhiteSpace($LOGGEDINUSER)) {
+        Write-Section "RENAME ACTION" "INFO"
+        PrintKV "STATUS" "NO INTERACTIVE USER - SKIPPING RENAME"
+        PrintKV "NOTE" "RENAMING NOW WOULD CHURN THE NAME ONCE A USER LOGS IN"
+        Write-LevelSlot -Name "RenameStatus" -Value "no_user"
+        Write-Section "SCRIPT COMPLETED" "OK"
+        exit 0
     }
     $USER_SEG = SanitizeSegment -s $LOGGEDINUSER -maxLen $MaxUserSegmentLen
     $uuidClean = $UUID_RAW.Replace('-', '').ToUpper()
