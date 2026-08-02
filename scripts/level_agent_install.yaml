@@ -1,5 +1,5 @@
 name: level_agent_install.ps1
-description: Silently installs Level RMM agent with install key and group id
+description: Silently installs the Level RMM agent and verifies enrollment
 language: PowerShell
 tags:
   - Software
@@ -10,30 +10,36 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Downloads the Level Windows MSI and silently installs the agent, registering it to a specific Level device group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script.
-  
+  Downloads the Level Windows MSI and silently installs the agent, registering it to a specific Level device group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script. The script verifies that the agent enrolled and connected to Level, not just that files landed on disk.
+
   Usage Notes
   -----------
-  - Skips if Level is already installed (optional, default on)
   - Downloads https://downloads.level.io/level.msi over HTTPS
-  - Runs msiexec with LEVEL_API_KEY=<key>:<groupId> /qn
-  - Verifies install via Program Files path or Level service
+  - Runs msiexec with LEVEL_API_KEY=key:groupId /qn (verified 2026-08-02)
+  - Verifies enrollment with level.exe --check (live connection required)
+  - Skips only when an existing agent reports a live connection; reinstalls over a broken one
+  - Accepts keys that already end in :groupId without doubling the group
   - Cleans up temporary MSI after completion
-  - Hard-fails if group id is empty or unreplaced
-  
+  - Hard-fails if the install key or group id is empty or unreplaced
+
+  Group Assignment Caveat
+  -----------------------
+  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or wipe the agent identity first (stop the Level service, remove C:\Program Files\Level, reinstall). A wipe creates a new device record; the old record goes offline as a duplicate.
+
   Requirements
   ------------
   - Windows 10/11 or Windows Server
   - Administrator privileges
   - PowerShell 5.1 or later
-  - Network access to downloads.level.io
+  - Network access to downloads.level.io, online.level.io, agents.level.io
   - $YourLevelInstallKeyHere: Level UI install key from Add device (not REST API key)
   - $YourLevelGroupIdHere: numeric Level group id (required, e.g. 55904)
-  
+
   Security
   --------
   - No secrets in the public repo — keys only via SuperOps runtime vars
   - Install key is masked in console output
+  - Output uses [masked], not angle brackets — some RMM log viewers strip angle-bracket text as HTML
 favourite: false
 shared: false
 runtimeVariables:
