@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Level Agent Install                                           v2.0.0
+ SCRIPT   : Level Agent Install                                           v2.0.1
  AUTHOR   : Limehawk.io
  DATE     : August 2026
  USAGE    : .\level_agent_install.ps1
@@ -65,9 +65,12 @@ $ErrorActionPreference = 'Stop'
    The group id in the install key only applies at FIRST enrollment. A machine
    with an existing agent identity re-attaches to its existing Level device
    record and keeps its current group (or no group). To re-home such a device,
-   move it in the Level console, or wipe the agent identity first (stop the
-   Level service, remove C:\Program Files\Level, then reinstall). A wipe
-   creates a new device record; the old record goes offline as a duplicate.
+   move it in the Level console, or uninstall the agent first with the
+   official command, then reinstall:
+     & 'C:\Program Files\Level\level.exe' --action uninstall
+   The agent is not a registered MSI product — msiexec /x returns 1605.
+   A fresh enrollment creates a new device record; the old record goes
+   offline as a duplicate to delete in the Level console.
 
  PREREQUISITES
 
@@ -138,6 +141,9 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-02 v2.0.1 Document the official uninstall command for re-homing
+                   (level.exe --action uninstall); the agent is not a
+                   registered MSI product, so msiexec /x returns 1605.
  2026-08-02 v2.0.0 Replace the Program Files existence check with level.exe
                    --check, so a failed enrollment no longer reports SUCCESS.
                    Skip an existing agent only when it reports a live

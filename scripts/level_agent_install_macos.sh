@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Level Agent Install (macOS)                                  v2.0.0
+#  SCRIPT   : Level Agent Install (macOS)                                  v2.0.1
 #  AUTHOR   : Limehawk.io
 #  DATE     : August 2026
 #  USAGE    : sudo ./level_agent_install_macos.sh
@@ -65,9 +65,11 @@
 #    The group id in the install key only applies at FIRST enrollment. A
 #    machine with an existing agent identity re-attaches to its existing Level
 #    device record and keeps its current group (or no group). To re-home such
-#    a device, move it in the Level console, or wipe the agent identity first.
-#    A wipe creates a new device record; the old record goes offline as a
-#    duplicate.
+#    a device, move it in the Level console, or uninstall the agent first
+#    with the official command, then reinstall:
+#      sudo /usr/local/bin/level --action uninstall
+#    A fresh enrollment creates a new device record; the old record goes
+#    offline as a duplicate to delete in the Level console.
 #
 #  PREREQUISITES
 #
@@ -131,6 +133,8 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-08-02 v2.0.1 Document the official uninstall command for re-homing
+#                    (sudo /usr/local/bin/level --action uninstall).
 #  2026-08-02 v2.0.0 Replace the path/launchctl existence check with
 #                    level --check, so a failed enrollment no longer reports
 #                    SUCCESS. Skip an existing agent only when it reports a

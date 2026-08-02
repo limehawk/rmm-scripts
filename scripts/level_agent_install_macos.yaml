@@ -11,7 +11,7 @@ readme: |
   Purpose
   -------
   Downloads and runs the Level macOS installer, registering the device to a specific Level group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script. The script verifies that the agent enrolled and connected to Level, not just that files landed on disk.
-
+  
   Usage Notes
   -----------
   - Runs official installer: LEVEL_API_KEY=key:groupId bash -c "$(curl -L https://downloads.level.io/install_mac_os.sh)"
@@ -19,11 +19,11 @@ readme: |
   - Skips only when an existing agent reports a live connection; reinstalls over a broken one
   - Accepts keys that already end in :groupId without doubling the group
   - Hard-fails if the install key or group id is empty or unreplaced
-
+  
   Group Assignment Caveat
   -----------------------
-  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or wipe the agent identity first and reinstall. A wipe creates a new device record; the old record goes offline as a duplicate.
-
+  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or uninstall the agent first with the official command, then reinstall: sudo /usr/local/bin/level --action uninstall. A fresh enrollment creates a new device record; the old record goes offline as a duplicate to delete in the Level console.
+  
   Requirements
   ------------
   - macOS operating system
@@ -31,7 +31,7 @@ readme: |
   - curl and network access to downloads.level.io, online.level.io, agents.level.io
   - $YourLevelInstallKeyHere: Level UI install key from Add device (not REST API key)
   - $YourLevelGroupIdHere: numeric Level group id (required, e.g. 55896)
-
+  
   Security
   --------
   - No secrets in the public repo — keys only via SuperOps runtime vars
@@ -44,5 +44,5 @@ runtimeVariables:
   - name: YourLevelInstallKeyHere
   - name: YourLevelGroupIdHere
 scriptId: "7330712502440001536"
-lastPushedChecksum: "sha256:b99bbfa346ec46c5"
-lastPushedMetaChecksum: "sha256:a5231bff84a382dc"
+lastPushedChecksum: "sha256:013830eb9c97e877"
+lastPushedMetaChecksum: "sha256:1c8415458ec84876"
