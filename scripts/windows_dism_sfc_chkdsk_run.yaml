@@ -10,7 +10,7 @@ readme: |
   Purpose
   -------
   Runs standard Windows health checks and repair commands including DISM image health scans, disk checks, system file verification, and component cleanup. Designed for unattended execution in RMM environments to perform routine system maintenance and repair operations.
-
+  
   Usage Notes
   -----------
   - All maintenance operations are optional via hardcoded input flags
@@ -24,7 +24,7 @@ readme: |
   - Failed operations are reported but script continues to next operation
   - If corruption is found AND RestoreHealth succeeds and RebootWhenCorruptionFound is true, schedules a 5-minute reboot so the user can save work
   - No reboot when healthy, or when corruption was found but repair failed
-
+  
   Requirements
   ------------
   - PowerShell 5.1 or later
@@ -37,7 +37,7 @@ readme: |
   - $RunSfc: whether to run System File Checker (default: true)
   - $ChkdskParameters: chkdsk parameters; use /scan for quick scan or /f /r for full check (default: /scan)
   - $RebootWhenCorruptionFound: warn and reboot only when ScanHealth found corruption AND RestoreHealth fixed it (default: true)
-
+  
   Security
   --------
   - Requires elevated permissions to modify system components
@@ -45,5 +45,5 @@ readme: |
 favourite: false
 shared: true
 scriptId: "1907390810231676928"
-lastPushedChecksum: "sha256:be481319dad82072"
-lastPushedMetaChecksum: "sha256:e863d3038b50b3df"
+lastPushedChecksum: "sha256:b4ad9d2189166041"
+lastPushedMetaChecksum: "sha256:d0e064877031ec60"

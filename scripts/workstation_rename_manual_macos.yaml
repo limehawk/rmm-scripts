@@ -1,0 +1,13 @@
+name: workstation_rename_manual_macos.sh
+description: Renames macOS device with custom name via RMM variable
+language: Bash
+tags:
+  - Administration
+  - Mac
+runAs: SYSTEM_USER
+timeout: 15
+favourite: false
+shared: false
+scriptId: "259059164883050496"
+lastPushedChecksum: "sha256:cf6852c71596e859"
+lastPushedMetaChecksum: "sha256:e0191c77df891a1b"

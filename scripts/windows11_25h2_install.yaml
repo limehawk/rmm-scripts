@@ -10,7 +10,7 @@ readme: |
   Purpose
   -------
   Detects the current Windows version and chooses a clean upgrade path to Windows 11, version 25H2 for Level RMM (run as System). Already 25H2 is a no-op success. Windows 11 24H2 (build 26100) with CU UBR 5074+ uses enablement package KB5054156 (shared 24H2/25H2 core; eKB is a small master switch plus one restart). Windows 11 24H2 with UBR below 5074 fails with a clear CU prerequisite. Windows 10 or Windows 11 older than 24H2 takes a full feature upgrade via Windows Update (if offered) then Windows 11 Installation Assistant.
-
+  
   Usage Notes
   -----------
   - eKB method: wusa.exe /quiet /norestart (then optional scheduled reboot)
@@ -23,7 +23,7 @@ readme: |
   - Prefer Windows Update is true by default; falls back to Installation Assistant
   - Level timeout: 14400 seconds (4 hours) recommended; run as System
   - Validate inputs, detect OS path, run health preflight, execute eKB/WU/IA, report status
-
+  
   Requirements
   ------------
   - Level agent; run as System
@@ -42,7 +42,7 @@ readme: |
   - $RunHealthPreflight: DISM ScanHealth before upgrade (default true)
   - $RunHealthRestore: DISM RestoreHealth if corruption found
   - $healthRebootDelaySeconds: user-warn reboot delay after health repair
-
+  
   Security
   --------
   - No secrets in logs
@@ -52,3 +52,6 @@ readme: |
   - Post-repair resume copies this script under ProgramData and registers a SYSTEM startup task; artifacts are removed after a successful resume/upgrade start
 favourite: false
 shared: false
+scriptId: "7890901402481967104"
+lastPushedChecksum: "sha256:d2a0271f2d08f3ee"
+lastPushedMetaChecksum: "sha256:c48e5ba48e004442"

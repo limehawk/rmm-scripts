@@ -1,0 +1,13 @@
+name: workstation_rename_manual.ps1
+description: Renames Windows device with custom client segment override
+language: PowerShell
+tags:
+  - Administration
+  - Windows
+runAs: SYSTEM_USER
+timeout: 15
+favourite: false
+shared: true
+scriptId: "8083647452427669504"
+lastPushedChecksum: "sha256:2140a719a807fc81"
+lastPushedMetaChecksum: "sha256:0d61c0306d0826a8"
