@@ -1,5 +1,5 @@
 name: level_agent_install_macos.sh
-description: Installs Level RMM agent on macOS with install key and group id
+description: Installs the Level RMM agent on macOS and verifies enrollment
 language: Bash
 tags:
   - Software
@@ -10,27 +10,33 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Downloads and runs the Level macOS installer, registering the device to a specific Level group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script.
-  
+  Downloads and runs the Level macOS installer, registering the device to a specific Level group. Install key and group id come from SuperOps runtime variables at run time — nothing secret is stored in the public script. The script verifies that the agent enrolled and connected to Level, not just that files landed on disk.
+
   Usage Notes
   -----------
-  - Skips if Level is already installed (optional, default on)
-  - Runs official installer: LEVEL_API_KEY=<key>:<groupId> bash -c "$(curl -L https://downloads.level.io/install_mac_os.sh)"
-  - Verifies install via Application path, Library path, or launchctl
-  - Hard-fails if group id is empty or unreplaced
-  
+  - Runs official installer: LEVEL_API_KEY=key:groupId bash -c "$(curl -L https://downloads.level.io/install_mac_os.sh)"
+  - Verifies enrollment with level --check (live connection required; retries up to ~60s before failing)
+  - Skips only when an existing agent reports a live connection; reinstalls over a broken one
+  - Accepts keys that already end in :groupId without doubling the group
+  - Hard-fails if the install key or group id is empty or unreplaced
+
+  Group Assignment Caveat
+  -----------------------
+  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or wipe the agent identity first and reinstall. A wipe creates a new device record; the old record goes offline as a duplicate.
+
   Requirements
   ------------
   - macOS operating system
   - Root/sudo privileges
-  - curl and network access to downloads.level.io
+  - curl and network access to downloads.level.io, online.level.io, agents.level.io
   - $YourLevelInstallKeyHere: Level UI install key from Add device (not REST API key)
   - $YourLevelGroupIdHere: numeric Level group id (required, e.g. 55896)
-  
+
   Security
   --------
   - No secrets in the public repo — keys only via SuperOps runtime vars
   - Install key is masked in console output
+  - Output uses [masked], not angle brackets — some RMM log viewers strip angle-bracket text as HTML
   - Installer downloaded over HTTPS
 favourite: false
 shared: false

@@ -2,16 +2,16 @@ name: sentinelone_install.ps1
 description: Silently installs SentinelOne endpoint agent with site token
 language: PowerShell
 tags:
-- Antivirus
-- Software
-- Windows
+  - Antivirus
+  - Software
+  - Windows
 runAs: SYSTEM_USER
 timeout: 15
 readme: |
   Purpose
   -------
   Installs SentinelOne endpoint agent silently using a site token. Downloads the installer from ConnectWise CDN (or custom URL) and performs installation with verification. Skips if already installed. The installed version will auto-update based on your S1 console Auto-Upgrade Policy settings, so the initial installer version does not matter.
-
+  
   Usage Notes
   -----------
   - Checks if SentinelOne is already installed (optional skip)
@@ -20,7 +20,7 @@ readme: |
   - Downloads installer from ConnectWise CDN or custom URL
   - Verifies installation success with multiple retry attempts
   - Cleans up temporary files after completion
-
+  
   Requirements
   ------------
   - Windows 10/11 or Windows Server
@@ -28,7 +28,7 @@ readme: |
   - PowerShell 5.1 or later
   - Network access to download URL (ConnectWise CDN or custom)
   - $SiteToken: SentinelOne site token for agent registration, injected at runtime from the Level custom field cf_s1_site_token ({{cf_s1_site_token}} placeholder). Get the token from S1 Console > Sentinels > Site Info
-
+  
   Security
   --------
   - Site token is embedded in script -- protect accordingly
@@ -36,7 +36,7 @@ readme: |
 favourite: false
 shared: false
 runtimeVariables:
-- name: SiteToken
-scriptId: '7562225567458115584'
-lastPushedChecksum: sha256:aab2ea4bf232ddc9
-lastPushedMetaChecksum: sha256:735f151624a1b339
+  - name: SiteToken
+scriptId: "7562225567458115584"
+lastPushedChecksum: "sha256:3a0ca6654acf5982"
+lastPushedMetaChecksum: "sha256:bf3088382c006632"

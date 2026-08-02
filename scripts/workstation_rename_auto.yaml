@@ -1,0 +1,13 @@
+name: workstation_rename_auto.ps1
+description: Auto-renames Windows device using CLIENT3-USER-UUID pattern
+language: PowerShell
+tags:
+  - Administration
+  - Windows
+runAs: SYSTEM_USER
+timeout: 15
+favourite: false
+shared: true
+scriptId: "8083616885623574528"
+lastPushedChecksum: "sha256:d5996dd1d435f7a6"
+lastPushedMetaChecksum: "sha256:d315c726eb8b62f5"

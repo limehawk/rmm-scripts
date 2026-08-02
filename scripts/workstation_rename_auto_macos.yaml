@@ -1,0 +1,13 @@
+name: workstation_rename_auto_macos.sh
+description: Auto-renames macOS device using CLIENT-USER-UUID pattern
+language: Bash
+tags:
+  - Administration
+  - Mac
+runAs: SYSTEM_USER
+timeout: 15
+favourite: false
+shared: false
+scriptId: "259059160919433216"
+lastPushedChecksum: "sha256:e20d54ceb44212c7"
+lastPushedMetaChecksum: "sha256:805b2c3bb7f990ef"
