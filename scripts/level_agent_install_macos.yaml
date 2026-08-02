@@ -22,7 +22,7 @@ readme: |
   
   Group Assignment Caveat
   -----------------------
-  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or wipe the agent identity first and reinstall. A wipe creates a new device record; the old record goes offline as a duplicate.
+  The group id only applies at FIRST enrollment. A machine with an existing agent identity re-attaches to its existing Level device record and keeps its current group. To re-home such a device, move it in the Level console, or uninstall the agent first with the official command, then reinstall: sudo /usr/local/bin/level --action uninstall. A fresh enrollment creates a new device record; the old record goes offline as a duplicate to delete in the Level console.
   
   Requirements
   ------------
