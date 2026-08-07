@@ -6,9 +6,9 @@
  ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
  ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : SuperOps Agent Uninstall (Windows)                            v1.1.1
+ SCRIPT   : SuperOps Agent Uninstall (Windows)                            v1.1.2
  AUTHOR   : Limehawk.io
- DATE      : January 2026
+ DATE      : August 2026
  USAGE    : .\superops_agent_uninstall.ps1
 ================================================================================
  FILE     : superops_agent_uninstall.ps1
@@ -90,6 +90,10 @@ DESCRIPTION : Uninstalls SuperOps RMM agent using official or registry method
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-07 v1.1.2 Fix strict-mode crash in the registry fallback: uninstall
+                   entries without DisplayName (patch/hotfix keys) threw
+                   "property cannot be found" and aborted the search. Guard
+                   DisplayName and UninstallString reads.
  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
  2025-12-23 v1.1.0 Updated to Limehawk Script Framework
  2025-11-02 v1.0.0 Initial release
@@ -193,7 +197,10 @@ try {
         $uninstallInfo = $null
         foreach ($regPath in $uninstallRegistryPaths) {
             if (Test-Path $regPath) {
-                $apps = Get-ChildItem $regPath | Get-ItemProperty | Where-Object { $_.DisplayName -like $productNamePattern }
+                # Guard the property reads: patch/hotfix registry entries have no
+                # DisplayName, and strict mode throws on missing properties.
+                $apps = Get-ChildItem $regPath | Get-ItemProperty |
+                    Where-Object { $_.PSObject.Properties['DisplayName'] -and $_.DisplayName -like $productNamePattern }
                 if ($apps) {
                     $uninstallInfo = $apps | Select-Object -First 1
                     break
@@ -204,7 +211,7 @@ try {
         if ($uninstallInfo) {
             Write-Host "Found SuperOps installation: $($uninstallInfo.DisplayName)"
 
-            if ($uninstallInfo.UninstallString) {
+            if ($uninstallInfo.PSObject.Properties['UninstallString'] -and $uninstallInfo.UninstallString) {
                 $uninstallString = $uninstallInfo.UninstallString
                 Write-Host "Uninstall string: $uninstallString"
 
