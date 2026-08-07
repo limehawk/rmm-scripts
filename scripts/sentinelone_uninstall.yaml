@@ -1,0 +1,39 @@
+name: sentinelone_uninstall.ps1
+description: Offline-uninstalls SentinelOne on Windows using the agent passphrase
+language: PowerShell
+tags:
+- Antivirus
+- Software
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Removes the SentinelOne Windows agent when console online-uninstall is not
+  completing. Uses the per-agent passphrase from the S1 console
+  (Actions > Show Passphrase) and runs uninstall.exe with offline verification.
+
+  Usage Notes
+  -----------
+  - Set SuperOps runtime variable YourPassphraseHere to the agent passphrase
+  - Passphrase is unique per agent — set it per device when running the script
+  - Idempotent: already-uninstalled machines exit 0
+  - Passphrase is never printed in script output
+  - Uses uninstall.exe /norestart /q /k "<passphrase>"
+
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - PowerShell 5.1 or later
+  - SYSTEM / Administrator (runAs SYSTEM_USER)
+  - Correct per-agent passphrase from S1 console
+
+  Security
+  --------
+  - Do not paste passphrases into shared notes that leave the ticket
+  - Script redacts passphrase from stdout
+favourite: false
+shared: false
+runtimeVariables:
+- name: YourPassphraseHere
