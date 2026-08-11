@@ -1,0 +1,31 @@
+name: agent_startup_fix.ps1
+description: Fixes RMM agent service startup with recovery options and delayed start
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+readme: |
+  Purpose
+  -------
+  Configures the RMM agent service with proper recovery options and delayed automatic start to prevent startup failures on slow or overloaded machines where services timeout during boot.
+  
+  Usage Notes
+  -----------
+  - Locates the RMM agent service by name
+  - Reports current service status and startup type
+  - Sets service recovery options (restart on failure)
+  - Sets service to Automatic (Delayed Start) via registry
+  - Reports recent crash events from Event Viewer for diagnosis
+  - Default service name is "limehawk"; change $ServiceName for other RMM agents
+  - Recovery: restart after 60s, 60s, then 120s; reset failure count every 24 hours
+  - Uses registry for delayed start (compatible with Server 2019 PowerShell which lacks AutomaticDelayedStart enum)
+  - Event log lookback defaults to 3 days
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - RMM agent installed
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMQ
+lastPushedChecksum: "sha256:5c55fbd2b948f152"
+lastPushedMetaChecksum: "sha256:c4a125f9dc0cfecf"

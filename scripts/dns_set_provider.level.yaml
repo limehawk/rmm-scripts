@@ -1,0 +1,45 @@
+name: dns_set_provider.ps1
+description: Sets IPv4 DNS servers on active adapters to a chosen provider
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+readme: |
+  Purpose
+  -------
+  Quickly switches all active physical IPv4 network adapters to a known public DNS provider chosen by number. Designed for SuperOps runtime replacement so a tech can pick the desired DNS from a numbered list without typing IP addresses or worrying about syntax.
+  
+  Provider Selection (set DnsProviderSelection to one of these numbers)
+  --------------------------------------------------------------------
+   1  DHCP / Automatic        - clear static DNS, return to DHCP
+   2  Cloudflare              - 1.1.1.1, 1.0.0.1
+   3  Cloudflare Malware      - 1.1.1.2, 1.0.0.2  (block malware)
+   4  Cloudflare Families     - 1.1.1.3, 1.0.0.3  (block malware + adult)
+   5  Google                  - 8.8.8.8, 8.8.4.4
+   6  OpenDNS                 - 208.67.222.222, 208.67.220.220
+   7  OpenDNS FamilyShield    - 208.67.222.123, 208.67.220.123
+   8  Quad9                   - 9.9.9.9, 149.112.112.112  (block malware)
+   9  Quad9 Unsecured         - 9.9.9.10, 149.112.112.10  (no filtering)
+  10  AdGuard                 - 94.140.14.14, 94.140.15.15  (block ads)
+  11  AdGuard Family          - 94.140.14.15, 94.140.15.16  (block ads + adult)
+  12  CleanBrowsing Security  - 185.228.168.9, 185.228.169.9
+  13  CleanBrowsing Family    - 185.228.168.168, 185.228.169.168
+  14  Control D Free          - 76.76.2.0, 76.76.10.0
+  
+  Usage Notes
+  -----------
+  - Targets active Ethernet (InterfaceType 6) and Wi-Fi (InterfaceType 71) adapters
+  - Applies to IPv4 DNS only; IPv6 DNS is left untouched
+  - Selection 1 resets the adapters to DHCP (clears static DNS)
+  - Flushes the resolver cache after the change
+  - Reports per-adapter success / failure
+  
+  Requirements
+  ------------
+  - DnsProviderSelection runtime variable (required, integer 1..14)
+  - Windows 10 1809+ / Windows Server 2019+
+  - SYSTEM or Administrator privileges
+  - At least one active Ethernet or Wi-Fi adapter
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Ng
+lastPushedChecksum: "sha256:c5ae635e195d07c1"
+lastPushedMetaChecksum: "sha256:da73d5ee6c22002f"

@@ -1,0 +1,35 @@
+name: eset_cleanup.ps1
+description: Completely removes ESET antivirus remnants from Windows systems
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Performs a complete cleanup of ESET antivirus software from Windows systems. Removes services, processes, files, registry entries, and scheduled tasks left behind after ESET uninstallation. Useful when standard uninstall fails or leaves remnants that interfere with new AV deployment.
+  
+  Usage Notes
+  -----------
+  - Validates Administrator privileges
+  - Stops and removes all ESET services (matching *ESET* pattern)
+  - Terminates active ESET processes (egui.exe, ekrn.exe)
+  - Removes ESET installation folders (Program Files, ProgramData, AppData)
+  - Removes ESET registry keys (HKLM and HKCU)
+  - Removes ESET scheduled tasks (matching *ESET* pattern)
+  - No inputs required; all cleanup targets are predefined
+  
+  Requirements
+  ------------
+  - Windows PowerShell 5.1 or PowerShell 7+
+  - Administrator privileges (required)
+  - No modules required
+  
+  Security
+  --------
+  - Forcefully terminates processes (may lose unsaved ESET settings)
+  - Registry modifications are permanent
+  - Backup important data before running
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2NQ
+lastPushedChecksum: "sha256:be3fe66de9f75c4b"
+lastPushedMetaChecksum: "sha256:0237e98d9cf419df"

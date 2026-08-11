@@ -1,0 +1,30 @@
+name: directory_size_analyze.ps1
+description: Analyzes disk usage with gdu utility for directory size reports
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Runs a command-line disk usage analysis on a specified directory using gdu (Go Disk Usage analyzer). Downloads gdu from GitHub releases if not already present, extracts it to a local cache directory, and executes it against the target path in non-interactive mode.
+  
+  Usage Notes
+  -----------
+  - Set $YourTargetDirectoryHere runtime variable to the path to scan (e.g., C:\Users)
+  - Designed for unattended RMM execution
+  - Downloads and caches gdu utility automatically; no package manager dependencies
+  - Supports text or JSON output formats (OutputFormat setting)
+  - Includes timeout protection for long-running scans (ScanTimeout setting)
+  - Optional cleanup of downloaded files after completion (CleanupAfterRun setting)
+  - Configurable scan depth controls top N items shown
+  
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Internet access to reach github.com for initial download
+  - Write permissions to the cache directory
+  - Runtime variable: $YourTargetDirectoryHere (target directory to scan)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MQ
+lastPushedChecksum: "sha256:341a3b130cb083e0"
+lastPushedMetaChecksum: "sha256:50e38b1f59ae7bc9"

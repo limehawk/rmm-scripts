@@ -8,18 +8,22 @@ readme: |
   -------
   Renames a macOS device to CLIENT3-USERUUID (exactly 15 chars). CLIENT3 from
   Level group name; sets HostName, ComputerName, LocalHostName.
-
+  
   Usage Notes
   -----------
   - Device must be in a named Level group
   - Output slots: DesiredHostname, RenameStatus
-
+  
   Requirements
   ------------
   - macOS 10.14+
   - Level agent; run as System (root)
 variables:
-- name: DesiredHostname
-  description: Built 15-char hostname (CLIENT3-USERUUID)
-- name: RenameStatus
-  description: already_matches | applied | error
+  - name: DesiredHostname
+    description: Built 15-char hostname (CLIENT3-USERUUID)
+  - name: RenameStatus
+    description: already_matches | applied | error
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNA
+lastPushedChecksum: "sha256:df8780e338a26cd4"
+lastPushedMetaChecksum: "sha256:816262b32c580d5a"

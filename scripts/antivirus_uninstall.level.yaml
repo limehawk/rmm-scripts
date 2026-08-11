@@ -1,0 +1,35 @@
+name: antivirus_uninstall.ps1
+description: Removes common third-party antivirus software (McAfee, Sophos, AVG, etc.)
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Detects and uninstalls common third-party antivirus software from Windows systems including McAfee, Sophos, AVG, and Microsoft Security Essentials. Designed for scenarios where existing AV must be removed before deploying a new endpoint protection solution.
+  
+  Usage Notes
+  -----------
+  - Validates execution environment (must run as Administrator)
+  - Detects each AV product using registry, services, file paths, packages, and WMI
+  - Stops services before uninstallation
+  - Attempts removal via multiple methods (packages, WMI, vendor-specific tools)
+  - Downloads MCPR (McAfee Consumer Product Removal) tool if needed
+  - Downloads AVG Clear tool if needed
+  - Uses silent/quiet uninstall methods where possible
+  - No reboot is forced, though some AV may require it for complete removal
+  
+  Requirements
+  ------------
+  - Windows PowerShell 5.1 or PowerShell 7+
+  - Administrator privileges
+  - Internet access (optional, for downloading MCPR and AVG Clear tools)
+  
+  Security
+  --------
+  - Some antivirus may require tamper protection to be disabled first
+  - A reboot may be required after uninstallation for complete removal
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMw
+lastPushedChecksum: "sha256:20975b8efcf885c8"
+lastPushedMetaChecksum: "sha256:be876ca8a3a8af7d"

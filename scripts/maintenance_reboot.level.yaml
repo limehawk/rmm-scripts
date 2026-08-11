@@ -1,0 +1,33 @@
+name: maintenance_reboot.ps1
+description: System reboot with graceful or force mode for maintenance
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Performs system reboot when uptime exceeds threshold or reboot flags are detected. Supports graceful mode (default) for servers/workstations with active users, which warns users and skips reboot if critical apps are running, and force mode for after-hours maintenance windows with immediate reboot.
+  
+  Usage Notes
+  -----------
+  - Calculates current uptime from last boot time
+  - Checks Windows registry for reboot-pending flags (CBS, WU, PendingFileRename)
+  - Graceful mode: configurable warning delay ($WarningMinutes, default 5)
+  - Graceful mode: skips reboot if critical apps running (QuickBooks, SQL, etc.)
+  - Force mode: immediate forced reboot, no user warning
+  - If neither uptime nor flags trigger, no action taken
+  - $GracefulReboot default: true
+  - $DefaultMaxUptimeDays default: 7
+  
+  Requirements
+  ------------
+  - PowerShell 5.1+
+  - Local Administrator rights
+  
+  Security
+  --------
+  - Force mode will not prompt users -- use for empty machines only
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4NQ
+lastPushedChecksum: "sha256:7f7bd5e13d21a1a0"
+lastPushedMetaChecksum: "sha256:ec38353eb325da89"

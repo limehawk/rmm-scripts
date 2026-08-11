@@ -1,30 +1,9 @@
 name: bitlocker_enable.ps1
-description: Enables BitLocker on the OS drive and guarantees Protection On
+description: ""
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 600
-readme: |
-  Purpose
-  -------
-  Converges the OS drive to BitLocker "Protection On" from any starting state: fully decrypted, encrypted with protection suspended (the OOBE pre-provisioned clear-key state), or already protected. Prints the recovery password to the console for Level activity-log capture and fails loudly (exit 1) whenever protection cannot be activated, instead of reporting false success.
-
-  Usage Notes
-  -----------
-  - Requires a present and ready TPM (fails otherwise)
-  - Ensures exactly one RecoveryPassword protector and a TPM protector
-  - Starts encryption via manage-bde (xts_aes256, used space only, no hardware test) when the volume is FullyDecrypted
-  - Activates protectors (manage-bde -protectors -enable) when the volume is encrypted but Protection Status is Off
-  - manage-bde exit codes are checked; failures exit 1 instead of reporting false success
-  - Target drive default: C:
-
-  Requirements
-  ------------
-  - PowerShell 5.1 or later
-  - Windows 10/11 Pro or Enterprise with BitLocker feature
-  - Level: run as System; timeout 600 seconds
-  - TPM present and ready
-
-  Security
-  --------
-  - Recovery password is printed to console by design (Level activity log is the key escrow record)
-  - No other secrets in logs
+timeout: 100
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzM1NDg3
+lastPushedChecksum: "sha256:3aed65cd22ff6767"
+lastPushedMetaChecksum: "sha256:dddc42444529721f"

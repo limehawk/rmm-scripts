@@ -1,0 +1,27 @@
+name: sentinelone_uninstall_linux.sh
+description: Uninstalls SentinelOne agent from Linux using passphrase
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Uninstalls the SentinelOne agent from Linux systems using the sentinelctl command. Verifies the agent is installed and sentinelctl is available before attempting removal.
+  
+  Usage Notes
+  -----------
+  - No hardcoded inputs required
+  - Verifies root privileges before proceeding
+  - Checks if sentinelctl command is available in PATH
+  - Runs sentinelctl uninstall to remove the agent
+  - Agent may have tamper protection enabled which could block removal
+  
+  Requirements
+  ------------
+  - Linux system with SentinelOne agent installed
+  - Root/sudo privileges
+  - sentinelctl must be in PATH (/usr/local/bin or /opt/sentinelone/bin)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Mg
+lastPushedChecksum: "sha256:14d539a27befd82d"
+lastPushedMetaChecksum: "sha256:a67fedd0e755613b"

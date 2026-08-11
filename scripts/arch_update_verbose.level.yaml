@@ -1,0 +1,28 @@
+name: arch_update_verbose.sh
+description: Updates all packages on Arch Linux/Omarchy with verbose output
+shell: BASH
+runAs: SYSTEM
+timeout: 5400
+readme: |
+  Purpose
+  -------
+  Automates system package updates for Arch Linux and Omarchy systems with verbose output and error handling. Syncs package databases, upgrades all packages, removes orphaned dependencies, and cleans package cache. Provides color-coded status messages.
+  
+  Usage Notes
+  -----------
+  - Run with sudo or as root
+  - Configure options at top of script:
+    - ENABLE_ORPHAN_REMOVAL: Remove orphaned packages after upgrade
+    - ENABLE_CACHE_CLEAN: Clean pacman cache to free disk space
+    - ENABLE_COLOR_OUTPUT: Use colored terminal output
+  
+  Requirements
+  ------------
+  - Root/sudo access required
+  - Arch Linux or Arch-based distribution (Omarchy, EndeavourOS, Manjaro, etc.)
+  - Network connectivity to package mirrors
+  - pacman package manager
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNA
+lastPushedChecksum: "sha256:132e3b80eb80e9b3"
+lastPushedMetaChecksum: "sha256:e2851cf2c1bec96a"

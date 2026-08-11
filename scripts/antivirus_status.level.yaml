@@ -1,0 +1,30 @@
+name: antivirus_status.ps1
+description: Reports third-party antivirus status to SuperOps custom fields
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Checks for the presence and active status of third-party antivirus software on the system, excluding Windows/Microsoft Defender. Reports the active product name and boolean state to SuperOps custom fields for monitoring.
+  
+  Usage Notes
+  -----------
+  - Validates that SuperOps module is available
+  - Detects OS type (client vs server)
+  - Queries installed AV products via SecurityCenter2 or registry fallback
+  - Checks enabled state via productState bitmask
+  - Ignores Windows Defender entries; only reports third-party AV
+  - Outputs AV name and enabled state (TRUE/FALSE) to SuperOps custom fields
+  - Confirms Windows Defender status in console output
+  - No configurable settings; all logic is fixed for third-party AV detection
+  
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Access to root\SecurityCenter2 namespace (requires local admin or equivalent)
+  - SuperOps module available via $SuperOpsModule variable (provided by RMM)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMg
+lastPushedChecksum: "sha256:1a20a2caeb5024b5"
+lastPushedMetaChecksum: "sha256:6d2043db6f0128b0"

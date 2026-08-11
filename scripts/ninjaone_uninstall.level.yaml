@@ -1,0 +1,29 @@
+name: ninjaone_uninstall.ps1
+description: Completely removes NinjaOne RMM agent and Ninja Remote from Windows
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Completely removes NinjaOne RMM agent and Ninja Remote from a Windows system. Includes disabling uninstall prevention, removing services, cleaning up registry entries, and removing the virtual display driver.
+  
+  Usage Notes
+  -----------
+  - Auto-detects NinjaOne installation path from registry
+  - Disables uninstall prevention before running MSI uninstaller
+  - Stops and removes NinjaRMMAgent, nmsmanager, and lockhart services
+  - Kills running processes after service removal
+  - Removes installation directories and data directories
+  - Cleans up registry entries in HKLM
+  - Removes Ninja Remote components and virtual display driver
+  - Creates transcript log in Windows\temp for review
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5MQ
+lastPushedChecksum: "sha256:c5cf794d589cf8bc"
+lastPushedMetaChecksum: "sha256:1d07441138e0c6b2"

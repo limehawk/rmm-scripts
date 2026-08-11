@@ -1,0 +1,33 @@
+name: rustic_backup.ps1
+description: Runs rustic backup, prune, and integrity check using existing profile
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 7200
+readme: |
+  Purpose
+  -------
+  Scheduled backup runner for Rustic. Reads configuration from the TOML profile written by rustic_install.ps1 and executes a full backup cycle: backup snapshot, retention prune, and a lightweight integrity check on a random 1% data subset. Intended to be invoked by the Windows Scheduled Task created during installation, or manually via SuperOps RMM.
+  
+  Usage Notes
+  -----------
+  - No runtime variables required — all configuration is read from the TOML profile
+  - Validates rustic.exe and rustic.toml exist (exits 1 if missing)
+  - Ensures log directory exists before running
+  - Sets RUSTIC_CONFIG_FILE environment variable, clears it in a finally block
+  - Backup step is fatal: exits 1 if rustic backup fails (no snapshot was created)
+  - Prune step is non-fatal: warns and continues if rustic forget --prune fails
+  - Integrity check is non-fatal: warns and continues if rustic check fails
+  - Integrity check scope: --read-data-subset=1/100 (1% of data per run)
+  - Reports duration and per-step status in the final summary
+  
+  Requirements
+  ------------
+  - rustic_install.ps1 must have been run successfully on this machine
+  - rustic.exe at C:\ProgramData\Limehawk\Rustic\bin\rustic.exe
+  - rustic.toml at C:\ProgramData\Limehawk\Rustic\rustic.toml
+  - Windows 10/11 or Windows Server 2016+
+  - Administrator privileges (runs as SYSTEM via RMM or Scheduled Task)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMg
+lastPushedChecksum: "sha256:37d4d46a94882a30"
+lastPushedMetaChecksum: "sha256:0fa3173759925e88"

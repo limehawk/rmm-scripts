@@ -1,0 +1,36 @@
+name: rustic_backup_unix.sh
+description: Runs rustic backup, prune, and integrity check (Linux/macOS)
+shell: BASH
+runAs: SYSTEM
+timeout: 7200
+readme: |
+  Purpose
+  -------
+  Executes a full Rustic backup cycle on Linux and macOS: runs a backup against the configured repository, applies retention policy with prune, and performs a partial integrity check on the repository. Reads all configuration from /etc/rustic/rustic.toml. Intended to be run on a schedule (systemd timer or launchd plist) or invoked directly via SuperOps RMM.
+  
+  Usage Notes
+  -----------
+  - Verifies rustic binary (/usr/local/bin/rustic) and config (/etc/rustic/rustic.toml) exist before running
+  - Exports RUSTIC_CONFIG_FILE to direct rustic to the TOML configuration
+  - Backup step is fatal: script exits 1 if rustic backup fails
+  - Retention (forget --prune) and integrity check (check --read-data-subset=1/100) are non-fatal: failures emit a warning but do not abort
+  - Integrity check scope: --read-data-subset=1/100 (1% of data per run)
+  - Reports total duration in the final status block
+  - No runtime variables required; all settings come from the TOML config
+  
+  Requirements
+  ------------
+  - Linux or macOS
+  - Root privileges (runs as root via RMM)
+  - rustic installed at /usr/local/bin/rustic
+  - /etc/rustic/rustic.toml configured by rustic_install_unix.sh
+  - Network access to the configured backup backend
+  
+  Security
+  --------
+  - No credentials are printed to console output
+  - All secrets remain in /etc/rustic/rustic.toml (chmod 600)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMw
+lastPushedChecksum: "sha256:a10b4b3cc851a31b"
+lastPushedMetaChecksum: "sha256:8f421517af16e5ab"

@@ -1,0 +1,30 @@
+name: cloudflared_uninstall.ps1
+description: Removes the Cloudflare Tunnel service and uninstalls cloudflared
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Tears down a Cloudflare Tunnel connector on a Windows endpoint by uninstalling the Cloudflare Tunnel service and removing the Cloudflare.cloudflared package via winget. Idempotent: a clean machine results in a no-op success.
+  
+  Usage Notes
+  -----------
+  - Detects current state (service present, binary present)
+  - Removes the Cloudflare Tunnel service via cloudflared service uninstall (graceful)
+  - Falls back to sc.exe delete if binary is gone but service is orphaned
+  - Uninstalls Cloudflare.cloudflared via winget
+  - Verifies service no longer present and binary not resolvable
+  - Reports a clean-state result (idempotent on already-clean machines)
+  - Package Id is Cloudflare.cloudflared
+  - Service name is Cloudflare Tunnel
+  
+  Requirements
+  ------------
+  - Windows 10 1809+ / Windows Server 2019+
+  - SYSTEM or Administrator privileges
+  - Winget installed (used only if the package is registered)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0MA
+lastPushedChecksum: "sha256:f9aa02bdaa9c4cda"
+lastPushedMetaChecksum: "sha256:65f4ddcdd3d9069e"

@@ -1,0 +1,28 @@
+name: potplayer_install.ps1
+description: Downloads and silently installs PotPlayer media player
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Downloads and silently installs PotPlayer media player. Automatically selects the correct version (32-bit or 64-bit) based on system architecture.
+  
+  Usage Notes
+  -----------
+  - Fetches PotPlayer website to find download links
+  - Selects appropriate version based on OS architecture
+  - Downloads installer to temp directory
+  - Installs silently using /S switch
+  - Cleans up installer file after completion
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - Internet connectivity
+  - $baseUrl: Base URL for PotPlayer website to scrape download links
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwOA
+lastPushedChecksum: "sha256:7533ac610d424652"
+lastPushedMetaChecksum: "sha256:e34a1ac1f92a47b7"

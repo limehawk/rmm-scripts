@@ -1,0 +1,30 @@
+name: nirsoft_uninstall_view.ps1
+description: Uses NirSoft UninstallView to uninstall software matching patterns
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Downloads NirSoft UninstallView utility and uses it to uninstall software matching a specified pattern using wildcard matching.
+  
+  Usage Notes
+  -----------
+  - Set the SuperOps runtime variable $YourAppPatternHere to the application name or pattern to uninstall
+  - Supports wildcards (e.g., Adobe*, *Chrome*, etc.)
+  - Determines system architecture and downloads appropriate 32/64-bit version
+  - Extracts to limehawk\nirsoft directory
+  - Runs uninstall command with wildcard matching
+  - Cleans up downloaded zip file after extraction
+  - Check manually after execution to confirm uninstallation
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - Internet connectivity (downloads from official NirSoft website)
+  - $YourAppPatternHere: application name or pattern to uninstall (SuperOps runtime variable)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5NA
+lastPushedChecksum: "sha256:87cabcfd5f2ac46f"
+lastPushedMetaChecksum: "sha256:5ccf687959bb12b2"

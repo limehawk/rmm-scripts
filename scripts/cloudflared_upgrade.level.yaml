@@ -1,0 +1,33 @@
+name: cloudflared_upgrade.ps1
+description: Upgrades cloudflared via winget and verifies tunnel service health
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Patches the Cloudflare.cloudflared package on a Windows endpoint via winget and confirms the Cloudflare Tunnel service remains healthy after the upgrade. Idempotent: machines without cloudflared installed exit 0 with a no-op.
+  
+  Usage Notes
+  -----------
+  - Pre-checks for an existing cloudflared install (no-op exit 0 if absent)
+  - Captures current version before upgrade
+  - Captures pre-upgrade service state
+  - Runs winget upgrade with --exact --silent --accept-package-agreements --accept-source-agreements
+  - Treats 0x8A15002B no-applicable-update as success (already current)
+  - Captures new version after upgrade
+  - Verifies service still Running if it was Running before
+  - Reports old to new version transition
+  - Package Id is Cloudflare.cloudflared
+  - Service name is Cloudflare Tunnel
+  
+  Requirements
+  ------------
+  - Windows 10 1809+ / Windows Server 2019+
+  - SYSTEM or Administrator privileges
+  - Winget installed
+  - Outbound internet connectivity to Cloudflare edge (port 7844)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0MQ
+lastPushedChecksum: "sha256:df3c507b8b3e95a9"
+lastPushedMetaChecksum: "sha256:fa0c4f09a5a81211"

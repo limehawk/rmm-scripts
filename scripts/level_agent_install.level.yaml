@@ -1,0 +1,8 @@
+name: level_agent_install.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNzUxMQ
+lastPushedChecksum: "sha256:08f2a9b6044ca6a3"
+lastPushedMetaChecksum: "sha256:4998b3dfa27ba35b"

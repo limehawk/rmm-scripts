@@ -1,0 +1,27 @@
+name: outlook_new_remove.ps1
+description: Removes the New Outlook (Microsoft.OutlookForWindows) app from all user profiles and prevents reinstallation
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 600
+readme: |
+  Purpose
+  -------
+  Removes the "New Outlook" (Microsoft.OutlookForWindows) Appx package from all user profiles on a Windows machine and prevents it from being reprovisioned. Used when organizations want to keep users on Classic Outlook and prevent the new Outlook from appearing via Windows Update or new user provisioning.
+  
+  Usage Notes
+  -----------
+  - Checks if Microsoft.OutlookForWindows is installed via Get-AppxPackage
+  - Removes the package from all user profiles with Remove-AppxPackage -AllUsers
+  - Removes the provisioned package so new user profiles do not get it
+  - Deletes the OutlookUpdate registry key under UScheduler to prevent re-provisioning via Windows Update
+  - No configurable inputs required - targets Microsoft.OutlookForWindows specifically
+  
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges
+  - No network requirements (local operations only)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwNA
+lastPushedChecksum: "sha256:b2ff05e51e2d5e97"
+lastPushedMetaChecksum: "sha256:b28aed12e71c2c75"

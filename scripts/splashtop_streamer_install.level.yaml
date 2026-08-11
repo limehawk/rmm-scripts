@@ -1,0 +1,27 @@
+name: splashtop_streamer_install.ps1
+description: Silently installs Splashtop Streamer agent for remote access
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Silently installs or upgrades the Splashtop Streamer agent for remote access. Configured to hide the system tray icon by default.
+  
+  Usage Notes
+  -----------
+  - Validates installer path is provided and file exists
+  - Runs silent installation with parameters: prevercheck, no confirmation, hidden window, hidden tray icon
+  - Installer must be pre-staged at the specified path before running
+  - Default path: C:\temp\Splashtop_Streamer_Windows_DEPLOY_INSTALLER.exe
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - Splashtop deploy installer downloaded to specified path
+  - $installerPath: full path to the Splashtop Streamer deploy installer EXE
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0OQ
+lastPushedChecksum: "sha256:ba206f1ad3a5419d"
+lastPushedMetaChecksum: "sha256:f2888088f12693e5"

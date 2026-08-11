@@ -1,0 +1,33 @@
+name: prinstall_add.ps1
+description: Installs a network or USB printer using prinstall 0.3.0+
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 600
+readme: |
+  Purpose
+  -------
+  Installs a printer on Windows using prinstall 0.3.0+. Network mode walks the full four-tier driver resolution pipeline (local store -> manufacturer download -> Microsoft Update Catalog HWID match -> IPP Class Driver fallback) automatically. USB mode swaps the driver on an existing PnP-created queue via Set-Printer.
+  
+  Usage Notes
+  -----------
+  - Set $usbMode to $true for USB printers (driver swap on existing queue)
+  - Network mode: set $YourPrinterIpHere
+  - USB mode: set $YourUsbQueueNameHere to the existing queue name (e.g. "Brother MFC-L2750DW")
+  - Driver name optional via $YourDriverNameHere (auto-detects if not set)
+  - Display name optional via $YourPrinterNameHere (uses model name if not set)
+  - Requires prinstall.exe installed (run prinstall_setup.ps1 first)
+  
+  Requirements
+  ------------
+  - Windows OS
+  - Administrator privileges
+  - prinstall.exe 0.3.0 or newer installed
+  - Network access to printer IP (network mode only)
+  - $YourPrinterIpHere: Printer IP address (network mode)
+  - $YourUsbQueueNameHere: Existing USB queue name (USB mode)
+  - $YourDriverNameHere: (optional) Specific driver name
+  - $YourPrinterNameHere: (optional) Display name for the printer
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMg
+lastPushedChecksum: "sha256:14ba5595155d0539"
+lastPushedMetaChecksum: "sha256:909105b5f9ee34c0"

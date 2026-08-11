@@ -1,0 +1,30 @@
+name: ubuntu_debian_update_verbose.sh
+description: Updates all packages on Ubuntu/Debian with verbose output
+shell: BASH
+runAs: SYSTEM
+timeout: 10800
+readme: |
+  Purpose
+  -------
+  Automates system package updates for Ubuntu/Debian systems with verbose output and error handling. Updates package lists, upgrades installed packages, removes unused dependencies, and cleans package cache. Provides color-coded status messages and reboot detection.
+  
+  Usage Notes
+  -----------
+  - Run with sudo or as root
+  - Configure options at top of script:
+    - ENSURE_APT_UTILS: Install apt-utils if missing
+    - ENABLE_FULL_UPGRADE: Use dist-upgrade instead of upgrade
+    - ENABLE_AUTOREMOVE: Remove unused packages after upgrade
+    - ENABLE_CACHE_CLEAN: Clean apt cache to free disk space
+    - ENABLE_COLOR_OUTPUT: Use colored terminal output
+  
+  Requirements
+  ------------
+  - Root/sudo access required
+  - Ubuntu or Debian-based Linux distribution
+  - Network connectivity to package repositories
+  - apt package manager
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Mw
+lastPushedChecksum: "sha256:cb32e47af9465ca4"
+lastPushedMetaChecksum: "sha256:832c0b229748f99e"

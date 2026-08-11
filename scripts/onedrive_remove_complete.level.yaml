@@ -1,0 +1,31 @@
+name: onedrive_remove_complete.ps1
+description: Completely removes Microsoft OneDrive with startup suppression
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Performs a complete, multi-path uninstallation of Microsoft OneDrive with permanent startup suppression. Stops running processes, executes the official Microsoft uninstall utility against all known install paths (system and Office), removes scheduled tasks, and applies registry policies to prevent reinstallation.
+  
+  Usage Notes
+  -----------
+  - Stops all running OneDrive processes
+  - Executes OneDriveSetup.exe /uninstall for each found path (System32, SysWOW64, Office x86, Office x64)
+  - Removes all OneDrive scheduled tasks
+  - Sets HKLM GPO DisableFileSyncNGSC=1 to prevent startup for all users
+  - Removes HKCU Run key OneDrive entry
+  - Sets Explorer policy to hide OneDrive from navigation pane
+  - Cleans Default User profile to prevent OneDrive on new accounts
+  - $cleanDefaultProfile controls Default User cleanup (default: true)
+  - Reboot recommended for full cleanup
+  
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Administrator privileges
+  - No network requirements (local operations only)
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Nw
+lastPushedChecksum: "sha256:e1f4ee52cb2ad974"
+lastPushedMetaChecksum: "sha256:1763b0675e257efc"

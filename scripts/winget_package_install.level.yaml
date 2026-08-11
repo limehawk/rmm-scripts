@@ -1,0 +1,27 @@
+name: winget_package_install.ps1
+description: Installs software package using winget with SuperOps integration
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Installs a software package using winget (Windows Package Manager). Uses SuperOps runtime text replacement for the package name. Handles silent installation with automatic acceptance of agreements.
+  
+  Usage Notes
+  -----------
+  - PackageName runtime variable specifies winget package ID (e.g., "Google.Chrome", "Mozilla.Firefox")
+  - Validates software name input before proceeding
+  - Searches for package to verify it exists in the repository
+  - Silent installation mode with machine scope when available
+  - Accepts package and source agreements automatically
+  
+  Requirements
+  ------------
+  - Winget must be installed (use winget_setup first)
+  - Administrator privileges recommended
+  - Internet connectivity
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5MA
+lastPushedChecksum: "sha256:81593e032c1092d2"
+lastPushedMetaChecksum: "sha256:3720ad0025a0796a"

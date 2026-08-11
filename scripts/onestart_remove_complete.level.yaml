@@ -1,0 +1,35 @@
+name: onestart_remove_complete.ps1
+description: Completely removes OneStart.ai PUP from Windows systems
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Completely removes OneStart.ai browser/PUP from Windows systems. First attempts a clean uninstall via NirSoft UninstallView, then performs manual cleanup of any remaining processes, files, registry keys, and scheduled tasks.
+  
+  Usage Notes
+  -----------
+  - Downloads NirSoft UninstallView (architecture-appropriate)
+  - Attempts silent uninstall of OneStart via UninstallView
+  - Terminates any running OneStart/DBar processes
+  - Removes scheduled tasks matching OneStart patterns
+  - Removes leftover files and folders from AppData, ProgramData, Program Files
+  - Backs up registry keys to SystemDrive\limehawk\registry_backup before removal
+  - Cleans up registry keys in HKCU and HKLM
+  - $appName default: OneStart
+  
+  Requirements
+  ------------
+  - Windows PowerShell 5.1+
+  - Administrative privileges required
+  - Internet access for UninstallView download
+  
+  Security
+  --------
+  - Only removes OneStart-related items using known paths and patterns
+  - Registry keys are backed up before removal for recovery if needed
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5OA
+lastPushedChecksum: "sha256:a672ec29a7dc6a4b"
+lastPushedMetaChecksum: "sha256:00d73bce056db2aa"

@@ -1,0 +1,35 @@
+name: windows_update_reset.ps1
+description: Resets Windows Update components and clears cache
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Completely resets Windows Update components by stopping services, clearing caches, resetting security descriptors, re-registering DLLs, and restarting services. Fixes most Windows Update problems.
+  
+  Usage Notes
+  -----------
+  - Stops BITS, wuauserv, appidsvc, cryptsvc services
+  - Flushes DNS cache and clears BITS download queue data
+  - Renames SoftwareDistribution and catroot2 folders (creates .bak for recovery)
+  - Resets BITS and wuauserv security descriptors
+  - Re-registers 30+ Windows Update related DLLs
+  - Resets Winsock
+  - Restarts all services after reset
+  - Optional RebootAfterReset (default: false)
+  
+  Requirements
+  ------------
+  - Windows 10/11
+  - Administrator privileges
+  - Internet connectivity for updates after reset
+  
+  Security
+  --------
+  - Modifies system registry and service configurations
+  - Creates .bak folders for recovery of renamed directories
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4OQ
+lastPushedChecksum: "sha256:dc0660ba30a52b1f"
+lastPushedMetaChecksum: "sha256:7a248ea5926f32dd"

@@ -1,0 +1,28 @@
+name: splashtop_streamer_install_debian_arm64.sh
+description: Installs Splashtop Streamer on Debian/Ubuntu ARM64 systems
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Downloads and installs the Splashtop Streamer agent on Debian systems running ARM64 architecture (e.g., Raspberry Pi, ARM servers).
+  
+  Usage Notes
+  -----------
+  - Updates package lists and installs prerequisites (wget, tar)
+  - Downloads tarball from official Splashtop servers (v3.7.2.0)
+  - Extracts to /opt/splashtop install directory
+  - Installs deb package with automatic dependency resolution
+  - Enables and starts systemd service (splashtop-streamer.service)
+  - Cleans up downloaded tarball after installation
+  
+  Requirements
+  ------------
+  - Debian Linux (ARM64 architecture)
+  - Root/sudo privileges
+  - Internet connectivity
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1MQ
+lastPushedChecksum: "sha256:4fb1452893ccc28c"
+lastPushedMetaChecksum: "sha256:fe7c924f979e90b5"

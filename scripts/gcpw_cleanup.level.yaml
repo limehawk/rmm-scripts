@@ -1,0 +1,27 @@
+name: gcpw_cleanup.ps1
+description: Removes GCPW registry keys and folders for clean reinstallation
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+readme: |
+  Purpose
+  -------
+  Removes Google Credential Provider for Windows (GCPW) registry keys and folders to allow for a clean reinstallation or complete removal.
+  
+  Usage Notes
+  -----------
+  - Deletes GCPW-related registry keys
+  - Deletes Chrome enrollment registry keys
+  - Removes GCPW policy and credential folders
+  - Reports results for each operation
+  - No inputs required
+  - Does NOT uninstall GCPW itself (use Programs and Features for that)
+  
+  Requirements
+  ------------
+  - Windows 10/11 or Windows Server
+  - Administrator privileges
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3MQ
+lastPushedChecksum: "sha256:ac2a1fbb15510a20"
+lastPushedMetaChecksum: "sha256:01c25972ed0defab"
