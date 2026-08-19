@@ -1,0 +1,8 @@
+name: sentinelone_uninstall.ps1
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 60
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEzNTUwOQ
+lastPushedChecksum: "sha256:27e92a31275071c4"
+lastPushedMetaChecksum: "sha256:c298dac3499dd4e9"
