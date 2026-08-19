@@ -1,29 +1,39 @@
 name: superops_agent_uninstall.ps1
-description: Uninstalls SuperOps RMM agent using official or registry method
+description: Uninstalls SuperOps/Limehawk RMM agent and leftover remnants
 language: PowerShell
 tags:
 - Cleanup
 - Software
 - Windows
 runAs: SYSTEM_USER
-timeout: 15
+timeout: 20
 readme: |
   Purpose
   -------
-  Uninstalls the SuperOps RMM agent from Windows systems. Attempts to use the vendor's official uninstall program first, then falls back to registry-based MSI uninstallation if the official uninstaller is not found.
+  Removes the SuperOps RMM agent (including Limehawk-branded installs) from Windows. Tamper protection can leave the service and files after MSI reports success, so the service is deleted first, msiexec is watched for hangs, and leftovers are verified before exit. Missing product is success so the script is safe to re-run.
 
   Usage Notes
   -----------
-  - No inputs required - auto-detects installed SuperOps agent
-  - Searches for SuperOps uninstall.exe in common installation directories
-  - Falls back to registry search (including WOW6432Node) for MSI uninstall information
-  - Executes MSI uninstall with silent parameters (/qn /norestart) if needed
+  - Silent MSI args: /qn /norestart
+  - msiexec hang timeout: 90 seconds (near-zero CPU = hung, then taskkill)
+  - msiexec exit 0 is not proof the agent is gone
+  - Service match is name/display limehawk* / superops*, or ImagePath
+  - Already-removed agent is exit 0
+  - sc stop + sc delete FIRST (works with tamper on)
+  - Then msiexec /x for each product code; leftover dirs and registry cleaned
+  - Verifies service 1060, no limehawkrmm processes, dirs gone
 
   Requirements
   ------------
-  - Windows PowerShell 5.1 or later
+  - PowerShell 5.1 or later
   - Administrator privileges
-  - SuperOps RMM agent currently installed
+  - Windows
+  - $ProductGuid: SuperOps agent MSI IdentifyingNumber (hardcoded)
+
+  Security
+  --------
+  - No network calls
+  - Does not touch Limehawk user profiles or branding pictures
 favourite: false
 shared: false
 scriptId: '259059206855450624'

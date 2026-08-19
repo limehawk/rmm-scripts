@@ -7,9 +7,9 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : SuperOps Agent Uninstall (Linux)                             v1.1.1
+#  SCRIPT   : SuperOps Agent Uninstall (Linux)                             v1.2.0
 #  AUTHOR   : Limehawk.io
-#  DATE     : January 2026
+#  DATE     : August 2026
 #  USAGE    : sudo ./superops_agent_uninstall_linux.sh
 # ================================================================================
 #  FILE     : superops_agent_uninstall_linux.sh
@@ -18,44 +18,36 @@
 #  README
 # --------------------------------------------------------------------------------
 #  PURPOSE
-#  Uninstalls the SuperOps RMM agent from Linux systems by executing the
-#  agent's built-in uninstall script. This provides a clean removal of the
-#  agent and all associated components.
+#  Uninstalls the SuperOps RMM agent from Linux by running the vendor
+#  uninstall.sh from every known SuperOps and Limehawk install path.
+#  Already-removed is success.
 #
 #  DATA SOURCES & PRIORITY
-#  1) SuperOps agent uninstall script (provided by agent installation)
-#  2) Hardcoded installation path
+#  1) Vendor uninstall.sh in known install directories
 #
 #  REQUIRED INPUTS
-#  - UninstallScriptPath : "/opt/superopsrmm/uninstall.sh"
-#    (Path to the SuperOps-provided uninstall script)
+#  - UNINSTALL_PATHS : hardcoded list of vendor uninstall.sh locations
 #
 #  SETTINGS
-#  - Uses the official SuperOps uninstall script
-#  - Ensures script is executable before running
-#  - Validates script existence before execution
-#  - No additional cleanup needed (handled by uninstall script)
+#  - Tries each path in order and runs the first uninstall.sh found
+#  - Sets executable permissions before running
+#  - Missing agent is exit 0
 #
 #  BEHAVIOR
-#  - Validates that the uninstall script exists at expected path
-#  - Sets executable permissions on the uninstall script
-#  - Executes the SuperOps-provided uninstall script
-#  - Reports progress and status to stdout
-#  - Exits with code 0 on success, 1 on failure
-#  - All-or-nothing: any failure stops the script immediately
+#  1. Looks for uninstall.sh under /opt/superopsrmm, SuperOpsRMM, limehawkrmm,
+#     limehawk, Limehawkrmmagent, and /usr/local/superops
+#  2. chmod +x and runs the first one found
+#  3. Reports already-removed if none exist
 #
 #  PREREQUISITES
 #  - Bash shell
 #  - Linux operating system
 #  - Root/sudo privileges (for uninstallation)
-#  - SuperOps RMM agent must be installed
-#  - Uninstall script must exist at /opt/superopsrmm/uninstall.sh
 #
 #  SECURITY NOTES
-#  - No secrets or credentials used
-#  - Executes only the official SuperOps uninstall script
+#  - No secrets in logs
+#  - Executes only the vendor uninstall script
 #  - Requires root privileges to execute
-#  - Does not store or transmit any data
 #
 #  ENDPOINTS
 #  - N/A (local uninstallation only)
@@ -90,9 +82,9 @@
 #    SuperOps agent uninstalled successfully
 #
 # --------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-08-19 v1.2.0 Try SuperOps + Limehawk paths. Already-removed is success.
 #  2026-01-19 v1.1.1 Updated to two-line ASCII console output style
 #  2025-12-23 v1.1.0 Updated to Limehawk Script Framework
 #  2024-11-02 v1.0.0 Initial migration from SuperOps
@@ -106,78 +98,50 @@ ERROR_OCCURRED=0
 ERROR_TEXT=""
 
 # ==== HARDCODED INPUTS (MANDATORY) ====
-# Note: Adjust this path if your SuperOps installation uses a different directory
-UNINSTALL_SCRIPT_PATH="/opt/superopsrmm/uninstall.sh"
+UNINSTALL_PATHS="/opt/superopsrmm/uninstall.sh /opt/SuperOpsRMM/uninstall.sh /usr/local/superops/uninstall.sh /opt/limehawkrmm/uninstall.sh /opt/limehawk/uninstall.sh /opt/Limehawkrmmagent/uninstall.sh"
 
-# ==== VALIDATION ====
-if [ -z "$UNINSTALL_SCRIPT_PATH" ]; then
-    ERROR_OCCURRED=1
-    ERROR_TEXT="UNINSTALL_SCRIPT_PATH is required but not set."
-fi
-
-if [ "$ERROR_OCCURRED" -eq 1 ]; then
-    echo ""
-    echo "[ERROR] ERROR OCCURRED"
-    echo "=============================================================="
-    echo "$ERROR_TEXT"
-    echo ""
-    echo "[INFO] RESULT"
-    echo "=============================================================="
-    echo "Status: Failure"
-    echo ""
-    echo "[ERROR] FINAL STATUS"
-    echo "=============================================================="
-    echo "Script cannot proceed. Invalid configuration."
-    exit 1
-fi
+UNINSTALL_SCRIPT_PATH=""
+for candidate in $UNINSTALL_PATHS; do
+    if [ -f "$candidate" ]; then
+        UNINSTALL_SCRIPT_PATH="$candidate"
+        break
+    fi
+done
 
 # ==== RUNTIME OUTPUT ====
 echo ""
 echo "[INFO] INPUT VALIDATION"
 echo "=============================================================="
-echo "Uninstall Script: $UNINSTALL_SCRIPT_PATH"
+if [ -n "$UNINSTALL_SCRIPT_PATH" ]; then
+    echo "Uninstall Script : $UNINSTALL_SCRIPT_PATH"
+else
+    echo "Uninstall Script : (none found)"
+fi
 
 echo ""
 echo "[RUN] UNINSTALLING"
 echo "=============================================================="
 
-# Check if uninstall script exists
-echo "Checking for uninstall script..."
-if [ ! -f "$UNINSTALL_SCRIPT_PATH" ]; then
-    ERROR_OCCURRED=1
-    ERROR_TEXT="Uninstall script not found at: $UNINSTALL_SCRIPT_PATH
-This could mean:
-  - SuperOps agent is not installed
-  - Agent was installed to a different location
-  - Uninstall script was removed or corrupted
-
-Common installation paths:
-  - /opt/superopsrmm/uninstall.sh
-  - /opt/SuperOpsRMM/uninstall.sh
-  - /usr/local/superops/uninstall.sh"
+if [ -z "$UNINSTALL_SCRIPT_PATH" ]; then
+    echo "No vendor uninstall script found - agent already absent"
 else
     echo "Uninstall script found"
-
-    # Make script executable
     echo "Setting executable permissions..."
     if ! chmod +x "$UNINSTALL_SCRIPT_PATH"; then
         ERROR_OCCURRED=1
         ERROR_TEXT="Failed to set executable permissions on uninstall script.
 You may need to run this script with sudo."
     fi
-fi
 
-# Execute uninstall if no errors
-if [ "$ERROR_OCCURRED" -eq 0 ]; then
-    echo "Executing uninstall script..."
-
-    # Run the uninstall script
-    if ! "$UNINSTALL_SCRIPT_PATH"; then
-        ERROR_OCCURRED=1
-        ERROR_TEXT="Uninstall script execution failed.
+    if [ "$ERROR_OCCURRED" -eq 0 ]; then
+        echo "Executing uninstall script..."
+        if ! "$UNINSTALL_SCRIPT_PATH"; then
+            ERROR_OCCURRED=1
+            ERROR_TEXT="Uninstall script execution failed.
 Check the output above for specific error messages from the uninstaller."
-    else
-        echo "Uninstall script completed successfully"
+        else
+            echo "Uninstall script completed successfully"
+        fi
     fi
 fi
 
@@ -193,9 +157,9 @@ echo ""
 echo "[INFO] RESULT"
 echo "=============================================================="
 if [ "$ERROR_OCCURRED" -eq 1 ]; then
-    echo "Status: Failure"
+    echo "Status : Failure"
 else
-    echo "Status: Success"
+    echo "Status : Success"
 fi
 
 echo ""
@@ -206,7 +170,11 @@ if [ "$ERROR_OCCURRED" -eq 1 ]; then
 else
     echo "[OK] SCRIPT COMPLETED"
     echo "=============================================================="
-    echo "SuperOps agent uninstalled successfully"
+    if [ -z "$UNINSTALL_SCRIPT_PATH" ]; then
+        echo "SuperOps agent already absent"
+    else
+        echo "SuperOps agent uninstalled successfully"
+    fi
 fi
 
 if [ "$ERROR_OCCURRED" -eq 1 ]; then

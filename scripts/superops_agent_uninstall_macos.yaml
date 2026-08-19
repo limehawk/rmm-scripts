@@ -1,5 +1,5 @@
 name: superops_agent_uninstall_macos.sh
-description: Uninstalls SuperOps RMM agent from macOS using vendor script
+description: Uninstalls SuperOps/Limehawk RMM agent from macOS
 language: Bash
 tags:
 - Cleanup
@@ -10,22 +10,22 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Uninstalls the SuperOps RMM agent from macOS systems by executing the agent's built-in uninstall script. Provides a clean removal of the agent and all associated components.
+  Uninstalls the SuperOps RMM agent from macOS by running the vendor uninstall.sh from every known SuperOps and Limehawk install path. Already-removed is success.
 
   Usage Notes
   -----------
-  - Uses official SuperOps uninstall script at /Library/superops/uninstall.sh
-  - Executes with sudo privileges
-  - Validates script existence before execution
-  - All-or-nothing: any failure stops the script immediately
+  - Tries each path in order and runs the first uninstall.sh found
+  - Missing agent is exit 0
+  - Looks under /Library/superops, limehawk, limehawkrmm, Limehawkrmmagent
 
   Requirements
   ------------
-  - Bash shell
-  - macOS operating system
-  - Sudo privileges
-  - SuperOps RMM agent must be installed
-  - Uninstall script must exist at /Library/superops/uninstall.sh
+  - Bash, macOS, sudo
+  - UNINSTALL_PATHS: hardcoded list of vendor uninstall.sh locations
+
+  Security
+  --------
+  - Runs only the vendor uninstall script
 favourite: false
 shared: false
 scriptId: '259059202858278912'

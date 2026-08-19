@@ -10,22 +10,26 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Uninstalls the SuperOps RMM agent from Linux systems by executing the agent's built-in uninstall script. Provides a clean removal of the agent and all associated components.
+  Uninstalls the SuperOps RMM agent from Linux by running the vendor uninstall.sh from every known SuperOps and Limehawk install path. Already-removed is success.
 
   Usage Notes
   -----------
-  - Uses official SuperOps uninstall script at /opt/superopsrmm/uninstall.sh
-  - Sets executable permissions on the uninstall script before running
-  - Validates script existence before execution
-  - All-or-nothing: any failure stops the script immediately
+  - Tries each path in order and runs the first uninstall.sh found
+  - Sets executable permissions before running
+  - Missing agent is exit 0
+  - Looks under /opt/superopsrmm, SuperOpsRMM, limehawkrmm, limehawk, Limehawkrmmagent, and /usr/local/superops
 
   Requirements
   ------------
   - Bash shell
   - Linux operating system
   - Root/sudo privileges
-  - SuperOps RMM agent must be installed
-  - Uninstall script must exist at /opt/superopsrmm/uninstall.sh
+  - UNINSTALL_PATHS: hardcoded list of vendor uninstall.sh locations
+
+  Security
+  --------
+  - Executes only the vendor uninstall script
+  - Requires root privileges to execute
 favourite: false
 shared: false
 scriptId: '259059199326674944'
