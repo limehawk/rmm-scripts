@@ -16,11 +16,9 @@ readme: |
 
   Usage Notes
   -----------
-  - Set service filter via $YourServiceFilterHere (e.g., "limehawk")
-  - Filter converted to wildcard pattern *filter* for service discovery
+  - Service filter hardcoded to limehawk (*limehawk*)
   - When running from RMM agent: spawns background process with 30-second delay
   - When running manually: restarts services directly and waits for completion
-  - Reports status of each service after restart
 
   Requirements
   ------------
@@ -30,8 +28,6 @@ readme: |
   - Target RMM agent installed (matching services must exist)
 favourite: false
 shared: true
-runtimeVariables:
-- name: YourServiceFilterHere
 scriptId: '259059215009177600'
 lastPushedChecksum: sha256:21071e206631d4f0
 lastPushedMetaChecksum: sha256:e256f2b0e663321a

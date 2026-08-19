@@ -16,7 +16,7 @@ readme: |
   - MUST RUN AS LOGGED-IN USER - NOT SYSTEM
   - Modifies HKCU registry which is per-user
   - Running as SYSTEM will modify SYSTEM's registry, not the user's
-  - Sets IsPromoted=1 for SuperOps notification entries
+  - Sets IsPromoted=1 for notification entries matching limehawkrmm or superops
   - Exits gracefully (exit 0) if registry path does not exist yet
   - No restart required - changes take effect on next tray icon update
 

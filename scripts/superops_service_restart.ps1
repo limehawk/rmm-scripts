@@ -7,9 +7,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Restart SuperOps Services                                    v2.2.1
+ SCRIPT   : Restart SuperOps Services                                    v2.3.0
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : August 2026
  USAGE    : .\superops_service_restart.ps1
 ================================================================================
  FILE     : superops_service_restart.ps1
@@ -33,13 +33,12 @@ DATA SOURCES & PRIORITY
 REQUIRED INPUTS
 
 All inputs are hardcoded in the script body:
-  - $serviceFilter : Service name filter for fuzzy matching (e.g., "limehawk")
-    Converted to wildcard pattern "*filter*" for service discovery
+  - $serviceFilter : limehawk (matches service name limehawk)
 
 --------------------------------------------------------------------------------
 SETTINGS
 
-- Fuzzy matching: Filter "limehawk" matches services like "LimehawkAgent"
+- Service match: *limehawk* (name limehawk on Limehawk-branded agents)
 - RMM detection: Checks parent process tree for superops.exe
 - Background restart: 30-second delay when running from RMM agent
 - Direct restart: Immediate synchronous restart when run manually
@@ -99,19 +98,17 @@ EXAMPLE RUN (Manual Execution)
 [RUN] RESTART SERVICES
 ==============================================================
   Finding services matching: *limehawk*
-  Found 2 service(s)
-    - LimehawkAgent (Running)
-    - LimehawkUpdater (Running)
+  Found 1 service(s)
+    - limehawk (Running)
 
   Restarting services directly...
-    - LimehawkAgent : Restarted (Running)
-    - LimehawkUpdater : Restarted (Running)
+    - limehawk : Restarted (Running)
 
 [INFO] RESULT
 ==============================================================
   Status             : Success
-  Services Found     : 2
-  Services Restarted : 2
+  Services Found     : 1
+  Services Restarted : 1
 
 [OK] FINAL STATUS
 ==============================================================
@@ -137,9 +134,8 @@ EXAMPLE RUN (RMM Execution)
 [RUN] RESTART SERVICES
 ==============================================================
   Finding services matching: *limehawk*
-  Found 2 service(s)
-    - LimehawkAgent (Running)
-    - LimehawkUpdater (Running)
+  Found 1 service(s)
+    - limehawk (Running)
 
   Scheduling background restart in 30 seconds...
   Restart command issued successfully
@@ -147,7 +143,7 @@ EXAMPLE RUN (RMM Execution)
 [INFO] RESULT
 ==============================================================
   Status         : Success
-  Services Found : 2
+  Services Found : 1
   Restart Mode   : Scheduled (background)
 
 [OK] FINAL STATUS
@@ -160,6 +156,7 @@ EXAMPLE RUN (RMM Execution)
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-19 v2.3.0 Hardcode filter limehawk. Drop SuperOps runtime var and debug tree.
  2026-01-19 v2.2.1 Updated to two-line ASCII console output style
  2026-01-19 v2.2.0 Updated to corner bracket style section headers
  2026-01-18 v2.1.2 Increased background restart delay to 30 seconds
@@ -188,7 +185,7 @@ $runningFromRMM    = $false
 # HARDCODED INPUTS
 # ==============================================================================
 
-$serviceFilter = "$YourServiceFilterHere"
+$serviceFilter = 'limehawk'
 
 # ==============================================================================
 # FUNCTIONS
@@ -222,27 +219,6 @@ function Test-RunningFromRMM {
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="
-
-if ([string]::IsNullOrWhiteSpace($serviceFilter) -or $serviceFilter -eq '$' + 'YourServiceFilterHere') {
-    $errorOccurred = $true
-    $errorText = "- SuperOps runtime variable `$YourServiceFilterHere was not replaced."
-}
-
-if ($errorOccurred) {
-    Write-Host "Service Filter : (not set)"
-    Write-Host ""
-    Write-Host "[ERROR] ERROR OCCURRED"
-    Write-Host "=============================================================="
-    Write-Host $errorText
-    Write-Host ""
-    Write-Host "[ERROR] FINAL STATUS"
-    Write-Host "=============================================================="
-    Write-Host "Script cannot proceed. Configure the runtime variable in SuperOps."
-    Write-Host ""
-    Write-Host "[ERROR] SCRIPT COMPLETED"
-    Write-Host "=============================================================="
-    exit 1
-}
 
 $wildcardPattern = "*$serviceFilter*"
 Write-Host "Service Filter   : $serviceFilter"
@@ -285,56 +261,7 @@ if ($runningFromRMM) {
 }
 
 # ==============================================================================
-# DEBUG: PROCESS TREE ANALYSIS
-# ==============================================================================
-
-Write-Host ""
-Write-Host "[INFO] DEBUG: PROCESS TREE"
-Write-Host "=============================================================="
-Write-Host "Current Process:"
-Write-Host "  PID          : $PID"
-Write-Host "  Process Name : $((Get-Process -Id $PID).ProcessName)"
-Write-Host "  Command Line : $([Environment]::CommandLine)"
-Write-Host ""
-Write-Host "Parent Process Chain:"
-
-$currentPID = $PID
-$depth = 0
-while ($currentPID -and $currentPID -ne 0 -and $depth -lt 10) {
-    $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $currentPID" -ErrorAction SilentlyContinue
-    if ($null -eq $proc) { break }
-
-    $indent = "  " + ("  " * $depth)
-    Write-Host "${indent}[$depth] PID: $($proc.ProcessId)"
-    Write-Host "${indent}    Name       : $($proc.Name)"
-    Write-Host "${indent}    Parent PID : $($proc.ParentProcessId)"
-    if ($proc.CommandLine) {
-        $cmdLine = $proc.CommandLine
-        if ($cmdLine.Length -gt 100) { $cmdLine = $cmdLine.Substring(0, 100) + "..." }
-        Write-Host "${indent}    CommandLine: $cmdLine"
-    }
-    if ($proc.ExecutablePath) {
-        Write-Host "${indent}    Path       : $($proc.ExecutablePath)"
-    }
-
-    # Check what patterns this would match
-    $matchesSuperops = $proc.Name -match 'superops'
-    $matchesFilter = $serviceFilter -and ($proc.Name -match [regex]::Escape($serviceFilter))
-    if ($matchesSuperops -or $matchesFilter) {
-        Write-Host "${indent}    ** MATCHES: superops=$matchesSuperops, filter=$matchesFilter **"
-    }
-
-    $currentPID = $proc.ParentProcessId
-    $depth++
-}
-
-Write-Host ""
-Write-Host "Detection Summary:"
-Write-Host "  Filter pattern  : $serviceFilter"
-Write-Host "  Would detect    : $runningFromRMM"
-
-# ==============================================================================
-# RESTART SERVICES (DISABLED FOR DEBUG)
+# RESTART SERVICES
 # ==============================================================================
 
 Write-Host ""
@@ -382,11 +309,6 @@ try {
 
         $serviceNames = ($services | ForEach-Object { $_.Name }) -join "','"
         $restartCommand = "Start-Sleep -Seconds 30; @('$serviceNames') | ForEach-Object { Restart-Service -Name `$_ -Force }"
-
-        Write-Host ""
-        Write-Host "DEBUG: Background command:"
-        Write-Host "  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command `"$restartCommand`""
-        Write-Host ""
 
         Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", $restartCommand -WindowStyle Hidden
 

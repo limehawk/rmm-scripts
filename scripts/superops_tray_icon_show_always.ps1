@@ -8,9 +8,9 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : SuperOps Tray Icon Always Show                                v1.4.1
+ SCRIPT   : SuperOps Tray Icon Always Show                                v1.5.0
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : August 2026
  USAGE    : .\superops_tray_icon_show_always.ps1
 ================================================================================
  FILE     : superops_tray_icon_show_always.ps1
@@ -31,7 +31,7 @@ DESCRIPTION : Configures Windows to always show SuperOps tray icon
 
  DATA SOURCES & PRIORITY
  1) Windows Registry (HKCU:\Control Panel\NotifyIconSettings)
- 2) Hardcoded search pattern ("superops")
+ 2) Hardcoded search pattern (limehawkrmm or superops)
 
  REQUIRED INPUTS
  None - Script automatically detects and configures SuperOps tray icon settings
@@ -40,13 +40,13 @@ DESCRIPTION : Configures Windows to always show SuperOps tray icon
  - Searches all notification icon registry entries for SuperOps-related entries
  - Sets IsPromoted=1 for matching entries (makes icon always visible)
  - Processes all users' notification area settings under HKCU context
- - Uses case-insensitive pattern matching for "superops"
+ - Matches limehawkrmm or superops in any icon property (path or name)
 
  BEHAVIOR
  - Checks Windows version and exits with error on unsupported OS
  - Exits gracefully (exit 0) if registry path doesn't exist yet
  - Enumerates all subkeys in HKCU:\Control Panel\NotifyIconSettings
- - Searches each key's properties for strings containing "superops"
+ - Searches each key's properties for limehawkrmm or superops
  - When a match is found, sets the IsPromoted DWORD value to 1
  - Reports each modification made to the console
  - Continues processing even if individual keys fail to read
@@ -78,7 +78,7 @@ DESCRIPTION : Configures Windows to always show SuperOps tray icon
  [INFO] INPUT VALIDATION
  ==============================================================
  Registry Path : HKCU:\Control Panel\NotifyIconSettings
- Search Pattern : *superops*
+ Search Pattern : limehawkrmm|superops
 
  [RUN] OPERATION
  ==============================================================
@@ -102,6 +102,7 @@ DESCRIPTION : Configures Windows to always show SuperOps tray icon
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-19 v1.5.0 Match limehawkrmm or superops (Limehawk-branded agent)
  2026-01-19 v1.4.1 Updated to two-line ASCII console output style
  2025-12-28 v1.4.0 Add OS version check - requires Windows 11 (build 22000+)
  2025-12-28 v1.3.0 Handle missing registry path gracefully (exit 0 instead of error)
@@ -121,7 +122,7 @@ $iconsModified = 0
 
 # ==== HARDCODED INPUTS (MANDATORY) ====
 $notifyIconPath = "HKCU:\Control Panel\NotifyIconSettings"
-$searchPattern  = "*superops*"
+$searchPattern  = '(?i)limehawkrmm|superops'
 
 # ==== USER CONTEXT CHECK ====
 Write-Host ""
@@ -237,10 +238,9 @@ try {
         try {
             $values = Get-ItemProperty -Path $key.PSPath -ErrorAction Stop
 
-            # Check for any property that contains "superops" (case-insensitive)
             $matchFound = $false
             foreach ($property in $values.PSObject.Properties) {
-                if ($property.Value -is [string] -and $property.Value -like $searchPattern) {
+                if ($property.Value -is [string] -and $property.Value -match $searchPattern) {
                     $matchFound = $true
                     break
                 }
