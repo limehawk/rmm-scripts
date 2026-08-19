@@ -1,0 +1,9 @@
+name: file_secure_delete.ps1
+description: Interactive version of secure delete - prompts user for all inputs
+shell: POWERSHELL
+runAs: CURRENT_USER
+timeout: 1800
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Nw
+lastPushedChecksum: "sha256:99d45673e39aa403"
+lastPushedMetaChecksum: "sha256:489feaaeba40b6e3"

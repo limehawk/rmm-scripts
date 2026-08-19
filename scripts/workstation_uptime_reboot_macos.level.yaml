@@ -1,0 +1,9 @@
+name: workstation_uptime_reboot_macos.sh
+description: Reboots macOS when uptime exceeds configured threshold
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwOA
+lastPushedChecksum: "sha256:3ba41914e543c9d9"
+lastPushedMetaChecksum: "sha256:0781436877e2f134"

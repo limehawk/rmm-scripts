@@ -1,0 +1,9 @@
+name: prinstall_driver_list.ps1
+description: Lists drivers in the Windows driver store using prinstall 0.4.13+
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNA
+lastPushedChecksum: "sha256:feaf37e6d0aa7773"
+lastPushedMetaChecksum: "sha256:28995de0f60bab15"

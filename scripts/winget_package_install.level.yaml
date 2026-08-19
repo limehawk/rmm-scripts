@@ -1,0 +1,9 @@
+name: winget_package_install.ps1
+description: Installs software package using winget with SuperOps integration
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5MA
+lastPushedChecksum: "sha256:81593e032c1092d2"
+lastPushedMetaChecksum: "sha256:3720ad0025a0796a"

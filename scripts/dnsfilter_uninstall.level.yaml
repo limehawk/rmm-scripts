@@ -1,0 +1,9 @@
+name: dnsfilter_uninstall.ps1
+description: Completely removes DNSFilter agent and resets DNS to DHCP
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Nw
+lastPushedChecksum: "sha256:09f70a00c2649337"
+lastPushedMetaChecksum: "sha256:c77b8bc2bb6028e6"

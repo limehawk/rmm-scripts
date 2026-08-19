@@ -1,0 +1,9 @@
+name: dns_flush.sh
+description: Flushes DNS cache on macOS across all supported versions
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1NQ
+lastPushedChecksum: "sha256:5124eb497016d01a"
+lastPushedMetaChecksum: "sha256:d307e5164ef19eba"

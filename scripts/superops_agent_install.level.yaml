@@ -1,0 +1,9 @@
+name: superops_agent_install.ps1
+description: Downloads and installs SuperOps RMM agent on Windows
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1OA
+lastPushedChecksum: "sha256:52ab8410999a4df7"
+lastPushedMetaChecksum: "sha256:53916519f3b9b717"

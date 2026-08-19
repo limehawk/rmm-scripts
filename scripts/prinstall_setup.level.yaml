@@ -1,0 +1,9 @@
+name: prinstall_setup.ps1
+description: Installs or uninstalls prinstall from GitHub releases
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 600
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMQ
+lastPushedChecksum: "sha256:91001c70808f9cc5"
+lastPushedMetaChecksum: "sha256:61dabbef7cd23842"

@@ -1,0 +1,9 @@
+name: windows_update_reset.ps1
+description: Resets Windows Update components and clears cache
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4OQ
+lastPushedChecksum: "sha256:dc0660ba30a52b1f"
+lastPushedMetaChecksum: "sha256:7a248ea5926f32dd"

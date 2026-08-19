@@ -1,0 +1,9 @@
+name: disk_cleanup.ps1
+description: Runs Windows Disk Cleanup plus SoftwareDistribution/WinSxS cleanup
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 86399
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Mg
+lastPushedChecksum: "sha256:2496e05767011ab7"
+lastPushedMetaChecksum: "sha256:aca26b0341ff6df2"

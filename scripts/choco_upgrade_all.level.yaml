@@ -1,0 +1,9 @@
+name: choco_upgrade_all.ps1
+description: Upgrades all Chocolatey-managed packages to latest versions
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNw
+lastPushedChecksum: "sha256:bf35638a77698431"
+lastPushedMetaChecksum: "sha256:26c49d38afabc76f"

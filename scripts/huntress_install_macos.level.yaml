@@ -1,0 +1,9 @@
+name: huntress_install_macos.sh
+description: Installs Huntress Agent on macOS endpoints
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3NQ
+lastPushedChecksum: "sha256:910ea6231cde662c"
+lastPushedMetaChecksum: "sha256:34241a4dc18f26c6"

@@ -1,0 +1,9 @@
+name: local_user_delete.ps1
+description: Deletes local user account and associated profile directory
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Mg
+lastPushedChecksum: "sha256:16d8ccc7f3be11d4"
+lastPushedMetaChecksum: "sha256:0f41c6379afcbb6c"

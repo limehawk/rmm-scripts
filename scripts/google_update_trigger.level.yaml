@@ -1,0 +1,9 @@
+name: google_update_trigger.ps1
+description: Triggers Google Update scheduled task to check for Chrome updates
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3Mw
+lastPushedChecksum: "sha256:4646ca9e91cf3598"
+lastPushedMetaChecksum: "sha256:2f7d6a09f0708c09"

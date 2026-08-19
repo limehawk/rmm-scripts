@@ -1,0 +1,9 @@
+name: workstation_reboot_force.ps1
+description: Forces an immediate system reboot without user prompts
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMQ
+lastPushedChecksum: "sha256:396ded2032104a45"
+lastPushedMetaChecksum: "sha256:2c00b765cd6f6685"

@@ -1,0 +1,9 @@
+name: rustic_uninstall.ps1
+description: Removes rustic binary, config, scheduled task, and logs
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzOA
+lastPushedChecksum: "sha256:3e899b4f1ae514a7"
+lastPushedMetaChecksum: "sha256:0522707d97bb82c5"

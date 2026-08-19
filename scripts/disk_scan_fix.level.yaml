@@ -1,0 +1,9 @@
+name: disk_scan_fix.sh
+description: Comprehensive disk and volume health check for macOS
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Mw
+lastPushedChecksum: "sha256:9afd6590971bc04f"
+lastPushedMetaChecksum: "sha256:9a562a254b2a72cc"

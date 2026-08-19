@@ -1,0 +1,9 @@
+name: directory_cleanup.ps1
+description: Deletes files and directories older than specified days
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1MA
+lastPushedChecksum: "sha256:c4b0a0caf6528904"
+lastPushedMetaChecksum: "sha256:befec431a22ba5de"

@@ -1,0 +1,9 @@
+name: file_secure_delete_certificate.ps1
+description: Securely deletes files with DoD-compliant overwriting and audit trail
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2OA
+lastPushedChecksum: "sha256:a041287d0a535364"
+lastPushedMetaChecksum: "sha256:47c7a4f846c9c22e"

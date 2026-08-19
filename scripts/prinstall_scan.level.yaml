@@ -1,0 +1,9 @@
+name: prinstall_scan.ps1
+description: Scans a subnet for network printers using prinstall
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyMA
+lastPushedChecksum: "sha256:97d57bd6f9b1475b"
+lastPushedMetaChecksum: "sha256:f881129b3146716f"

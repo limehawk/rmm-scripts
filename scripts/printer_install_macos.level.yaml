@@ -1,0 +1,9 @@
+name: printer_install_macos.sh
+description: Installs network printer via IPP using lpadmin on macOS
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNw
+lastPushedChecksum: "sha256:629c0f1457ee7d88"
+lastPushedMetaChecksum: "sha256:6293f73c0f7de6ac"

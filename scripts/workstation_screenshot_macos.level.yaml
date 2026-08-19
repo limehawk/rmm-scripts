@@ -1,0 +1,9 @@
+name: workstation_screenshot_macos.sh
+description: Captures screenshot of all displays on macOS
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwNw
+lastPushedChecksum: "sha256:68e461f9f17d2d4c"
+lastPushedMetaChecksum: "sha256:3146d24ddd1b608a"

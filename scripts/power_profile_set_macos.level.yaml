@@ -1,0 +1,9 @@
+name: power_profile_set_macos.sh
+description: Configures always-on power settings for macOS systems
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxMQ
+lastPushedChecksum: "sha256:6f8c56d312326c36"
+lastPushedMetaChecksum: "sha256:bb301f6395f145ee"

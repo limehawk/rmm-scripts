@@ -1,0 +1,9 @@
+name: local_user_admin_toggle.ps1
+description: Adds or removes a local user from the Administrators group
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4MA
+lastPushedChecksum: "sha256:d8f47d2d007aaf4c"
+lastPushedMetaChecksum: "sha256:6ed97fab0330af93"

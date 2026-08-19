@@ -1,0 +1,9 @@
+name: splashtop_streamer_install_debian_arm64.sh
+description: Installs Splashtop Streamer on Debian/Ubuntu ARM64 systems
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1MQ
+lastPushedChecksum: "sha256:4fb1452893ccc28c"
+lastPushedMetaChecksum: "sha256:fe7c924f979e90b5"

@@ -1,0 +1,9 @@
+name: webview2_repair_install.ps1
+description: Detects and repairs broken Microsoft Edge WebView2 Runtime installs
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Nw
+lastPushedChecksum: "sha256:eb622de3ac3b06f0"
+lastPushedMetaChecksum: "sha256:12630399b7d7c829"

@@ -1,0 +1,9 @@
+name: public_ip_export_superops_macos.sh
+description: Fetches public IP info from wtfismyip.com and outputs formatted results
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMA
+lastPushedChecksum: "sha256:c115a7ff0b97c23b"
+lastPushedMetaChecksum: "sha256:deb7b3f42214fdf0"

@@ -1,0 +1,9 @@
+name: local_user_admin_setup.ps1
+description: Creates a new local administrator account for employee onboarding
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3OQ
+lastPushedChecksum: "sha256:5b01541855959832"
+lastPushedMetaChecksum: "sha256:7719e7438de5965b"

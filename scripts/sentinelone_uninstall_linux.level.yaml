@@ -1,0 +1,9 @@
+name: sentinelone_uninstall_linux.sh
+description: Uninstalls SentinelOne agent from Linux using passphrase
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Mg
+lastPushedChecksum: "sha256:14d539a27befd82d"
+lastPushedMetaChecksum: "sha256:a67fedd0e755613b"

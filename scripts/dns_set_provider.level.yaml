@@ -1,0 +1,9 @@
+name: dns_set_provider.ps1
+description: Sets IPv4 DNS servers on active adapters to a chosen provider
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1Ng
+lastPushedChecksum: "sha256:c5ae635e195d07c1"
+lastPushedMetaChecksum: "sha256:da73d5ee6c22002f"

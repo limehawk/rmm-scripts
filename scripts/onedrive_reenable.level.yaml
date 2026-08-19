@@ -1,0 +1,9 @@
+name: onedrive_reenable.ps1
+description: Removes OneDrive blocking policies and reinstalls OneDrive
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Ng
+lastPushedChecksum: "sha256:640ca7ab752253cc"
+lastPushedMetaChecksum: "sha256:927a6fa438d77c73"

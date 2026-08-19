@@ -1,0 +1,9 @@
+name: rustic_backup.ps1
+description: Runs rustic backup, prune, and integrity check using existing profile
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 7200
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMg
+lastPushedChecksum: "sha256:37d4d46a94882a30"
+lastPushedMetaChecksum: "sha256:0fa3173759925e88"

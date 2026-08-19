@@ -1,0 +1,9 @@
+name: synology_backup_agent_install_linux.sh
+description: Installs Synology Active Backup for Business Agent on Linux
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2OQ
+lastPushedChecksum: "sha256:d25da66ea53f3a05"
+lastPushedMetaChecksum: "sha256:5a69a5cf5651e9ab"

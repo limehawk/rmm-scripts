@@ -1,0 +1,9 @@
+name: power_plans_default_add.ps1
+description: Restores missing default Windows power plans
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwOQ
+lastPushedChecksum: "sha256:3bb8c3a5422e2db1"
+lastPushedMetaChecksum: "sha256:9998ceb48258c846"

@@ -1,0 +1,9 @@
+name: rustic_backup_unix.sh
+description: Runs rustic backup, prune, and integrity check (Linux/macOS)
+shell: BASH
+runAs: SYSTEM
+timeout: 7200
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzMw
+lastPushedChecksum: "sha256:a10b4b3cc851a31b"
+lastPushedMetaChecksum: "sha256:8f421517af16e5ab"

@@ -1,0 +1,9 @@
+name: edge_chrome_default_user_set.ps1
+description: Sets Google Chrome as default browser for current user via SetUserFTA
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2Mg
+lastPushedChecksum: "sha256:b213f84130bd8aa5"
+lastPushedMetaChecksum: "sha256:c2acc08e23506011"

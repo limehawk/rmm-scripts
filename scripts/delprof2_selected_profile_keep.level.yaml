@@ -1,0 +1,9 @@
+name: delprof2_selected_profile_keep.ps1
+description: Deletes all profiles EXCEPT the specified one and protected ones
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI0Ng
+lastPushedChecksum: "sha256:e42a9370705203ab"
+lastPushedMetaChecksum: "sha256:5be9cc55318f8539"

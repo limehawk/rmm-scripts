@@ -1,0 +1,9 @@
+name: printer_connection_test.sh
+description: Tests network printer connectivity via ping and IPP port check
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMyNQ
+lastPushedChecksum: "sha256:80e00c348b5ea77c"
+lastPushedMetaChecksum: "sha256:cfe2d9e32e309cfd"

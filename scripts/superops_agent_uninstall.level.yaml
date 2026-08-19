@@ -1,31 +1,9 @@
 name: superops_agent_uninstall.ps1
-description: Uninstalls SuperOps/Limehawk RMM agent and leftover remnants
+description: Uninstalls SuperOps RMM agent using official or registry method
 shell: POWERSHELL
 runAs: SYSTEM
-timeout: 300
-readme: |
-  Purpose
-  -------
-  Removes the SuperOps RMM agent (including Limehawk-branded installs) from
-  Windows. Tamper protection can leave the service and files after MSI reports
-  success, so the service is deleted first, msiexec is watched for hangs, and
-  leftovers are verified before exit. Missing product is success so the script
-  is safe to re-run.
-
-  Usage Notes
-  -----------
-  - Silent MSI args: /qn /norestart
-  - msiexec hang timeout: 90 seconds (near-zero CPU = hung, then taskkill)
-  - msiexec exit 0 is not proof the agent is gone
-  - Service match is name/display limehawk* / superops*, or ImagePath
-  - Already-removed agent is exit 0
-  - sc stop + sc delete FIRST (works with tamper on)
-  - Then msiexec /x for each product code; leftover dirs and registry cleaned
-  - Verifies service 1060, no limehawkrmm processes, dirs gone
-
-  Requirements
-  ------------
-  - PowerShell 5.1 or later
-  - Administrator privileges
-  - Windows
-  - Level: run as System; timeout 300 seconds
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM2Mg
+lastPushedChecksum: "sha256:2c5397547f07fe33"
+lastPushedMetaChecksum: "sha256:77311cc9d07e964c"

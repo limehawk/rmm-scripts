@@ -1,0 +1,9 @@
+name: splashtop_service_restart.ps1
+description: Restarts Splashtop Remote Service to resolve connectivity issues
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0Nw
+lastPushedChecksum: "sha256:af58133e2ca89fc7"
+lastPushedMetaChecksum: "sha256:ca5ff6d66ef74047"

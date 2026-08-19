@@ -1,0 +1,9 @@
+name: winreagent_cleanup.ps1
+description: Cleans up WinREAgent folder to free disk space
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5NQ
+lastPushedChecksum: "sha256:142834ca4118604e"
+lastPushedMetaChecksum: "sha256:7e9b2e2e650ff49e"

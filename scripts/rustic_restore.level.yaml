@@ -1,0 +1,9 @@
+name: rustic_restore.ps1
+description: Restores files from a rustic backup snapshot to a local destination
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 7200
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMzNg
+lastPushedChecksum: "sha256:59f81da920ec0a94"
+lastPushedMetaChecksum: "sha256:4a497d7cd476607c"

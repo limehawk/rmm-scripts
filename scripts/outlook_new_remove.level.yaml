@@ -1,0 +1,9 @@
+name: outlook_new_remove.ps1
+description: Removes the New Outlook (Microsoft.OutlookForWindows) app from all user profiles and prevents reinstallation
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 600
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwNA
+lastPushedChecksum: "sha256:b2ff05e51e2d5e97"
+lastPushedMetaChecksum: "sha256:b28aed12e71c2c75"

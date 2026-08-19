@@ -1,0 +1,9 @@
+name: sentinelone_install.ps1
+description: Silently installs SentinelOne endpoint agent with site token
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0MA
+lastPushedChecksum: "sha256:3a0ca6654acf5982"
+lastPushedMetaChecksum: "sha256:761f0587b986e04b"

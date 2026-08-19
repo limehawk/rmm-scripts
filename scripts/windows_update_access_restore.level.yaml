@@ -1,0 +1,9 @@
+name: windows_update_access_restore.ps1
+description: Restores user access to Windows Update settings
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Nw
+lastPushedChecksum: "sha256:b8d790b668a1b512"
+lastPushedMetaChecksum: "sha256:2a13b643717822f7"

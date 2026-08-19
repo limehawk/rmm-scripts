@@ -1,0 +1,9 @@
+name: wifi_adapters_disable.ps1
+description: Disables all physical and virtual Wi-Fi network adapters
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3OA
+lastPushedChecksum: "sha256:16dd67e48b67ceaf"
+lastPushedMetaChecksum: "sha256:78f8840e065d4f86"

@@ -1,0 +1,9 @@
+name: onedrive_remove_complete.ps1
+description: Completely removes Microsoft OneDrive with startup suppression
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Nw
+lastPushedChecksum: "sha256:e1f4ee52cb2ad974"
+lastPushedMetaChecksum: "sha256:1763b0675e257efc"

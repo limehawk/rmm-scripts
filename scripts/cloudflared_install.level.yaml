@@ -1,0 +1,9 @@
+name: cloudflared_install.ps1
+description: Installs cloudflared via winget and registers the tunnel service
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOA
+lastPushedChecksum: "sha256:13f478410f8c5064"
+lastPushedMetaChecksum: "sha256:456e101d5dc58bfa"

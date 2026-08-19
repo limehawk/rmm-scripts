@@ -1,0 +1,9 @@
+name: bitlocker_superops_enable.ps1
+description: Enables BitLocker with TPM and syncs recovery key to SuperOps
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzNQ
+lastPushedChecksum: "sha256:5bb054e2cc26dc88"
+lastPushedMetaChecksum: "sha256:5f4065d7380dd69d"

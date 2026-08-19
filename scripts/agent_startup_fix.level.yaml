@@ -1,0 +1,9 @@
+name: agent_startup_fix.ps1
+description: Fixes RMM agent service startup with recovery options and delayed start
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMQ
+lastPushedChecksum: "sha256:5c55fbd2b948f152"
+lastPushedMetaChecksum: "sha256:c4a125f9dc0cfecf"

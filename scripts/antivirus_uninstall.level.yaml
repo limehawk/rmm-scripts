@@ -1,0 +1,9 @@
+name: antivirus_uninstall.ps1
+description: Removes common third-party antivirus software (McAfee, Sophos, AVG, etc.)
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzMw
+lastPushedChecksum: "sha256:20975b8efcf885c8"
+lastPushedMetaChecksum: "sha256:be876ca8a3a8af7d"

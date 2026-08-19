@@ -1,0 +1,9 @@
+name: splashtop_streamer_install_macos.sh
+description: Downloads and installs Splashtop Streamer agent on macOS
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM1Mg
+lastPushedChecksum: "sha256:7962109ca8b9e885"
+lastPushedMetaChecksum: "sha256:4306f91b36daf03a"

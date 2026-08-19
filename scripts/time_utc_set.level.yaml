@@ -1,0 +1,9 @@
+name: time_utc_set.ps1
+description: Fixes time drift on Windows/Linux dual-boot systems
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM3Mg
+lastPushedChecksum: "sha256:4a8bd8317bc76df9"
+lastPushedMetaChecksum: "sha256:0ad7080096c9e58e"

@@ -1,0 +1,9 @@
+name: openssh_server_setup.ps1
+description: Installs and configures OpenSSH Server on Windows
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwMQ
+lastPushedChecksum: "sha256:c182f7aae76eb7a9"
+lastPushedMetaChecksum: "sha256:ed6fdd260dab7da6"

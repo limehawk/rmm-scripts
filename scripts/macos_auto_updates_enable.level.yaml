@@ -1,0 +1,9 @@
+name: macos_auto_updates_enable.sh
+description: Enables all automatic update settings on macOS
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4NA
+lastPushedChecksum: "sha256:25ead792bd41f224"
+lastPushedMetaChecksum: "sha256:4ce1ba02ae3dea40"

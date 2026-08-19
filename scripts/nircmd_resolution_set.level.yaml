@@ -1,0 +1,9 @@
+name: nircmd_resolution_set.ps1
+description: Changes display resolution using NirSoft NirCmd utility
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5Mg
+lastPushedChecksum: "sha256:144f3fde5574868a"
+lastPushedMetaChecksum: "sha256:5ca9f9cf9f5a5181"

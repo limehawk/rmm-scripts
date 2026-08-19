@@ -1,0 +1,9 @@
+name: network_service_refresh_macos.sh
+description: Refreshes all macOS network services by toggling them off and on
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI5MA
+lastPushedChecksum: "sha256:5c518394b55357ae"
+lastPushedMetaChecksum: "sha256:dfafcc5d6cef2dd1"

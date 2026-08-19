@@ -1,0 +1,9 @@
+name: openssh_server_remove.ps1
+description: Removes OpenSSH Server, firewall rule, and cleans up config
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 300
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMwMA
+lastPushedChecksum: "sha256:71f9a649c4db3f9b"
+lastPushedMetaChecksum: "sha256:b0fae51c710c8234"

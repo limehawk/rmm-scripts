@@ -1,0 +1,9 @@
+name: disk_smart_status.ps1
+description: Reports S.M.A.R.T. predictive-failure health of all physical disks
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 1800
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI1NA
+lastPushedChecksum: "sha256:cf1b77bc78f75a11"
+lastPushedMetaChecksum: "sha256:b346d0878c0124e5"

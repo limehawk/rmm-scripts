@@ -1,0 +1,9 @@
+name: splashtop_business_install.ps1
+description: Installs Splashtop Business client via winget
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0NQ
+lastPushedChecksum: "sha256:de86051d4da42af9"
+lastPushedMetaChecksum: "sha256:c9ccc5444c61bb30"

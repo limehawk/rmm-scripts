@@ -1,0 +1,9 @@
+name: speedtest_export_superops.ps1
+description: Runs Ookla Speedtest and syncs results to SuperOps custom fields
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM0NA
+lastPushedChecksum: "sha256:f0b07e25413d5fec"
+lastPushedMetaChecksum: "sha256:6afc2af3e746c7ed"

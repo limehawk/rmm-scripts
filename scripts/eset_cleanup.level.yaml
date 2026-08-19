@@ -1,0 +1,9 @@
+name: eset_cleanup.ps1
+description: Completely removes ESET antivirus remnants from Windows systems
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2NQ
+lastPushedChecksum: "sha256:be3fe66de9f75c4b"
+lastPushedMetaChecksum: "sha256:0237e98d9cf419df"

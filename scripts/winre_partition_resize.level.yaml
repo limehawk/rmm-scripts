@@ -1,0 +1,9 @@
+name: winre_partition_resize.ps1
+description: Extends WinRE partition by 250MB for Windows updates
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM5Mw
+lastPushedChecksum: "sha256:193e2e8a68f2a4ce"
+lastPushedMetaChecksum: "sha256:16d1d403c7cd3d39"

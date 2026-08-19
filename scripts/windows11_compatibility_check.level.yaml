@@ -1,0 +1,9 @@
+name: windows11_compatibility_check.ps1
+description: Checks TPM, SecureBoot, RAM, CPU compatibility for Windows 11
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4Mg
+lastPushedChecksum: "sha256:c2db40bcd9a3a6cf"
+lastPushedMetaChecksum: "sha256:113554ca377d83e9"

@@ -1,0 +1,9 @@
+name: windows_dism_sfc_chkdsk_run.ps1
+description: Runs DISM, SFC, and chkdsk for Windows system file repair
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 14400
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDM4NA
+lastPushedChecksum: "sha256:b4ad9d2189166041"
+lastPushedMetaChecksum: "sha256:b8b34b4001d1223d"

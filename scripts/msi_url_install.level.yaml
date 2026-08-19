@@ -1,0 +1,9 @@
+name: msi_url_install.ps1
+description: Downloads and silently installs an MSI package from a specified URL
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI4Nw
+lastPushedChecksum: "sha256:11645faa554f4b42"
+lastPushedMetaChecksum: "sha256:fa6304a82cedf013"

@@ -1,0 +1,9 @@
+name: prinstall_drivers.ps1
+description: Previews matched and universal drivers for a network printer
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 120
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDMxNg
+lastPushedChecksum: "sha256:460ee74ac32197ed"
+lastPushedMetaChecksum: "sha256:2f7436090f0b5465"

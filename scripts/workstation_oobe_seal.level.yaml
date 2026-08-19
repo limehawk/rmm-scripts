@@ -1,0 +1,9 @@
+name: workstation_oobe_seal.ps1
+description: Seals a configured Win11 image to a silent OOBE via sysprep
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDQwMA
+lastPushedChecksum: "sha256:131faea0ea03ff73"
+lastPushedMetaChecksum: "sha256:38bb682d15a4d427"

@@ -1,0 +1,9 @@
+name: emsisoft_url_install.ps1
+description: Downloads and installs Emsisoft Anti-Malware from a specified URL
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI2NA
+lastPushedChecksum: "sha256:192d86d6bb9b656b"
+lastPushedMetaChecksum: "sha256:2ed3ace3665c7ce7"

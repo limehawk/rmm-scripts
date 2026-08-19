@@ -1,0 +1,9 @@
+name: cloudflared_status.ps1
+description: Reports cloudflared binary, service, and tunnel connectivity state
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDIzOQ
+lastPushedChecksum: "sha256:e7d61d1e9ee15f74"
+lastPushedMetaChecksum: "sha256:4547fac1dace91c5"
