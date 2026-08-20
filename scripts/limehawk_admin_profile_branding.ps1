@@ -1,4 +1,3 @@
-Import-Module $SuperOpsModule
 $ErrorActionPreference = 'Stop'
 
 <#
@@ -9,13 +8,13 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v3.2.6
+ SCRIPT   : Limehawk Admin Profile Branding v4.0.0
  AUTHOR   : Limehawk.io
- DATE      : January 2026
+ DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
 ================================================================================
  FILE     : limehawk_admin_profile_branding.ps1
- DESCRIPTION : Creates and manages MSP admin accounts with SuperOps password sync
+ DESCRIPTION : Creates and manages MSP admin accounts with Level password slots
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
@@ -23,7 +22,7 @@ $ErrorActionPreference = 'Stop'
    Standardized Limehawk MSP automation to:
      1) Rename built-in Administrator (SID *-500) to "hawkadmin" and disable it
      2) Create/update "limehawk" MSP admin account (enabled for daily use)
-     3) Generate strong passwords for both, push to SuperOps custom fields
+     3) Generate strong passwords for both, emit Level output slots
      4) Clean up old MSP accounts (m5sadmin, tlitlocal, clientadmin)
      5) Apply account pictures and wallpaper branding
 
@@ -32,10 +31,10 @@ $ErrorActionPreference = 'Stop'
    - Run as local Administrator (elevated)
    - Local user management available (Server/Client SKUs)
 
- SUPEROPS REQUIREMENTS
-   - $SuperOpsModule available (Import-Module on line 1)
-   - Runtime cmdlet Send-CustomField available
-   - Custom fields: "Built-in Admin Password", "MSP Admin Password"
+ LEVEL REQUIREMENTS
+   - Run via Level (SYSTEM). $SuperOpsModule is not present on Level.
+   - Script variables: BuiltInAdminPassword, MspAdminPassword
+   - Map those slots to admin-only custom fields (Set Custom Field action)
 
  SAFETY / IDEMPOTENCE
    - Built-in admin identified by SID *-500, not by name
@@ -48,6 +47,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-20 v4.0.0 Ported to Level.io: drop SuperOps module/Send-CustomField; emit BuiltInAdminPassword and MspAdminPassword output slots
  2026-01-19 v3.2.6 Updated to two-line ASCII console output style
  2025-12-23 v3.2.5 Updated to Limehawk Script Framework
  2025-12-04 v3.2.4 Remove UserSwitch registry fix (didn't help, showed all users)
@@ -65,12 +65,10 @@ Set-StrictMode -Version Latest
 
 # Built-in Administrator (SID *-500) - DISABLED, password stored as backup
 $BuiltInAdminNewName       = "hawkadmin"                    # Rename built-in admin to this
-$BuiltInAdminPasswordField = "Built-in Admin Password"      # SuperOps custom field for password
 
 # MSP Administrator - ENABLED, used for daily MSP access
 $MspAdminName              = "limehawk"                     # MSP admin account name
 $MspAdminFullName          = "Limehawk"                     # Display name on login screen
-$MspAdminPasswordField     = "MSP Admin Password"           # SuperOps custom field for password
 
 # Branding assets (applied to both accounts)
 $PhotoSource               = "$env:PUBLIC\Pictures\limehawk_profile.jpg"
@@ -138,6 +136,22 @@ function PrintKV {
     param([string]$Label,[string]$Value)
     $lbl = $Label.PadRight(28)
     Write-Host (" {0} : {1}" -f $lbl, $Value)
+}
+$script:SlotHeaderShown = $false
+function Write-LevelSlot {
+    # Emit a Level output slot. Braces are built at runtime so Level does not interpolate the source.
+    param([string]$Name, [string]$Value)
+    if (-not $script:SlotHeaderShown) {
+        Write-Host ""
+        Write-Host "[INFO] LEVEL OUTPUT SLOTS"
+        Write-Host "=============================================================="
+        Write-Host " Map BuiltInAdminPassword and MspAdminPassword in the Run Script"
+        Write-Host " action, then Set Custom Field. Raw tokens mean an ad-hoc run."
+        $script:SlotHeaderShown = $true
+    }
+    $open = [string][char]123 + [string][char]123
+    $close = [string][char]125 + [string][char]125
+    Write-Host (" " + $open + $Name + '=' + $Value + $close)
 }
 function Test-IsElevated {
     $id = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -260,22 +274,12 @@ function Set-AdminWallpaper {
 
 try {
     # =============================================================================
-    # PRECHECKS & MODULE
+    # PRECHECKS
     # =============================================================================
     Write-Section "PRECHECKS"
     $elev = Test-IsElevated
     PrintKV "Elevated"               ($(if ($elev) {"Yes"} else {"No"}))
     if (-not $elev) { throw "SCRIPT MUST RUN ELEVATED." }
-
-    Write-Section "SUPEROPS MODULE"
-    try {
-        PrintKV "Importing Module"    "SuperOps"
-        # Module is already imported on line 1; this validates presence
-        $null = Get-Command Send-CustomField -ErrorAction Stop
-        PrintKV "SuperOps Cmdlets"    "OK"
-    } catch {
-        throw "FAILED TO VALIDATE SUPEROPS MODULE/CMDLETS: $($_.Exception.Message)"
-    }
 
     # =============================================================================
     # GATHER SYSTEM / TARGETS
@@ -319,13 +323,8 @@ try {
         throw "Failed to set password on built-in Administrator account: $($_.Exception.Message)"
     }
 
-    # Sync the password to SuperOps
-    try {
-        Send-CustomField -CustomFieldName $BuiltInAdminPasswordField -Value $BuiltInAdminPassword
-        PrintKV "SuperOps Sync (Built-in)" "Password for '$BuiltInAdminNewName' updated in '$BuiltInAdminPasswordField'"
-    } catch {
-        throw "Failed to sync built-in admin password to SuperOps: $($_.Exception.Message)"
-    }
+    Write-LevelSlot -Name "BuiltInAdminPassword" -Value $BuiltInAdminPassword
+    PrintKV "Level Slot (Built-in)" "BuiltInAdminPassword"
 
     # Ensure the built-in admin account is disabled
     try {
@@ -370,13 +369,8 @@ try {
         }
     }
 
-    # Sync the password to SuperOps
-    try {
-        Send-CustomField -CustomFieldName $MspAdminPasswordField -Value $MspAdminPassword
-        PrintKV "SuperOps Sync (MSP)" "Password for '$MspAdminName' updated in '$MspAdminPasswordField'"
-    } catch {
-        throw "Failed to sync MSP admin password to SuperOps: $($_.Exception.Message)"
-    }
+    Write-LevelSlot -Name "MspAdminPassword" -Value $MspAdminPassword
+    PrintKV "Level Slot (MSP)" "MspAdminPassword"
 
     # Ensure the MSP admin account is enabled
     try {
@@ -469,8 +463,8 @@ try {
     # DONE
     # =============================================================================
     Write-Section "FINAL STATUS"
-    PrintKV "hawkadmin (built-in)" "Disabled, password synced to SuperOps"
-    PrintKV "limehawk (MSP admin)" "Enabled, password synced to SuperOps"
+    PrintKV "hawkadmin (built-in)" "Disabled, password in BuiltInAdminPassword slot"
+    PrintKV "limehawk (MSP admin)" "Enabled, password in MspAdminPassword slot"
 
     Write-Section "SCRIPT COMPLETED" "OK"
     exit 0

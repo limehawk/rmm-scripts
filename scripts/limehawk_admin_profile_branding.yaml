@@ -1,5 +1,5 @@
 name: limehawk_admin_profile_branding.ps1
-description: Creates and manages MSP admin accounts with SuperOps password sync
+description: Creates and manages MSP admin accounts with Level password slots
 language: PowerShell
 tags:
 - Maintenance
@@ -9,23 +9,22 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Standardized Limehawk MSP automation that renames the built-in Administrator (SID *-500) to "hawkadmin" and disables it, creates or updates the "limehawk" MSP admin account for daily use, generates strong passwords for both accounts and pushes them to SuperOps custom fields, cleans up old MSP accounts (m5sadmin, tlitlocal, clientadmin), and applies account pictures and wallpaper branding.
+  Standardized Limehawk MSP automation that renames the built-in Administrator (SID *-500) to "hawkadmin" and disables it, creates or updates the "limehawk" MSP admin account for daily use, generates strong passwords for both accounts and emits them as Level output slots (BuiltInAdminPassword, MspAdminPassword), cleans up old MSP accounts (m5sadmin, tlitlocal, clientadmin), and applies account pictures and wallpaper branding.
 
   Usage Notes
   -----------
   - Built-in admin identified by SID *-500, not by name
   - If limehawk account exists, password is reset (safe for existing clients)
   - Account picture and wallpaper operations are best-effort (no-throw)
-  - Requires SuperOps module with Send-CustomField cmdlet
-  - Configure account names, custom field mappings, branding asset paths, and password length via hardcoded settings
+  - Map BuiltInAdminPassword and MspAdminPassword in the Run Script action to admin-only custom fields
+  - Configure account names, branding asset paths, and password length via hardcoded settings
   - Password length defaults to 16 characters
 
   Requirements
   ------------
   - PowerShell 5.1+
   - Run as local Administrator (elevated)
-  - SuperOps module available ($SuperOpsModule)
-  - SuperOps custom fields: "Built-in Admin Password", "MSP Admin Password"
+  - Level agent (SYSTEM)
 favourite: false
 shared: false
 scriptId: '3077420686222594048'

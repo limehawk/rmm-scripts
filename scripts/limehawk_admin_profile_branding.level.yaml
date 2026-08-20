@@ -1,8 +1,13 @@
 name: limehawk_admin_profile_branding.ps1
-description: Creates and manages MSP admin accounts with SuperOps password sync
+description: Creates and manages MSP admin accounts with Level password slots
 shell: POWERSHELL
 runAs: SYSTEM
 timeout: 900
+variables:
+  - name: BuiltInAdminPassword
+    description: Generated password for hawkadmin (built-in, disabled)
+  - name: MspAdminPassword
+    description: Generated password for limehawk (MSP admin)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3Nw
 lastPushedChecksum: "sha256:cc11c5cfa54f13ae"
