@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.0.2
+ SCRIPT   : Limehawk Admin Profile Branding v4.1.0
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -33,8 +33,8 @@ $ErrorActionPreference = 'Stop'
 
  LEVEL REQUIREMENTS
    - Run via Level (SYSTEM). $SuperOpsModule is not present on Level.
-   - Script variables: BuiltInAdminPassword, MspAdminPassword
-   - Map those slots to admin-only custom fields (Set Custom Field action)
+   - Script variables: password_admin, password_msp
+   - Map those slots to custom fields of the same name (Set Custom Field action)
 
  SAFETY / IDEMPOTENCE
    - Built-in admin identified by SID *-500, not by name
@@ -47,6 +47,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.1.0 Emit password_admin / password_msp slots (same names as Level fields); no leading space on tokens
  2026-08-21 v4.0.2 Set wallpaper on a live HKU SID hive when the user is logged on; do not load NTUSER.DAT in that case
  2026-08-20 v4.0.1 Profile photo path is limehawk_profile.png (Level Files)
  2026-08-20 v4.0.0 Ported to Level.io: drop SuperOps module/Send-CustomField; emit BuiltInAdminPassword and MspAdminPassword output slots
@@ -147,13 +148,13 @@ function Write-LevelSlot {
         Write-Host ""
         Write-Host "[INFO] LEVEL OUTPUT SLOTS"
         Write-Host "=============================================================="
-        Write-Host " Map BuiltInAdminPassword and MspAdminPassword in the Run Script"
-        Write-Host " action, then Set Custom Field. Raw tokens mean an ad-hoc run."
+        Write-Host " Map password_admin and password_msp in the Run Script action,"
+        Write-Host " then Set Custom Field. Raw tokens mean an ad-hoc run."
         $script:SlotHeaderShown = $true
     }
     $open = [string][char]123 + [string][char]123
     $close = [string][char]125 + [string][char]125
-    Write-Host (" " + $open + $Name + '=' + $Value + $close)
+    Write-Host ($open + $Name + '=' + $Value + $close)
 }
 function Test-IsElevated {
     $id = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -166,7 +167,7 @@ function New-RandomPassword {
     $lower = 'abcdefghijklmnopqrstuvwxyz'.ToCharArray()
     $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.ToCharArray()
     $number = '0123456789'.ToCharArray()
-    $symbol = '!@#$%^&*()'.ToCharArray()
+    $symbol = '!@#*-_+'.ToCharArray()
 
     $allChars = $lower + $upper + $number + $symbol
 
@@ -341,8 +342,8 @@ try {
         throw "Failed to set password on built-in Administrator account: $($_.Exception.Message)"
     }
 
-    Write-LevelSlot -Name "BuiltInAdminPassword" -Value $BuiltInAdminPassword
-    PrintKV "Level Slot (Built-in)" "BuiltInAdminPassword"
+    Write-LevelSlot -Name "password_admin" -Value $BuiltInAdminPassword
+    PrintKV "Level Slot (Built-in)" "password_admin"
 
     # Ensure the built-in admin account is disabled
     try {
@@ -387,8 +388,8 @@ try {
         }
     }
 
-    Write-LevelSlot -Name "MspAdminPassword" -Value $MspAdminPassword
-    PrintKV "Level Slot (MSP)" "MspAdminPassword"
+    Write-LevelSlot -Name "password_msp" -Value $MspAdminPassword
+    PrintKV "Level Slot (MSP)" "password_msp"
 
     # Ensure the MSP admin account is enabled
     try {
@@ -481,8 +482,8 @@ try {
     # DONE
     # =============================================================================
     Write-Section "FINAL STATUS"
-    PrintKV "hawkadmin (built-in)" "Disabled, password in BuiltInAdminPassword slot"
-    PrintKV "limehawk (MSP admin)" "Enabled, password in MspAdminPassword slot"
+    PrintKV "hawkadmin (built-in)" "Disabled, password in password_admin slot"
+    PrintKV "limehawk (MSP admin)" "Enabled, password in password_msp slot"
 
     Write-Section "SCRIPT COMPLETED" "OK"
     exit 0

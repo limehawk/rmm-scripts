@@ -4,9 +4,9 @@ shell: POWERSHELL
 runAs: SYSTEM
 timeout: 900
 variables:
-    - name: BuiltInAdminPassword
+    - name: password_admin
       description: Generated password for hawkadmin (built-in, disabled)
-    - name: MspAdminPassword
+    - name: password_msp
       description: Generated password for limehawk (MSP admin)
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
 scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzEyNDI3Nw
