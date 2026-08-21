@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.0.0
+ SCRIPT   : Limehawk Admin Profile Branding v4.0.1
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -47,6 +47,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-20 v4.0.1 Profile photo path is limehawk_profile.png (Level Files)
  2026-08-20 v4.0.0 Ported to Level.io: drop SuperOps module/Send-CustomField; emit BuiltInAdminPassword and MspAdminPassword output slots
  2026-01-19 v3.2.6 Updated to two-line ASCII console output style
  2025-12-23 v3.2.5 Updated to Limehawk Script Framework
@@ -71,9 +72,9 @@ $MspAdminName              = "limehawk"                     # MSP admin account 
 $MspAdminFullName          = "Limehawk"                     # Display name on login screen
 
 # Branding assets (applied to both accounts)
-$PhotoSource               = "$env:PUBLIC\Pictures\limehawk_profile.jpg"
+$PhotoSource               = "$env:PUBLIC\Pictures\limehawk_profile.png"
 $WallpaperPath             = "$env:PUBLIC\Pictures\limehawk_wallpaper.png"
-$OldPhotoSource            = "$env:PUBLIC\Pictures\limehawk_profile.png"  # Legacy file to clean up
+$OldPhotoSource            = "$env:PUBLIC\Pictures\limehawk_profile.jpg"  # Legacy jpg to clean up
 
 # Misc
 $GeneratedPasswordLength   = 16                             # Password length for both accounts
