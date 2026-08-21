@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.2.1
+ SCRIPT   : Limehawk Admin Profile Branding v4.2.2
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -46,6 +46,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.2.2 Write passwords to %ProgramData%\Limehawk for Branding shell capture steps
  2026-08-21 v4.2.1 Remove password-file capture workaround. Passwords stay in the activity log.
  2026-08-21 v4.2.0 Write passwords to %ProgramData%\Limehawk for a follow-up capture script
  2026-08-21 v4.1.2 Write slots as UTF-8 bytes to stdout so Level can parse {{name=value}}
@@ -144,6 +145,15 @@ function PrintKV {
     Write-Host (" {0} : {1}" -f $lbl, $Value)
 }
 $script:SlotHeaderShown = $false
+function Write-PasswordFile {
+    param([string]$Name, [string]$Value)
+    $dir = Join-Path $env:ProgramData 'Limehawk'
+    if (-not (Test-Path $dir)) {
+        $null = New-Item -ItemType Directory -Path $dir -Force
+    }
+    $path = Join-Path $dir ($Name + '.txt')
+    [System.IO.File]::WriteAllText($path, $Value)
+}
 function Write-LevelSlot {
     param([string]$Name, [string]$Value)
     if (-not $script:SlotHeaderShown) {
@@ -343,6 +353,7 @@ try {
     }
 
     Write-LevelSlot -Name "password_admin" -Value $BuiltInAdminPassword
+    Write-PasswordFile -Name "password_admin" -Value $BuiltInAdminPassword
 
     # Ensure the built-in admin account is disabled
     try {
@@ -388,6 +399,7 @@ try {
     }
 
     Write-LevelSlot -Name "password_msp" -Value $MspAdminPassword
+    Write-PasswordFile -Name "password_msp" -Value $MspAdminPassword
 
     # Ensure the MSP admin account is enabled
     try {
