@@ -11,7 +11,7 @@ $OutputEncoding = $script:Utf8NoBom
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.1.2
+ SCRIPT   : Limehawk Admin Profile Branding v4.2.0
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -50,6 +50,7 @@ $OutputEncoding = $script:Utf8NoBom
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.2.0 Write passwords to %ProgramData%\Limehawk for a follow-up capture script
  2026-08-21 v4.1.2 Write slots as UTF-8 bytes to stdout so Level can parse {{name=value}}
  2026-08-21 v4.1.1 Write slots with Write-Output so Level parses stdout, not Write-Host
  2026-08-21 v4.1.0 Emit password_admin / password_msp slots (same names as Level fields); no leading space on tokens
@@ -146,6 +147,15 @@ function PrintKV {
     Write-Host (" {0} : {1}" -f $lbl, $Value)
 }
 $script:SlotHeaderShown = $false
+function Write-PasswordFile {
+    param([string]$Name, [string]$Value)
+    $dir = Join-Path $env:ProgramData 'Limehawk'
+    if (-not (Test-Path $dir)) {
+        $null = New-Item -ItemType Directory -Path $dir -Force
+    }
+    $path = Join-Path $dir ($Name + '.txt')
+    [System.IO.File]::WriteAllText($path, $Value, $script:Utf8NoBom)
+}
 function Write-LevelSlot {
     # Emit a Level output slot. Braces are built at runtime so Level does not interpolate the source.
     param([string]$Name, [string]$Value)
@@ -350,6 +360,7 @@ try {
     }
 
     Write-LevelSlot -Name "password_admin" -Value $BuiltInAdminPassword
+    Write-PasswordFile -Name "password_admin" -Value $BuiltInAdminPassword
     PrintKV "Level Slot (Built-in)" "password_admin"
 
     # Ensure the built-in admin account is disabled
@@ -396,6 +407,7 @@ try {
     }
 
     Write-LevelSlot -Name "password_msp" -Value $MspAdminPassword
+    Write-PasswordFile -Name "password_msp" -Value $MspAdminPassword
     PrintKV "Level Slot (MSP)" "password_msp"
 
     # Ensure the MSP admin account is enabled
