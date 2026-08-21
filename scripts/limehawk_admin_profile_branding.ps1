@@ -1,4 +1,7 @@
 $ErrorActionPreference = 'Stop'
+$script:Utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[Console]::OutputEncoding = $script:Utf8NoBom
+$OutputEncoding = $script:Utf8NoBom
 
 <#
 ██╗     ██╗███╗   ███╗███████╗██╗  ██╗ █████╗ ██╗    ██╗██╗  ██╗
@@ -8,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.1.1
+ SCRIPT   : Limehawk Admin Profile Branding v4.1.2
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -47,6 +50,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.1.2 Write slots as UTF-8 bytes to stdout so Level can parse {{name=value}}
  2026-08-21 v4.1.1 Write slots with Write-Output so Level parses stdout, not Write-Host
  2026-08-21 v4.1.0 Emit password_admin / password_msp slots (same names as Level fields); no leading space on tokens
  2026-08-21 v4.0.2 Set wallpaper on a live HKU SID hive when the user is logged on; do not load NTUSER.DAT in that case
@@ -155,7 +159,9 @@ function Write-LevelSlot {
     }
     $open = [string][char]123 + [string][char]123
     $close = [string][char]125 + [string][char]125
-    Write-Output ($open + $Name + '=' + $Value + $close)
+    $line = $open + $Name + '=' + $Value + $close
+    $bytes = $script:Utf8NoBom.GetBytes($line + [char]10)
+    $null = [Console]::OpenStandardOutput().Write($bytes, 0, $bytes.Length)
 }
 function Test-IsElevated {
     $id = [Security.Principal.WindowsIdentity]::GetCurrent()
