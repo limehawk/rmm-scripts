@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.0.1
+ SCRIPT   : Limehawk Admin Profile Branding v4.0.2
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -47,6 +47,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.0.2 Set wallpaper on a live HKU SID hive when the user is logged on; do not load NTUSER.DAT in that case
  2026-08-20 v4.0.1 Profile photo path is limehawk_profile.png (Level Files)
  2026-08-20 v4.0.0 Ported to Level.io: drop SuperOps module/Send-CustomField; emit BuiltInAdminPassword and MspAdminPassword output slots
  2026-01-19 v3.2.6 Updated to two-line ASCII console output style
@@ -195,7 +196,14 @@ function Load-UserHive {
 }
 function Unload-UserHive {
     param([string]$MountName)
-    & reg.exe unload ("HKU\{0}" -f $MountName) | Out-Null
+    $key = "HKU\{0}" -f $MountName
+    for ($i = 0; $i -lt 3; $i++) {
+        [gc]::Collect()
+        [gc]::WaitForPendingFinalizers()
+        & reg.exe unload $key 2>$null | Out-Null
+        if ($LASTEXITCODE -eq 0) { return }
+        Start-Sleep -Milliseconds 400
+    }
 }
 function Set-AdminAccountPictures {
     param(
@@ -246,6 +254,7 @@ function Set-AdminAccountPictures {
 function Set-AdminWallpaper {
     param(
         [string]$WallpaperPng,
+        [string]$AdminSid,
         [string]$AdminProfileNtuserPath
     )
     try {
@@ -253,11 +262,19 @@ function Set-AdminWallpaper {
             Write-Host "   (skip) Wallpaper source not found: $WallpaperPng"
             return
         }
+        $liveRoot = "Registry::HKEY_USERS\$AdminSid"
+        if (Test-Path $liveRoot) {
+            $desktopKey = Join-Path $liveRoot "Control Panel\Desktop"
+            if (-not (Test-Path $desktopKey)) { $null = New-Item -Path $desktopKey -Force }
+            Set-ItemProperty -Path $desktopKey -Name "Wallpaper" -Value $WallpaperPng
+            Write-Host "   Wallpaper registry set (logged on): $WallpaperPng"
+            return
+        }
         if (-not (Test-Path $AdminProfileNtuserPath)) {
             Write-Host "   (warn) NTUSER.DAT not found for wallpaper: $AdminProfileNtuserPath. User profile may not have been created yet (first login required)."
             return
         }
-        $mount = "TempAdminHive"
+        $mount = "TempHive$($AdminSid.Substring($AdminSid.Length - 8))"
         try {
             Load-UserHive -HivePath $AdminProfileNtuserPath -MountName $mount
             $desktopKey = "Registry::HKEY_USERS\{0}\Control Panel\Desktop" -f $mount
@@ -452,13 +469,13 @@ try {
     Write-Host "   [$BuiltInAdminNewName] Applying profile picture..."
     Set-AdminAccountPictures -ImageSourcePng $PhotoSource -AdminSid $AdminSID
     Write-Host "   [$BuiltInAdminNewName] Applying wallpaper..."
-    Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminProfileNtuserPath $NtUserDatPath
+    Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminSid $AdminSID -AdminProfileNtuserPath $NtUserDatPath
 
     # Branding for MSP Admin (limehawk)
     Write-Host "   [$MspAdminName] Applying profile picture..."
     Set-AdminAccountPictures -ImageSourcePng $PhotoSource -AdminSid $MspAdminSID
     Write-Host "   [$MspAdminName] Applying wallpaper..."
-    Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminProfileNtuserPath $MspAdminNtUserDatPath
+    Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminSid $MspAdminSID -AdminProfileNtuserPath $MspAdminNtUserDatPath
 
     # =============================================================================
     # DONE
