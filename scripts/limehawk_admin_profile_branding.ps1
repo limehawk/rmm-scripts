@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.2.4
+ SCRIPT   : Limehawk Admin Profile Branding v4.3.0
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -24,7 +24,7 @@ $ErrorActionPreference = 'Stop'
      2) Create/update "limehawk" MSP admin account (enabled for daily use)
      3) Generate strong passwords for both, emit Level output slots
      4) Clean up old MSP accounts (m5sadmin, tlitlocal, clientadmin)
-     5) Apply account pictures and wallpaper branding
+     5) Apply account pictures, wallpaper, and dark mode
 
  WINDOWS / RUNTIME REQUIREMENTS
    - PowerShell 5.1+
@@ -46,6 +46,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.3.0 Set Apps and System dark mode on hawkadmin and limehawk user hives
  2026-08-21 v4.2.4 Restore full console log. Token-only output did not fill custom fields.
  2026-08-21 v4.2.3 Quiet console: emit only {{password_admin=}} / {{password_msp=}} tokens
  2026-08-21 v4.2.2 Write passwords to %ProgramData%\Limehawk for Branding shell capture steps
@@ -294,6 +295,41 @@ function Set-AdminWallpaper {
         Write-Host "   (warn) Wallpaper set failed: $($_.Exception.Message)"
     }
 }
+function Set-HiveDarkMode {
+    param([string]$HiveRoot)
+    $path = Join-Path $HiveRoot "SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+    if (-not (Test-Path $path)) { $null = New-Item -Path $path -Force }
+    Set-ItemProperty -Path $path -Name "AppsUseLightTheme" -Value 0 -Type DWord -Force
+    Set-ItemProperty -Path $path -Name "SystemUsesLightTheme" -Value 0 -Type DWord -Force
+}
+function Set-AdminDarkMode {
+    param(
+        [string]$AdminSid,
+        [string]$AdminProfileNtuserPath
+    )
+    try {
+        $liveRoot = "Registry::HKEY_USERS\$AdminSid"
+        if (Test-Path $liveRoot) {
+            Set-HiveDarkMode -HiveRoot $liveRoot
+            Write-Host "   Dark mode set (logged on)"
+            return
+        }
+        if (-not (Test-Path $AdminProfileNtuserPath)) {
+            Write-Host "   (warn) NTUSER.DAT not found for dark mode. First login required."
+            return
+        }
+        $mount = "TempDark$($AdminSid.Substring($AdminSid.Length - 8))"
+        try {
+            Load-UserHive -HivePath $AdminProfileNtuserPath -MountName $mount
+            Set-HiveDarkMode -HiveRoot ("Registry::HKEY_USERS\{0}" -f $mount)
+            Write-Host "   Dark mode set"
+        } finally {
+            Unload-UserHive -MountName $mount
+        }
+    } catch {
+        Write-Host "   (warn) Dark mode set failed: $($_.Exception.Message)"
+    }
+}
 # ============================================================================
 
 try {
@@ -476,12 +512,16 @@ try {
     Set-AdminAccountPictures -ImageSourcePng $PhotoSource -AdminSid $AdminSID
     Write-Host "   [$BuiltInAdminNewName] Applying wallpaper..."
     Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminSid $AdminSID -AdminProfileNtuserPath $NtUserDatPath
+    Write-Host "   [$BuiltInAdminNewName] Applying dark mode..."
+    Set-AdminDarkMode         -AdminSid $AdminSID -AdminProfileNtuserPath $NtUserDatPath
 
     # Branding for MSP Admin (limehawk)
     Write-Host "   [$MspAdminName] Applying profile picture..."
     Set-AdminAccountPictures -ImageSourcePng $PhotoSource -AdminSid $MspAdminSID
     Write-Host "   [$MspAdminName] Applying wallpaper..."
     Set-AdminWallpaper        -WallpaperPng  $WallpaperPath -AdminSid $MspAdminSID -AdminProfileNtuserPath $MspAdminNtUserDatPath
+    Write-Host "   [$MspAdminName] Applying dark mode..."
+    Set-AdminDarkMode         -AdminSid $MspAdminSID -AdminProfileNtuserPath $MspAdminNtUserDatPath
 
     # =============================================================================
     # DONE
