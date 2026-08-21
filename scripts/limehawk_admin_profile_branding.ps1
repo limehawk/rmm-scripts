@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.1.0
+ SCRIPT   : Limehawk Admin Profile Branding v4.1.1
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -47,6 +47,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.1.1 Write slots with Write-Output so Level parses stdout, not Write-Host
  2026-08-21 v4.1.0 Emit password_admin / password_msp slots (same names as Level fields); no leading space on tokens
  2026-08-21 v4.0.2 Set wallpaper on a live HKU SID hive when the user is logged on; do not load NTUSER.DAT in that case
  2026-08-20 v4.0.1 Profile photo path is limehawk_profile.png (Level Files)
@@ -154,7 +155,7 @@ function Write-LevelSlot {
     }
     $open = [string][char]123 + [string][char]123
     $close = [string][char]125 + [string][char]125
-    Write-Host ($open + $Name + '=' + $Value + $close)
+    Write-Output ($open + $Name + '=' + $Value + $close)
 }
 function Test-IsElevated {
     $id = [Security.Principal.WindowsIdentity]::GetCurrent()
