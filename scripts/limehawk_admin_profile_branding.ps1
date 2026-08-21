@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : Limehawk Admin Profile Branding v4.2.3
+ SCRIPT   : Limehawk Admin Profile Branding v4.2.4
  AUTHOR   : Limehawk.io
  DATE      : August 2026
  USAGE    : .\limehawk_admin_profile_branding.ps1
@@ -46,6 +46,7 @@ $ErrorActionPreference = 'Stop'
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-08-21 v4.2.4 Restore full console log. Token-only output did not fill custom fields.
  2026-08-21 v4.2.3 Quiet console: emit only {{password_admin=}} / {{password_msp=}} tokens
  2026-08-21 v4.2.2 Write passwords to %ProgramData%\Limehawk for Branding shell capture steps
  2026-08-21 v4.2.1 Remove password-file capture workaround. Passwords stay in the activity log.
@@ -145,9 +146,6 @@ function PrintKV {
     $lbl = $Label.PadRight(28)
     Write-Host (" {0} : {1}" -f $lbl, $Value)
 }
-function Write-Host {
-    param([Parameter(ValueFromRemainingArguments = $true)] $Ignore)
-}
 function Write-PasswordFile {
     param([string]$Name, [string]$Value)
     $dir = Join-Path $env:ProgramData 'Limehawk'
@@ -161,7 +159,7 @@ function Write-LevelSlot {
     param([string]$Name, [string]$Value)
     $open = [string][char]123 + [string][char]123
     $close = [string][char]125 + [string][char]125
-    Microsoft.PowerShell.Utility\Write-Host ($open + $Name + '=' + $Value + $close)
+    Write-Host ($open + $Name + '=' + $Value + $close)
 }
 function Test-IsElevated {
     $id = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -496,9 +494,9 @@ try {
     exit 0
 }
 catch {
-    Microsoft.PowerShell.Utility\Write-Host ""
-    Microsoft.PowerShell.Utility\Write-Host "[ERROR] SCRIPT FAILED"
-    Microsoft.PowerShell.Utility\Write-Host "=============================================================="
-    Microsoft.PowerShell.Utility\Write-Host $_.Exception.Message
+    Write-Host ""
+    Write-Host "[ERROR] SCRIPT FAILED"
+    Write-Host "=============================================================="
+    Write-Host $_.Exception.Message
     exit 1
 }
