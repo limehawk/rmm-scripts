@@ -1,0 +1,29 @@
+name: software_blacklist_uninstall.ps1
+description: Uninstalls blacklisted Windows programs in sequence and verifies each removal
+language: PowerShell
+tags:
+- Cleanup
+- Software
+- Windows
+runAs: SYSTEM_USER
+timeout: 30
+readme: |
+  Purpose
+  -------
+  This script removes blacklisted programs from a Windows endpoint. Add each DisplayName to the hardcoded list. The script checks the Uninstall registry for each name in order. If it finds a match, it runs a silent uninstall. It then checks the registry again to confirm removal.
+
+  Usage Notes
+  -----------
+  - Match is exact unless the name contains * or ?
+  - QuietUninstallString is preferred
+  - MSI product codes use msiexec /x /qn /norestart
+  - Missing software is a skip
+  - A failed uninstall does not stop the list
+  - Default list includes DNS Agent and *McAfee*
+
+  Requirements
+  ------------
+  - Windows PowerShell 5.1 or later
+  - Administrator privileges
+favourite: false
+shared: false

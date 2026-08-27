@@ -1,0 +1,6 @@
+name: software_blacklist_uninstall.ps1
+description: Uninstalls blacklisted Windows programs in sequence and verifies each removal
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
