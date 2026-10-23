@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.8.0
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.8.1
 #  AUTHOR   : Limehawk.io
 #  DATE     : October 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -32,7 +32,8 @@
 #  DATA SOURCES & PRIORITY
 #
 #    - Dokploy PostgreSQL database (application table: status, sourceType,
-#      branch, watchPaths, refreshToken, appName, applicationId, dockerImage;
+#      branch, watchPaths, refreshToken, appName, applicationId, dockerImage,
+#      autoDeploy;
 #      deployment table: status, errorMessage)
 #    - Docker (swarm service -> running container image id, before/after;
 #      docker pull of each docker-source image to check for a newer one)
@@ -71,7 +72,7 @@
 #    1. Takes a non-blocking flock so overlapping schedule runs exit cleanly
 #    2. Lowers own scheduling priority (nice/ionice best-effort)
 #    3. Queries the Dokploy database for all applications
-#    4. Skips applications with "idle" status
+#    4. Skips applications with "idle" status or with Auto Deploy turned off
 #    5. Orders queue: docker-source apps first (cheap), then git-source (builds)
 #    6. For each non-idle app, one at a time:
 #         a. Records the running image id (before)
@@ -90,8 +91,7 @@
 #    - Script must run on the Dokploy host server (Dokploy schedule or cron)
 #    - Dokploy postgres container accessible via docker exec
 #    - docker and curl installed
-#    - Each target app must have "Auto Deploy" enabled — the webhook rejects
-#      apps with auto deploy turned off
+#    - Apps with "Auto Deploy" off are skipped — the webhook rejects them
 #
 #  SECURITY NOTES
 #
@@ -127,6 +127,7 @@
 #    Unchanged : 3
 #    Failed    : 1
 #    Skipped (idle) : 9
+#    Skipped (auto deploy off) : 0
 #    Elapsed   : 2m03s
 #
 #    [OK] SCRIPT COMPLETED
@@ -135,6 +136,9 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-10-23 v3.8.1 Skip apps with Auto Deploy off instead of failing them
+#                    (webhook returns HTTP 400). Print the webhook's reply
+#                    when a trigger is rejected.
 #  2026-10-23 v3.8.0 Pull docker-source images first and skip apps already on
 #                    the newest image (no needless restart). Cool down only
 #                    after a deploy that changed something, not after no-ops.
@@ -341,8 +345,8 @@ wait_for_resources() {
 }
 
 # Query per app: project, name, status, sourceType, branch, watchPaths, token,
-# appName, applicationId, dockerImage (pipe-delimited, no headers).
-APP_DATA=$(db "SELECT p.name, a.name, a.\"applicationStatus\", a.\"sourceType\", a.branch, a.\"watchPaths\", a.\"refreshToken\", a.\"appName\", a.\"applicationId\", a.\"dockerImage\" FROM application a JOIN environment e ON a.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"")
+# appName, applicationId, dockerImage, autoDeploy (pipe-delimited, no headers).
+APP_DATA=$(db "SELECT p.name, a.name, a.\"applicationStatus\", a.\"sourceType\", a.branch, a.\"watchPaths\", a.\"refreshToken\", a.\"appName\", a.\"applicationId\", a.\"dockerImage\", a.\"autoDeploy\" FROM application a JOIN environment e ON a.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"")
 
 if [[ -z "$APP_DATA" ]]; then
     echo "No applications found in database."
@@ -363,14 +367,22 @@ echo "[RUN] PROCESSING APPLICATIONS"
 echo "=============================================================="
 
 SKIPPED_IDLE=0
+SKIPPED_NOAUTO=0
 DEPLOY_LIST=""
 
-while IFS='|' read -r PROJECT_NAME APP_NAME APP_STATUS SOURCE_TYPE BRANCH WATCHPATHS TOKEN APPNAME APPID IMAGE; do
+while IFS='|' read -r PROJECT_NAME APP_NAME APP_STATUS SOURCE_TYPE BRANCH WATCHPATHS TOKEN APPNAME APPID IMAGE AUTODEPLOY; do
     DISPLAY_NAME="$PROJECT_NAME/$APP_NAME"
 
     if [[ "$APP_STATUS" == "idle" ]]; then
         echo "Skipping idle app : $DISPLAY_NAME"
         SKIPPED_IDLE=$((SKIPPED_IDLE + 1))
+        continue
+    fi
+
+    # The deploy webhook rejects apps with Auto Deploy off (HTTP 400).
+    if [[ "$AUTODEPLOY" != "t" ]]; then
+        echo "Skipping app (auto deploy off) : $DISPLAY_NAME"
+        SKIPPED_NOAUTO=$((SKIPPED_NOAUTO + 1))
         continue
     fi
 
@@ -410,6 +422,7 @@ if [[ -z "$DEPLOY_LIST" ]]; then
     echo "Unchanged : 0"
     echo "Failed    : 0"
     echo "Skipped (idle) : $SKIPPED_IDLE"
+    echo "Skipped (auto deploy off) : $SKIPPED_NOAUTO"
     echo ""
     echo "[OK] SCRIPT COMPLETED"
     echo "=============================================================="
@@ -452,7 +465,7 @@ image_current() {
 # (true when the host did real work and should rest before the next deploy).
 deploy_one() {
     local DISPLAY="$1" MODE="$2" TOKEN="$3" REF="$4" SAMPLE="$5" APPNAME="$6" APPID="$7" before="$8"
-    local after start elapsed last_dep url code body dep_id status row errmsg
+    local after start elapsed last_dep url code body reply dep_id status row errmsg
     start=$(date +%s)
     COOLDOWN_DUE=true
 
@@ -462,18 +475,21 @@ deploy_one() {
     # Trigger the webhook
     url="$DOKPLOY_LOCAL_URL/api/deploy/$TOKEN"
     if [[ "$MODE" == "docker" ]]; then
-        code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 -X POST "$url" 2>/dev/null)
+        reply=$(curl -s -w '\n%{http_code}' --max-time 60 -X POST "$url" 2>/dev/null)
     else
         if [[ -n "$SAMPLE" ]]; then
             body="{\"ref\":\"$REF\",\"commits\":[{\"modified\":[\"$SAMPLE\"]}]}"
         else
             body="{\"ref\":\"$REF\"}"
         fi
-        code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 -X POST "$url" -H "x-github-event: push" -H "Content-Type: application/json" -d "$body" 2>/dev/null)
+        reply=$(curl -s -w '\n%{http_code}' --max-time 60 -X POST "$url" -H "x-github-event: push" -H "Content-Type: application/json" -d "$body" 2>/dev/null)
     fi
 
+    code="${reply##*$'\n'}"
     if [[ "$code" != "200" ]]; then
         printf '[FAIL] %-28s trigger rejected (HTTP %s)\n' "$DISPLAY" "$code"
+        reply="${reply%$'\n'*}"
+        [[ -n "$reply" ]] && printf '       %s\n' "${reply:0:200}"
         RESULT=failed
         COOLDOWN_DUE=false
         return
@@ -566,6 +582,7 @@ echo "Unchanged : $NOCHANGE"
 echo "Failed    : $FAILED"
 echo "Not verified : $WARNED"
 echo "Skipped (idle) : $SKIPPED_IDLE"
+echo "Skipped (auto deploy off) : $SKIPPED_NOAUTO"
 echo "Elapsed   : $ELAPSED_FMT"
 
 echo ""

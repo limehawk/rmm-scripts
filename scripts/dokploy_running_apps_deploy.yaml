@@ -14,7 +14,7 @@ readme: |
   Usage Notes
   -----------
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
-  - Skips applications with "idle" status; deploys remaining apps one at a time (docker-source first, then git-source)
+  - Skips applications with "idle" status or with Auto Deploy off; deploys remaining apps one at a time (docker-source first, then git-source)
   - Before each app, waits until MemAvailable is under threshold (load gate off by default; set MAX_LOAD empty for 2*nproc or a number to enable)
   - Docker-source apps: pulls the image first and skips the redeploy (no restart) when the running container already has the newest image
   - Rests DEPLOY_COOLDOWN seconds only after a deploy that changed something (never after up-to-date or no-change apps); single-instance flock prevents stacked schedule runs
@@ -28,7 +28,7 @@ readme: |
   - Must run on the Dokploy host server (Dokploy schedule or cron)
   - Dokploy postgres container accessible via docker exec
   - docker and curl installed
-  - Each target app must have "Auto Deploy" enabled — the webhook rejects apps with auto deploy turned off
+  - Apps with "Auto Deploy" off are skipped — the webhook rejects them
   
   Security
   --------
