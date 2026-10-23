@@ -16,6 +16,7 @@ readme: |
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
   - Skips applications with "idle" status or with Auto Deploy off; deploys remaining apps one at a time (docker-source first, then git-source)
   - Before each app, waits until MemAvailable is under threshold (load gate off by default; set MAX_LOAD empty for 2*nproc or a number to enable)
+  - Also covers Docker Compose stacks (compose table, compose webhook); a stack is skipped when every container already runs the newest image
   - Docker-source apps: pulls the image first and skips the redeploy (no restart) when the running container already has the newest image
   - Rests DEPLOY_COOLDOWN seconds only after a deploy that changed something (never after up-to-date or no-change apps); single-instance flock prevents stacked schedule runs
   - No API key or stored secret: each app's own webhook token is read from the local database at runtime and used only against localhost

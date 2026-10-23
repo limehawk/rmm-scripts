@@ -7,7 +7,7 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.8.1
+#  SCRIPT   : Dokploy Deploy Running Apps                                  v3.9.0
 #  AUTHOR   : Limehawk.io
 #  DATE     : October 2026
 #  USAGE    : ./dokploy_running_apps_deploy.sh
@@ -24,7 +24,8 @@
 #    for each app's status and its built-in deploy webhook token, triggers that
 #    webhook on localhost, waits for the deploy to finish, and reports the real
 #    outcome (from the deployment table) plus whether the running image changed.
-#    Docker-source apps whose image has not changed are left alone (no restart).
+#    Docker Compose stacks are covered the same way. Docker-source apps and
+#    stacks whose images have not changed are left alone (no restart).
 #    Because every app already carries its own webhook token in the database,
 #    the script needs no API key. Tuned for low-resource hosts (e.g. Pi Zero):
 #    sequential deploys, load/memory gates, cooldowns, and a single-instance lock.
@@ -33,11 +34,14 @@
 #
 #    - Dokploy PostgreSQL database (application table: status, sourceType,
 #      branch, watchPaths, refreshToken, appName, applicationId, dockerImage,
-#      autoDeploy;
+#      autoDeploy; compose table: composeStatus, refreshToken, appName,
+#      composeId, autoDeploy;
 #      deployment table: status, errorMessage)
 #    - Docker (swarm service -> running container image id, before/after;
-#      docker pull of each docker-source image to check for a newer one)
-#    - Local Dokploy deploy webhook (localhost:3000/api/deploy/<token>)
+#      compose project label -> every container's image for stacks;
+#      docker pull of each docker-source / stack image to check for a newer one)
+#    - Local Dokploy deploy webhooks (localhost:3000/api/deploy/<token>,
+#      localhost:3000/api/deploy/compose/<token>)
 #    - Host /proc/loadavg and /proc/meminfo (resource gates between apps)
 #
 #  REQUIRED INPUTS
@@ -71,16 +75,17 @@
 #
 #    1. Takes a non-blocking flock so overlapping schedule runs exit cleanly
 #    2. Lowers own scheduling priority (nice/ionice best-effort)
-#    3. Queries the Dokploy database for all applications
+#    3. Queries the Dokploy database for all applications and compose stacks
 #    4. Skips applications with "idle" status or with Auto Deploy turned off
 #    5. Orders queue: docker-source apps first (cheap), then git-source (builds)
 #    6. For each non-idle app, one at a time:
 #         a. Records the running image id (before)
-#         b. Docker-source: pulls the image; if the running container already
-#            has it, reports "up to date" and moves on (no deploy, no cooldown)
+#         b. Docker-source / compose: pulls the image(s); if everything running
+#            already has the newest, reports "up to date" and moves on (no
+#            deploy, no cooldown)
 #         c. If the previous deploy changed something, cools down first
 #         d. Waits until load and free memory are under thresholds (or timeout)
-#         e. Triggers the app's deploy webhook (docker: bare POST; git: a
+#         e. Triggers the deploy webhook (docker / compose: bare POST; git: a
 #            GitHub-style push payload with branch + watchPaths-matched file)
 #         f. Waits for the new deployment row to reach done/error (or timeout)
 #         g. Records the running image id (after) and prints the result
@@ -104,6 +109,7 @@
 #  ENDPOINTS
 #
 #    - http://localhost:3000/api/deploy/<refreshToken> (per-app deploy webhook)
+#    - http://localhost:3000/api/deploy/compose/<refreshToken> (per-stack)
 #
 #  EXIT CODES
 #
@@ -136,6 +142,9 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-10-23 v3.9.0 Cover Docker Compose stacks: pull every image in the stack,
+#                    skip if all current, else trigger the compose webhook and
+#                    verify like apps.
 #  2026-10-23 v3.8.1 Skip apps with Auto Deploy off instead of failing them
 #                    (webhook returns HTTP 400). Print the webhook's reply
 #                    when a trigger is rejected.
@@ -273,6 +282,25 @@ image_id() {
     [[ -n "$cid" ]] && docker inspect -f '{{.Image}}' "$cid" 2>/dev/null | sed 's/^sha256://'
 }
 
+# "image-ref image-id" for every container of a compose stack.
+stack_images() {
+    docker ps -aq --filter "label=com.docker.compose.project=$1" \
+        | xargs -r docker inspect -f '{{.Config.Image}} {{.Image}}' 2>/dev/null \
+        | sed 's/sha256://' | sort -u
+}
+
+# What is running now: an app's container image id, or for a compose stack a
+# hash of all its containers' image ids. Empty if nothing is running.
+fingerprint() {
+    local mode="$1" name="$2" ids
+    if [[ "$mode" == "compose" ]]; then
+        ids=$(stack_images "$name" | awk '{print $2}' | sort)
+        [[ -n "$ids" ]] && md5sum <<< "$ids" | cut -d' ' -f1
+    else
+        image_id "$name"
+    fi
+}
+
 # Current 1-min load average (empty if unreadable)
 load_1m() {
     awk '{print $1}' /proc/loadavg 2>/dev/null
@@ -345,8 +373,11 @@ wait_for_resources() {
 }
 
 # Query per app: project, name, status, sourceType, branch, watchPaths, token,
-# appName, applicationId, dockerImage, autoDeploy (pipe-delimited, no headers).
-APP_DATA=$(db "SELECT p.name, a.name, a.\"applicationStatus\", a.\"sourceType\", a.branch, a.\"watchPaths\", a.\"refreshToken\", a.\"appName\", a.\"applicationId\", a.\"dockerImage\", a.\"autoDeploy\" FROM application a JOIN environment e ON a.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"")
+# appName, id, dockerImage, autoDeploy (pipe-delimited, no headers).
+# Compose stacks come back with sourceType "compose" and no branch/image.
+APP_DATA=$(db "SELECT p.name, a.name, a.\"applicationStatus\"::text, a.\"sourceType\"::text, a.branch, a.\"watchPaths\"::text, a.\"refreshToken\", a.\"appName\", a.\"applicationId\", a.\"dockerImage\", a.\"autoDeploy\" FROM application a JOIN environment e ON a.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"
+    UNION ALL
+    SELECT p.name, c.name, c.\"composeStatus\"::text, 'compose', '', '', c.\"refreshToken\", c.\"appName\", c.\"composeId\", '', c.\"autoDeploy\" FROM compose c JOIN environment e ON c.\"environmentId\" = e.\"environmentId\" JOIN project p ON e.\"projectId\" = p.\"projectId\"")
 
 if [[ -z "$APP_DATA" ]]; then
     echo "No applications found in database."
@@ -387,8 +418,8 @@ while IFS='|' read -r PROJECT_NAME APP_NAME APP_STATUS SOURCE_TYPE BRANCH WATCHP
     fi
 
     # Decide how to trigger this app's webhook based on its source type.
-    if [[ "$SOURCE_TYPE" == "docker" ]]; then
-        MODE="docker"
+    if [[ "$SOURCE_TYPE" == "docker" || "$SOURCE_TYPE" == "compose" ]]; then
+        MODE="$SOURCE_TYPE"
         REF=""
         SAMPLE=""
     else
@@ -438,7 +469,7 @@ DEPLOY_LIST=$(
 DEPLOY_LIST=$(echo "$DEPLOY_LIST" | sed '/^$/d')
 
 DEPLOY_COUNT=$(echo "$DEPLOY_LIST" | wc -l)
-echo "Queue order : docker-source first, then git-source ($DEPLOY_COUNT apps)"
+echo "Queue order : docker-source first, then compose and git-source ($DEPLOY_COUNT apps)"
 if [[ "$MAX_LOAD" == "0" ]]; then
     echo "Resource gates : load off | free >= ${MIN_FREE_MB}MB | cooldown ${DEPLOY_COOLDOWN}s after changes"
 else
@@ -459,22 +490,35 @@ image_current() {
     [[ -n "$latest" && "$latest" == "$running" ]]
 }
 
+# Compose: true only when every container in the stack is current.
+stack_current() {
+    local ref id any=1
+    while read -r ref id; do
+        image_current "$ref" "$id" || return 1
+        any=0
+    done < <(stack_images "$1")
+    return $any
+}
+
 # Triggers the webhook, waits for the deployment to settle, and classifies the
 # result by comparing the running image id before and after. Prints the result
 # line and sets RESULT (updated|unchanged|failed|unverified) and COOLDOWN_DUE
 # (true when the host did real work and should rest before the next deploy).
 deploy_one() {
     local DISPLAY="$1" MODE="$2" TOKEN="$3" REF="$4" SAMPLE="$5" APPNAME="$6" APPID="$7" before="$8"
-    local after start elapsed last_dep url code body reply dep_id status row errmsg
+    local after start elapsed last_dep url code body reply dep_id status row errmsg idcol
     start=$(date +%s)
     COOLDOWN_DUE=true
+    idcol="applicationId"
+    [[ "$MODE" == "compose" ]] && idcol="composeId"
 
     # Newest existing deployment id, so we can detect the one we trigger.
-    last_dep=$(db "SELECT \"deploymentId\" FROM deployment WHERE \"applicationId\"='$APPID' ORDER BY \"createdAt\" DESC LIMIT 1")
+    last_dep=$(db "SELECT \"deploymentId\" FROM deployment WHERE \"$idcol\"='$APPID' ORDER BY \"createdAt\" DESC LIMIT 1")
 
     # Trigger the webhook
     url="$DOKPLOY_LOCAL_URL/api/deploy/$TOKEN"
-    if [[ "$MODE" == "docker" ]]; then
+    [[ "$MODE" == "compose" ]] && url="$DOKPLOY_LOCAL_URL/api/deploy/compose/$TOKEN"
+    if [[ "$MODE" == "docker" || "$MODE" == "compose" ]]; then
         reply=$(curl -s -w '\n%{http_code}' --max-time 60 -X POST "$url" 2>/dev/null)
     else
         if [[ -n "$SAMPLE" ]]; then
@@ -498,7 +542,7 @@ deploy_one() {
     # Wait for a NEW deployment row to reach done/error
     dep_id=""; status=""
     while (( $(date +%s) - start < DEPLOY_TIMEOUT )); do
-        row=$(db "SELECT \"deploymentId\", status FROM deployment WHERE \"applicationId\"='$APPID' ORDER BY \"createdAt\" DESC LIMIT 1")
+        row=$(db "SELECT \"deploymentId\", status FROM deployment WHERE \"$idcol\"='$APPID' ORDER BY \"createdAt\" DESC LIMIT 1")
         dep_id="${row%%|*}"
         status="${row#*|}"
         if [[ "$dep_id" != "$last_dep" && ( "$status" == "done" || "$status" == "error" ) ]]; then
@@ -507,7 +551,7 @@ deploy_one() {
         sleep "$POLL_INTERVAL"
     done
     elapsed=$(( $(date +%s) - start ))
-    after=$(image_id "$APPNAME")
+    after=$(fingerprint "$MODE" "$APPNAME")
 
     if [[ "$status" == "error" && "$dep_id" != "$last_dep" ]]; then
         errmsg=$(db "SELECT COALESCE(\"errorMessage\",'') FROM deployment WHERE \"deploymentId\"='$dep_id'" | head -1)
@@ -544,9 +588,10 @@ WARNED=0
 COOLDOWN_DUE=false
 
 while IFS='|' read -r DISPLAY MODE TOKEN REF SAMPLE APPNAME APPID IMAGE; do
-    BEFORE=$(image_id "$APPNAME")
+    BEFORE=$(fingerprint "$MODE" "$APPNAME")
 
-    if [[ "$MODE" == "docker" ]] && image_current "$IMAGE" "$BEFORE"; then
+    if { [[ "$MODE" == "docker" ]] && image_current "$IMAGE" "$BEFORE"; } \
+        || { [[ "$MODE" == "compose" ]] && stack_current "$APPNAME"; }; then
         printf '[OK]   %-28s up to date  %s\n' "$DISPLAY" "${BEFORE:0:6}"
         NOCHANGE=$((NOCHANGE + 1))
         continue
