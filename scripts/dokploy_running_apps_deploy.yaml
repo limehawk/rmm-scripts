@@ -14,9 +14,11 @@ readme: |
   Usage Notes
   -----------
   - Queries project, name, status, sourceType, branch, watchPaths, deploy webhook token, appName, and applicationId from the Dokploy database
-  - Skips applications with "idle" status; deploys remaining apps one at a time (docker-source first, then git-source)
+  - Skips applications with "idle" status or with Auto Deploy off; deploys remaining apps one at a time (docker-source first, then git-source)
   - Before each app, waits until MemAvailable is under threshold (load gate off by default; set MAX_LOAD empty for 2*nproc or a number to enable)
-  - Rests DEPLOY_COOLDOWN seconds between apps; single-instance flock prevents stacked schedule runs
+  - Also covers Docker Compose stacks (compose table, compose webhook); a stack is skipped when every container already runs the newest image
+  - Docker-source apps: pulls the image first and skips the redeploy (no restart) when the running container already has the newest image
+  - Rests DEPLOY_COOLDOWN seconds only after a deploy that changed something (never after up-to-date or no-change apps); single-instance flock prevents stacked schedule runs
   - No API key or stored secret: each app's own webhook token is read from the local database at runtime and used only against localhost
   - docker-source apps redeploy on a bare webhook POST; git-source apps get a GitHub-style push payload carrying the branch plus a file path matching any watchPaths filter
   - After triggering, waits for the deployment table to report done/error, then compares the running container image id before and after to classify each app as updated / no change / failed
@@ -27,13 +29,13 @@ readme: |
   - Must run on the Dokploy host server (Dokploy schedule or cron)
   - Dokploy postgres container accessible via docker exec
   - docker and curl installed
-  - Each target app must have "Auto Deploy" enabled — the webhook rejects apps with auto deploy turned off
+  - Apps with "Auto Deploy" off are skipped — the webhook rejects them
   
   Security
   --------
   - No API key or stored secret anywhere — the per-app webhook token is read from the local database at runtime
   - No secrets are written to logs (only app names, image ids, and outcomes are printed)
-  - All calls are localhost-only, no external network traffic
+  - Webhook and database calls are localhost-only; the only outbound traffic is docker pull to each app's own image registry
 favourite: false
 shared: false
 scriptId: "259059084121726976"
