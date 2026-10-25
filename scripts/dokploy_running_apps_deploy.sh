@@ -153,7 +153,7 @@
 #                    after a deploy that changed something, not after no-ops.
 #                    Count results directly instead of grepping output.
 #  2026-07-20 v3.7.2 Default MAX_LOAD=0 (load gate off). Live host idles at
-#                    load 2–4 on 2 cores with 1.5GB+ free; load waits wasted
+#                    load 2-4 on 2 cores with 1.5GB+ free; load waits wasted
 #                    minutes while deploys themselves finish in ~15s. Rely on
 #                    sequential + cooldown + free-RAM gate instead.
 #  2026-07-20 v3.7.1 Auto MAX_LOAD is 2*nproc (was nproc). Docker hosts sit near
