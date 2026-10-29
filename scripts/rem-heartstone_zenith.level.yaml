@@ -4,3 +4,6 @@ shell: POWERSHELL
 runAs: SYSTEM
 timeout: 900
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzE2NDcwOQ
+lastPushedChecksum: sha256:74a8abc58d589cd1
+lastPushedMetaChecksum: sha256:0f22ebddd33f686d
