@@ -1,5 +1,5 @@
 name: sentinelone_install.ps1
-description: Silently installs SentinelOne endpoint agent with site token
+description: Silently installs the SentinelOne agent from a Level-staged, signature-verified installer with a site token
 language: PowerShell
 tags:
   - Antivirus
@@ -10,29 +10,31 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Installs SentinelOne endpoint agent silently using a site token. Downloads the installer from ConnectWise CDN (or custom URL) and performs installation with verification. Skips if already installed. The installed version will auto-update based on your S1 console Auto-Upgrade Policy settings, so the initial installer version does not matter.
-  
+  Installs the SentinelOne endpoint agent silently using a site token from a Level custom field. The installer is staged on the device ahead of time by a Level automation step; this script never downloads anything. Before running the installer it checks the Authenticode signature is valid and was issued to SentinelOne, so a swapped or tampered file is never run. Skips if the agent is already installed. The installed version will auto-update based on your S1 console Auto-Upgrade Policy settings, so the initial installer version does not matter.
+
   Usage Notes
   -----------
-  - Checks if SentinelOne is already installed (optional skip)
-  - Auto-detects 32-bit vs 64-bit OS
-  - Supports EXE or MSI installer ($UseExe toggle, MSI recommended)
-  - Downloads installer from ConnectWise CDN or custom URL
-  - Verifies installation success with multiple retry attempts
-  - Cleans up temporary files after completion
-  
+  - Validates the site token is present and was substituted by Level
+  - Exits 0 without changes if the SentinelAgent service already exists
+  - Uses C:\Windows\Temp\SentinelAgent.msi (x64), or SentinelAgent.exe (ARM64) if no MSI; fails if neither exists
+  - Verifies the Authenticode signature: Status must be Valid and the signer certificate Subject must contain O="Sentinelone, Inc."
+  - Runs the installer silently with the site token (msiexec /qn or EXE -q)
+  - Verifies the SentinelAgent service appears, with retries
+  - Removes the staged installer whether the install succeeded or not
+
   Requirements
   ------------
   - Windows 10/11 or Windows Server
-  - Administrator privileges
+  - Administrator privileges (Level runs as SYSTEM)
   - PowerShell 5.1 or later
-  - Network access to download URL (ConnectWise CDN or custom)
+  - Installer already staged at C:\Windows\Temp\SentinelAgent.msi or .exe
   - $SiteToken: SentinelOne site token for agent registration, injected at runtime from the Level custom field cf_s1_site_token ({{cf_s1_site_token}} placeholder). Get the token from S1 Console > Sentinels > Site Info
-  
+
   Security
   --------
-  - Site token is embedded in script -- protect accordingly
-  - Default CDN URL uses HTTPS
+  - No third-party downloads: only the Level-staged file is ever run
+  - Installer must carry a valid Authenticode signature from SentinelOne
+  - Site token is never printed in full (first 10 characters + ***)
 favourite: false
 shared: false
 runtimeVariables:

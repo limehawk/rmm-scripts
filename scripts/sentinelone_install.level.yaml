@@ -1,5 +1,5 @@
 name: sentinelone_install.ps1
-description: Silently installs SentinelOne endpoint agent with site token
+description: Silently installs the SentinelOne agent from a Level-staged, signature-verified installer with a site token
 shell: POWERSHELL
 runAs: SYSTEM
 timeout: 900

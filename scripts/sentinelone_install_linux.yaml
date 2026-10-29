@@ -1,5 +1,5 @@
 name: sentinelone_install_linux.sh
-description: Installs the SentinelOne agent on Linux from a pre-downloaded deb or rpm with a site token
+description: Installs the SentinelOne agent on Linux from a Level-staged, integrity-checked deb or rpm with a site token
 language: Bash
 tags:
   - Antivirus
@@ -10,7 +10,7 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Installs the SentinelOne endpoint agent on Linux using the site token from a Level custom field. A Level automation step downloads both the deb and rpm packages ahead of time; this script picks the one matching the system's package manager, installs it, registers the token with sentinelctl, starts the agent and verifies it. Skips if already present.
+  Installs the SentinelOne endpoint agent on Linux using the site token from a Level custom field. A Level automation step stages both the deb and rpm packages ahead of time; this script never downloads anything. It picks the package matching the system's package manager, checks it is structurally intact, installs it, registers the token with sentinelctl, starts the agent and verifies it. Skips if already present. Vendor-signature verification is not available on Linux: the S1 .deb is unsigned and the .rpm signature needs SentinelOne's GPG key, which this script does not distribute. Integrity relies on Level's checksummed file transfer plus the package's own digests (rpm -K --nosignature) or archive structure (dpkg-deb --info).
 
   Usage Notes
   -----------
@@ -18,6 +18,7 @@ readme: |
   - Exits 0 without changes if /opt/sentinelone/bin/sentinelctl already exists
   - Picks dpkg -i (Debian/Ubuntu) or rpm -i (RHEL/Fedora/SUSE/Amazon); exits 1 without changes on any other distro
   - Fails if the matching package file is missing
+  - Integrity check before install: dpkg-deb --info (deb) or rpm -K --nosignature (rpm digests); exits 1 without installing on failure
   - Installs, sets the token with sentinelctl management token set, runs sentinelctl control start
   - Prints sentinelctl version and control status
   - Removes both package files on every exit path
@@ -30,6 +31,8 @@ readme: |
 
   Security
   --------
+  - No third-party downloads: only the Level-staged package is ever run
+  - No vendor-signature check is possible on Linux; the package must at least pass dpkg-deb --info or rpm -K --nosignature
   - Site token is never printed in full (first 10 characters + ***)
 favourite: false
 shared: false

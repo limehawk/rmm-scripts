@@ -7,28 +7,35 @@
 # ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 # ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 # ================================================================================
-#  SCRIPT   : SentinelOne Install (Linux)                                  v1.0.0
+#  SCRIPT   : SentinelOne Install (Linux)                                  v1.1.0
 #  AUTHOR   : Limehawk.io
 #  DATE     : October 2026
 #  USAGE    : sudo ./sentinelone_install_linux.sh
 # ================================================================================
 #  FILE     : sentinelone_install_linux.sh
-#  DESCRIPTION : Installs the SentinelOne agent on Linux from a pre-downloaded deb or rpm with a site token
+#  DESCRIPTION : Installs the SentinelOne agent on Linux from a Level-staged, integrity-checked deb or rpm with a site token
 # --------------------------------------------------------------------------------
 #  README
 # --------------------------------------------------------------------------------
 #  PURPOSE
 #
 #    Installs the SentinelOne endpoint agent on Linux using the site token
-#    from a Level custom field. A Level automation step downloads both the
-#    deb and rpm packages ahead of time; this script picks the one matching
-#    the system's package manager, installs it, registers the token with
+#    from a Level custom field. A Level automation step stages both the deb
+#    and rpm packages ahead of time; this script never downloads anything.
+#    It picks the package matching the system's package manager, checks it
+#    is structurally intact, installs it, registers the token with
 #    sentinelctl, starts the agent and verifies it. Skips if already present.
+#
+#    NOTE: Vendor-signature verification is not available on Linux. The S1
+#    .deb is unsigned and the .rpm signature needs SentinelOne's GPG key,
+#    which this script does not distribute. Integrity relies on Level's
+#    checksummed file transfer plus the package's own digests (rpm -K
+#    --nosignature) or archive structure (dpkg-deb --info).
 #
 #  DATA SOURCES & PRIORITY
 #
 #    - Level custom field {{cf_s1_site_token}}: site token (REQUIRED)
-#    - /var/tmp/SentinelAgent.deb and .rpm: packages placed by Level
+#    - /var/tmp/SentinelAgent.deb and .rpm: packages staged by Level
 #    - dpkg or rpm on PATH decides which package is used
 #
 #  REQUIRED INPUTS
@@ -40,8 +47,8 @@
 #  SETTINGS
 #
 #    Configuration details and default values:
-#      - DEB_PATH    : /var/tmp/SentinelAgent.deb (pre-downloaded by Level)
-#      - RPM_PATH    : /var/tmp/SentinelAgent.rpm (pre-downloaded by Level)
+#      - DEB_PATH    : /var/tmp/SentinelAgent.deb (staged by Level)
+#      - RPM_PATH    : /var/tmp/SentinelAgent.rpm (staged by Level)
 #      - SENTINELCTL : /opt/sentinelone/bin/sentinelctl
 #
 #  BEHAVIOR
@@ -52,9 +59,11 @@
 #    3. Picks dpkg -i (Debian/Ubuntu) or rpm -i (RHEL/Fedora/SUSE/Amazon);
 #       exits 1 without changes on any other distro
 #    4. Fails if the matching package file is missing
-#    5. Installs, sets the token with sentinelctl, starts the agent
-#    6. Prints sentinelctl version and control status
-#    7. Removes both package files
+#    5. Integrity check: dpkg-deb --info (deb) or rpm -K --nosignature
+#       (rpm digests); exits 1 without installing on failure
+#    6. Installs, sets the token with sentinelctl, starts the agent
+#    7. Prints sentinelctl version and control status
+#    8. Removes both package files
 #
 #  PREREQUISITES
 #
@@ -64,18 +73,21 @@
 #
 #  SECURITY NOTES
 #
+#    - No third-party downloads: only the Level-staged package is ever run
+#    - No vendor-signature check is possible (see PURPOSE); the package
+#      must at least pass dpkg-deb --info or rpm -K --nosignature
 #    - Site token is never printed in full (first 10 characters + ***)
 #    - No secrets in logs
 #
 #  ENDPOINTS
 #
-#    Not applicable - packages are downloaded by a separate Level step
+#    Not applicable - packages are staged by a separate Level step
 #
 #  EXIT CODES
 #
 #    0 = Success (installed or already present)
-#    1 = Failure (bad token, unsupported distro, package missing,
-#        install, token set, start or verification failed)
+#    1 = Failure (bad token, unsupported distro, package missing or
+#        corrupt, install, token set, start or verification failed)
 #
 #  EXAMPLE RUN
 #
@@ -88,6 +100,10 @@
 #    SentinelOne not detected
 #    Package manager : dpkg
 #    Package         : /var/tmp/SentinelAgent.deb
+#
+#    [RUN] INTEGRITY CHECK
+#    ==============================================================
+#    Package integrity OK
 #
 #    [RUN] INSTALLATION
 #    ==============================================================
@@ -111,6 +127,9 @@
 # --------------------------------------------------------------------------------
 #  CHANGELOG
 # --------------------------------------------------------------------------------
+#  2026-10-29 v1.1.0 Integrity check before install (dpkg-deb --info or rpm -K
+#                    --nosignature); note that vendor-signature verification is
+#                    not available on Linux
 #  2026-10-29 v1.0.0 Initial release
 # ================================================================================
 
@@ -118,8 +137,8 @@
 # HARDCODED INPUTS
 # ============================================================================
 SITE_TOKEN="{{cf_s1_site_token}}"             # Level custom field, set per group
-DEB_PATH="/var/tmp/SentinelAgent.deb"          # Pre-downloaded by the Level automation
-RPM_PATH="/var/tmp/SentinelAgent.rpm"          # Pre-downloaded by the Level automation
+DEB_PATH="/var/tmp/SentinelAgent.deb"          # Staged by the Level automation
+RPM_PATH="/var/tmp/SentinelAgent.rpm"          # Staged by the Level automation
 SENTINELCTL="/opt/sentinelone/bin/sentinelctl" # Agent CLI, present after install
 # ============================================================================
 
@@ -140,7 +159,7 @@ fail() {
     exit 1
 }
 
-# Both packages are removed on every exit path; the automation re-downloads them
+# Both packages are removed on every exit path; the automation re-stages them
 trap 'rm -f "$DEB_PATH" "$RPM_PATH"' EXIT
 
 # ============================================================================
@@ -190,13 +209,25 @@ fi
 echo "Package manager : $PKG_MGR"
 echo "Package         : $PKG_PATH"
 
+if [[ ! -f "$PKG_PATH" ]]; then
+    fail "Package not found at $PKG_PATH. The Level staging step did not run or failed."
+fi
+
+echo ""
+echo "[RUN] INTEGRITY CHECK"
+echo "=============================================================="
+
+# No vendor signature to check on Linux (see header); at least refuse a truncated or corrupt file
+if [[ "$PKG_MGR" == "dpkg" ]]; then
+    dpkg-deb --info "$PKG_PATH" > /dev/null || fail "dpkg-deb --info failed: $PKG_PATH is not a valid deb. Not installing it."
+else
+    rpm -K --nosignature "$PKG_PATH" || fail "rpm -K failed: $PKG_PATH digests do not verify. Not installing it."
+fi
+echo "Package integrity OK"
+
 echo ""
 echo "[RUN] INSTALLATION"
 echo "=============================================================="
-
-if [[ ! -f "$PKG_PATH" ]]; then
-    fail "Package not found at $PKG_PATH. The Level download step did not run or failed."
-fi
 
 if [[ "$PKG_MGR" == "dpkg" ]]; then
     DEBIAN_FRONTEND=noninteractive dpkg -i "$PKG_PATH" || fail "dpkg -i failed for $PKG_PATH"
