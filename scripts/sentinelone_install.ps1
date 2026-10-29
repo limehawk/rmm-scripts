@@ -8,29 +8,33 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : SentinelOne Install                                           v1.0.2
+ SCRIPT   : SentinelOne Install                                           v2.0.0
  AUTHOR   : Limehawk.io
- DATE     : January 2026
+ DATE     : October 2026
  USAGE    : .\sentinelone_install.ps1
 ================================================================================
  FILE     : sentinelone_install.ps1
-DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
+DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signature-verified installer with a site token
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
  PURPOSE
 
-   Installs SentinelOne endpoint agent silently using a site token. Downloads
-   the installer from ConnectWise CDN (or custom URL) and performs installation
-   with verification. Skips if already installed.
+   Installs the SentinelOne endpoint agent silently using a site token from
+   a Level custom field. The installer is staged on the device ahead of time
+   by a Level automation step; this script never downloads anything. Before
+   running the installer it checks the Authenticode signature is valid and
+   was issued to SentinelOne, so a swapped or tampered file is never run.
+   Skips if the agent is already installed.
 
    NOTE: The installed version will auto-update based on your S1 console
    Auto-Upgrade Policy settings. Initial installer version doesn't matter.
 
  DATA SOURCES & PRIORITY
 
-   1) Hardcoded site token (REQUIRED)
-   2) ConnectWise CDN for installer (default) or custom URL
+   1) Level custom field {{cf_s1_site_token}}: site token (REQUIRED)
+   2) C:\Windows\Temp\SentinelAgent.msi (x64) staged by Level, preferred
+   3) C:\Windows\Temp\SentinelAgent.exe (ARM64) staged by Level, fallback
 
  REQUIRED INPUTS
 
@@ -40,64 +44,74 @@ DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
 
  SETTINGS
 
-   - $InstallerUrl    : URL to download installer (defaults to CW CDN)
-   - $UseExe          : Use EXE installer ($true) or MSI ($false)
-   - $TempPath        : Local path for downloaded installer
-   - $SkipIfInstalled : Skip if SentinelOne already present
-   - $CleanupAfter    : Remove installer after completion
+   - $MsiPath            : Staged MSI installer (x64)
+   - $ExePath            : Staged EXE installer (ARM64)
+   - $SignerOrg          : Organization the signing certificate must carry
+   - $MaxVerifyAttempts  : Post-install service checks before giving up
+   - $VerifyDelaySeconds : Seconds between verification attempts
 
  BEHAVIOR
 
-   1. Checks if SentinelOne is already installed (optional skip)
-   2. Auto-detects 32-bit vs 64-bit OS
-   3. Downloads installer from URL
-   4. Runs silent installation with site token
-   5. Verifies installation success
-   6. Cleans up temporary files
+   1. Validates the site token is present and was substituted by Level
+   2. Exits 0 without changes if the SentinelAgent service already exists
+   3. Picks the staged MSI, or the EXE if no MSI; fails if neither exists
+   4. Verifies the Authenticode signature: Status must be Valid and the
+      signer certificate Subject must contain O="Sentinelone, Inc."
+   5. Runs the installer silently with the site token
+   6. Verifies the SentinelAgent service appears
+   7. Removes the staged installer whether the install succeeded or not
 
  PREREQUISITES
 
    - PowerShell 5.1 or later
-   - Administrator privileges required
-   - Network access to download URL
+   - Administrator privileges (Level runs as SYSTEM)
+   - Installer already staged at C:\Windows\Temp\SentinelAgent.msi or .exe
+   - Level custom field cf_s1_site_token set on the device's group
 
  SECURITY NOTES
 
-   - Site token is embedded in script - protect accordingly
-   - Default CDN URL uses HTTPS
+   - No third-party downloads: only the Level-staged file is ever run
+   - Installer must carry a valid Authenticode signature from SentinelOne
+   - Site token is never printed in full (first 10 characters + ***)
+   - No secrets in logs
+
+ ENDPOINTS
+
+   Not applicable - the installer is staged by a separate Level step
 
  EXIT CODES
 
    0 = Success (installed or already present)
-   1 = Failure
+   1 = Failure (bad token, installer missing, signature rejected,
+       install or verification failed)
 
  EXAMPLE RUN
 
  [INFO] INPUT VALIDATION
  ==============================================================
- Site Token       : eyJ...***
- Architecture     : 64-bit
- Installer Type   : EXE
+ Site Token : eyJ1cmwiOi***
 
  [RUN] PRE-CHECK
  ==============================================================
- Checking for existing installation...
  SentinelOne not detected
 
- [RUN] DOWNLOAD
+ [RUN] SIGNATURE CHECK
  ==============================================================
- Downloading 64-bit EXE installer...
- Download complete (61.5 MB)
+ Installer : C:\Windows\Temp\SentinelAgent.msi
+ Status    : Valid
+ Signer    : Sentinelone, Inc.
+ Signature accepted
 
  [RUN] INSTALLATION
  ==============================================================
  Starting silent installation...
- Installer completed with exit code 0
+ Installer completed with exit code : 0
+ Staged installer removed
 
  [RUN] VERIFICATION
  ==============================================================
- Attempt 1: Checking...
- SentinelOne detected
+ Attempt 1 : Checking...
+ SentinelAgent service detected
 
  [OK] FINAL STATUS
  ==============================================================
@@ -108,6 +122,10 @@ DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-10-29 v2.0.0 Install only the Level-staged installer; drop the CDN
+                   download and custom URL; require a valid Authenticode
+                   signature from SentinelOne before running it; detect the
+                   agent by the SentinelAgent service; EXE path for ARM64
  2026-07-24 v1.0.2 SiteToken from Level custom field {{cf_s1_site_token}} (adopts
                    edit made in Level UI); fail if placeholder is unsubstituted
  2026-01-19 v1.0.1 Updated to two-line ASCII console output style
@@ -115,29 +133,27 @@ DESCRIPTION : Silently installs SentinelOne endpoint agent with site token
 ================================================================================
 #>
 
-Set-StrictMode -Version Latest
-
-# ==== STATE ====
-$errorOccurred = $false
-$errorText     = ""
-
 # ==== HARDCODED INPUTS (MANDATORY) ====
 
 # --- REQUIRED: Your SentinelOne Site Token ---
 $SiteToken = "{{cf_s1_site_token}}"  # Get from S1 Console > Sentinels > Site Info
 
-# --- Installer Options ---
-$UseExe          = $false  # $true = EXE installer, $false = MSI installer (recommended)
-$SkipIfInstalled = $true   # Skip if SentinelOne already present
-$CleanupAfter    = $true   # Remove installer after completion
-$TempPath        = "C:\temp\SentinelOne"
+# --- Staged installers (placed by the Level automation, MSI preferred) ---
+$MsiPath = "C:\Windows\Temp\SentinelAgent.msi"   # x64
+$ExePath = "C:\Windows\Temp\SentinelAgent.exe"   # ARM64
 
-# --- Custom URL (leave empty to use ConnectWise CDN) ---
-$CustomInstallerUrl = ""
+# --- Signer the installer certificate must belong to ---
+$SignerOrg = "Sentinelone, Inc."
 
 # --- Verification Settings ---
 $MaxVerifyAttempts  = 5
 $VerifyDelaySeconds = 3
+
+Set-StrictMode -Version Latest
+
+# ==== STATE ====
+$errorOccurred = $false
+$errorText     = ""
 
 # ==== VALIDATION ====
 if ([string]::IsNullOrWhiteSpace($SiteToken)) {
@@ -149,111 +165,79 @@ if ([string]::IsNullOrWhiteSpace($SiteToken)) {
     $errorText = "SiteToken custom field was not substituted - set cf_s1_site_token in Level"
 }
 
-if ($errorOccurred) {
+# ==== HELPER FUNCTIONS ====
+function Test-SentinelOneInstalled {
+    return $null -ne (Get-Service -Name 'SentinelAgent' -ErrorAction SilentlyContinue)
+}
+
+function Exit-WithError {
+    param([string]$Message)
     Write-Host ""
-    Write-Host "[ERROR] VALIDATION FAILED"
+    Write-Host "[ERROR] ERROR OCCURRED"
     Write-Host "=============================================================="
-    Write-Host $errorText
+    Write-Host $Message
+    Write-Host ""
+    Write-Host "[ERROR] FINAL STATUS"
+    Write-Host "=============================================================="
+    Write-Host "Result : FAILED"
     Write-Host ""
     Write-Host "[ERROR] SCRIPT COMPLETED"
     Write-Host "=============================================================="
     exit 1
 }
 
-# ==== DETECT ARCHITECTURE ====
-$is64Bit = [Environment]::Is64BitOperatingSystem
-$arch = if ($is64Bit) { "64bit" } else { "32bit" }
-$archDisplay = if ($is64Bit) { "64-bit" } else { "32-bit" }
-
-# ==== BUILD INSTALLER URL ====
-if ([string]::IsNullOrWhiteSpace($CustomInstallerUrl)) {
-    $ext = if ($UseExe) { "exe" } else { "msi" }
-    $InstallerUrl = "https://cwa.connectwise.com/tools/sentinelone/SentinelOneAgent-Windows_$arch.$ext"
-} else {
-    $InstallerUrl = $CustomInstallerUrl
-}
-
-# ==== HELPER FUNCTION ====
-function Test-SentinelOneInstalled {
-    $paths = @(
-        "C:\Program Files\SentinelOne",
-        "C:\Program Files (x86)\SentinelOne"
-    )
-    foreach ($p in $paths) {
-        if (Test-Path $p) { return $p }
-    }
-    return $null
-}
+if ($errorOccurred) { Exit-WithError $errorText }
 
 # ==== RUNTIME OUTPUT ====
 Write-Host ""
 Write-Host "[INFO] INPUT VALIDATION"
 Write-Host "=============================================================="
 $maskedToken = if ($SiteToken.Length -gt 10) { $SiteToken.Substring(0,10) + "***" } else { "***" }
-Write-Host "Site Token       : $maskedToken"
-Write-Host "Architecture     : $archDisplay"
-Write-Host "Installer Type   : $(if ($UseExe) { 'EXE' } else { 'MSI' })"
+Write-Host "Site Token : $maskedToken"
 
 # ==== PRE-CHECK ====
 Write-Host ""
 Write-Host "[RUN] PRE-CHECK"
 Write-Host "=============================================================="
-Write-Host "Checking for existing installation..."
 
-$existingPath = Test-SentinelOneInstalled
-if ($existingPath) {
-    if ($SkipIfInstalled) {
-        Write-Host "SentinelOne already installed at: $existingPath"
-        Write-Host ""
-        Write-Host "[OK] FINAL STATUS"
-        Write-Host "=============================================================="
-        Write-Host "Result : SUCCESS (already installed)"
-        Write-Host ""
-        Write-Host "[OK] SCRIPT COMPLETED"
-        Write-Host "=============================================================="
-        exit 0
-    } else {
-        Write-Host "SentinelOne detected, reinstalling..."
-    }
-} else {
-    Write-Host "SentinelOne not detected"
+if (Test-SentinelOneInstalled) {
+    Write-Host "SentinelOne already installed (SentinelAgent service present)"
+    Write-Host ""
+    Write-Host "[OK] FINAL STATUS"
+    Write-Host "=============================================================="
+    Write-Host "Result : SUCCESS (already installed)"
+    Write-Host ""
+    Write-Host "[OK] SCRIPT COMPLETED"
+    Write-Host "=============================================================="
+    exit 0
 }
+Write-Host "SentinelOne not detected"
 
-# ==== DOWNLOAD ====
+# ==== SIGNATURE CHECK ====
 Write-Host ""
-Write-Host "[RUN] DOWNLOAD"
+Write-Host "[RUN] SIGNATURE CHECK"
 Write-Host "=============================================================="
 
-$installerExt = if ($UseExe) { "exe" } else { "msi" }
-$installerPath = "$TempPath\SentinelOneInstaller.$installerExt"
-
-try {
-    if (-not (Test-Path $TempPath)) {
-        New-Item -Path $TempPath -ItemType Directory -Force | Out-Null
-    }
-
-    Write-Host "Downloading $archDisplay $($installerExt.ToUpper()) installer..."
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-    $wc = New-Object System.Net.WebClient
-    $wc.DownloadFile($InstallerUrl, $installerPath)
-
-    if (Test-Path $installerPath) {
-        $sizeMB = [math]::Round((Get-Item $installerPath).Length / 1MB, 1)
-        Write-Host "Download complete ($sizeMB MB)"
-    } else {
-        throw "Installer not found after download"
-    }
-} catch {
-    Write-Host ""
-    Write-Host "[ERROR] DOWNLOAD FAILED"
-    Write-Host "=============================================================="
-    Write-Host "Download failed: $($_.Exception.Message)"
-    Write-Host ""
-    Write-Host "[ERROR] SCRIPT COMPLETED"
-    Write-Host "=============================================================="
-    exit 1
+if (Test-Path $MsiPath) {
+    $installerPath = $MsiPath
+} elseif (Test-Path $ExePath) {
+    $installerPath = $ExePath
+} else {
+    Exit-WithError "No installer at $MsiPath or $ExePath. The Level staging step did not run or failed."
 }
+Write-Host "Installer : $installerPath"
+
+$sig    = Get-AuthenticodeSignature -FilePath $installerPath
+$signer = if ($sig.SignerCertificate) { $sig.SignerCertificate.GetNameInfo('SimpleName', $false) } else { "(unsigned)" }
+Write-Host "Status    : $($sig.Status)"
+Write-Host "Signer    : $signer"
+
+# Both conditions: a trusted chain AND the cert belongs to SentinelOne. -match is case-insensitive.
+$signerOk = $sig.SignerCertificate -and ($sig.SignerCertificate.Subject -match ('O="' + [regex]::Escape($SignerOrg) + '"'))
+if ($sig.Status -ne 'Valid' -or -not $signerOk) {
+    Exit-WithError "Installer signature is not a valid SentinelOne signature. Not running it. Status: $($sig.Status); Subject: $(if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { 'none' })"
+}
+Write-Host "Signature accepted"
 
 # ==== INSTALLATION ====
 Write-Host ""
@@ -263,28 +247,22 @@ Write-Host "=============================================================="
 try {
     Write-Host "Starting silent installation..."
 
-    if ($UseExe) {
-        # EXE installer
-        $args = "-t `"$SiteToken`" --dont_fail_on_config_preserving_failures"
-        $proc = Start-Process -FilePath $installerPath -ArgumentList $args -Wait -PassThru
+    if ($installerPath -like '*.msi') {
+        $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn SITE_TOKEN=`"$SiteToken`"" -Wait -PassThru
     } else {
-        # MSI installer
-        $args = "/i `"$installerPath`" /qn SITE_TOKEN=`"$SiteToken`""
-        $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList $args -Wait -PassThru
+        # -q = quiet (SentinelOne EXE installer switch)
+        $proc = Start-Process -FilePath $installerPath -ArgumentList "-q -t `"$SiteToken`" --dont_fail_on_config_preserving_failures" -Wait -PassThru
     }
 
-    Write-Host "Installer completed with exit code: $($proc.ExitCode)"
-
+    Write-Host "Installer completed with exit code : $($proc.ExitCode)"
 } catch {
-    Write-Host ""
-    Write-Host "[ERROR] INSTALLATION FAILED"
-    Write-Host "=============================================================="
-    Write-Host "Installation failed: $($_.Exception.Message)"
-    Write-Host ""
-    Write-Host "[ERROR] SCRIPT COMPLETED"
-    Write-Host "=============================================================="
-    exit 1
+    Remove-Item -Path $installerPath -Force -ErrorAction SilentlyContinue
+    Exit-WithError "Installation failed: $($_.Exception.Message)"
 }
+
+# Staged file is single-use; the automation re-stages it next run
+Remove-Item -Path $installerPath -Force -ErrorAction SilentlyContinue
+Write-Host "Staged installer removed"
 
 # ==== VERIFICATION ====
 Write-Host ""
@@ -299,36 +277,14 @@ while (-not $verified -and $attempt -lt $MaxVerifyAttempts) {
     Start-Sleep -Seconds $VerifyDelaySeconds
     Write-Host "Attempt $attempt : Checking..."
 
-    $installedPath = Test-SentinelOneInstalled
-    if ($installedPath) {
-        Write-Host "SentinelOne detected at $installedPath"
+    if (Test-SentinelOneInstalled) {
+        Write-Host "SentinelAgent service detected"
         $verified = $true
     }
 }
 
 if (-not $verified) {
-    Write-Host "SentinelOne not detected after $MaxVerifyAttempts attempts"
-    Write-Host ""
-    Write-Host "[ERROR] FINAL STATUS"
-    Write-Host "=============================================================="
-    Write-Host "Result : FAILED - Installation could not be verified"
-    Write-Host ""
-    Write-Host "[ERROR] SCRIPT COMPLETED"
-    Write-Host "=============================================================="
-    exit 1
-}
-
-# ==== CLEANUP ====
-if ($CleanupAfter) {
-    Write-Host ""
-    Write-Host "[RUN] CLEANUP"
-    Write-Host "=============================================================="
-    try {
-        Remove-Item -Path $TempPath -Recurse -Force -ErrorAction SilentlyContinue
-        Write-Host "Temporary files removed"
-    } catch {
-        Write-Host "Cleanup warning: $($_.Exception.Message)"
-    }
+    Exit-WithError "SentinelAgent service not found after $MaxVerifyAttempts attempts - installation could not be verified"
 }
 
 # ==== FINAL STATUS ====

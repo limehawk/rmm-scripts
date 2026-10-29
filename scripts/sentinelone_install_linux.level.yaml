@@ -1,5 +1,5 @@
 name: sentinelone_install_linux.sh
-description: Installs the SentinelOne agent on Linux from a pre-downloaded deb or rpm with a site token
+description: Installs the SentinelOne agent on Linux from a Level-staged, integrity-checked deb or rpm with a site token
 shell: BASH
 runAs: SYSTEM
 timeout: 900

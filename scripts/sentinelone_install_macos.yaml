@@ -1,5 +1,5 @@
 name: sentinelone_install_macos.sh
-description: Installs the SentinelOne agent on macOS from a pre-downloaded pkg with a site token
+description: Installs the SentinelOne agent on macOS from a Level-staged, signature-verified pkg with a site token
 language: Bash
 tags:
   - Antivirus
@@ -10,13 +10,14 @@ timeout: 15
 readme: |
   Purpose
   -------
-  Installs the SentinelOne endpoint agent on macOS using the site token from a Level custom field. The installer pkg is downloaded ahead of time by a Level automation step; this script registers the token the way SentinelOne documents (a token file beside the pkg), runs the installer, and verifies the agent answers. Skips if the agent is already present.
+  Installs the SentinelOne endpoint agent on macOS using the site token from a Level custom field. The installer pkg is staged on the device ahead of time by a Level automation step; this script never downloads anything. It checks the pkg is signed by SentinelOne's Apple Developer ID with a chain ending at Apple Root CA, registers the token the way SentinelOne documents (a token file beside the pkg), runs the installer, and verifies the agent answers. Skips if the agent is already present.
 
   Usage Notes
   -----------
   - Validates the site token is present and was substituted by Level
   - Exits 0 without changes if the agent is already installed
-  - Fails if the pre-downloaded pkg is missing at /var/tmp/SentinelAgent.pkg
+  - Fails if the staged pkg is missing at /var/tmp/SentinelAgent.pkg
+  - Verifies the pkg with pkgutil --check-signature: signer must be Developer ID Installer: Sentinel Labs Inc. (4AYE5J54KN) and the chain must end at Apple Root CA, otherwise exits 1 without installing
   - Writes /var/tmp/com.sentinelone.registration-token and runs installer -target /
   - Verifies with sentinelctl version and status
   - Removes the token file on every exit path, and the pkg on success
@@ -29,6 +30,8 @@ readme: |
 
   Security
   --------
+  - No third-party downloads: only the Level-staged pkg is ever run
+  - pkg must be signed by SentinelOne's Apple Developer ID (chain to Apple Root CA) or it is not installed
   - Site token is never printed in full (first 10 characters + ***)
   - Token file is mode 600 and deleted on every exit path
 favourite: false
