@@ -4,3 +4,6 @@ shell: BASH
 runAs: SYSTEM
 timeout: 900
 groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzE2NDU2MQ
+lastPushedChecksum: sha256:820060135819fbf6
+lastPushedMetaChecksum: sha256:d371104f2db3ae5f
