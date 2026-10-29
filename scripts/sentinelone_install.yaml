@@ -17,7 +17,7 @@ readme: |
   - Validates the site token is present and was substituted by Level
   - Exits 0 without changes if the SentinelAgent service already exists
   - Uses C:\Windows\Temp\SentinelAgent.msi (x64), or SentinelAgent.exe (ARM64) if no MSI; fails if neither exists
-  - Verifies the Authenticode signature: Status must be Valid and the signer certificate Subject must contain O="Sentinelone, Inc."
+  - Verifies the Authenticode signature: Status must be Valid and the signer certificate Subject O= must be "SentinelOne Inc." (current installers) or "Sentinelone, Inc." (older), case-insensitive
   - Runs the installer silently with the site token (msiexec /qn or EXE -q)
   - Verifies the SentinelAgent service appears, with retries
   - Removes the staged installer whether the install succeeded or not
