@@ -1,0 +1,35 @@
+name: sentinelone_install_macos.sh
+description: Installs the SentinelOne agent on macOS from a pre-downloaded pkg with a site token
+language: Bash
+tags:
+  - Antivirus
+  - Mac
+  - Software
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Installs the SentinelOne endpoint agent on macOS using the site token from a Level custom field. The installer pkg is downloaded ahead of time by a Level automation step; this script registers the token the way SentinelOne documents (a token file beside the pkg), runs the installer, and verifies the agent answers. Skips if the agent is already present.
+
+  Usage Notes
+  -----------
+  - Validates the site token is present and was substituted by Level
+  - Exits 0 without changes if the agent is already installed
+  - Fails if the pre-downloaded pkg is missing at /var/tmp/SentinelAgent.pkg
+  - Writes /var/tmp/com.sentinelone.registration-token and runs installer -target /
+  - Verifies with sentinelctl version and status
+  - Removes the token file on every exit path, and the pkg on success
+
+  Requirements
+  ------------
+  - macOS with root privileges (Level runs as root)
+  - Installer pkg already at /var/tmp/SentinelAgent.pkg
+  - SITE_TOKEN: SentinelOne site token, injected at runtime from the Level custom field cf_s1_site_token ({{cf_s1_site_token}} placeholder)
+
+  Security
+  --------
+  - Site token is never printed in full (first 10 characters + ***)
+  - Token file is mode 600 and deleted on every exit path
+favourite: false
+shared: false
