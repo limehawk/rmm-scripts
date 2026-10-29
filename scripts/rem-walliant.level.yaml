@@ -1,0 +1,6 @@
+name: rem-walliant.ps1
+description: Removes Walliant adware files, tasks, services and registry entries from the machine and every user profile
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU

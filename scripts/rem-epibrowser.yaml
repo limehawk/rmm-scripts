@@ -1,0 +1,53 @@
+name: rem-epibrowser.ps1
+description: Removes EpiBrowser browser hijacker files, tasks, services and registry entries from the machine and every user profile
+language: PowerShell
+tags:
+- Security
+- Cleanup
+- Windows
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Chromium-based browser (EPISoftware) that auto-starts and registers itself as a web browser. This script removes it from the machine and from every user profile, including users who are signed out.
+
+  Usage Notes
+  -----------
+  - Validates every indicator entry and exits 1 if any is blank, too shallow or too broad
+  - Stops matching processes
+  - Stops and deletes matching services
+  - Unregisters matching scheduled tasks and deletes leftover task files
+  - Deletes machine-wide files, folders, registry keys and values
+  - For each user profile, deletes profile files, Downloads installers, user registry keys and values
+  - Confirms each file, registry and task delete and counts anything still present as a failure. Services count as removed when sc.exe reports success
+  - Exits 1 if anything could not be removed, otherwise exits 0
+  - Profiles: every S-1-5-21 profile listed under ProfileList
+  - Signed-out users: NTUSER.DAT is loaded at HKU\Limehawk_<SID> and unloaded when done
+  - Processes running from the Windows folder are never stopped
+  - Each entry must keep 3 or more literal characters in its last segment, not counting the extension, so a stray * cannot widen a delete
+  - Indicator counts: ProcessNames 1, ServiceNames 0, TaskNames 1, MachinePaths 0, MachineRegistryKeys 1, MachineRegistryValues 0, UserPaths 3, UserDownloadPatterns 0, UserRegistryKeys 6, UserRegistryValues 2
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Windows
+  - Administrator privileges or SYSTEM
+  - $ThreatName: Display name used in output. Default: EpiBrowser
+  - $ProcessNames: Process names to stop, without .exe. * allowed
+  - $ServiceNames: Service names to stop and delete. * allowed
+  - $TaskNames: Scheduled task names to unregister, in any task folder. * allowed
+  - $MachinePaths: Absolute files or folders to delete. * allowed
+  - $MachineRegistryKeys: HKLM\SOFTWARE or HKLM\SYSTEM keys to delete. * allowed
+  - $MachineRegistryValues: HKLM values to delete, written as Key|ValueName. * allowed in the value name
+  - $UserPaths: Files or folders to delete, relative to each profile folder. * allowed
+  - $UserDownloadPatterns: Installer file names to delete from each Downloads folder, searched recursively
+  - $UserRegistryKeys: Keys to delete under each user hive, starting with Software\. * allowed
+  - $UserRegistryValues: Values to delete under each user hive, written as Key|ValueName
+
+  Security
+  --------
+  - Deletes files and registry entries without a backup
+  - Matches processes, services and tasks by name only
+favourite: false
+shared: false
