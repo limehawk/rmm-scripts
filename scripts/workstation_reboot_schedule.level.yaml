@@ -1,0 +1,9 @@
+name: workstation_reboot_schedule.ps1
+description: Schedules a one-time 3:00 AM local reboot on a workstation and removes the scheduled task after it expires
+shell: POWERSHELL
+runAs: SYSTEM
+timeout: 120
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU
+scriptId: Z2lkOi8vbGV2ZWwvU2NyaXB0LzE0OTM2OA
+lastPushedChecksum: sha256:02aa1c9f4d8d66de
+lastPushedMetaChecksum: sha256:630669bd4504c509
