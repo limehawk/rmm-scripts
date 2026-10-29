@@ -1,0 +1,35 @@
+name: sentinelone_install_linux.sh
+description: Installs the SentinelOne agent on Linux from a pre-downloaded deb or rpm with a site token
+language: Bash
+tags:
+  - Antivirus
+  - Linux
+  - Software
+runAs: SYSTEM_USER
+timeout: 15
+readme: |
+  Purpose
+  -------
+  Installs the SentinelOne endpoint agent on Linux using the site token from a Level custom field. A Level automation step downloads both the deb and rpm packages ahead of time; this script picks the one matching the system's package manager, installs it, registers the token with sentinelctl, starts the agent and verifies it. Skips if already present.
+
+  Usage Notes
+  -----------
+  - Validates the site token is present and was substituted by Level
+  - Exits 0 without changes if /opt/sentinelone/bin/sentinelctl already exists
+  - Picks dpkg -i (Debian/Ubuntu) or rpm -i (RHEL/Fedora/SUSE/Amazon); exits 1 without changes on any other distro
+  - Fails if the matching package file is missing
+  - Installs, sets the token with sentinelctl management token set, runs sentinelctl control start
+  - Prints sentinelctl version and control status
+  - Removes both package files on every exit path
+
+  Requirements
+  ------------
+  - Linux with dpkg or rpm, root privileges (Level runs as root)
+  - Packages already at /var/tmp/SentinelAgent.deb and /var/tmp/SentinelAgent.rpm
+  - SITE_TOKEN: SentinelOne site token, injected at runtime from the Level custom field cf_s1_site_token ({{cf_s1_site_token}} placeholder)
+
+  Security
+  --------
+  - Site token is never printed in full (first 10 characters + ***)
+favourite: false
+shared: false

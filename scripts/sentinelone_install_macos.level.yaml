@@ -1,0 +1,6 @@
+name: sentinelone_install_macos.sh
+description: Installs the SentinelOne agent on macOS from a pre-downloaded pkg with a site token
+shell: BASH
+runAs: SYSTEM
+timeout: 900
+groupId: Z2lkOi8vbGV2ZWwvU2NyaXB0R3JvdXAvNTQ2NDU

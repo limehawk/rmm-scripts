@@ -1,0 +1,42 @@
+name: workstation_reboot_schedule.ps1
+description: Schedules a one-time 3:00 AM local reboot on a workstation and removes the scheduled task after it expires
+language: PowerShell
+tags:
+- Maintenance
+- Windows
+runAs: SYSTEM_USER
+timeout: 120
+readme: |
+  Purpose
+  -------
+  Schedules a single workstation reboot for the next 3:00 AM local time when uptime is over the threshold. Task Scheduler deletes the task after its window ends, so a missed night leaves nothing behind.
+
+  Usage Notes
+  -----------
+  - Reboot time is the next 03:00 local, or the following day if that time has already passed
+  - Task name is Limehawk-UptimeReboot
+  - The task expires 15 minutes after its start time and Task Scheduler deletes it
+  - A machine that was off at 3:00 AM is not rebooted when someone opens it later
+  - The task may start on battery and runs as SYSTEM
+  - The reboot command is shutdown.exe /r /t 0 /f
+  - Servers and domain controllers are skipped
+  - Uptime at or under 30 days is skipped
+  - An existing task of the same name is left in place
+
+  Requirements
+  ------------
+  - PowerShell 5.1 or later
+  - Windows workstation
+  - Administrator privileges, so the task can be registered as SYSTEM
+  - Uptime threshold of 30 whole days
+  - Reboot hour 3 and minute 0
+  - Task name Limehawk-UptimeReboot
+  - Task window of 15 minutes
+
+  Security
+  --------
+  - No secrets in logs
+  - The reboot closes applications without a prompt at the scheduled time
+  - The task runs as SYSTEM and is deleted by Task Scheduler after it expires
+favourite: false
+shared: false
