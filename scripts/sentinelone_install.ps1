@@ -8,13 +8,13 @@ $ErrorActionPreference = 'Stop'
 ███████╗██║██║ ╚═╝ ██║███████╗██║  ██║██║  ██║╚███╔███╔╝██║  ██╗
 ╚══════╝╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝
 ================================================================================
- SCRIPT   : SentinelOne Install                                           v2.0.0
+ SCRIPT   : SentinelOne Install                                           v2.0.1
  AUTHOR   : Limehawk.io
  DATE     : October 2026
  USAGE    : .\sentinelone_install.ps1
 ================================================================================
  FILE     : sentinelone_install.ps1
-DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signature-verified installer with a site token
+ DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signature-verified installer with a site token
 --------------------------------------------------------------------------------
  README
 --------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signa
 
    - $MsiPath            : Staged MSI installer (x64)
    - $ExePath            : Staged EXE installer (ARM64)
-   - $SignerOrg          : Organization the signing certificate must carry
+   - $SignerOrgPattern   : Regex the signing certificate Subject O= must match
    - $MaxVerifyAttempts  : Post-install service checks before giving up
    - $VerifyDelaySeconds : Seconds between verification attempts
 
@@ -56,7 +56,8 @@ DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signa
    2. Exits 0 without changes if the SentinelAgent service already exists
    3. Picks the staged MSI, or the EXE if no MSI; fails if neither exists
    4. Verifies the Authenticode signature: Status must be Valid and the
-      signer certificate Subject must contain O="Sentinelone, Inc."
+      signer certificate Subject O= must be "SentinelOne Inc." (current
+      installers) or "Sentinelone, Inc." (older), case-insensitive
    5. Runs the installer silently with the site token
    6. Verifies the SentinelAgent service appears
    7. Removes the staged installer whether the install succeeded or not
@@ -99,7 +100,7 @@ DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signa
  ==============================================================
  Installer : C:\Windows\Temp\SentinelAgent.msi
  Status    : Valid
- Signer    : Sentinelone, Inc.
+ Signer    : SentinelOne Inc.
  Signature accepted
 
  [RUN] INSTALLATION
@@ -122,6 +123,10 @@ DESCRIPTION : Silently installs the SentinelOne agent from a Level-staged, signa
 --------------------------------------------------------------------------------
  CHANGELOG
 --------------------------------------------------------------------------------
+ 2026-10-29 v2.0.1 Accept the signer Subject SentinelOne uses on current
+                   installers (O=SentinelOne Inc.) as well as the older
+                   O="Sentinelone, Inc."; anchored on the O= attribute so
+                   look-alike names are still rejected
  2026-10-29 v2.0.0 Install only the Level-staged installer; drop the CDN
                    download and custom URL; require a valid Authenticode
                    signature from SentinelOne before running it; detect the
@@ -142,8 +147,9 @@ $SiteToken = "{{cf_s1_site_token}}"  # Get from S1 Console > Sentinels > Site In
 $MsiPath = "C:\Windows\Temp\SentinelAgent.msi"   # x64
 $ExePath = "C:\Windows\Temp\SentinelAgent.exe"   # ARM64
 
-# --- Signer the installer certificate must belong to ---
-$SignerOrg = "Sentinelone, Inc."
+# --- Signer the installer certificate must belong to (Subject O= attribute) ---
+# Current installers: O=SentinelOne Inc.   Older / installed binaries: O="Sentinelone, Inc."
+$SignerOrgPattern = '(^|,\s*)O="?SentinelOne,? Inc\."?(,|$)'
 
 # --- Verification Settings ---
 $MaxVerifyAttempts  = 5
@@ -233,7 +239,7 @@ Write-Host "Status    : $($sig.Status)"
 Write-Host "Signer    : $signer"
 
 # Both conditions: a trusted chain AND the cert belongs to SentinelOne. -match is case-insensitive.
-$signerOk = $sig.SignerCertificate -and ($sig.SignerCertificate.Subject -match ('O="' + [regex]::Escape($SignerOrg) + '"'))
+$signerOk = $sig.SignerCertificate -and ($sig.SignerCertificate.Subject -match $SignerOrgPattern)
 if ($sig.Status -ne 'Valid' -or -not $signerOk) {
     Exit-WithError "Installer signature is not a valid SentinelOne signature. Not running it. Status: $($sig.Status); Subject: $(if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { 'none' })"
 }
